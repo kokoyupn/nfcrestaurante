@@ -1,0 +1,55 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.nfcook"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="15" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+       >
+        <activity
+            android:name="usuario.MainActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="usuario.Inicial"
+            android:label="@string/inicial"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="usuario.Cuenta"
+            android:label="@string/cuenta"
+            android:screenOrientation="portrait"  >
+        </activity>
+        <activity
+            android:name="usuario.StartActivity"
+            android:label="@string/pestanas"
+            android:screenOrientation="portrait"  >
+        </activity>
+        <activity
+            android:name="usuario.Pedido"
+            android:label="@string/pedido"
+            android:screenOrientation="portrait"  >
+        </activity>
+        <activity
+            android:name="usuario.DescripcionPlato"
+            android:label="@string/descripcion_plato"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+           >
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/desc_plato"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFC"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/nombrePlato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:text="Nombre plato"
+        android:textColor="#600"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/imagenPlato"
+            android:layout_width="121dp"
+            android:layout_height="84dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Precio"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#003"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/idTextCantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/tituloCantidad"
+                    android:textColor="#003"
+                    android:textSize="16dp" />
+
+                <Spinner
+                    android:id="@+id/idCantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:scrollbarFadeDuration="500" >
+
+        <TextView
+            android:id="@+id/descripcionPlato"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="descripcion detallada"
+            android:textSize="14dp" />
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/FrameLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.47" >
+
+        <ExpandableListView
+            android:id="@+id/expandableExtras"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.68" >
+
+        </ExpandableListView>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewOpciones"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp"
+            android:text="Introduzca sus observaciones"
+            android:textSize="14dp" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="0.02" >
+
+            <AutoCompleteTextView
+                android:id="@+id/AutoCompleteTextViewOpciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.92"
+                android:ems="10"
+                android:hint="Nada especial"
+                android:textSize="12dp" >
+
+                <requestFocus />
+            </AutoCompleteTextView>
+
+            <Button
+                android:id="@+id/botonOpcion"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickConfirmar"
+                android:text="Confirmar" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
