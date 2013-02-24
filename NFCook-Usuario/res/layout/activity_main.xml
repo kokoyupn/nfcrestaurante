@@ -14,7 +14,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
         android:src="@drawable/logo" />
-    
     <ListView
         android:id="@+id/listaLogosRestarurtantes"
         android:layout_width="match_parent"

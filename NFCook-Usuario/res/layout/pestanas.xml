@@ -57,7 +57,6 @@
             android:text="@string/reparto"
             android:textSize="@dimen/tam" />
     </LinearLayout>
-
     <TextView
         android:id="@+id/textViewBienvenidarestaurante"
         android:layout_width="wrap_content"

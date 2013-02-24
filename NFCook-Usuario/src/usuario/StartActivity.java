@@ -152,13 +152,9 @@ public class StartActivity extends Activity {
         m.commit();
     }
     
-    // Falta meterle al metodo la información referente al pedido en donde la tengamos guardada
+    
     public void OnClickPedido (View boton){
     	Fragment fragmentPedido = new PedidoFragment();
-    	//String [] Ejemplatos = {"Hamburguesa Director", "50","Ensalada cesar","16","Hamburguesa de pollo","20","Habichuelas con lacon","25","Sopitas de la abuela","250"};
-    	String [] Ejemplatos = {"Beicon & Cheese Fries", "8.35","BBQ Egg Burguer","10.85","New York Cheese Cake","5.35","New York Cheese Cake","5.35","New York Cheese Cake","5.35"};
-    	
-	    ((PedidoFragment)fragmentPedido).platos = Ejemplatos;
         FragmentTransaction m = getFragmentManager().beginTransaction();
         m.replace(R.id.RelativeLayout1, fragmentPedido);
         m.addToBackStack("Seleccion de platos");

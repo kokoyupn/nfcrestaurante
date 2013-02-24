@@ -21,7 +21,7 @@ public class Handler extends SQLiteOpenHelper {
     //Ruta por defecto de las bases de datos en el sistema Android
 	private static String DB_PATH = "/data/data/com.example.nfcook/databases/";
 	//archivo de la base de datos que esta en la carpeta assets
-	private static String DB_NAME = "MiBase.db";
+	private static String DB_NAME;
 	private SQLiteDatabase myDataBase;
 	private final Context myContext;
 	
@@ -30,7 +30,16 @@ public class Handler extends SQLiteOpenHelper {
 
      public Handler(Context context) {
     	 //el uno corresponde a la version de la base de datos;
+    	 super(context, "MiBase.db", null, 1);
+    	 DB_NAME = "MiBase.db";
+    	 this.myContext = context;
+
+     }
+     
+     public Handler(Context context,String DB_NAME) {
+    	 //el uno corresponde a la version de la base de datos;
     	 super(context, DB_NAME, null, 1);
+    	this.DB_NAME = DB_NAME;
     	 this.myContext = context;
 
      }
@@ -40,7 +49,7 @@ public class Handler extends SQLiteOpenHelper {
     	 SQLiteDatabase checkDB = null;
     	 try{
     		 String myPath = DB_PATH + DB_NAME;
-    		 checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+    		 checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
     	
     	 }catch(SQLiteException e){
     		 //si llegamos aqui es porque la base de datos no existe todavía.
@@ -113,7 +122,7 @@ public class Handler extends SQLiteOpenHelper {
     			  }
     		  
     			  String myPath = DB_PATH + DB_NAME;
-    			  myDataBase = SQLiteDatabase.openDatabase(myPath, null,SQLiteDatabase.OPEN_READONLY);
+    			  myDataBase = SQLiteDatabase.openDatabase(myPath, null,SQLiteDatabase.OPEN_READWRITE);
     		  }
     		  
     		  return myDataBase;
@@ -126,9 +135,9 @@ public class Handler extends SQLiteOpenHelper {
     	  
     	 @Override
     	public void onCreate(SQLiteDatabase db) {
-    		 String query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
+    		 /*String query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
     					"TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER)";
-    		db.execSQL(query);
+    		db.execSQL(query);*/
     	}
 
     	  

@@ -7,7 +7,9 @@ import java.util.Map;
 
 import com.example.nfcook.R;
 
+import adapters.DescripcionPlatoAdapter;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -46,8 +48,9 @@ public class DescripcionPlato extends Activity {
 	private DescripcionPlatoAdapter dA;
 	public String[] seleccionado;
 	
-	public Handler sql;
-	public SQLiteDatabase db;
+	public Handler sql,sqlPedido;
+	public SQLiteDatabase db,dbPedido;
+	
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,22 +176,33 @@ public class DescripcionPlato extends Activity {
 	 
 	 
     public void onClickConfirmar(View boton){
+    	sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
+     	dbPedido=sqlPedido.open();
+    	ContentValues plato = new ContentValues();
+    	plato.put("Plato", nombrePlato);
+    	plato.put("Observaciones", actw.getText().toString());
+    	plato.put("Id", "uno");
     	// Recorremos los RadioGroups para ver la selección del usuario
-    	/*for(int i=0;i<platoPadre.size();i++){
+    	for(int i=0;i<platoPadre.size();i++){
     		int numHijos = platoHijo.get(i).get(0).get("NOMBRE").getChildCount();
     		RadioGroup rg = (RadioGroup) platoHijo.get(i).get(0).get("NOMBRE");
     		for(int j=0;j<numHijos;j++){
     			RadioButton rb = (RadioButton) rg.getChildAt(j);
         		String des = rb.getText().toString();
-    			if(rb.isChecked())
-    				Log.i("Checked","HIJO"+i+" selccionado: "+rb.getText().toString());
+    			if(rb.isChecked()){
+    				Log.i("Checked","HIJO"+i+" selccionado: " + rb.getText().toString());
+    			}
     		}
-    	}*/
-    	
-    	if (seleccionado != null)
+    	}
+
+    	if (seleccionado != null){
     		for(int i=0;i<seleccionado.length;i++){
     			Log.i("Checked","HIJO"+i+" selccionado: "+seleccionado[i]);
+				plato.put("Extras", plato.get("Extras") + seleccionado[i] + "/");
     		}
+    	}
+
+		dbPedido.insert("Pedido", null, plato);
 
 
     	Toast.makeText(getApplicationContext(),"Plato Nº " + cantidad + " confirmado", Toast.LENGTH_SHORT).show();
