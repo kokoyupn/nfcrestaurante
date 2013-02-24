@@ -1,92 +1,106 @@
 package fragments;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import java.util.Set;
+
+import baseDatos.Handler;
+
 import com.example.nfcook.R;
 
+import adapters.HijoExpandableListPedido;
+import adapters.MiExpandableListAdapterPedido;
+import adapters.PadreExpandableListPedido;
 import android.app.Fragment;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 public class PedidoFragment extends Fragment{
-	private float total;
-	private View vista;
-	private TableLayout tableLayout;
+	private MiExpandableListAdapterPedido  adapterExpandableListPedido;
+	private ExpandableListView expandableListPedido;
 	
-	public String[] platos; // Atributo de prueba para ver que funciona todo.
+	private float total;
+	
+	private Handler sqlPedido;
+	private SQLiteDatabase dbPedido;
 	
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		vista = inflater.inflate(R.layout.pedido, container, false);
-             
-        tableLayout= (TableLayout)vista.findViewById(R.id.tableLayoutPedido);
-      
-        TableRow fila = (TableRow)inflater.inflate(R.layout.tablerowpedido,tableLayout,false);
-       
-        TextView descripcion =(TextView)fila.findViewById(R.id.textViewDescripcionPedido);
-        TextView precio =(TextView)fila.findViewById(R.id.textViewPrecioPedido);
-        
-        CheckBox c = (CheckBox) fila.findViewById(R.id.checkBox1);
-        c.setVisibility(CheckBox.INVISIBLE);
-        
-        descripcion.setText("Descripcion");
-        descripcion.setTextSize(20);
-        precio.setText("Precio");
-        precio.setTextSize(20);
-        
-        tableLayout.addView(fila);
-       
-        
-        View v =(View)inflater.inflate(R.layout.separador,tableLayout,false);
-        tableLayout.addView(v);
-        
-        total=0;
-        for (int j = 0; j<platos.length; j = j+2){
-       	            
-           total += (float) Double.parseDouble(platos[j+1]);
-            
-            TableRow f1 = (TableRow)inflater.inflate(R.layout.tablerowpedido,tableLayout,false);
-            
-            TextView c1 =(TextView)f1.findViewById(R.id.textViewDescripcionPedido);
-            c1.setText(platos[j]);
-            c1.setTextSize(12);
-            c1.setPadding(5, 0, 0, 0);
-            
-            TextView c2 =(TextView)f1.findViewById(R.id.textViewPrecioPedido);
-            c2.setText(platos[j+1]+" €");
-            c2.setTextSize(12);
-            tableLayout.addView(f1);
-        }
-        
-        final TextView textTotal =(TextView) vista.findViewById(R.id.total);
-        textTotal.setText("TOTAL A PAGAR: "+ total);  
-      
-        final Button eliminar = (Button) vista.findViewById(R.id.eliminar);
-        eliminar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	for (int i=2;i<tableLayout.getChildCount();i++){
-           		TableRow r = (TableRow)tableLayout.getChildAt(i);
-           		if (((CheckBox) r.getChildAt(2)).isChecked()){
-           			String s=((TextView) r.getChildAt(1)).getText().toString();
-           			s=s.substring(0, s.length()-2);
-           			total-=(float)Double.parseDouble(s);
-                   	 tableLayout.removeViewAt(i);
-                   	 i--;
-                    }
-           		
-            	}
-            	textTotal.setText("TOTAL A PAGAR: "+ total);
-            }
-        }); 
-        
-        return vista;    
-   }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		View vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_pedido, container, false);
+		Button botonEliminar = (Button) vistaConExpandaleList.findViewById(R.id.buttonEliminarPedido);
+		botonEliminar.setOnClickListener( new View.OnClickListener() {
+		    public void onClick(View v) {
+		    	adapterExpandableListPedido.eliminarHijosMarcados();
+				expandableListPedido.setAdapter(adapterExpandableListPedido);
+		    }
+		      });
+        importarBaseDatatos(vistaConExpandaleList);
+        crearExpandableList(vistaConExpandaleList);
+        return vistaConExpandaleList;
+	}
    
+	public void crearExpandableList(View vistaConExpandaleList) {
+		try{
+			
+			String[] campos = new String[]{"Plato"};//Campos que quieres recuperar
+	    	Cursor c = dbPedido.query("Pedido", campos, null, null,null, null,null);
+
+			Set<String> conjuntoNombresPadres = new HashSet<String>();
+	    	while(c.moveToNext()){
+	    		conjuntoNombresPadres.add(c.getString(0));
+	    	}
+
+			ArrayList<PadreExpandableListPedido> padres = new ArrayList<PadreExpandableListPedido>();
+			Iterator<String> iteradorConjunto = conjuntoNombresPadres.iterator();
+	    	while(iteradorConjunto.hasNext()){
+		    	ArrayList<HijoExpandableListPedido> hijos = new ArrayList<HijoExpandableListPedido>();
+	    		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones"};
+	    		String nombrePlato = iteradorConjunto.next();
+		    	String[] datos = new String[]{nombrePlato};
+		    	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Plato=?", datos,null, null,null);
+		    	while(cursor.moveToNext()){
+		    		HijoExpandableListPedido unHijo = new HijoExpandableListPedido(cursor.getString(1), cursor.getString(0));
+		    		hijos.add(unHijo);
+		    	}
+		    	PadreExpandableListPedido unPadre = new PadreExpandableListPedido(nombrePlato,hijos);
+		    	padres.add(unPadre);
+	    	}
+			expandableListPedido = (ExpandableListView) vistaConExpandaleList.findViewById(R.id.expandableListPedido);
+			adapterExpandableListPedido = new MiExpandableListAdapterPedido(vistaConExpandaleList.getContext(),padres);
+			expandableListPedido.setAdapter(adapterExpandableListPedido);
+	    }catch(SQLiteException e){
+	        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
+	    		
+	    }   
+	}
+	
+	public void onClickEliminarPedido(View boton){
+		//Falta eliminar de base de datos
+		adapterExpandableListPedido.eliminarHijosMarcados();
+		adapterExpandableListPedido.notifyAll();
+	}
+
+	private void importarBaseDatatos(View vistaConExpandaleList) {
+		 try{
+	     	   sqlPedido=new Handler(vistaConExpandaleList.getContext(),"Pedido.db"); 
+	     	   dbPedido=sqlPedido.open();
+	         }catch(SQLiteException e){
+	         	Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show();
+	      		
+	         }
+		
+	}
+
 	public float getTotal() {
 		return total;
 	}

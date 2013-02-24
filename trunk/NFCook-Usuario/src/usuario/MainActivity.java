@@ -9,6 +9,7 @@ import com.example.nfcook.R;
 
 import baseDatos.Handler;
 
+import adapters.ImagenesRestaurantesAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -113,6 +114,7 @@ private void crearRestaurantesListView() {
     	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
     	startActivity(intent);
     }
+	
 	
 }
 
