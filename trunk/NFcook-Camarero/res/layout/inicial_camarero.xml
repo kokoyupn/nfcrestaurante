@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+
+
+
+
+    <GridView
+        android:id="@+id/gridViewInicial"
+        android:layout_width="match_parent"
+        android:layout_height="372dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0.73"
+        android:horizontalSpacing="15dp"
+        android:numColumns="3"
+        android:verticalSpacing="15dp" >
+
+    </GridView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.73" >
+
+        <Button
+            android:id="@+id/aniadirMesa"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.73"
+            android:onClick="onAniadirClick"
+            android:text="Añade mesa" />
+
+
+
+        <Button
+            android:id="@+id/eliminarMesa"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.73"
+            android:onClick="onClickEliminarMesa"
+            android:text="Elimina mesa" />
+
+    </LinearLayout>
+
+</LinearLayout>
