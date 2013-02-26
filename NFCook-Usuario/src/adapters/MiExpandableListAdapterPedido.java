@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 
 import com.example.nfcook.R;
+
+
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -18,10 +21,12 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
  
     private LayoutInflater inflater;
     private ArrayList<PadreExpandableListPedido> arrayPadres;
- 
-    public MiExpandableListAdapterPedido(Context context, ArrayList<PadreExpandableListPedido> padres){
+    private Button botonEliminar;
+    
+    public MiExpandableListAdapterPedido(Context context, ArrayList<PadreExpandableListPedido> padres, Button botonEliminar){
     	arrayPadres = padres;
         inflater = LayoutInflater.from(context);
+        this.botonEliminar = botonEliminar;
     }
 
 	public Object getChild(int groupPosition, int childPosition) {
@@ -42,7 +47,10 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		 
 		 TextView textViewExtras = (TextView) convertView.findViewById(R.id.textViewPedidoExtras);
 		 TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
+		 TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);
 		 
+		 textViewPrecio.setText(arrayPadres.get(groupPosition).getHijoAt(childPosition).getPrecio() + "€");
+
 		 textViewExtras.setText(arrayPadres.get(groupPosition).getHijoAt(childPosition).getExtras());
 		 textViewObservaciones.setText(arrayPadres.get(groupPosition).getHijoAt(childPosition).getObservaciones());
 		 
@@ -50,10 +58,25 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		 checkHijo.setOnClickListener( new View.OnClickListener() {
 			    public void onClick(View v) {
 			    	arrayPadres.get(groupPositionMarcar).getHijoAt(childPositionMArcar).setCheck();
+			    	if(algunHijoMarcado()){
+			    		botonEliminar.setVisibility(Button.VISIBLE);
+			    	}else{
+			    		botonEliminar.setVisibility(Button.INVISIBLE);
+			    	}
 			    }
 		 			});
 		 
 	     return convertView;
+	}
+	
+	private boolean algunHijoMarcado(){
+		int posicionPadre = 0;
+		boolean marcado = false;
+		while(posicionPadre<arrayPadres.size() && !marcado){
+			marcado = arrayPadres.get(posicionPadre).algunHijoMarcado();
+			posicionPadre++;
+		}
+		return marcado;
 	}
 
 	public int getChildrenCount(int groupPosition) {
@@ -75,13 +98,17 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.padre_lista_expandible_rg, parent,false);
+			convertView = inflater.inflate(R.layout.contenido_padre_lista_pedido, parent,false);
         }
  
-        TextView textViewPadre = (TextView) convertView.findViewById(R.id.textViewPadre);
+        TextView textViewPadrePlato = (TextView) convertView.findViewById(R.id.textViewPlatoPadre);
+        TextView textViewPadrePrecio = (TextView) convertView.findViewById(R.id.textViewPrecioTotalPadre);
         
-        textViewPadre.setText(getGroup(groupPosition).toString());
- 
+        textViewPadrePlato.setText(getGroup(groupPosition).toString());
+        int precio = (int)(((PadreExpandableListPedido) this.getGroup(groupPosition)).getPrecio() * 100); 
+        double valorConDosDecimales = precio/100.0;
+        textViewPadrePrecio.setText(valorConDosDecimales + "€");
+        
         return convertView;
 
 	}

@@ -179,9 +179,9 @@ public class DescripcionPlato extends Activity {
     	sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
      	dbPedido=sqlPedido.open();
     	ContentValues plato = new ContentValues();
+    	plato.put("Id", "uno");
     	plato.put("Plato", nombrePlato);
     	plato.put("Observaciones", actw.getText().toString());
-    	plato.put("Id", "uno");
     	// Recorremos los RadioGroups para ver la selección del usuario
     	for(int i=0;i<platoPadre.size();i++){
     		int numHijos = platoHijo.get(i).get(0).get("NOMBRE").getChildCount();
@@ -198,10 +198,14 @@ public class DescripcionPlato extends Activity {
     	if (seleccionado != null){
     		for(int i=0;i<seleccionado.length;i++){
     			Log.i("Checked","HIJO"+i+" selccionado: "+seleccionado[i]);
-				plato.put("Extras", plato.get("Extras") + seleccionado[i] + "/");
+    			if(plato.get("Extras") == null){
+    				plato.put("Extras", seleccionado[i]);
+    			}else{
+    				plato.put("Extras", plato.get("Extras") + "/" + seleccionado[i]);
+    			}
     		}
     	}
-
+    	plato.put("PrecioPlato",precio);
 		dbPedido.insert("Pedido", null, plato);
 
 

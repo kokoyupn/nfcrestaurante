@@ -3,13 +3,15 @@ import java.util.ArrayList;
 
 public class PadreExpandableListPedido {
     private String titulo;
+    private double precio;
     private ArrayList<HijoExpandableListPedido> arrayHijos;
  
     
     
-    public PadreExpandableListPedido(String titulo, ArrayList<HijoExpandableListPedido> arrayHijos) {
+    public PadreExpandableListPedido(String titulo, ArrayList<HijoExpandableListPedido> arrayHijos, double precio) {
 		this.titulo = titulo;
 		this.arrayHijos = arrayHijos;
+		this.precio = precio;
 	}
 
 	public String getTitle() {
@@ -20,7 +22,11 @@ public class PadreExpandableListPedido {
         this.titulo = titulo;
     }
  
-    public ArrayList<HijoExpandableListPedido> getArrayChildren() {
+    public double getPrecio() {
+		return precio;
+	}
+
+	public ArrayList<HijoExpandableListPedido> getArrayChildren() {
         return arrayHijos;
     }
     
@@ -44,8 +50,21 @@ public class PadreExpandableListPedido {
 		for(int i = 0; i<arrayHijos.size();i++){
 			if(arrayHijos.get(i).isCheck()){
 				arrayHijos.remove(i);
+				precio -= arrayHijos.get(i).getPrecio();
 			}
 		}
-		
+	}
+	
+	public boolean esPadreVacio(){
+		return arrayHijos.size()==0;
+	}
+
+	public boolean algunHijoMarcado() {
+		int posicionHijo = 0;
+		boolean marcado = false;
+		while(posicionHijo<arrayHijos.size() && !marcado){
+			marcado = arrayHijos.get(posicionHijo).isCheck();
+		}
+		return marcado;
 	}
 }

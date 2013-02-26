@@ -34,10 +34,13 @@ public class PedidoFragment extends Fragment{
 	private Handler sqlPedido;
 	private SQLiteDatabase dbPedido;
 	
+	private Button botonEliminar; // Para poder pasarlo al adapter y  hacerlo visible e invisible al marcarun CheckBox
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		View vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_pedido, container, false);
-		Button botonEliminar = (Button) vistaConExpandaleList.findViewById(R.id.buttonEliminarPedido);
+		botonEliminar = (Button) vistaConExpandaleList.findViewById(R.id.buttonEliminarPedido);
+		botonEliminar.setVisibility(Button.INVISIBLE);
 		botonEliminar.setOnClickListener( new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	adapterExpandableListPedido.eliminarHijosMarcados();
@@ -64,19 +67,21 @@ public class PedidoFragment extends Fragment{
 			Iterator<String> iteradorConjunto = conjuntoNombresPadres.iterator();
 	    	while(iteradorConjunto.hasNext()){
 		    	ArrayList<HijoExpandableListPedido> hijos = new ArrayList<HijoExpandableListPedido>();
-	    		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones"};
+	    		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones","PrecioPlato"};
 	    		String nombrePlato = iteradorConjunto.next();
 		    	String[] datos = new String[]{nombrePlato};
 		    	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Plato=?", datos,null, null,null);
+		    	double precio = 0; //Para sumar todos los platos hijos de un padre
 		    	while(cursor.moveToNext()){
-		    		HijoExpandableListPedido unHijo = new HijoExpandableListPedido(cursor.getString(1), cursor.getString(0));
+		    		precio +=cursor.getDouble(2); 
+		    		HijoExpandableListPedido unHijo = new HijoExpandableListPedido(cursor.getString(1), cursor.getString(0), cursor.getDouble(2));
 		    		hijos.add(unHijo);
 		    	}
-		    	PadreExpandableListPedido unPadre = new PadreExpandableListPedido(nombrePlato,hijos);
+		    	PadreExpandableListPedido unPadre = new PadreExpandableListPedido(nombrePlato, hijos, precio);
 		    	padres.add(unPadre);
 	    	}
 			expandableListPedido = (ExpandableListView) vistaConExpandaleList.findViewById(R.id.expandableListPedido);
-			adapterExpandableListPedido = new MiExpandableListAdapterPedido(vistaConExpandaleList.getContext(),padres);
+			adapterExpandableListPedido = new MiExpandableListAdapterPedido(vistaConExpandaleList.getContext(),padres, botonEliminar);
 			expandableListPedido.setAdapter(adapterExpandableListPedido);
 	    }catch(SQLiteException e){
 	        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
