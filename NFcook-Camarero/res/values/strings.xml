@@ -1,0 +1,46 @@
+<resources>
+
+    <string name="app_name">NFCook</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Seleccion de restaurante</string>
+    <string name="principales">Principales</string>
+    <string name="entrantes">Entrantes</string>
+    <string name="postres">Postres</string>
+    <string name="bebidas">Bebidas</string>
+    <string name="sugerencias">Sugerencias</string>
+    <string name="cuenta">Cuenta</string>
+    <string name="pedido">Pedido</string>
+    <string name="reparto">Reparto</string>
+    <string name="inicial">Inicial</string>
+    <string name="precio">Precio</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="pestanas">Pestañas</string>
+    <string name="tituloCantidad">Cantidad:</string>
+    <string name="descripcion_plato">Descripcion plato:</string>
+    <string name="ventana_mesa">Pedido Mesa</string>
+       
+    <string-array name="cantidades">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+         <item>4</item>
+        <item>5</item>
+        <item>6</item>
+         <item>7</item>
+        <item>8</item>
+        <item>9</item>
+         <item>10</item>
+        <item>11</item>
+        <item>12</item>
+         <item>13</item>
+        <item>14</item>
+        <item>15</item>
+         <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>mas</item>
+    </string-array>
+</resources>

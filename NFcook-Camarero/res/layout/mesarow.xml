@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+ 	<CheckBox 
+    	android:id="@+id/CheckBox1"
+     	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"/>
+    
+	<TextView
+            android:id="@+id/nombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+            <!--android:layout_weight="0.8"-->
+                 
+
+ 	 <TextView
+         	android:id="@+id/observaciones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+ 	 
+ 	 <TextView
+         	android:id="@+id/extras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+ 	 
+ 	 <TextView
+            android:id="@+id/precioCada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+            <!--android:layout_weight="0.2"-->
+            
+     
+     
+     <Button
+	    android:id="@+id/editar"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:gravity="right"
+	    android:text="Editar" />
+                 
+   
+</TableRow>
