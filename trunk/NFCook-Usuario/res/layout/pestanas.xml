@@ -12,59 +12,76 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
-
+    
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:gravity="bottom" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0px"
-            android:layout_marginLeft="0px"
-            android:layout_marginRight="0px"
-            android:layout_marginTop="0px"
-            android:onClick="OnClickSugerencias"
-            android:text="@string/sugerencias"
-            android:textSize="@dimen/tam" />
+        <TabHost
+            android:id="@android:id/tabhost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1" >
 
-        <Button
-            android:id="@+id/cuenta"
-            android:layout_width="79dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0px"
-            android:layout_marginRight="0px"
-            android:onClick="OnClickCuenta"
-            android:text="@string/cuenta"
-            android:textSize="@dimen/tam" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/pedido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="OnClickPedido"
-            android:text="@string/pedido"
-            android:textSize="@dimen/tam" />
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/linea_azul_vertical"
+                    android:dividerPadding="8dp" >
 
-        <Button
-            android:id="@+id/reparto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="OnClickReparto"
-            android:text="@string/reparto"
-            android:textSize="@dimen/tam" />
+                </TabWidget>
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:id="@+id/tab1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tab3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:id="@+id/tab4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </TabHost>
+
     </LinearLayout>
+
     <TextView
         android:id="@+id/textViewBienvenidarestaurante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
         android:gravity="center" />
 
 </RelativeLayout>
-  
