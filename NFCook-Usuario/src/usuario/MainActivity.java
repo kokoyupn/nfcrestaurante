@@ -34,20 +34,19 @@ public class MainActivity extends Activity{
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        //Quitamos barra de titulo de la aplicacion
+    	//Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Quitamos barra de notificaciones
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         importarBaseDatatos();
     	crearRestaurantesListView();
     }
     
-private void crearRestaurantesListView() {
-    	
+    private void crearRestaurantesListView() {	
     	// Vemos cuantos restaurantes hay en la base de datos para cargar sus logos de forma generica
     	nombresRestaurantes = new HashSet<String>();
     	try{
@@ -72,7 +71,6 @@ private void crearRestaurantesListView() {
     	while(it.hasNext()){
     		nombre = it.next();
     		logosRestaurantesListaInicial.add(getResources().getIdentifier(nombre.toLowerCase(),"drawable",this.getPackageName()));
-    		Log.i("COJONES: ", nombre);
     		logo = "logo_"+nombre.toLowerCase();
     		logosRestaurantes.add(getResources().getIdentifier(logo,"drawable",this.getPackageName()));
     	}
@@ -84,12 +82,10 @@ private void crearRestaurantesListView() {
 			public void onItemClick(AdapterView<?> a, View v, int position, long id){
 				lanzar(position); 
 			}
-        });
-		
+        });	
 	}
     
     private void importarBaseDatatos(){
-    	//Para importar la base de Assets
         try{
         	sql = new Handler(getApplicationContext()); 
         	db = sql.open();
@@ -113,8 +109,6 @@ private void crearRestaurantesListView() {
 		intent.putExtra("nombreRestaurante", nombreRestaurante);
     	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
     	startActivity(intent);
-    }
-	
-	
+    }	
 }
 

@@ -209,10 +209,6 @@ public class TabsFragment extends Fragment {
 							intent.putExtra("nombreRestaurante", restaurante);
 							intent.putExtra("nombrePlato", nombrePlato);
 					    	startActivity(intent);
-							/*
-					        m.replace(R.id.RelativeLayout1, fragmentDescripcion);
-					        m.addToBackStack("DescripcionPlato");
-					        m.commit();*/
 					        return false;
 					   }
 					});

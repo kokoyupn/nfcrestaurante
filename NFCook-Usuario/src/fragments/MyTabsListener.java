@@ -8,10 +8,12 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 public class MyTabsListener implements TabListener {
-	public Fragment fragment;
+	private Fragment fragment;
+	private String nombreTab;
  
-	public MyTabsListener(Fragment fragment) {
+	public MyTabsListener(Fragment fragment, String nombreTab) {
 		this.fragment = fragment;
+		this.nombreTab = nombreTab;
 	}
  
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
@@ -23,7 +25,6 @@ public class MyTabsListener implements TabListener {
 	}
  
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		ft.remove(fragment);
-		
+		ft.remove(fragment);	
 	}
 }
