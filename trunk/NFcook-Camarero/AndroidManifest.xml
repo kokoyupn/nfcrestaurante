@@ -55,9 +55,10 @@
 
         </activity>
          <activity
-            android:name=".VentanaMesa">
+            android:name=".AnadirBebidas">
 
         </activity>
+         
         
     </application>
 
