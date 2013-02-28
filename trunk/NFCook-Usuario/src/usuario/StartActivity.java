@@ -19,17 +19,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -82,6 +81,19 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
 		
 		// Cargamos en el fragment la pantalla de bienvenida del restaurante
 		lanzarPantallaBienvenida();
+    }
+    
+    /* Metodo encargado de implementar el botón back.
+     * De la pantalla de navegación de platos, si se pulsa back, volverá a la pantalla 
+     * de selección de restaurantes.
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Si pulsamos el botón back
+    	if (keyCode == KeyEvent.KEYCODE_BACK) {
+           finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
      
     // Importamos la base de datos
@@ -191,12 +203,15 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
         int numeroTabs = tabs.getTabWidget().getChildCount();
         for(int i=0; i<numeroTabs; i++){
             tabs.getTabWidget().getChildAt(i).setOnTouchListener(new View.OnTouchListener() {
-            	// Implementamos la acción de cada tab cuando se pinche en él
-            	// Es distinto del onTabChange, puesto que auío entra si pulsamos sobre un tab ya seleccionado
+            	/* Implementamos la acción de cada tab cuando se pinche en él
+            	 * Es distinto del onTabChange, puesto que auío entra si pulsamos 
+            	 * sobre un tab ya seleccionado.
+            	 */
             	public boolean onTouch(View v, MotionEvent event){
             		// Cuando pulsamos el tab
             		if(event.getAction()==MotionEvent.ACTION_UP){
 	                	if(tabs.getCurrentTabTag().equals("tabPromociones")){
+	                		// Falta hacer el layout y su funcionalidad
 	        				Log.i("touch", "Promociones");
 	        			}else if(tabs.getCurrentTabTag().equals("tabPedidoSincronizar")){
 	        				Log.i("touch", "Pedido a Sinccronizar");
@@ -213,6 +228,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
 	        		        m.replace(R.id.RelativeLayout1, fragmentCuenta);
 	        		        m.commit();
 	        			}else if(tabs.getCurrentTabTag().equals("tabCalculadora")){
+	        				// Falta hacer el layout y su funcionalidad
 	        				Log.i("touch", "Calculadora");
 	        			}
             		}
@@ -251,6 +267,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
 		if(tabId.equals("tabPromociones")){
+			// Falta hacer el layout y su funcionalidad
 			Log.i("changed", "Promociones");
 		}else if(tabId.equals("tabPedidoSincronizar")){
 			Log.i("changed", "Pedido a Sinccronizar");
@@ -269,6 +286,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
 	        m.addToBackStack("Cuenta");
 	        m.commit();
 		}else if(tabId.equals("tabCalculadora")){
+			// Falta hacer el layout y su funcionalidad
 			Log.i("changed", "Calculadora");
 		}
 	}
@@ -278,6 +296,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
         return tabInferiorContentView;
 	}
 	
+	// Metodo encargado de lanzar la pantalla de bienvenida
 	public void lanzarPantallaBienvenida(){
 		Bundle bundle = getIntent().getExtras();
 		// Mostramos la pantalla inicial del restaurante con su logo y un mensaje de bienvenida

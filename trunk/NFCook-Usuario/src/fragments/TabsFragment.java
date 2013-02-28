@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.example.nfcook.R;
 
 
-public class TabsFragment extends Fragment {
+public class TabsFragment extends Fragment{
 		
 		private static final String NOMBRE = "NOMBRE";  
 		private static final String DESCRIPCION = "DESCRIPCION";  

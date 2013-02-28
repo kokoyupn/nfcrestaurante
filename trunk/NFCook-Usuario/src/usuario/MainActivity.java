@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +43,9 @@ public class MainActivity extends Activity{
         
         importarBaseDatatos();
     	crearRestaurantesListView();
+    	
+    	// Cerramos la base de datos
+    	sql.close();
     }
     
     private void crearRestaurantesListView() {	
