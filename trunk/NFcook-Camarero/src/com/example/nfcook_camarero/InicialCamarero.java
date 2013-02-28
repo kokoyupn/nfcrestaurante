@@ -22,8 +22,10 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -39,8 +41,8 @@ public class InicialCamarero extends Activity{
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
     
-    private HandlerGenerico sqlPedido, sqlMiBase;
-	private SQLiteDatabase dbPedido, dbMiBase;
+    private HandlerGenerico sqlMesas, sqlMiBase;
+	private SQLiteDatabase dbMesas, dbMiBase;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,21 +79,22 @@ public class InicialCamarero extends Activity{
        
       //Para importar la base de Assets
         try{
-			sqlPedido = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Pedido.db" );
+			sqlMesas = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db" );
 			
-			dbPedido= sqlPedido.open();
+			dbMesas= sqlMesas.open();
 			}catch(SQLiteException e){
 			System.out.println("CATCH");
 			Toast.makeText(getApplicationContext(),"NO EXISTE LA BASE DE DATOS",Toast.LENGTH_SHORT).show();
 		}
         try{
-        	String[] infoMesa = new String[]{"NumMesa"};
-        	Cursor cPPedido = dbPedido.query("Pedido", infoMesa, null,null,null, null,null);
+        	String[] infoMesa = new String[]{"NumMesa","Personas"};
+        	Cursor cPMesas = dbMesas.query("Mesas", infoMesa, null,null,null, null,null);
     	
         	//añadir mesas que ya tiene
-        	while(cPPedido.moveToNext()){
+        	while(cPMesas.moveToNext()){
         		MesaView mesa1= new MesaView(this);
-        		mesa1.setNumMesa(cPPedido.getString(0));
+        		mesa1.setNumMesa(cPMesas.getString(0));
+        		mesa1.setNumPersonas(cPMesas.getString(1));
         		if(!existeMesa(mesa1))
         			mesas.add(mesa1);
         	}
@@ -106,7 +109,7 @@ public class InicialCamarero extends Activity{
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
             	//nos llevara a la pantalla siguiente          	
             	MesaView pulsada= mesas.get(position);
-            	dbPedido.close();
+            	dbMesas.close();
             	Intent intent = new Intent(InicialCamarero.this,Mesa.class);//ir a VentanaMesa
         		intent.putExtra("NumMesa", pulsada.getNumMesa());
         		Log.i("numMesa", pulsada.getNumMesa());
@@ -114,7 +117,18 @@ public class InicialCamarero extends Activity{
                 }
         });
         
-            
+        // onLongClick botón añadir
+        Button botonAniadir = (Button) findViewById(R.id.aniadirMesa);
+        botonAniadir.setOnLongClickListener(new OnLongClickListener() {
+
+            public boolean onLongClick(View v) {
+                onAniadirClick(v);
+                return true;
+            }
+        });   
+       
+        
+        
 		}//fin del oncreate
 	
     public boolean existeMesa(MesaView mesa){
@@ -130,7 +144,7 @@ public class InicialCamarero extends Activity{
  
 	
         public void onAniadirClick(View v) {
-           AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
+            AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
             alert.setMessage("Introduce el número de la mesa: "); //mensaje
             final EditText input = new EditText(InicialCamarero.this); //creas un Edit Text
             int maxLength = 10; //si quieres ponerle caracteristicas al EditText
@@ -155,7 +169,7 @@ public class InicialCamarero extends Activity{
             			}else{
 	            			gridviewCam = (GridView) findViewById(R.id.gridViewInicial);
 	                    	MesaView mesa2 = new MesaView(InicialCamarero.this);
-	                    	mesa2.setNumMesa("" + value);
+	                    	mesa2.setNumMesa("" + value);	
 	                    	mesas.add(mesa2);
 	                    	adapterCam = new InicialCamareroAdapter(InicialCamarero.this,R.layout.imagen_mesa, mesas);
 	                    	gridviewCam.setAdapter(adapterCam);
@@ -205,12 +219,31 @@ public class InicialCamarero extends Activity{
 		                    	registro.put("Observaciones",  "" + datos.get(j).getObservaciones());
 		                    	registro.put("Extras", extr);
 		                    	registro.put("FechaHora", formatteDate + " " + formatteHour);
-		                    	registro.put("NombrePlato", nombre);
-		                    	registro.put("PrecioPlato", precio);
+		                    	registro.put("Nombre", nombre);
+		                    	registro.put("Precio", precio);
 		                	   
-		                	   	dbPedido.insert("Pedido", null, registro);
+		                	   	dbMesas.insert("Mesas", null, registro);
 		                	   
 	                    	}
+	                    	//Mensaje para elegir el número de personas
+            				
+            				AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
+            	            alert.setMessage("¿Cuántas personas van a sentarse?: "); //mensaje
+            	            final EditText input = new EditText(InicialCamarero.this); //creas un Edit Text
+            	            int maxLength = 10; //si quieres ponerle caracteristicas al EditText
+            	            InputFilter[] FilterArray = new InputFilter[1];
+            	            FilterArray[0] = new InputFilter.LengthFilter(maxLength);
+            	            input.setFilters(FilterArray);      //por ejemplo maximo 10 caracteres
+            	            alert.setView(input); //añades el edit text a la vista del AlertDialog
+            	            alert.setPositiveButton("Cancelar", null);
+            	            alert.setNegativeButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
+            	            	@SuppressLint("SimpleDateFormat")
+            					public void onClick(DialogInterface dialog, int whichButton) {
+            	            		Editable value =input.getText();
+            	            		
+            	            	}
+            	            });
+            	            alert.show();
 	                    }
             		}
                 }
@@ -245,7 +278,7 @@ public class InicialCamarero extends Activity{
             			}else{//eliminamos la mesa
 	                        //Eliminar un registro
 	                     	String[] args = new String[]{val};
-	                     	dbPedido.execSQL("DELETE FROM Pedido WHERE NumMesa=?", args);
+	                     	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
 	                        //Lo eliminamos tambien de la lista de mesas	
 	                     	Boolean enc = false;
 	                     	Iterator<MesaView> it = mesas.iterator();

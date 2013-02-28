@@ -37,18 +37,21 @@ public class InicialCamareroAdapter extends ArrayAdapter<MesaView>{
         if(row == null){
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
-            row.setLayoutParams (new GridView.LayoutParams (85, 85));
+            row.setLayoutParams (new GridView.LayoutParams (110, 110));
             row.setPadding(8,8,8,8);
             
             holder = new MesaHolder();
-            holder.txtTitle = (TextView)row.findViewById(R.id.textViewMesa); 
+            holder.txtTitle = (TextView)row.findViewById(R.id.textViewMesa);
+            holder.txtPersonas = (TextView)row.findViewById(R.id.textViewPersonas);
             
             row.setTag(holder);
         }else {
             holder = (MesaHolder)row.getTag();
         }
-        String s = mesas.get(position).getNumMesa().toString();
-        holder.txtTitle.setText(s);
+        String m = mesas.get(position).getNumMesa().toString();
+        holder.txtTitle.setText(m);
+        String p = mesas.get(position).getNumPersonas().toString();
+        holder.txtPersonas.setText(p);
         
         return row;
     }
@@ -56,5 +59,6 @@ public class InicialCamareroAdapter extends ArrayAdapter<MesaView>{
     static class MesaHolder {
         ImageView imgIcon;
         TextView txtTitle;
+        TextView txtPersonas;
     }
 }

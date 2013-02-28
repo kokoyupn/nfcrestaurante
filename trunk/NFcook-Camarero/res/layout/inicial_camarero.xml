@@ -21,31 +21,52 @@
         android:verticalSpacing="15dp" >
 
     </GridView>
-
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.73" >
-
+
         <Button
             android:id="@+id/aniadirMesa"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.73"
-            android:onClick="onAniadirClick"
-            android:text="Añade mesa" />
-
-
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/anadir_mesa_icono"
+            android:clickable="false"
+            android:longClickable="true" />
 
         <Button
             android:id="@+id/eliminarMesa"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.73"
-            android:onClick="onClickEliminarMesa"
-            android:text="Elimina mesa" />
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/eliminar_mesa_icono"
+            android:onClick="onClickEliminarMesa" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.73" >
+
+        <TextView
+            android:id="@+id/textViewAnadirMesa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="57dp"
+            android:text="Añadir Mesa" />
+
+        <TextView
+            android:id="@+id/textViewQuitarMesa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="43dp"
+            android:text="Quitar Mesa" />
 
     </LinearLayout>
 
