@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -29,8 +30,8 @@ public class Mesa extends Activity {
 	private TableLayout platos;
 	
 	//CAMBIAR DIRECCION porque no ES IGUAL EN TODOS LOS PCs:
-	String rutaPedido="/data/data/com.example.camarero/Mesas.db";
-	String rutaHistorico="/data/data/com.example.camarero/Historico.db";
+	String rutaPedido="/data/data/com.example.nfcook_camarero/Mesas.db";
+	String rutaHistorico="/data/data/com.example.nfcook_camarero/Historico.db";
 	
 
 	@Override
@@ -221,6 +222,15 @@ public class Mesa extends Activity {
             public void onClick(View view) {
             	try{
             		dbPedido.openDatabase(rutaPedido, null,SQLiteDatabase.OPEN_READWRITE);
+            		String[] campos = new String[]{"idCamarero", "Personas"};
+         	  	  	Cursor cursorAnadirBebida = dbPedido.query("Mesas",campos, "NumMesa = numMesa" ,null, null,null, null); // NO HE PODIDO PROBARLO
+         	  		// PROBAR---------------------------------------------
+            		Intent intent = new Intent(Mesa.this, AnadirBebidas.class);
+            		intent.putExtra("numMesa", numMesa);
+            		intent.putExtra("idCamarero", cursorAnadirBebida.getString(0));
+            		intent.putExtra("personasMesa", cursorAnadirBebida.getString(1));
+            		startActivity(intent);
+            		// PROBAR---------------------------------------------
             	}catch(Exception e){
             		System.out.println("Error funcionalidad de boton AñadirBebida");
             		
