@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mesa_icono" >
-
-    <TextView
-        android:id="@+id/textViewMesa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="TextView"
-        android:textColor="@android:color/white"
-        android:textSize="22dp" />
+    android:orientation="vertical" >
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.50" >
+
+        <TextView
+            android:id="@+id/textViewPersonas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="25dp"
+            android:text="0"
+            android:textColor="@android:color/black"
+            android:textSize="40dp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/personas_icono" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.64"
+        android:background="@drawable/mesa_icono" >
+
+        <TextView
+            android:id="@+id/textViewMesa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="TextView"
+            android:textColor="@android:color/white"
+            android:textSize="22dp" />
+    </RelativeLayout>
+
+</LinearLayout>

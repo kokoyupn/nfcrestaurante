@@ -130,10 +130,15 @@ public class HandlerGenerico extends SQLiteOpenHelper {
     			 	query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
     					 "TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER)";
     		 }else{
-    			 if (DB_NAME == "Pedido.db"){
-    			 	 query="CREATE TABLE Pedido(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
- 	 					"Observaciones TEXT,Extras TEXT, FechaHora TEXT, NombrePlato TEXT, PrecioPlato INTEGER)";	
-
+    			 if (DB_NAME == "Mesas.db"){  
+    			 	 query="CREATE TABLE Mesas(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
+ 	 					"Observaciones TEXT,Extras TEXT, FechaHora TEXT, Nombre TEXT, Precio INTEGER, Personas INTEGER)";	
+    			 	 // NumMesa es el número que identifica la mesa
+    			 	 // IdCamarero identifica a cada camarero
+    			 	 // IdPlato identifica a cada plato
+    			 	 // Nombre indica el nombre de cada plato
+    			 	 // Precio indica el precio de cada plato
+    			 	 // Personas indica el número de personas que hay en la mesa
     		 		}
     		 }
  			 
