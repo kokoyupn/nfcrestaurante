@@ -1,5 +1,8 @@
 package com.example.nfcook_camarero;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import android.os.Bundle;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -164,18 +167,20 @@ public class Mesa extends Activity {
 		cobrar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
-            		String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio"};
-              	  	Cursor c = dbPedido.query("Mesas", campos, null,null, null,null, null);
+            		Cursor filasPedido = dbPedido.query("Mesas", null, null,null, null,null, null);
+            		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
             		
-            		while(c.moveToNext()){
+            		while(filasPedido.moveToNext()){
             			//Añades los platos a la base de datos del historico
             			ContentValues nuevo = new ContentValues();
-            			nuevo.put("NumeroMesa",numMesa);
-            			nuevo.put("Nombre",c.getString(0));
-	            		nuevo.put("Observaciones",c.getString(1) );
-	            		nuevo.put("Extras", c.getString(2));
-	            		nuevo.put("Precio",c.getString(3));
-	            		dbHistorico.insert("Historico", null, nuevo);
+            			
+            			for (int i=0;i<filasPedido.getColumnCount();i++)
+            				for (int j=0;j<filasPedido.getColumnCount();j++){
+            					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j)))
+            						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
+            			
+            				}
+            			dbHistorico.insert("Historico", null, nuevo);
 	            		
 	            		//Eliminas los platos de la lista
 	            		platos.removeViewAt(0);            			
@@ -233,68 +238,55 @@ public class Mesa extends Activity {
             		int totalPlatos=platos.getChildCount();
             		int i=0;
             		float precio=0;
+            		Cursor c = dbPedido.query("Mesas", null, null,null, null,null, null);
+                   	ArrayList<ContentValues> temporal = new ArrayList<ContentValues>();
             		
-            		//Se eliminan de la tabla las filas seleccionadas---------------------
-            		while(i<totalPlatos-1){
+            		while(i<totalPlatos-1 && c.moveToNext()){
             			TableRow fila = (TableRow)platos.getChildAt(i);
                    		CheckBox cbox= (CheckBox) fila.getChildAt(0);
                    		
                    		if ( cbox.isChecked() ){
-                   			//Se elimina de la lista
-                   			platos.removeViewAt(i);
-                   			totalPlatos--;
+                   			platos.removeViewAt(i);//Se elimina de la lista
+                   			totalPlatos--;//Se resta 1 al total de platos
+                   			
                    		}else{
-                        	TextView precFila= (TextView) fila.getChildAt(4);
-                        	precio = precio + Float.parseFloat(precFila.getText().toString());
-                        	i++;
+                   			//Se guardan todas las columnas y contenido en arrayList provisional
+                   			ContentValues nuevo = new ContentValues();
+                   			
+                   			for (int j=0;j<c.getColumnCount();j++){
+                   				nuevo.put(c.getColumnName(j), c.getString(j));
+                   				if(c.getColumnName(j).equals("Precio"))
+                   					precio = precio + Float.parseFloat(c.getString(j));
+                   			}
+                   			temporal.add(nuevo);
+                   			i++;
                         }
                    	}
-            		//Se eliminan de la tabla las filas seleccionadas---------------------
-                   		
-               		//Se pone el nuevo precio total---------------------------------------
+            		
+            		//Se pone el nuevo precio total---------------------------------------
             		TableRow filaPrecio = (TableRow)platos.getChildAt(platos.getChildCount()-1);
                		TextView precioFinal= (TextView) filaPrecio.getChildAt(4);
                		precioFinal.setText(String.valueOf(precio));
-               		//Se pone el nuevo precio total---------------------------------------
                		
-               		
-            		//La borras porque la vas a rellenar de nuevo con lo que queda(o no si esta vacio)
+            		//Se borra y se rellena con lo que queda(o no si esta vacio)
                		dbPedido.delete("Mesas","1", null);
+               		Iterator<ContentValues> it = temporal.iterator();
+               		while(it.hasNext()){
+               			ContentValues contenido = it.next();
+               			dbPedido.insert("Mesas", null, contenido);
+               		}
                		
-               		
-               		//Actualizar la base de datos de Pedido--------------------------
                		if(totalPlatos<=1)//Eliminas la fila del precio si solo quedan la fila del precio
            				platos.removeViewAt(0);
            			
-               		else{//Si queda algun plato, actualizas la base de datos de Pedido
-               			for(int j=0;j<platos.getChildCount()-1;j++){
-               				TableRow reañadir = (TableRow)platos.getChildAt(j);
-               				
-                   			String nombre = ((TextView) reañadir.getChildAt(1)).getText().toString();
-                   			String obs = ((TextView) reañadir.getChildAt(2)).getText().toString();
-                   			String ext = ((TextView) reañadir.getChildAt(3)).getText().toString();
-                   			String pre = ((TextView) reañadir.getChildAt(4)).getText().toString();
-                   			
-                   			ContentValues nuev = new ContentValues();
-                   			nuev.put("NumMesa", numMesa);
-                   			nuev.put("Nombre", nombre);
-                   			nuev.put("Observaciones", obs);
-                   			nuev.put("Extras", ext);
-                   			nuev.put("Precio", pre);
-                   			dbPedido.insert("Mesas", null, nuev);
-               			}
-               		}
-               		//Actualizar la base de datos de Pedido--------------------------
-               		
-            		
-	        	}catch(Exception e){
-	        		System.out.println("Error funcionalidad de boton Eliminar");
+            	}catch(Exception e){
+	        		System.out.println("Catch funcionalidad de boton Eliminar");
 	        		
 	        	}
             }
         });
 		//Boton Eliminar------------------------------------------------------------------
-		
+			
 	}
 	
 	
