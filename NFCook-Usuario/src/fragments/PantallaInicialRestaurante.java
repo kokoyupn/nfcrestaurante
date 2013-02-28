@@ -27,7 +27,7 @@ public class PantallaInicialRestaurante extends Fragment{
 		// Mal introducido el nombre del Foster en la base de datos
 		if(restaurante.equals("Foster"))
 			restaurante = "Foster's Hollywood";
-		bienvenida.setText("Bienvenido a "+restaurante);
+		bienvenida.setText("Bienvenidos a \n"+restaurante);
 		bienvenida.setTextSize(25);
 		return vista;
     }
