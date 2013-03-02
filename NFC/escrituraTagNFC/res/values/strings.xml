@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">escrituraTagNFC</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="botonEscribir">Escribir en Tag</string>
+    <string name="textoOculto">Escribe el texto</string>
+    
+    <string name="tag_no_detectada">Tag no detectada</string>
+    <string name="escritura_ok">Escritura completada. Salimos del metodo write</string>
+    <string name="error_escritura">Error durante escritura. Seguro que la tarjeta está cerca?</string>
+    <string name="tag_detectada">Tag detectada: </string>
+
+</resources>
