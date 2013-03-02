@@ -6,59 +6,60 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+public class InicialCamareroAdapter extends BaseAdapter {
+	private ArrayList<MesaView> mesas;
+	private LayoutInflater l_Inflater;
+	
 
+	public InicialCamareroAdapter(Context context, ArrayList<MesaView> mesas) {
+		this.mesas = mesas;
+		this.l_Inflater = LayoutInflater.from(context);
+	}
 
-public class InicialCamareroAdapter extends ArrayAdapter<MesaView>{
+	public int getCount() {
+		return mesas.size();
+	}
 
-    Context context; 
-    int layoutResourceId;    
-    ArrayList<MesaView> mesas ;
-    
-    public InicialCamareroAdapter(Context context, int layoutResourceId, ArrayList<MesaView> mesas) {
-        super(context, layoutResourceId, mesas);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.mesas = mesas;
-    }
+	public Object getItem(int position) {
+		return mesas.get(position);
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        MesaHolder holder = null;
-        
-        if(row == null){
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-            row.setLayoutParams (new GridView.LayoutParams (110, 110));
-            row.setPadding(8,8,8,8);
-            
-            holder = new MesaHolder();
-            holder.txtTitle = (TextView)row.findViewById(R.id.textViewMesa);
-            holder.txtPersonas = (TextView)row.findViewById(R.id.textViewPersonas);
-            
-            row.setTag(holder);
-        }else {
-            holder = (MesaHolder)row.getTag();
-        }
-        String m = mesas.get(position).getNumMesa().toString();
-        holder.txtTitle.setText(m);
-        String p = mesas.get(position).getNumPersonas().toString();
-        holder.txtPersonas.setText(p);
-        
-        return row;
-    }
-    
-    static class MesaHolder {
-        ImageView imgIcon;
-        TextView txtTitle;
-        TextView txtPersonas;
-    }
+	public long getItemId(int position) {
+		return position;
+	}
+
+	public View getView(int position, View convertView, ViewGroup parent) {
+		TextView textNumMesa;
+		TextView textPersonas;
+		if (convertView == null) {
+			convertView = l_Inflater.inflate(R.layout.imagen_mesa, null);
+			convertView.setLayoutParams (new GridView.LayoutParams (110, 135));
+			textNumMesa = (TextView) convertView.findViewById(R.id.textViewMesa);
+			textPersonas = (TextView) convertView.findViewById(R.id.textViewPersonas);
+			//coger el numMesa y el numPersonas de las mesas
+			textNumMesa.setText(mesas.get(position).getNumMesa().toString());
+			textPersonas.setText(mesas.get(position).getNumPersonas().toString());
+			
+			convertView.setTag(textNumMesa);
+			convertView.setTag(textPersonas);
+		} else {
+			textNumMesa = (TextView) convertView.getTag();
+			textPersonas = (TextView) convertView.getTag();
+		
+			textNumMesa.setText(mesas.get(position).getNumMesa().toString());
+			textPersonas.setText(mesas.get(position).getNumPersonas().toString());
+		}
+		return convertView;
+	}
+
 }

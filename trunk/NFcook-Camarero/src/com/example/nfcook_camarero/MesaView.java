@@ -6,10 +6,10 @@ import android.widget.TextView;
 
 public class MesaView extends LinearLayout{
  
-	private TextView numMesa;
-	private String numM; // atributo que indica el numero de la mesa en formato String para facilitar accesos
+    private TextView numMesa;
     private TextView numPersonas;
-    private String numP;
+    private String numM; // atributo que indica el numero de la mesa en formato String para facilitar accesos
+    private String numP;  // atributo que indica el numero de personasen una mesa en formato String para facilitar accesos
     
     public MesaView(Context context) {
         super(context);
@@ -31,6 +31,14 @@ public class MesaView extends LinearLayout{
     	numP=num;
     }
     public String getNumPersonas(){
-    	return numM;
+    	return numP;
     }
+
+	public void setImageResource(MesaView mesaView) {
+		numMesa = mesaView.numMesa;
+		numPersonas = mesaView.numPersonas;
+		numM = mesaView.numM;
+		numP = mesaView.numP;
+		
+	}
 }

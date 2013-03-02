@@ -1,48 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
+    android:layout_width="100dp"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.50" >
 
-        <TextView
-            android:id="@+id/textViewPersonas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="25dp"
-            android:text="0"
-            android:textColor="@android:color/black"
-            android:textSize="40dp" />
+
+
+
+ 
+
+    <FrameLayout
+        android:id="@+id/FrameLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+
+
+
+
+
+
+
+
+
+
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/personas_icono" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.64"
-        android:background="@drawable/mesa_icono" >
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/mesa_icono" />
 
         <TextView
             android:id="@+id/textViewMesa"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="TextView"
+            android:paddingLeft="25dp"
+            android:paddingTop="20dp"
+            android:text="22"
             android:textColor="@android:color/white"
-            android:textSize="22dp" />
-    </RelativeLayout>
+            android:textSize="20dp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_gravity="left" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/personas_icono" />
+
+        <TextView
+            android:id="@+id/textViewPersonas"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20dp"
+            android:text="Def"
+            android:textSize="18dp" />
+
+    </LinearLayout>
 
 </LinearLayout>
