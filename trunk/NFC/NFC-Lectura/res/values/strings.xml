@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NFC-Lectura</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+	 <string name="error_detected">Tag no detectada!</string>
+    <string name="ok_writing">Se ha leido el mensaje de la tarjeta</string>
+    <string name="error_reading">Error durante lectura. Seguro que la tarjeta está cerca?</string>
+    <string name="ok_detection">Tag detectada </string>
+</resources>
