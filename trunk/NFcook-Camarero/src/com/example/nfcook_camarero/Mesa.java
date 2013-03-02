@@ -64,11 +64,11 @@ public class Mesa extends Activity {
 		    
 		    for(int i=0;i<c.getColumnCount();i++){
 	  	    	TextView tituloCabecera = new TextView(getApplicationContext());
-	  	    	tituloCabecera.setText(c.getColumnName(i));
+	  	    	tituloCabecera.setText(c.getColumnName(i).substring(0, 6));
 	  	    	tituloCabecera.setTextSize(12);
 	  	    	tituloCabecera.setTypeface(Typeface.DEFAULT_BOLD);
 	  	    	tituloCabecera.setTextColor(Color.BLACK);
-	  	    	tituloCabecera.setWidth(90);
+	  	    	tituloCabecera.setWidth(95);
 	  	  		cabecera.addView(tituloCabecera);
 	  	     }
 		     //Cabeceras-------------------------------------------------------------------
@@ -92,7 +92,7 @@ public class Mesa extends Activity {
 					contenido.setTextSize(10);
 					contenido.setPadding(0, 0, 0, 5);
 					contenido.setTextColor(Color.BLACK);
-					contenido.setWidth(90);
+					contenido.setWidth(95);
 					plato.addView(contenido);
 					
 				}
@@ -101,14 +101,26 @@ public class Mesa extends Activity {
 				Button editar = (Button)inflater.inflate(R.layout.editarboton,plato,false);
 				editar.setOnClickListener(new View.OnClickListener() {
 		            public void onClick(View view) {
-		            	/*Intent intent = new Intent(contexto,DescripcionPlato.class);
-		    			startActivity(intent);*/
+		            	int numeroFila=0;
+		            	
+		            	Cursor filaPedido = dbPedido.query("Mesas", null, null,null, null,null, null);
+	            		
+		            	while(filaPedido.moveToNext()){
+		            		Button botonPulsado = (Button)view;
+		            		
+		            		TableRow filaActual = (TableRow)platos.getChildAt(numeroFila);
+	                   		Button botonActual = (Button) filaActual.getChildAt(5);
+		            		
+		            		if( botonPulsado == botonActual){
+		            			//Crear un InfoPlato con la informacion de filaPedido
+		            			/*Intent intent = new Intent(contexto,DescripcionPlato.class);
+		    					startActivity(intent);*/
+		            		}
+		            		numeroFila++;
+		            	}
 		            }
 		        });
 				editar.setTextSize(12);
-				//El tamaño del boton se ajusta lo que ocupe la fila de alto, 
-				//por si ocupa mas de una linea el nombre,descripcion u 
-				//observaciones del plato
 				plato.addView(editar);
 				
 				platos.addView(plato);
