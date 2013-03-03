@@ -7,9 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.PriorityQueue;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -19,18 +17,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -69,21 +62,21 @@ public class InicialCamarero extends Activity{
         
         //Creamos un datos (lo que nos llega del chip) para probarlo
         ArrayList<String> extras = new ArrayList<String>();
-        extras.add("salsa barbacoa");
-        extras.add("poco hecha");
+        extras.add("Barbacoa");
+       // extras.add("poco hecha");
 	    InfoPlato info = new InfoPlato();
 	    info.setExtras(extras);
 	    info.setObservaciones("Sin pepinillo");
-	    info.setIdPlato("V10");
+	    info.setIdPlato("fh4");
 	   
 	    ArrayList<String> extras2 = new ArrayList<String>();
-	    extras2.add("salsa ranchera");
-	    extras2.add("poco hecha");
-	    extras2.add("guacamole");
+	    extras2.add("Barbacoa");
+	    extras2.add("Poco hecha");
+	    extras2.add("Patata Asada");
 	    InfoPlato info2 = new InfoPlato();
 	    info2.setExtras(extras2); 
 	    info2.setObservaciones("Sin sal");
-	    info2.setIdPlato("V14");
+	    info2.setIdPlato("fh11");
 	   
 	    datos = new  ArrayList<InfoPlato>(); 
 	    datos.add(info);
@@ -216,22 +209,22 @@ public class InicialCamarero extends Activity{
 				//Comprobamos que ha introducido un numero porque si no a la hora de ordenar 
 				//puede mezclar numeros y letras y no es valido
 				if(!esNumero(numMesa.getText().toString())){
-					Toast.makeText(InicialCamarero.this, "La mesa ha de ser un numero", Toast.LENGTH_LONG).show();           			
+					Toast.makeText(InicialCamarero.this, "La mesa ha de ser un número", Toast.LENGTH_LONG).show();           			
         		}else{
 					String numeroMesa = numMesa.getText().toString();
 					String numeroPersonas = numPersonas.getText().toString();
 					if(numeroMesa.equals("")){
 	        			Toast.makeText(InicialCamarero.this, "Introduce la mesa", Toast.LENGTH_LONG).show();           			
 	        		}else if(numeroPersonas.equals("")){
-	        			Toast.makeText(InicialCamarero.this, "Introduce el numero de personas", Toast.LENGTH_LONG).show(); 
+	        			Toast.makeText(InicialCamarero.this, "Introduce el número de personas", Toast.LENGTH_LONG).show(); 
 	        		}else if(!esNumero(numPersonas.getText().toString())){
-	        			Toast.makeText(InicialCamarero.this, "La cantidad de personas ha de ser un numero", Toast.LENGTH_LONG).show();
+	        			Toast.makeText(InicialCamarero.this, "La cantidad de personas ha de ser un número", Toast.LENGTH_LONG).show();
 	        		}else{//ha introducido la mesa y numero de personas
 	        			//Creamos una mesa aux para buscarla en la base de datos y ver si ya existe previamente
 	        			MesaView mesaBuscarRepe = new MesaView(getApplicationContext());
 	        			mesaBuscarRepe.setNumMesa(numeroMesa);
 	        			if (existeMesa(mesaBuscarRepe)){// si ya existe la mesa no la metemos y sacamos un mensaje
-	        				Toast.makeText(InicialCamarero.this, "Esa mesa ya está sendo atendida", Toast.LENGTH_LONG).show();
+	        				Toast.makeText(InicialCamarero.this, "Esa mesa ya está siendo atendida", Toast.LENGTH_LONG).show();
 	        			}else{//la mesa no existe. La introducimos     				
 	            			gridviewCam = (GridView) findViewById(R.id.gridViewInicial);
 	                    	MesaView mesa2 = new MesaView(InicialCamarero.this);
@@ -275,11 +268,12 @@ public class InicialCamarero extends Activity{
 		                    	String[] infoMesa2 = new String[]{"Nombre","Precio"};
 		                       	String[] info = new String[]{datos.get(j).getIdPlato()};
 		                   		Cursor cPMiBase = dbMiBase.query("Restaurantes", infoMesa2, "Id=?" ,info,null, null,null);
-		                    	
-		                   		cPMiBase.moveToNext();
-		                   		nombre=cPMiBase.getString(0);
-		                   		precio=cPMiBase.getInt(1);
 		                   		
+		                   		cPMiBase.moveToNext();
+		                   		if(cPMiBase.getCount() > 0){
+		                   			nombre=cPMiBase.getString(0);
+		                   			precio=cPMiBase.getInt(1);
+		                   		}
 		                    	//Insertamos el plato en la tabla Platos
 		                    	ContentValues registro = new ContentValues();
 		                    	registro.put("NumMesa", numeroMesa);

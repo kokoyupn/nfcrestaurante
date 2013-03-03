@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="onAniadirClick"
     android:orientation="vertical" >
 
     <TextView
@@ -10,8 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.10"
+        android:background="#BFE4F2"
         android:gravity="center_horizontal|center_vertical"
-        android:text="Mesas" />
+        android:text="Mesas"
+        android:textSize="22sp" 
+        android:textStyle="bold"/>
 
     <GridView
         android:id="@+id/gridViewInicial"
@@ -68,9 +70,10 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="75dp"
+            android:layout_width="6dp"
+            android:layout_height="30dp"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/linea_azul_vertical" />
 
         <LinearLayout
