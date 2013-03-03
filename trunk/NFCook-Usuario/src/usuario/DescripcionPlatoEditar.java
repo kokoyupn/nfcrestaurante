@@ -7,7 +7,6 @@ import com.example.nfcook.R;
 import fragments.PedidoFragment;
 
 import baseDatos.Handler;
-import adapters.DescripcionPlatoAdapter;
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
 import adapters.PadreExpandableListEditar;
@@ -84,15 +83,15 @@ public class DescripcionPlatoEditar extends Activity {
         Cursor cursor =db.query("Restaurantes",campos,"Id =?",datos,null,null,null);  
       
     	expandableListPedidoEditar = (ExpandableListView) findViewById(R.id.expandableExtras);
-        
-    	cursor.moveToNext();
+    	        
+    	cursor.moveToFirst();
 		double precio = cursor.getDouble(1);
         String nombreImagen = cursor.getString(2);
         String descripcion = cursor.getString(3);
         nombrePlato = cursor.getString(4);
         String extrasBusqueda = cursor.getString(0);
     	
-        if (!extras.equals("")){
+        if (extras != null){
             String[] tokens = extrasBusqueda.split("/");
             String[] extrasSeleccionados = extras.split(",");
 	        // Creamos los padres de la lista, serán las distintas categorías de extras
@@ -133,10 +132,12 @@ public class DescripcionPlatoEditar extends Activity {
 					Toast.makeText(getApplicationContext(),"Error en el formato de extra en la BD", Toast.LENGTH_SHORT).show();
 				}
 			}
-	        // Creamos el adapater para adaptar la lista a la pantalla
-	    	adapterExpandableListPedidoEditar = new MiExpandableListAdapterEditar(this, categoriasExtras);
+	        // Creamos el adapater para adaptar la lista a la pantalla.
+	    	adapterExpandableListPedidoEditar = new MiExpandableListAdapterEditar(this, categoriasExtras,true);
 	        expandableListPedidoEditar.setAdapter(adapterExpandableListPedidoEditar);
         }else{
+        	//Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
+        	adapterExpandableListPedidoEditar = null;
         	expandableListPedidoEditar.setVisibility(ExpandableListView.INVISIBLE);
         }
         
@@ -157,8 +158,12 @@ public class DescripcionPlatoEditar extends Activity {
 	
 	public void onClickConfirmarEditar(View v){
 		importarBaseDatatosPedido();
-    	String nuevosExtrasMarcados = adapterExpandableListPedidoEditar.getExtrasMarcados();
-    	String observacionesNuevas = "";
+		String nuevosExtrasMarcados = null;
+		if(adapterExpandableListPedidoEditar != null){ // El plato tiene extras
+			nuevosExtrasMarcados = adapterExpandableListPedidoEditar.getExtrasMarcados();
+		}
+    	
+    	String observacionesNuevas;
     	if(!actwObservaciones.getText().toString().equals("")){
     		observacionesNuevas = actwObservaciones.getText().toString();
     	}else{

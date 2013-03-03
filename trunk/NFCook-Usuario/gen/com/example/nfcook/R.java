@@ -143,7 +143,6 @@ public final class R {
         public static final int RelativeLayoutPadrePedido=0x7f09000c;
         public static final int botonOpcion=0x7f09001d;
         public static final int botonOpcionEditar=0x7f09001e;
-        public static final int button1=0x7f090021;
         public static final int buttonPedidoBorrar=0x7f090004;
         public static final int buttonPedidoEditar=0x7f090005;
         public static final int checkBox1=0x7f090037;
@@ -157,6 +156,7 @@ public final class R {
         public static final int expandableListViewPlatos=0x7f090038;
         public static final int idCantidad=0x7f090017;
         public static final int idTextCantidad=0x7f090016;
+        public static final int imageButtonNFCSincronizar=0x7f090021;
         public static final int imageView1=0x7f090001;
         public static final int imageViewTabInferior=0x7f090024;
         public static final int imagenPlato=0x7f090014;
