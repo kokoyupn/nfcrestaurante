@@ -2,6 +2,7 @@ package com.example.nfcook_camarero;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 import android.app.Activity;
@@ -61,5 +62,5 @@ public class InicialCamareroAdapter extends BaseAdapter {
 		}
 		return convertView;
 	}
-
+	
 }
