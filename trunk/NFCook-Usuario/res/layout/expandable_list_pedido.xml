@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_marginBottom="60dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="408dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
         android:orientation="vertical" >
 
         <ExpandableListView
             android:id="@+id/expandableListPedido"
             android:layout_width="match_parent"
-            android:layout_height="360dp" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:childDivider="?android:attr/listDivider"
+            android:divider="?android:attr/listDividerAlertDialog" >
+
         </ExpandableListView>
 
-        <Button
-            android:id="@+id/buttonEliminarPedido"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
-            android:background="@drawable/papeleraeliminarpedido" />
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewTituloPedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="Pedido"
+        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/nfcicono"
+        android:minHeight="46dip"
+        android:minWidth="46dip" />
 
 </FrameLayout>

@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <FrameLayout
-        android:id="@+id/FrameLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textViewPedidoExtras"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="76dp"
-            android:layout_marginTop="4dp"
-            android:paddingLeft="10dp"
-            android:text="Extras"
-            android:textColor="@android:color/black"
-            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/textViewPrecioPedidoHijo"
@@ -33,22 +20,8 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/FrameLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textViewPedidoObservaciones"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="86dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="4dp"
-            android:paddingTop="4dp"
-            android:text="Observaciones"
-            android:textSize="13sp"
-            android:typeface="sans" />
 
         <Button
             android:id="@+id/buttonPedidoEditar"
@@ -67,12 +40,6 @@
             android:layout_marginRight="4dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/papeleraeliminarpedido" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
 
     </FrameLayout>
 

@@ -115,8 +115,8 @@
             android:text="Introduzca sus observaciones"
             android:textSize="14dp" />
 
-        <LinearLayout
-            android:id="@+id/LinearLayout1"
+        <FrameLayout
+            android:id="@+id/FrameLayout1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -124,10 +124,12 @@
 
             <AutoCompleteTextView
                 android:id="@+id/AutoCompleteTextViewOpciones"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="85dp"
                 android:layout_weight="0.92"
-                android:ems="10"
+                android:ems="15"
                 android:hint="Nada especial"
                 android:textSize="12dp" >
 
@@ -139,10 +141,22 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="5dp"
                 android:onClick="onClickConfirmar"
                 android:text="Confirmar" />
+            
+            <Button
+                android:id="@+id/botonOpcionEditar"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:onClick="onClickConfirmarEditar"
+                android:text="Editar" />
 
-        </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
