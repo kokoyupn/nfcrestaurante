@@ -1,17 +1,34 @@
 package adapters;
 import java.util.ArrayList;
 
+/**
+ * Configura los padres del adapter de la ExpandableList de la pantalla pedido,cada padre sera el nombre
+ * correspondiente a un plato.
+ * 
+ * -Atributos-
+ * titulo                  : almacena el nombre de un plato.
+ * idPlato                 : campo necesario para hacer modificaciones sobre la base de datos.
+ * precio                  : indica el dinero total a gastar en ese plato, se han podido pedir varios platos iguales.
+ * expandido               : indica si estaba expandido o no, de esta forma podremos mostrarlo así tras una edición.
+ * configuracionesPlato    : conjunto de diferentes configuraciones acerca de un plato.
+ * 
+ * @author Prado
+ *
+ */
 public class PadreExpandableListPedido {
     private String titulo;
+    private String idPlato;
     private double precio;
-    private ArrayList<HijoExpandableListPedido> arrayHijos;
+    private boolean expandido;
+    private ArrayList<HijoExpandableListPedido> configuracionesPlato;
  
     
     
-    public PadreExpandableListPedido(String titulo, ArrayList<HijoExpandableListPedido> arrayHijos, double precio) {
+    public PadreExpandableListPedido(String titulo, ArrayList<HijoExpandableListPedido> configuracionesPlato, double precio, String idPlato) {
 		this.titulo = titulo;
-		this.arrayHijos = arrayHijos;
+		this.configuracionesPlato = configuracionesPlato;
 		this.precio = precio;
+		this.idPlato = idPlato;
 	}
 
 	public String getTitle() {
@@ -21,50 +38,51 @@ public class PadreExpandableListPedido {
     public void setTitle(String titulo) {
         this.titulo = titulo;
     }
- 
-    public double getPrecio() {
+    
+    public String getIdPlato() {
+		return idPlato;
+	}
+
+	public double getPrecio() {
 		return precio;
 	}
 
 	public ArrayList<HijoExpandableListPedido> getArrayChildren() {
-        return arrayHijos;
+        return configuracionesPlato;
     }
     
     public HijoExpandableListPedido getHijoAt(int i) {
-        return arrayHijos.get(i);
+        return configuracionesPlato.get(i);
     }
  
     public void setArrayChildren(ArrayList<HijoExpandableListPedido> arrayHijos) {
-        this.arrayHijos = arrayHijos;
+        this.configuracionesPlato = arrayHijos;
     }
     
     public int getSize(){
-    	return arrayHijos.size();
+    	return configuracionesPlato.size();
     }
     
     public String toString(){
     	return titulo;
     }
+    
 
-	public void actualizaHijos() {
-		for(int i = 0; i<arrayHijos.size();i++){
-			if(arrayHijos.get(i).isCheck()){
-				arrayHijos.remove(i);
-				precio -= arrayHijos.get(i).getPrecio();
-			}
-		}
+	public boolean isExpandido() {
+		return expandido;
 	}
 	
-	public boolean esPadreVacio(){
-		return arrayHijos.size()==0;
+	public void setExpandido(boolean expandido) {
+		this.expandido = expandido;
 	}
 
-	public boolean algunHijoMarcado() {
-		int posicionHijo = 0;
-		boolean marcado = false;
-		while(posicionHijo<arrayHijos.size() && !marcado){
-			marcado = arrayHijos.get(posicionHijo).isCheck();
+	public boolean eliminaHijo(int posicionHijo) {
+		precio -=configuracionesPlato.get(posicionHijo).getPrecio();
+		configuracionesPlato.remove(posicionHijo);
+		if(configuracionesPlato.isEmpty()){
+			return true; //Si la lista de hijos es vacia avisamos para eliminar el padre el padre
 		}
-		return marcado;
+		return false;
 	}
+	
 }

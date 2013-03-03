@@ -44,6 +44,11 @@
             android:screenOrientation="portrait"  >
         </activity>
         <activity
+            android:name="usuario.DescripcionPlatoEditar"
+            android:label="@string/pedido"
+            android:screenOrientation="portrait"  >
+        </activity>
+        <activity
             android:name="usuario.DescripcionPlato"
             android:label="@string/descripcion_plato"
             android:windowSoftInputMode="stateHidden"

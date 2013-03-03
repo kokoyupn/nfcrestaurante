@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -32,11 +33,13 @@ import android.widget.Toast;
 import baseDatos.Handler;
 
 public class DescripcionPlato extends Activity {
+	
+	private static int identificadorUnicoHijoPedido;
 	 
 	private int cantidad, numPlato;
 	boolean carne, guarnicion;
 	double precio;
-	private String restaurante, nombrePlato, nombreImagen, descripcion;
+	private String restaurante, nombrePlato, nombreImagen, descripcion, idPlato;
 	private ImageView img;
 	private TextView tvPrecio, tvNombre, tvDescripcion; //tv3
 	AutoCompleteTextView actw;
@@ -61,7 +64,7 @@ public class DescripcionPlato extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
         setContentView(R.layout.descripcion_plato);
-        
+                
         carne = guarnicion = false;
         cantidad = 1;
         numPlato = 0;
@@ -70,10 +73,13 @@ public class DescripcionPlato extends Activity {
         tvNombre= (TextView) findViewById(R.id.nombrePlato);
         tvDescripcion= (TextView) findViewById(R.id.descripcionPlato);
         img = (ImageView) findViewById(R.id.imagenPlato);
-        //tv3 = (TextView) findViewById(R.id.opcionesPlato); 
         actw = (AutoCompleteTextView)findViewById(R.id.AutoCompleteTextViewOpciones);
-      
-
+        
+        Button botonConfirmar = (Button) findViewById(R.id.botonOpcion);
+        Button botonEditar = (Button) findViewById(R.id.botonOpcionEditar);
+        botonConfirmar.setVisibility(Button.VISIBLE);
+        botonEditar.setVisibility(Button.INVISIBLE);
+        
         // Obtenemos el nombre del plato y el restaurante de la pantalla anterior
         Bundle bundle = getIntent().getExtras();
         nombrePlato = bundle.getString("nombrePlato");
@@ -88,9 +94,10 @@ public class DescripcionPlato extends Activity {
         } 
 
         // Hacemos una consulta en la base de datos sobre el plato seleccionado   
-        String[] campo1=new String[]{"Extras","Precio","Foto","Descripcion"};
+        String[] campo1=new String[]{"Extras","Precio","Foto","Descripcion","Id"};
         String[] datos = new String[]{restaurante, nombrePlato};
         Cursor c =db.query("Restaurantes",campo1,"Restaurante =? AND Nombre=?",datos,null,null,null);  
+  
       
     	exp = (ExpandableListView) findViewById(R.id.expandableExtras);
         	
@@ -98,6 +105,7 @@ public class DescripcionPlato extends Activity {
     		precio = c.getDouble(1);
             nombreImagen = c.getString(2);
             descripcion = c.getString(3);
+            idPlato = c.getString(4);
             String extras = c.getString(0);
             if (!extras.equals("")){
 	            String[] tokens = extras.split("/");
@@ -179,9 +187,15 @@ public class DescripcionPlato extends Activity {
     	sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
      	dbPedido=sqlPedido.open();
     	ContentValues plato = new ContentValues();
-    	plato.put("Id", "uno");
+    	/*Eliminamos letras del Id del plato*/
+    	plato.put("Id", idPlato);
     	plato.put("Plato", nombrePlato);
-    	plato.put("Observaciones", actw.getText().toString());
+    	if(actw.getText().toString().equals("")){
+    		plato.put("Observaciones",(String) null);
+    	}else{
+        	plato.put("Observaciones", actw.getText().toString());
+
+    	}
     	// Recorremos los RadioGroups para ver la selección del usuario
     	for(int i=0;i<platoPadre.size();i++){
     		int numHijos = platoHijo.get(i).get(0).get("NOMBRE").getChildCount();
@@ -201,11 +215,15 @@ public class DescripcionPlato extends Activity {
     			if(plato.get("Extras") == null){
     				plato.put("Extras", seleccionado[i]);
     			}else{
-    				plato.put("Extras", plato.get("Extras") + "/" + seleccionado[i]);
+    				plato.put("Extras", plato.get("Extras") + ", " + seleccionado[i]);
     			}
     		}
+    	}else{
+    		plato.put("Extras",(String) null);
     	}
     	plato.put("PrecioPlato",precio);
+    	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
+    	identificadorUnicoHijoPedido++;
 		dbPedido.insert("Pedido", null, plato);
 
 
