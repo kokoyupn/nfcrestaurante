@@ -32,15 +32,16 @@
         android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
         android:textSize="30sp" />
 
-    <Button
-        android:id="@+id/button1"
+    <ImageButton
+        android:id="@+id/imageButtonNFCSincronizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/nfcicono"
+        android:drawablePadding="10dp"
         android:minHeight="46dip"
-        android:minWidth="46dip" />
+        android:minWidth="46dip" 
+        android:src="@drawable/nfcicono" />
 
 </FrameLayout>

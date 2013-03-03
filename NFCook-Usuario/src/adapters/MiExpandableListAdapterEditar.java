@@ -42,12 +42,20 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 	private LayoutInflater inflater;
     private ArrayList<PadreExpandableListEditar> padresExpandableList;
     private Context context;
+    private boolean esEditar;
     
-    public MiExpandableListAdapterEditar(Context context, ArrayList<PadreExpandableListEditar> arrayCategorias){
+    public MiExpandableListAdapterEditar(Context context, ArrayList<PadreExpandableListEditar> arrayCategorias, boolean esEditar){
     	this.context =  context;
     	this.padresExpandableList = arrayCategorias;
         inflater = LayoutInflater.from(context);
+        this.esEditar = esEditar;
     }
+
+	public MiExpandableListAdapterEditar() {
+		this.context =  null;
+    	this.padresExpandableList = null;
+        inflater = null;
+	}
 
 	public Object getChild(int groupPosition, int childPosition) {
 		return padresExpandableList.get(groupPosition).getHijoAt(childPosition);
@@ -101,10 +109,18 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 				
 				public void onClick(View v) {
 					padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).setCheck(posicionRadioButton);
-					DescripcionPlatoEditar.actualizaExpandableList();
+					if(esEditar){
+						DescripcionPlatoEditar.actualizaExpandableList();
+					}else{
+						DescripcionPlato.actualizaExpandableList();
+					}
 					for(int i=0;i<padresExpandableList.size();i++){
 						if(padresExpandableList.get(i).isExpandido()){
-							DescripcionPlatoEditar.expandeGrupoLista(i);
+							if(esEditar){
+								DescripcionPlatoEditar.expandeGrupoLista(i);
+							}else{
+								DescripcionPlato.expandeGrupoLista(i);
+							}
 						}
 					}
 				}
@@ -196,18 +212,22 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 	 */
 	
 	public String getExtrasMarcados(){
-		Iterator<PadreExpandableListEditar> it = padresExpandableList.iterator();
-		String extras = "";
-		while(it.hasNext()){
-			PadreExpandableListEditar unPadre = it.next();
-			if(!extras.equals("")){
-				extras += ", " + unPadre.getExtrasMarcados();				
+		if(padresExpandableList == null){
+			return null;
+		}else{
+			Iterator<PadreExpandableListEditar> it = padresExpandableList.iterator();
+			String extras = "";
+			while(it.hasNext()){
+				PadreExpandableListEditar unPadre = it.next();
+				if(!extras.equals("")){
+					extras += ", " + unPadre.getExtrasMarcados();				
+				}
+				else{
+					extras += unPadre.getExtrasMarcados();	
+				}
 			}
-			else{
-				extras += unPadre.getExtrasMarcados();	
-			}
+			return extras;
 		}
-		return extras;
 		
 	}
 	
