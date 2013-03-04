@@ -1,7 +1,6 @@
 package adapters;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Configura los hijos del adapter de la ExpandableList de la pantalla de edición de un plato, cada hijo sera
@@ -44,10 +43,14 @@ public class HijoExpandableListEditar {
 	
 	public String getExtraMarcado(){
 		int posicion = 0;
-		while(!marcados[posicion]){
+		while( posicion < marcados.length && !marcados[posicion]){
 			posicion++;
 		}
-		return nombresExtras.get(posicion);
+		if(posicion == marcados.length){
+			return null;
+		}else{
+			return nombresExtras.get(posicion);
+		}
 	}
 	
 

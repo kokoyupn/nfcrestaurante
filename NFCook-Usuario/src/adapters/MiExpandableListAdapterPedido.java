@@ -2,9 +2,7 @@ package adapters;
 
 import java.util.ArrayList;
 
-import usuario.DescripcionPlato;
 import usuario.DescripcionPlatoEditar;
-import usuario.StartActivity;
 
 
 import com.example.nfcook.R;
@@ -12,7 +10,6 @@ import com.example.nfcook.R;
 import fragments.PedidoFragment;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 /**

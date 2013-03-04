@@ -1,9 +1,7 @@
 package usuario;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 import com.example.nfcook.R;
 
@@ -16,7 +14,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,8 +24,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +39,6 @@ public class DescripcionPlato extends Activity {
 	private AutoCompleteTextView actwObservaciones;
 	private static ExpandableListView expandableListExtras;
 	private static MiExpandableListAdapterEditar adapterExpandableListExtras;
-	//public String[] seleccionado;
 	
 	public Handler sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
@@ -147,7 +141,6 @@ public class DescripcionPlato extends Activity {
         imageViewPlato.setImageResource(getResources().getIdentifier(imagePlato,"drawable",this.getPackageName()));	
       
         // Damos el texto a los textviews
-    	//tv3.setText("Elige el plato " + (numPlato+1));
         textViewPrecio.setText("P.V.P.       "+ precioPlato +" €");
         textViewNombre.setText(nombrePlato);
         textViewDescripcion.setText(descripcionPlato);
@@ -169,34 +162,41 @@ public class DescripcionPlato extends Activity {
 	}
 	 
     public void onClickConfirmar(View boton){
-    	sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
-     	dbPedido=sqlPedido.open();
-    	ContentValues plato = new ContentValues();
-    	plato.put("Id", idPlato);
-    	plato.put("Plato", nombrePlato);
-    	if(actwObservaciones.getText().toString().equals("")){
-    		plato.put("Observaciones",(String) null);
-    	}else{
-        	plato.put("Observaciones", actwObservaciones.getText().toString());
-
-    	}
+    	boolean bienEditado = true;
+    	String observaciones = null;
     	String nuevosExtrasMarcados = null;
-    	if(adapterExpandableListExtras!=null){
+    	if(!actwObservaciones.getText().toString().equals("")){
+        	observaciones = actwObservaciones.getText().toString();
+    	}
+    	if(adapterExpandableListExtras!=null){ //Es un plato con extras
     		nuevosExtrasMarcados = adapterExpandableListExtras.getExtrasMarcados();
+    		if(nuevosExtrasMarcados == null){
+    			bienEditado = false;
+    		}
     	}
-    	plato.put("Extras", nuevosExtrasMarcados);
-    	plato.put("PrecioPlato",precioPlato);
-    	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
-    	identificadorUnicoHijoPedido++;
-		dbPedido.insert("Pedido", null, plato);
-		
-    	Toast.makeText(getApplicationContext(),"Plato Nº " + cantidad + " confirmado", Toast.LENGTH_SHORT).show();
-    	if(cantidad == 1){
-    		this.finish();
+    	if(bienEditado){
+    		sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
+         	dbPedido=sqlPedido.open();
+        	ContentValues plato = new ContentValues();
+        	plato.put("Id", idPlato);
+        	plato.put("Plato", nombrePlato);
+        	plato.put("Observaciones", observaciones);
+        	plato.put("Extras", nuevosExtrasMarcados);
+        	plato.put("PrecioPlato",precioPlato);
+        	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
+        	identificadorUnicoHijoPedido++;
+    		dbPedido.insert("Pedido", null, plato);
+    		dbPedido.close();
+    		Toast.makeText(getApplicationContext(),"Plato Nº " + cantidad + " confirmado", Toast.LENGTH_SHORT).show();
+        	if(cantidad == 1){
+        		this.finish();
+        	}else{
+        		cantidad--;
+        	}
     	}else{
-    		cantidad--;
+    		adapterExpandableListExtras.expandeTodosLosPadres();
+    		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes", Toast.LENGTH_SHORT).show();
     	}
-
     }
 
     public static void actualizaExpandableList() {

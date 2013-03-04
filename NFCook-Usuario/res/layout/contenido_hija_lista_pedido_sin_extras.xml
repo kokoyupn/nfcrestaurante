@@ -23,23 +23,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/buttonPedidoBorrar"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/papeleraeliminarpedido" />
-
-        <Button
+        
+		<Button
             android:id="@+id/buttonPedidoEditar"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="right"
             android:layout_marginRight="45dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/editarpedidoboton" />
+            android:background="@drawable/iconoeditarplato" />
+
+        <Button
+            android:id="@+id/buttonPedidoBorrar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/iconoborrarplato" />
 
         <TextView
             android:id="@+id/textViewPedidoObservaciones"

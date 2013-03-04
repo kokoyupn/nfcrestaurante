@@ -53,7 +53,11 @@ public class PadreExpandableListEditar {
 		String extras = "";
 		while(it.hasNext()){
 			HijoExpandableListEditar unHijo = it.next();
-			extras += unHijo.getExtraMarcado();
+			if(unHijo.getExtraMarcado() == null){
+				return null;
+			}else{
+				extras += unHijo.getExtraMarcado();
+			}
 		}
 		return extras;
 	}
