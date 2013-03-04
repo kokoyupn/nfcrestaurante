@@ -261,7 +261,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
     		imagenTab.setImageResource(getResources().getIdentifier("pagar","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabCalculadora")){
     		textoTab.setText("Calculadora");
-    		imagenTab.setImageResource(getResources().getIdentifier("calc","drawable",this.getPackageName()));
+    		imagenTab.setImageResource(getResources().getIdentifier("calculadora","drawable",this.getPackageName()));
     	}
     	return tabInferiorContentView;
     }
@@ -302,10 +302,8 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
 	
 	// Metodo encargado de lanzar la pantalla de bienvenida
 	public void lanzarPantallaBienvenida(){
-		Bundle bundle = getIntent().getExtras();
 		// Mostramos la pantalla inicial del restaurante con su logo y un mensaje de bienvenida
 		Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
-		((PantallaInicialRestaurante)fragmentPantallaInicioRes).setImagen(bundle.getInt("logoRestaurante"));
 		((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
         FragmentTransaction m = getFragmentManager().beginTransaction();
         m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
