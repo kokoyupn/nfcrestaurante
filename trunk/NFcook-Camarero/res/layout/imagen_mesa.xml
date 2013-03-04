@@ -34,23 +34,24 @@
             android:textSize="20sp" />
 
     </FrameLayout>
-
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp" >
-
+        android:layout_height="wrap_content" >
+
         <ImageView
             android:id="@+id/imageViewPersonitas"
             android:layout_width="30dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="35dp"
             android:src="@drawable/group" />
-
+
         <TextView
             android:id="@+id/textViewPersonas"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Def"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -39,7 +39,7 @@ public class InicialCamareroAdapter extends BaseAdapter {
 		TextView textPersonas;
 		if (convertView == null) {
 			convertView = l_Inflater.inflate(R.layout.imagen_mesa, null);
-			convertView.setLayoutParams (new GridView.LayoutParams (110, 135));
+			//convertView.setLayoutParams (new GridView.LayoutParams (110, 135));
 			textNumMesa = (TextView) convertView.findViewById(R.id.textViewMesa);
 			textPersonas = (TextView) convertView.findViewById(R.id.textViewPersonas);
 			//coger el numMesa y el numPersonas de las mesas
