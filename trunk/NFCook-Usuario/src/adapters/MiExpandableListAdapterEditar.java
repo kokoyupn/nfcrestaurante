@@ -5,23 +5,18 @@ import java.util.Iterator;
 
 import usuario.DescripcionPlato;
 import usuario.DescripcionPlatoEditar;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.nfcook.R;
 
-import fragments.PedidoFragment;
 
 /**
  * Configura el adapter de la ExpandableList de la pantalla edición de un plato.
@@ -210,25 +205,37 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 	 * Devuelve en forma de String los extras que estaban marcados.
 	 * @return
 	 */
-	
 	public String getExtrasMarcados(){
-		if(padresExpandableList == null){
-			return null;
-		}else{
-			Iterator<PadreExpandableListEditar> it = padresExpandableList.iterator();
-			String extras = "";
-			while(it.hasNext()){
-				PadreExpandableListEditar unPadre = it.next();
-				if(!extras.equals("")){
-					extras += ", " + unPadre.getExtrasMarcados();				
-				}
-				else{
+		Iterator<PadreExpandableListEditar> it = padresExpandableList.iterator();
+		String extras = "";
+		while(it.hasNext()){
+			PadreExpandableListEditar unPadre = it.next();
+			if(!extras.equals("")){
+				extras += ", " + unPadre.getExtrasMarcados();				
+			}
+			else{
+				String extrasMarcados = unPadre.getExtrasMarcados();
+				if(extrasMarcados == null){
+					return null;
+				}else{
 					extras += unPadre.getExtrasMarcados();	
 				}
 			}
-			return extras;
 		}
+		return extras;
 		
+	}
+	
+	public void expandeTodosLosPadres(){
+		Iterator<PadreExpandableListEditar> it = padresExpandableList.iterator();
+		while(it.hasNext()){
+			PadreExpandableListEditar  unPadre = it.next();
+			unPadre.setExpandido(true);
+		}
+		DescripcionPlato.actualizaExpandableList();
+		for(int i = 0; i<padresExpandableList.size(); i++){
+			DescripcionPlato.expandeGrupoLista(i);
+		}
 	}
 	
 }

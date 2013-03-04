@@ -14,7 +14,6 @@ import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
 import android.app.Fragment;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -22,7 +21,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -31,16 +29,13 @@ public class PedidoFragment extends Fragment{
 	 * poder actualizar la lista desde otras clases*/
 	private static MiExpandableListAdapterPedido  adapterExpandableListPedido;
 	private static ExpandableListView expandableListPedido;
-	private static Context context;
 	private static View vistaConExpandaleList;
 	
 	private float total;
 	
 	private static Handler sqlPedido;
 	private static SQLiteDatabase dbPedido;
-	
-	private Button botonEliminar; // Para poder pasarlo al adapter y  hacerlo visible e invisible al marcarun CheckBox
-	
+		
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_pedido, container, false);
@@ -52,14 +47,13 @@ public class PedidoFragment extends Fragment{
 	public void crearExpandableList() {
 		try{
 			String[] campos = new String[]{"Plato"};//Campos que quieres recuperar
-	    	Cursor c = getDbPedido().query("Pedido", campos, null, null,null, null,null);
+	    	Cursor c = dbPedido.query("Pedido", campos, null, null,null, null,null);
 
 			Set<String> conjuntoNombresPadres = new HashSet<String>();
 	    	while(c.moveToNext()){
 	    		conjuntoNombresPadres.add(c.getString(0));
 	    	}
 	    	
-	    	context = vistaConExpandaleList.getContext(); // Necesitamos context para lanzar una actividad en el boton editar
 			ArrayList<PadreExpandableListPedido> padres = new ArrayList<PadreExpandableListPedido>();
 			Iterator<String> iteradorConjunto = conjuntoNombresPadres.iterator();
 	    	while(iteradorConjunto.hasNext()){
@@ -68,7 +62,7 @@ public class PedidoFragment extends Fragment{
 	    		String nombrePlato = iteradorConjunto.next();
 	    		String idPadre = "";
 		    	String[] datos = new String[]{nombrePlato};
-		    	Cursor cursor = getDbPedido().query("Pedido", camposBusquedaObsExt, "Plato=?", datos,null, null,null);
+		    	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Plato=?", datos,null, null,null);
 		    	double precio = 0; //Para sumar todos los platos hijos de un padre
 		    	while(cursor.moveToNext()){
 		    		idPadre = cursor.getString(3);
@@ -83,14 +77,14 @@ public class PedidoFragment extends Fragment{
 			adapterExpandableListPedido = new MiExpandableListAdapterPedido(vistaConExpandaleList.getContext(), padres, this);
 			expandableListPedido.setAdapter(adapterExpandableListPedido);
 	    }catch(SQLiteException e){
-	        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
+	        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL PEDIDO",Toast.LENGTH_SHORT).show();
 	    		
 	    }   
 	}
 	
 	public static void actualizaExpandableListPedidoEditada(){
 		importarBaseDatatos();
-		adapterExpandableListPedido.actualizaHijoEditado(getDbPedido());
+		adapterExpandableListPedido.actualizaHijoEditado(dbPedido);
 		actualizaExpandableList();
 		adapterExpandableListPedido.expandePadres();
 	}
