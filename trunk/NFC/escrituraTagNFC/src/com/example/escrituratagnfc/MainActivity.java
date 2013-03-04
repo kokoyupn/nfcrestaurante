@@ -187,4 +187,126 @@ public class MainActivity extends Activity{
 		adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters,null);
 		
 	}
+	
+	
+	/**TODO 
+	 * Falta acondicionar el codigo de codificacion de los platos con el de escritura por nfc  
+	 * import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+
+public class codificar {
+
+	public static void main(String[] args) {
+
+		String listaPlatos = "1@2@3@4+10010@5*Con semen@1+01001*Con semen@2+10010*Sin macarrones@";		
+		codificarPlatos(listaPlatos);
+	}
+	
+	private static ArrayList<Byte> codificarPlatos(String listaPlatos){
+		
+		ArrayList <Byte> codificado = new ArrayList <Byte>();
+		
+		// separamos por platos
+		StringTokenizer stPlatos = new StringTokenizer(listaPlatos,"@");
+		
+		while(stPlatos.hasMoreElements()){
+			
+			String plato = stPlatos.nextToken();
+			StringTokenizer stTodoSeparado =  new StringTokenizer(plato,"+,*");
+					
+			// id
+			String id =  stTodoSeparado.nextToken();
+			codificado.addAll(codificaIdPlato(id));
+					
+			// extras
+			if (plato.contains("+"))  {
+				String extras =  stTodoSeparado.nextToken();
+				ArrayList <Byte> alExtras = codificaExtras(extras);
+				// tamaño de los extras que habra que leer
+				codificado.add((byte) alExtras.size());
+				codificado.addAll(alExtras);	
+			} else codificado.add((byte) 0);
+					
+			// comentarios
+			if (plato.contains("*"))  {
+				String comentario =  stTodoSeparado.nextToken();
+				ArrayList <Byte> alComentario = codificaComentario(comentario);
+				// tamaño de comentarios que habra que leer
+				codificado.add((byte) alComentario.size());
+				codificado.addAll(alComentario);
+			} else codificado.add((byte) 0);
+					
+		}
+		System.out.println(codificado);
+		return codificado;	
+	
+	}
+	
+
+	private static ArrayList<Byte> codificaComentario(String comentario) {
+		
+		ArrayList<Byte> al = new ArrayList<Byte>();
+		
+		for (int i = 0; i<comentario.length(); i++)
+			al.add((byte) comentario.charAt(i));
+		
+		return al;
+	 }
+	 
+	private static ArrayList<Byte> codificaIdPlato(String id) {
+		
+		ArrayList<Byte> al = new ArrayList<Byte>();
+		al.add((byte) Integer.parseInt(id));
+		return al;
+	}
+
+	private static ArrayList<Byte> codificaExtras(String extras) {
+		
+		ArrayList<Byte> al = new ArrayList<Byte>();
+		
+		int relleno = 0;
+		int  numMod8 = extras.length()% 8;
+		if (numMod8 != 0){
+			relleno = 8-numMod8;
+			for (int p=0; p<relleno;p++)
+				extras = extras + "0";
+		}
+	
+		int veces = extras.length()/8;
+		int num;
+		int posicion=0;
+		for (int i=0 ; i<veces; i++){  
+			num = binToDec(extras.substring(posicion,posicion+8));
+			posicion += 8;
+			al.add((byte) ((char)num));	
+		}
+	
+		return al;	 
+	}
+	
+	private static int binToDec(String pNumBin) {        
+	        
+		int resultado = 0 ;        
+	        
+	    for( int i = 0; i < pNumBin.length() ; i++ ) {
+	           
+	    	char digito = pNumBin.charAt( i ); 
+	        // en general, resultado = resultado * base + digito
+	            
+	        try {         
+	        	int valDigito = Integer.parseInt( Character.toString(digito) ) ;
+	            resultado = resultado * 2 + valDigito ;    
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        }    
+	    }
+	    return resultado ; 
+	        
+	}
+  
+}
+
+	
+	 */
 }
