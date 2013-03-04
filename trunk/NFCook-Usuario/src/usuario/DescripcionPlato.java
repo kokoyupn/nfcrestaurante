@@ -146,6 +146,7 @@ public class DescripcionPlato extends Activity {
         
         // Damos el texto a los textviews
         editTextUnidades.setText("1");
+        cantidad = 1;
         editTextUnidades.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			//Se invoca cada vez que pinchamos sobre el o salimos de el
 			public void onFocusChange(View v, boolean hasFocus) {
