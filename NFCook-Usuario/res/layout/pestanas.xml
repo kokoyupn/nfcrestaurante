@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FrameLayoutPestanas"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_gravity="center"
-    android:orientation="vertical" >
+    android:layout_gravity="center" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imageViewLogoRestaurante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
-    
+        android:layout_gravity="center" />
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="bottom" >
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:orientation="horizontal" >
 
         <TabHost
             android:id="@android:id/tabhost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:visibility="visible" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,10 +34,7 @@
                 <TabWidget
                     android:id="@android:id/tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/linea_azul_vertical"
-                    android:dividerPadding="8dp" >
-
+                    android:layout_height="wrap_content" >
                 </TabWidget>
 
                 <FrameLayout
@@ -51,7 +46,6 @@
                         android:id="@+id/tab1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" >
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -65,7 +59,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" >
                     </LinearLayout>
-                    
+
                     <LinearLayout
                         android:id="@+id/tab4"
                         android:layout_width="match_parent"
@@ -74,14 +68,16 @@
                 </FrameLayout>
             </LinearLayout>
         </TabHost>
-
     </LinearLayout>
 
     <TextView
         android:id="@+id/textViewBienvenidarestaurante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="22dp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+        android:textSize="30sp" />
 
-</RelativeLayout>
+</FrameLayout>

@@ -16,11 +16,11 @@ public class MyTabsListener  implements TabListener{
 	}
 	
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		ft.replace(R.id.RelativeLayout1, fragment, nombreTab);
+		ft.replace(R.id.FrameLayoutPestanas, fragment, nombreTab);
 	}
  
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {       
-		ft.replace(R.id.RelativeLayout1, fragment, nombreTab);
+		ft.replace(R.id.FrameLayoutPestanas, fragment, nombreTab);
 	}
  
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {

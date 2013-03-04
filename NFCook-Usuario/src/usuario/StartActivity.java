@@ -60,7 +60,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
         setContentView(R.layout.pestanas);
 
         // Cargamos el logo del restaurante en el layout y asignamos el nombre del restaurante
-        imagenRestaurante = (ImageView)findViewById(R.id.imageView1);
+        imagenRestaurante = (ImageView)findViewById(R.id.imageViewLogoRestaurante);
         Bundle bundle = getIntent().getExtras();
 	    imagenRestaurante.setImageResource(bundle.getInt("logoRestaurante"));
 		restaurante = bundle.getString("nombreRestaurante");
@@ -211,24 +211,26 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
             		// Cuando pulsamos el tab
             		if(event.getAction()==MotionEvent.ACTION_UP){
 	                	if(tabs.getCurrentTabTag().equals("tabPromociones")){
-	                		// Falta hacer el layout y su funcionalidad
+	                		/*
+	            			 * TODO Hacer su layout y su funcionalidad
+	            			 */
 	        				Log.i("touch", "Promociones");
 	        			}else if(tabs.getCurrentTabTag().equals("tabPedidoSincronizar")){
 	        				Log.i("touch", "Pedido a Sinccronizar");
 	        				Fragment fragmentPedido = new PedidoFragment();
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        		        m.replace(R.id.RelativeLayout1, fragmentPedido);
+	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        		        m.commit();
 	        			}else if(tabs.getCurrentTabTag().equals("tabCuenta")){
 	        				Log.i("touch", "Cuenta");
 	        				Fragment fragmentCuenta = new CuentaFragment();
-	        		    	String [] Ejemplatos = {"Hamburguesa Director", "50","Ensalada cesar","16","Hamburguesa de pollo","20","Habichuelas con lacon","25","Sopitas de la abuela","250"};
-	        			    ((CuentaFragment)fragmentCuenta).platos = Ejemplatos;
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        		        m.replace(R.id.RelativeLayout1, fragmentCuenta);
+	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        		        m.commit();
 	        			}else if(tabs.getCurrentTabTag().equals("tabCalculadora")){
-	        				// Falta hacer el layout y su funcionalidad
+	        				/*
+	        				 * TODO Hacer su layout y su funcionalidad
+	        				 */
 	        				Log.i("touch", "Calculadora");
 	        			}
             		}
@@ -267,26 +269,28 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
 		if(tabId.equals("tabPromociones")){
-			// Falta hacer el layout y su funcionalidad
+			/*
+			 * TODO Hacer su layout y su funcionalidad
+			 */
 			Log.i("changed", "Promociones");
 		}else if(tabId.equals("tabPedidoSincronizar")){
 			Log.i("changed", "Pedido a Sinccronizar");
 			Fragment fragmentPedido = new PedidoFragment();
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        m.replace(R.id.RelativeLayout1, fragmentPedido);
+	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        m.addToBackStack("Pedido");
 	        m.commit();
 		}else if(tabId.equals("tabCuenta")){
 			Log.i("changed", "Cuenta");
 			Fragment fragmentCuenta = new CuentaFragment();
-	    	String [] Ejemplatos = {"Hamburguesa Director", "50","Ensalada cesar","16","Hamburguesa de pollo","20","Habichuelas con lacon","25","Sopitas de la abuela","250"};
-		    ((CuentaFragment)fragmentCuenta).platos = Ejemplatos;
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        m.replace(R.id.RelativeLayout1, fragmentCuenta);
+	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        m.addToBackStack("Cuenta");
 	        m.commit();
 		}else if(tabId.equals("tabCalculadora")){
-			// Falta hacer el layout y su funcionalidad
+			/*
+			 * TODO Hacer su layout y su funcionalidad
+			 */
 			Log.i("changed", "Calculadora");
 		}
 	}
@@ -304,7 +308,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
 		((PantallaInicialRestaurante)fragmentPantallaInicioRes).setImagen(bundle.getInt("logoRestaurante"));
 		((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
         FragmentTransaction m = getFragmentManager().beginTransaction();
-        m.replace(R.id.RelativeLayout1, fragmentPantallaInicioRes);
+        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
         m.addToBackStack("Pantalla Bienvenida");
         m.commit();
 	}

@@ -20,15 +20,14 @@ public class PantallaInicialRestaurante extends Fragment{
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.pestanas, container, false);
-		logo = (ImageView)vista.findViewById(R.id.imageView1);
+		logo = (ImageView)vista.findViewById(R.id.imageViewLogoRestaurante);
 		logo.setImageResource(imagen);
 		
 		TextView bienvenida = (TextView)vista.findViewById(R.id.textViewBienvenidarestaurante);
 		// Mal introducido el nombre del Foster en la base de datos
 		if(restaurante.equals("Foster"))
 			restaurante = "Foster's Hollywood";
-		bienvenida.setText("Bienvenidos a \n"+restaurante);
-		bienvenida.setTextSize(25);
+		bienvenida.setText("Bienvenido a \n"+restaurante);
 		return vista;
     }
 	
