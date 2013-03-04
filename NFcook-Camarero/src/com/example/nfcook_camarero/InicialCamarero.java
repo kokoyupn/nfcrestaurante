@@ -17,6 +17,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -195,11 +197,18 @@ public class InicialCamarero extends Activity{
 		final EditText numMesa = (EditText) textEntryView.findViewById(R.id.editTextNumMesa);
 		final TextView tituloMesa = (TextView) textEntryView.findViewById(R.id.textViewNumMesa);
 		final TextView tituloPersonas = (TextView) textEntryView.findViewById(R.id.textViewNumPersonas);
+		//Obligamos a que el teclado sea sólo numérico para la comodidad del camarero
+		numMesa.setInputType(InputType.TYPE_CLASS_NUMBER);
+		numPersonas.setInputType(InputType.TYPE_CLASS_NUMBER);
 		//Damos valor a los campos		
 		numPersonas.setText("", TextView.BufferType.EDITABLE);
 		numMesa.setText("", TextView.BufferType.EDITABLE);
-		tituloMesa.setText("Elige el numero de mesa:");
-		tituloPersonas.setText("Elige el numero de personas:");
+		//Limitamos a 99 el número de personas por mesa y a 999 el número de mesa
+		InputFilter[] FilterArray = new InputFilter[3];
+		FilterArray[0] = new InputFilter.LengthFilter(8);
+		numPersonas.setFilters(FilterArray);
+		tituloMesa.setText("Elige el número de mesa:");
+		tituloPersonas.setText("Elige el número de personas:");
 		//Construimos el AlertDialog y le metemos la vista que hemos personalizado
 		AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
 		alert.setView(textEntryView);
@@ -306,6 +315,8 @@ public class InicialCamarero extends Activity{
              AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
              alert.setMessage("Introduce el número de la mesa que desea borrar: "); //mensaje
              final EditText input = new EditText(InicialCamarero.this); //creamos un Edit Text
+             //Obligamos a que el teclado sea sólo numérico para la comodidad del camarero
+             input.setInputType(InputType.TYPE_CLASS_NUMBER);
              alert.setView(input); //añadimos el edit text a la vista del AlertDialog
              //añadimos los botones
              alert.setPositiveButton("Cancelar", null);
