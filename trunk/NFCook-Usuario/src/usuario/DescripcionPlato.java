@@ -152,7 +152,7 @@ public class DescripcionPlato extends Activity {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if(!hasFocus){ // salimos de el
 					cantidad = Integer.parseInt(editTextUnidades.getText().toString());
-					textViewPrecio.setText(cantidad*precioPlato + " €");
+					textViewPrecio.setText(Math.rint(cantidad*precioPlato*100)/100 + " €");
 				}
 				
 				
@@ -168,7 +168,7 @@ public class DescripcionPlato extends Activity {
 		if(cantidad != 1){
 			cantidad--;
 			editTextUnidades.setText(cantidad + "");
-			textViewPrecio.setText(cantidad*precioPlato + " €");
+			textViewPrecio.setText(Math.rint(cantidad*precioPlato*100)/100 + " €");
 		}
 		
 	}
@@ -176,7 +176,7 @@ public class DescripcionPlato extends Activity {
 	public void onClickBotonMas(View v){
 		cantidad++;
 		editTextUnidades.setText(cantidad + "");
-		textViewPrecio.setText(cantidad*precioPlato + " €");
+		textViewPrecio.setText(Math.rint(cantidad*precioPlato*100)/100 + " €");
 	}
 	 
     public void onClickConfirmar(View boton){

@@ -190,11 +190,6 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		return groupPosition;
 	}
 
-	/*FIXME
-	 * El precio total mostrado en cada padre no se trunca bien a dos cifras.
-	 * (non-Javadoc)
-	 * @see android.widget.ExpandableListAdapter#getGroupView(int, boolean, android.view.View, android.view.ViewGroup)
-	 */
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
 		if (convertView == null) {
@@ -205,9 +200,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
         TextView textViewPadrePrecio = (TextView) convertView.findViewById(R.id.textViewPrecioTotalPadre);
         
         textViewPadrePlato.setText(getGroup(groupPosition).toString());
-        int precio = (int)(((PadreExpandableListPedido) this.getGroup(groupPosition)).getPrecio() * 100); 
-        double valorConDosDecimales = precio/100.0;
-        textViewPadrePrecio.setText(valorConDosDecimales + "€");
+        textViewPadrePrecio.setText(Math.rint(((PadreExpandableListPedido) this.getGroup(groupPosition)).getPrecio()*100)/100 + "€");
         
         return convertView;
 
