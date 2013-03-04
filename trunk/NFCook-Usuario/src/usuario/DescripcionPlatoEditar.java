@@ -49,9 +49,8 @@ public class DescripcionPlatoEditar extends Activity {
         //Quitamos barra de notificaciones
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        setContentView(R.layout.descripcion_plato);
+        setContentView(R.layout.descripcion_del_plato_editar);
        
-        TextView textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
         TextView textViewNombrePlato= (TextView) findViewById(R.id.nombrePlato);
         TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlato);
         ImageView imgeViewPlato = (ImageView) findViewById(R.id.imagenPlato);
@@ -141,15 +140,8 @@ public class DescripcionPlatoEditar extends Activity {
         imgeViewPlato.setImageResource(getResources().getIdentifier(nombreImagen,"drawable",this.getPackageName()));	
       
         // Damos el texto a los textviews
-    	textViewPrecio.setText("P.V.P.       "+ precio +" €");
     	textViewNombrePlato.setText(nombrePlato);
     	textViewDescripcion.setText(descripcion);
-        		
-    	
-    	//No necesitamos el spiner en esta pantalla
-        Spinner spinnerCantidad = (Spinner) findViewById(R.id.idCantidad);
-        spinnerCantidad.setVisibility(Spinner.INVISIBLE);
-                
 	}
 	
 	public void onClickConfirmarEditar(View v){

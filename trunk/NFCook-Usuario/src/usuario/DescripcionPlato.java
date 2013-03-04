@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -37,6 +38,8 @@ public class DescripcionPlato extends Activity {
 	double precioPlato;
 	private String restaurante, nombrePlato, idPlato;
 	private AutoCompleteTextView actwObservaciones;
+	private TextView textViewPrecio;
+	private EditText editTextUnidades;
 	private static ExpandableListView expandableListExtras;
 	private static MiExpandableListAdapterEditar adapterExpandableListExtras;
 	
@@ -52,9 +55,10 @@ public class DescripcionPlato extends Activity {
         //Quitamos barra de notificaciones
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        setContentView(R.layout.descripcion_plato);
+        setContentView(R.layout.descripcion_del_plato);
         
-        TextView textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
+        editTextUnidades = (EditText) findViewById(R.id.editTextunidades);
+        textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
         TextView textViewNombre= (TextView) findViewById(R.id.nombrePlato);
         TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlato);
         ImageView imageViewPlato = (ImageView) findViewById(R.id.imagenPlato);
@@ -141,24 +145,37 @@ public class DescripcionPlato extends Activity {
         imageViewPlato.setImageResource(getResources().getIdentifier(imagePlato,"drawable",this.getPackageName()));	
         
         // Damos el texto a los textviews
-        textViewPrecio.setText("P.V.P.       "+ precioPlato +" €");
+        editTextUnidades.setText("1");
+        editTextUnidades.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			//Se invoca cada vez que pinchamos sobre el o salimos de el
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(!hasFocus){ // salimos de el
+					cantidad = Integer.parseInt(editTextUnidades.getText().toString());
+					textViewPrecio.setText(cantidad*precioPlato + " €");
+				}
+				
+				
+			}
+		});
+        textViewPrecio.setText(precioPlato +" €");
         textViewNombre.setText(nombrePlato);
         textViewDescripcion.setText(descripcionPlato);
-    	
-    	//CREACION DEL SPINNER
-        Spinner sp = (Spinner) findViewById(R.id.idCantidad);
-        ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(this, R.array.cantidades, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp.setAdapter(adapter);
-    	
-    	sp.setOnItemSelectedListener(new OnItemSelectedListener(){
-    		public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-    			cantidad=position+1;
-    		}
-         	
-    		public void onNothingSelected(AdapterView<?> parentView){
-    		}
-         });        	    	
+        
+	}
+	
+	public void onClickBotonMenos(View v){
+		if(cantidad != 1){
+			cantidad--;
+			editTextUnidades.setText(cantidad + "");
+			textViewPrecio.setText(cantidad*precioPlato + " €");
+		}
+		
+	}
+	
+	public void onClickBotonMas(View v){
+		cantidad++;
+		editTextUnidades.setText(cantidad + "");
+		textViewPrecio.setText(cantidad*precioPlato + " €");
 	}
 	 
     public void onClickConfirmar(View boton){
