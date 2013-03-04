@@ -139,7 +139,7 @@ public class DescripcionPlato extends Activity {
 
         // Cargamos la imagen del plato
         imageViewPlato.setImageResource(getResources().getIdentifier(imagePlato,"drawable",this.getPackageName()));	
-      
+        
         // Damos el texto a los textviews
         textViewPrecio.setText("P.V.P.       "+ precioPlato +" €");
         textViewNombre.setText(nombrePlato);

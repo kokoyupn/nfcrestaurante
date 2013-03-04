@@ -58,7 +58,7 @@ public class TabsFragment extends Fragment{
 	    		vistaConListView = inflater.inflate(R.layout.tabs_fragment_list_view, container, false);
 	    		importarBaseDatatos(vistaConExpandaleList);
 	    		crearExpandableListOlistView(vistaConExpandaleList, vistaConListView);
-	    		cargado=true;
+	    		cargado = true;
 	    	}
 	    	
 	    	/* No podíamos hacer un xml común  para ambos, pues al poner los dos tipos de lista
@@ -87,7 +87,6 @@ public class TabsFragment extends Fragment{
 	     	   db=sql.open();
 	         }catch(SQLiteException e){
 	         	Toast.makeText(v.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
-	      		
 	         }
 		}
 
@@ -135,13 +134,13 @@ public class TabsFragment extends Fragment{
 	    				
 	 	    	    }
 	    			listaHijos.add(listaHijoActual);
-	    	    	listaCategoriaUnica = (ListView) vistaConListView.findViewById(R.id.listView1);
+	    	    	listaCategoriaUnica = (ListView) vistaConListView.findViewById(R.id.listViewCuenta);
 	    	    	mAdapterListView = new SimpleAdapter(  
 			    			getActivity(),  
 			    			listaHijoActual,
 			   				R.layout.contenido_lista,  
 			   				new String[] {NOMBRE, DESCRIPCION },  
-			    			new int[] { R.id.textView1, R.id.textView2 }  
+			    			new int[] { R.id.textViewCuenta, R.id.textViewPrecioPlatoCuenta }  
 			    			);
 	    	    	
 	    	    	listaCategoriaUnica.setAdapter(mAdapterListView);
@@ -195,7 +194,7 @@ public class TabsFragment extends Fragment{
 			   				listaHijos,  
 			   				R.layout.contenido_lista,  
 			   				new String[] {NOMBRE, DESCRIPCION },  
-			    			new int[] { R.id.textView1, R.id.textView2 }  
+			    			new int[] { R.id.textViewCuenta, R.id.textViewPrecioPlatoCuenta }  
 			    			);  
 			   	     
 					exp = (ExpandableListView) vistaConExpandaleList.findViewById(R.id.expandableListViewPlatos);
@@ -215,8 +214,7 @@ public class TabsFragment extends Fragment{
 					exp.setAdapter(mAdapter);
 	    	   }
 		    }catch(SQLiteException e){
-		        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
-		    		
+		        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();	
 		    }   
 	    }
 		
