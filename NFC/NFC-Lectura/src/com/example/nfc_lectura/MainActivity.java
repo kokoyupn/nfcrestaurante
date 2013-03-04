@@ -181,4 +181,117 @@ public class MainActivity extends Activity{
 		
 	}
 	
+	
+/**TODO
+ * Falta acondicionar correctamente el codigo de decodificar con el de lectura de la tarjeta nfc 	
+ */
+	
+/*
+ * import java.util.ArrayList;
+import java.util.Collection;
+import java.util.StringTokenizer;
+import java.util.Iterator;
+
+public class decodificar {
+
+	public static void main(String[] args) {
+		String listaPlatos = "1@2@3@4+10010@5*Con semen@1+01001*Con semen@2+10010*Sin macarrones@";
+		
+		ArrayList<Byte> mensaje = new ArrayList<Byte>();
+		
+		Byte[] m = new Byte[]{1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 1, -112, 0, 5, 0, 9, 67, 111, 110, 32, 115, 101, 109, 101, 110, 1, 1, 72, 9, 67, 111, 110, 32, 115, 101, 109, 101, 110, 2, 1, -112, 14, 83, 105, 110, 32, 109, 97, 99, 97, 114, 114, 111, 110, 101, 115};
+		
+		for (int i = 0; i < m.length; i++)
+			mensaje.add(m[i]);
+		
+		decodificar(mensaje);
+		
+	}
+	
+	private static void decodificar(ArrayList<Byte> mensaje) {
+		
+	//Recorremos todo el mensaje leido i vamos descomponiendo todos los platos en id-extras-comentario
+		Iterator<Byte> itPlatos = mensaje.iterator();
+		String listaPlatos = "";
+		
+		while(itPlatos.hasNext()){
+				
+			
+			// id
+			int id = decodificaByte(itPlatos.next());
+					
+			// extras
+			int numExtras =  decodificaByte(itPlatos.next());
+			String extras = "";
+			if (numExtras > 0) extras += "+";
+			for (int i = 0; i < numExtras; i++ )
+				extras += decToBin(itPlatos.next());
+			
+			// comentario
+			int numComentario =  decodificaByte(itPlatos.next());
+			String comentario = "";
+			if (numComentario > 0) comentario += "*";
+			for (int i = 0; i < numComentario; i++)
+				comentario += (char)decodificaByte(itPlatos.next());
+			
+			listaPlatos += id + extras + comentario + "@";
+					
+		}
+		
+		System.out.println(listaPlatos);
+		
+		
+	}
+	//Metodo que se encargar de convertir un byte dado por parametro a un tipo int 
+		 
+	public static int decodificaByte(byte idByte){
+		int id = (int)idByte;
+		if (id < 0) return id + 256;
+		else return id;
+	}
+	
+	//Convierte un numero decimal en su equivalente en binario 
+	public static String decToBin(int decimal){
+		
+		int base = 2;
+		int result = 0;
+		int multiplier = 1;
+		
+		if (decimal < 0)
+			decimal = 256 + decimal;
+		
+		while (decimal>0){
+			int residue = decimal%base;
+			decimal = decimal/base;
+			result = result +residue*multiplier;
+			multiplier = multiplier * 10;
+		}
+		
+		// rellenamos con ceros a la izquierda para que tenga siempre 8 bytes
+		
+		String resultStr = "";
+		String numBytes = ""+result;
+		int veces = 8 - numBytes.length();
+		
+		for (int i = 0; i < veces; i++)
+			resultStr += "0";
+	
+		resultStr += result;
+			
+		return resultStr;
+		
+	}
+	
+
 }
+
+ */
+	
+	
+}
+
+
+
+
+
+
