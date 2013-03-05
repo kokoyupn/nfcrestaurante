@@ -34,7 +34,7 @@
             android:screenOrientation="portrait"  >
         </activity>
         <activity
-            android:name="usuario.StartActivity"
+            android:name="usuario.InicializarRestaurante"
             android:label="@string/pestanas"
             android:screenOrientation="portrait"  >
         </activity>
