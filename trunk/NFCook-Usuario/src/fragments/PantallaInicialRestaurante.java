@@ -20,7 +20,7 @@ public class PantallaInicialRestaurante extends Fragment{
 	@SuppressLint("DefaultLocale")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		vista = inflater.inflate(R.layout.pestanas, container, false);
+		vista = inflater.inflate(R.layout.contenedor_tabs, container, false);
 		
 		// Cargamos el logo del restaurante para la pantalla de bienvenida
 		String nombreLogo = "logo_" + restaurante.toLowerCase() + "_pantalla_inicial";

@@ -1,51 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/editPedido"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="65px"
-    android:gravity="center_horizontal" >
+    android:layout_marginBottom="60dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical" >
+
+        <ExpandableListView
+            android:id="@+id/expandableListPedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:childDivider="?android:attr/listDivider"
+            android:divider="?android:attr/listDividerAlertDialog" >
+
+        </ExpandableListView>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewPedido"
+        android:id="@+id/textViewTituloPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:text="@string/pedido"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="Pedido"
+        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+        android:textSize="30sp" />
 
-    <TableLayout
-        android:id="@+id/tableLayoutPedido"
+    <ImageButton
+        android:id="@+id/imageButtonNFCSincronizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textViewPedido"
-        android:layout_marginTop="25dp" >
-    </TableLayout>
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:drawablePadding="10dp"
+        android:minHeight="46dip"
+        android:minWidth="46dip" 
+        android:src="@drawable/nfcicono" />
 
-    <Button
-        android:id="@+id/validar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Validar" />
-
-    <Button
-        android:id="@+id/eliminar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/validar"
-        android:text="Eliminar" />
-
-    <TextView
-        android:id="@+id/total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/eliminar"
-        android:text="Total" />
-
-</RelativeLayout>
+</FrameLayout>

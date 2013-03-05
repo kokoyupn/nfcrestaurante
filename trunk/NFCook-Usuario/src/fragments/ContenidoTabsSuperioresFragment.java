@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.example.nfcook.R;
 
 
-public class TabsFragment extends Fragment{
+public class ContenidoTabsSuperioresFragment extends Fragment{
 		
 		private static final String NOMBRE = "NOMBRE";  
 		private static final String DESCRIPCION = "DESCRIPCION";  
@@ -54,8 +54,8 @@ public class TabsFragment extends Fragment{
 	    @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    	if(!cargado){
-	    		vistaConExpandaleList = inflater.inflate(R.layout.tabs_fragment_expandable_list, container, false);
-	    		vistaConListView = inflater.inflate(R.layout.tabs_fragment_list_view, container, false);
+	    		vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_tabs_fragment, container, false);
+	    		vistaConListView = inflater.inflate(R.layout.list_tabs_fragment, container, false);
 	    		importarBaseDatatos(vistaConExpandaleList);
 	    		crearExpandableListOlistView(vistaConExpandaleList, vistaConListView);
 	    		cargado = true;

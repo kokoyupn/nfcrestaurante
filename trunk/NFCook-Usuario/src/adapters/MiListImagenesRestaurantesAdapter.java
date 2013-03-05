@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-public class ImagenesRestaurantesAdapter extends BaseAdapter {
+public class MiListImagenesRestaurantesAdapter extends BaseAdapter {
 	private ArrayList<Integer> restaurantes;
 	private LayoutInflater l_Inflater;
 
-	public ImagenesRestaurantesAdapter(Context context, ArrayList<Integer> restaurantes) {
+	public MiListImagenesRestaurantesAdapter(Context context, ArrayList<Integer> restaurantes) {
 		this.restaurantes = restaurantes;
 		this.l_Inflater = LayoutInflater.from(context);
 	}
@@ -36,7 +36,7 @@ public class ImagenesRestaurantesAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView itemImage;
 		if (convertView == null) {
-			convertView = l_Inflater.inflate(R.layout.imag_restaurantes, null);
+			convertView = l_Inflater.inflate(R.layout.imagen_fondo_restaurante, null);
 			itemImage = (ImageView) convertView.findViewById(R.id.photo);
 			convertView.setTag(itemImage);
 		} else {

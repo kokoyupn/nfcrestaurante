@@ -7,10 +7,10 @@ import java.util.Stack;
 import com.example.nfcook.R;
 
 import fragments.CuentaFragment;
-import fragments.MyTabsListener;
+import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
-import fragments.TabsFragment;
+import fragments.ContenidoTabsSuperioresFragment;
 
 import baseDatos.Handler;
 
@@ -36,7 +36,7 @@ import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StartActivity extends Activity implements TabContentFactory, OnTabChangeListener{
+public class InicializarRestaurante extends Activity implements TabContentFactory, OnTabChangeListener{
 	
 	private ImageView imagenRestaurante;
 	private String restaurante;
@@ -57,7 +57,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pestanas);
+        setContentView(R.layout.contenedor_tabs);
 
         // Cargamos el logo del restaurante en el layout y asignamos el nombre del restaurante
         imagenRestaurante = (ImageView)findViewById(R.id.imageViewLogoRestaurante);
@@ -152,11 +152,11 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
     		// Creamos el tab
     		ActionBar.Tab tab = actionbar.newTab().setText(tipoTab);
     		// Creamos el fragment de cada tab y le metemos el restaurante al que pertenece
-    		Fragment tabFragment = new TabsFragment();
-    		((TabsFragment) tabFragment).setTipoTab(tipoTab);
-    		((TabsFragment) tabFragment).setRestaurante(restaurante);
+    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
+    		((ContenidoTabsSuperioresFragment) tabFragment).setTipoTab(tipoTab);
+    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
     		// Hacemos oyente al tab
-    		tab.setTabListener(new MyTabsListener(tabFragment,tipoTab));
+    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
     		// Añadimos dicha categoría como tab
     		actionbar.addTab(tab);
     	}
@@ -243,7 +243,7 @@ public class StartActivity extends Activity implements TabContentFactory, OnTabC
     // Metodo encargado de preparar las vistas de cada tab inferior
     private View prepararTabView(Context context, String nombreTab){
     	// Cargamos el layout
-    	tabInferiorContentView = LayoutInflater.from(context).inflate(R.layout.layout_tabs_inferiores, null);
+    	tabInferiorContentView = LayoutInflater.from(context).inflate(R.layout.tabs_inferiores, null);
     	// Cargamos el icono del tab
     	ImageView imagenTab = (ImageView)tabInferiorContentView.findViewById(R.id.imageViewTabInferior);
     	// Cargamos el titulo del tab

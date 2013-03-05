@@ -9,7 +9,7 @@ import com.example.nfcook.R;
 
 import baseDatos.Handler;
 
-import adapters.ImagenesRestaurantesAdapter;
+import adapters.MiListImagenesRestaurantesAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -78,7 +78,7 @@ public class MainActivity extends Activity{
     	}
     	
     	ListView lv = (ListView) findViewById(R.id.listaLogosRestarurtantes);
-        lv.setAdapter(new ImagenesRestaurantesAdapter(this, logosRestaurantesListaInicial));
+        lv.setAdapter(new MiListImagenesRestaurantesAdapter(this, logosRestaurantesListaInicial));
 
         lv.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> a, View v, int position, long id){
@@ -107,7 +107,7 @@ public class MainActivity extends Activity{
 		}
 		nombreRestaurante = it.next();
     	
-    	Intent intent = new Intent(this,StartActivity.class);
+    	Intent intent = new Intent(this,InicializarRestaurante.class);
 		intent.putExtra("nombreRestaurante", nombreRestaurante);
     	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
     	startActivity(intent);

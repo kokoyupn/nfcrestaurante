@@ -38,7 +38,7 @@ public class PedidoFragment extends Fragment{
 		
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_pedido, container, false);
+		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
         importarBaseDatatos();
         crearExpandableList();
         return vistaConExpandaleList;
