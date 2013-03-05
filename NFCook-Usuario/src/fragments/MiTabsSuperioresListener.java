@@ -6,11 +6,11 @@ import android.app.ActionBar.TabListener;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-public class MyTabsListener  implements TabListener{
+public class MiTabsSuperioresListener  implements TabListener{
 	private Fragment fragment;
 	private String nombreTab;
  
-	public MyTabsListener(Fragment fragment, String nombreTab) {
+	public MiTabsSuperioresListener(Fragment fragment, String nombreTab) {
 		this.fragment = fragment;
 		this.nombreTab = nombreTab;
 	}

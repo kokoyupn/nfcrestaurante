@@ -79,14 +79,14 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		//Cargamos diferente layout en función de los campos a mostrar.
 		if(extrasPlato==null && observacionesPlato==null){
 			
-			convertView = inflater.inflate(R.layout.contenido_hijo_lista_pedido_sin_extras_ni_observaciones, parent,false);
+			convertView = inflater.inflate(R.layout.hijo_lista_pedido_sin_extras_ni_observaciones, parent,false);
 			
 			TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);			 
 			textViewPrecio.setText(precioPlato);
 		
 		}else if(extrasPlato==null && observacionesPlato!=null){
 			
-			convertView = inflater.inflate(R.layout.contenido_hija_lista_pedido_sin_extras, parent,false);
+			convertView = inflater.inflate(R.layout.hijo_lista_pedido_sin_extras, parent,false);
 		
 			TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
 			TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);
@@ -96,7 +96,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		
 		}else{
 			
-			convertView = inflater.inflate(R.layout.contenido_hijo_lista_pedido, parent,false);
+			convertView = inflater.inflate(R.layout.hijo_lista_pedido, parent,false);
 			
 			TextView textViewExtras = (TextView) convertView.findViewById(R.id.textViewPedidoExtras);
 			TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
@@ -193,7 +193,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.contenido_padre_lista_pedido, parent,false);
+			convertView = inflater.inflate(R.layout.padre_lista_pedido, parent,false);
         }
  
         TextView textViewPadrePlato = (TextView) convertView.findViewById(R.id.textViewPlatoPadre);

@@ -74,7 +74,7 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		if(convertView == null){	
-			convertView = inflater.inflate(R.layout.hijo_lista_expandible_rg, parent,false); // XML contenedor de los view a mostrar por cada hijo. 
+			convertView = inflater.inflate(R.layout.hijo_lista_extras_descripcion_plato_y_editar, parent,false); // XML contenedor de los view a mostrar por cada hijo. 
 		}	
 		/*
 		 * Necesitamos que sean final para que por cada hijo mostrado de la lista guardemos en que posición
