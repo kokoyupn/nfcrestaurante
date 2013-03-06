@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -28,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,7 +134,17 @@ public class InicialCamarero extends Activity{
      //establecimiento del oyente de dejar pulsada una mesa   
         gridviewCam.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-						
+				//Preparamos los elementos que tendrá la lista
+				final CharSequence[] items = {"Sincronizar", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
+
+				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(InicialCamarero.this);
+				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog, int item) {
+				         Toast.makeText(getApplicationContext(), "YUJUUUU", Toast.LENGTH_SHORT).show();
+				    }
+				});
+				AlertDialog alert = ventEmergente.create();
+						/*
 						 posicionMesaABorrar = position;
 						 AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
 			             alert.setMessage("¿Seguro que quieres eliminar esta mesa? "); //mensaje            
@@ -162,6 +174,7 @@ public class InicialCamarero extends Activity{
 						
 			            
 			        });//fin aceptar
+			        */
 			            alert.show();
 			         	return true;
 					}
@@ -204,9 +217,12 @@ public class InicialCamarero extends Activity{
 		numPersonas.setText("", TextView.BufferType.EDITABLE);
 		numMesa.setText("", TextView.BufferType.EDITABLE);
 		//Limitamos a 99 el número de personas por mesa y a 999 el número de mesa
-		InputFilter[] FilterArray = new InputFilter[3];
-		FilterArray[0] = new InputFilter.LengthFilter(8);
-		numPersonas.setFilters(FilterArray);
+		InputFilter[] filterArrayP = new InputFilter[1];
+		filterArrayP[0] = new InputFilter.LengthFilter(2);
+		numPersonas.setFilters(filterArrayP);
+		InputFilter[] filterArrayM = new InputFilter[1];
+		filterArrayM[0] = new InputFilter.LengthFilter(3);
+		numMesa.setFilters(filterArrayM);
 		tituloMesa.setText("Elige el número de mesa:");
 		tituloPersonas.setText("Elige el número de personas:");
 		//Construimos el AlertDialog y le metemos la vista que hemos personalizado
