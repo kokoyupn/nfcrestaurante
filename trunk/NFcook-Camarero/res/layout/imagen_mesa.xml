@@ -21,14 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:src="@drawable/mesa_icono" />
-
+
         <TextView
             android:id="@+id/textViewMesa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:paddingTop="15dp"
             android:text="0"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
