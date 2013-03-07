@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="com.example.nfcook_camarero.Historico" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/Historico.java" binary="false" label="historico" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="168" y="0"/>    
+    <execution id="2">      
+      <position height="1635" width="0" x="0" y="78"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="1572" width="0" x="0" y="120"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="21" width="0" x="0" y="172"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="303" width="0" x="0" y="224"/>    
+    </execution>    
+    <execution id="62">      
+      <position height="21" width="0" x="0" y="1650"/>    
+    </execution>    
+    <execution id="66">      
+      <position height="21" width="0" x="0" y="318"/>    
+    </execution>    
+    <execution id="72">      
+      <position height="21" width="0" x="0" y="454"/>    
+    </execution>  
+  </object>  
+  <object id="75" language="java" name="com.example.nfcook_camarero.HandlerGenerico" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/HandlerGenerico.java" binary="false" label="sql" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="64">      
+      <position height="21" width="0" x="0" y="255"/>    
+    </execution>    
+    <execution id="68">      
+      <position height="21" width="0" x="0" y="349"/>    
+    </execution>  
+  </object>  
+  <object id="76" language="java" name="android.widget.Toast" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="&lt;static&gt;" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="70">      
+      <position height="21" width="0" x="0" y="391"/>    
+    </execution>  
+  </object>  
+  <object id="77" language="java" name="android.widget.Toast" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="74">      
+      <position height="21" width="0" x="0" y="485"/>    
+    </execution>  
+  </object>  
+  <object id="78" language="java" name="android.database.sqlite.SQLiteDatabase" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" label="db" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="537"/>    
+    </execution>  
+  </object>  
+  <object id="79" language="java" name="java.util.ArrayList" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="listaPadres" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="579"/>    
+    </execution>    
+    <execution id="28">      
+      <position height="21" width="0" x="0" y="915"/>    
+    </execution>  
+  </object>  
+  <object id="80" language="java" name="java.util.ArrayList" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="listaHijos" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="621"/>    
+    </execution>    
+    <execution id="24">      
+      <position height="21" width="0" x="0" y="831"/>    
+    </execution>    
+    <execution id="52">      
+      <position height="21" width="0" x="0" y="1419"/>    
+    </execution>  
+  </object>  
+  <object id="81" language="java" name="android.database.Cursor" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" label="c" 
+    type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="663"/>    
+    </execution>    
+    <execution id="18">      
+      <position height="21" width="0" x="0" y="705"/>    
+    </execution>    
+    <execution id="20">      
+      <position height="21" width="0" x="0" y="747"/>    
+    </execution>    
+    <execution id="34">      
+      <position height="21" width="0" x="0" y="1041"/>    
+    </execution>    
+    <execution id="40">      
+      <position height="21" width="0" x="0" y="1167"/>    
+    </execution>    
+    <execution id="42">      
+      <position height="21" width="0" x="0" y="1209"/>    
+    </execution>    
+    <execution id="50">      
+      <position height="21" width="0" x="0" y="1377"/>    
+    </execution>  
+  </object>  
+  <object id="82" language="java" name="java.util.Map" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="padreActual" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="22">      
+      <position height="21" width="0" x="0" y="789"/>    
+    </execution>    
+    <execution id="26">      
+      <position height="21" width="0" x="0" y="873"/>    
+    </execution>    
+    <execution id="30">      
+      <position height="21" width="0" x="0" y="957"/>    
+    </execution>    
+    <execution id="58">      
+      <position height="21" width="0" x="0" y="1545"/>    
+    </execution>  
+  </object>  
+  <object id="83" language="java" name="java.util.ArrayList" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" label="hijo" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="32">      
+      <position height="21" width="0" x="0" y="999"/>    
+    </execution>    
+    <execution id="46">      
+      <position height="21" width="0" x="0" y="1293"/>    
+    </execution>  
+  </object>  
+  <object id="84" language="java" name="java.util.Map" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="hijoActual" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="36">      
+      <position height="21" width="0" x="0" y="1083"/>    
+    </execution>    
+    <execution id="38">      
+      <position height="21" width="0" x="0" y="1125"/>    
+    </execution>    
+    <execution id="44">      
+      <position height="21" width="0" x="0" y="1251"/>    
+    </execution>    
+    <execution id="48">      
+      <position height="21" width="0" x="0" y="1335"/>    
+    </execution>    
+    <execution id="54">      
+      <position height="21" width="0" x="0" y="1461"/>    
+    </execution>    
+    <execution id="56">      
+      <position height="21" width="0" x="0" y="1503"/>    
+    </execution>  
+  </object>  
+  <object id="85" language="java" name="android.widget.SimpleExpandableListAdapter" project="NFcook-Camarero" 
+    file="C:/software/programacion/Android/android-sdk/platforms/android-16/android.jar" binary="true" label="mAdapter" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="60">      
+      <position height="21" width="0" x="0" y="1587"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="onCreate(android.os.Bundle):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="onCreate(android.os.Bundle):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="importarBaseDatatos():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" 
+    operation="query(java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String,java.lang.String,java.lang.String,java.lang.String):android.database.Cursor">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="ArrayList()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="ArrayList()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="moveToNext():boolean">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="getString(int):java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>  
+  <message id="19" operation="getString(int):java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="20"/>  
+  </message>  
+  <message id="21" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="22"/>  
+  </message>  
+  <message id="23" operation="add(E):boolean">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="24"/>  
+  </message>  
+  <message id="25" operation="HashMap()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="26"/>  
+  </message>  
+  <message id="27" operation="add(E):boolean">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="28"/>  
+  </message>  
+  <message id="29" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="30"/>  
+  </message>  
+  <message id="31" operation="ArrayList()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="32"/>  
+  </message>  
+  <message id="33" operation="getString(int):java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="34"/>  
+  </message>  
+  <message id="35" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="36"/>  
+  </message>  
+  <message id="37" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="38"/>  
+  </message>  
+  <message id="39" operation="getString(int):java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="40"/>  
+  </message>  
+  <message id="41" operation="getString(int):java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="42"/>  
+  </message>  
+  <message id="43" operation="HashMap()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="44"/>  
+  </message>  
+  <message id="45" operation="add(E):boolean">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="46"/>  
+  </message>  
+  <message id="47" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="48"/>  
+  </message>  
+  <message id="49" operation="getInt(int):int">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="50"/>  
+  </message>  
+  <message id="51" operation="add(E):boolean">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="52"/>  
+  </message>  
+  <message id="53" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="54"/>  
+  </message>  
+  <message id="55" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="56"/>  
+  </message>  
+  <message id="57" operation="put(K,V):V">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="58"/>  
+  </message>  
+  <message id="59" 
+    operation="SimpleExpandableListAdapter(android.content.Context,java.util.List&lt;? extends java.util.Map&lt;java.lang.String,?&gt;&gt;,int,java.lang.String[],int[],java.util.List&lt;? extends java.util.List&lt;? extends java.util.Map&lt;java.lang.String,?&gt;&gt;&gt;,int,java.lang.String[],int[])">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="60"/>  
+  </message>  
+  <message id="61" operation="setListAdapter(android.widget.ExpandableListAdapter):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="62"/>  
+  </message>  
+  <message id="63" operation="HandlerGenerico(android.content.Context,java.lang.String,java.lang.String)">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="64"/>  
+  </message>  
+  <message id="65" operation="getApplicationContext():android.content.Context">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="66"/>  
+  </message>  
+  <message id="67" operation="open():android.database.sqlite.SQLiteDatabase">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="68"/>  
+  </message>  
+  <message id="69" operation="makeText(android.content.Context,java.lang.CharSequence,int):android.widget.Toast">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="70"/>  
+  </message>  
+  <message id="71" operation="getApplicationContext():android.content.Context">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="72"/>  
+  </message>  
+  <message id="73" operation="show():void">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="74"/>  
+  </message>
+</sequence-diagram>
