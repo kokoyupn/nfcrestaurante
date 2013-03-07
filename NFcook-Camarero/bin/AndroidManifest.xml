@@ -4,7 +4,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="15" />
 
     <application
@@ -25,18 +25,7 @@
             android:name=".InicialCamarero">
 
         </activity>
-        <activity
-            android:name=".Handler">
-
-        </activity>
-         <activity
-            android:name=".HandlerCamarero">
-
-        </activity>
-         <activity
-            android:name=".HandlerCamarero2">
-
-        </activity>
+ 
          <activity
             android:name=".InfoPlato">
 
@@ -61,6 +50,9 @@
         <activity
             android:name=".Historico">
         </activity>  
+         <activity
+            android:name=".AnadirPlatos">
+        </activity> 
     </application>
 
 </manifest>
