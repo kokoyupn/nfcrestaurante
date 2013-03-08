@@ -40,6 +40,7 @@ public class InicialCamarero extends Activity{
     private ArrayList<MesaView> mesas;
     private String idCamarero;
     private String nombre;
+    private String numeroMesaAEditar;
     private int precio,posicionMesaABorrar;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
@@ -134,54 +135,175 @@ public class InicialCamarero extends Activity{
      //establecimiento del oyente de dejar pulsada una mesa   
         gridviewCam.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+				//Guardamos el número de la mesa pulsada
+				numeroMesaAEditar = mesas.get(position).getNumMesa();
 				//Preparamos los elementos que tendrá la lista
 				final CharSequence[] items = {"Sincronizar", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
 
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(InicialCamarero.this);
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog, int item) {
-				         Toast.makeText(getApplicationContext(), "YUJUUUU", Toast.LENGTH_SHORT).show();
+				    	if (item == 0){
+				    		Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
+				    	//----------------- onClickListener de editar número de mesas --------------------------------
+				    	}else if(item == 1){
+				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);
+				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
+				    		final TextView tituloMesa = (TextView) textEntryView.findViewById(R.id.textViewEditar);
+				    		final EditText numMesa = (EditText) textEntryView.findViewById(R.id.editTextEditar);
+				    		tituloMesa.setText("Indica el nuevo número de mesa: ");
+				    		numMesa.setText("", TextView.BufferType.EDITABLE);
+				    		//Limitamos a 4 el máximo número de caracteres en la mesa
+				    		InputFilter[] filterArray = new InputFilter[1];
+				    		filterArray[0] = new InputFilter.LengthFilter(4);
+				    		numMesa.setFilters(filterArray);
+				    		//Creación y configuración de la ventana emergente
+				    		AlertDialog.Builder ventEmergEditMesa = new AlertDialog.Builder(InicialCamarero.this);
+				    		ventEmergEditMesa.setNegativeButton("Cancelar", null);
+				    		ventEmergEditMesa.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
+				    			
+				    			public void onClick(DialogInterface dialog, int whichButton) {
+				    				//Comprobamos que ha introducido un numero porque si no a la hora de ordenar 
+				    				//puede mezclar numeros y letras y no es valido
+				    				if(!esNumero(numMesa.getText().toString())){
+				    					Toast.makeText(InicialCamarero.this, "La mesa ha de ser un número", Toast.LENGTH_LONG).show();           			
+				            		}else{
+				    					String numeroMesa = numMesa.getText().toString();
+				    					if(numeroMesa.equals("")){
+				    	        			Toast.makeText(InicialCamarero.this, "Introduce la mesa", Toast.LENGTH_LONG).show();           			
+				    	        		}else{//ha introducido la mesa
+				    	        			//Creamos una mesa aux para buscarla en la base de datos y ver si ya existe previamente
+				    	        			MesaView mesaBuscarRepe = new MesaView(getApplicationContext());
+				    	        			mesaBuscarRepe.setNumMesa(numeroMesa);
+				    	        			if (existeMesa(mesaBuscarRepe)){// si ya existe la mesa no la metemos y sacamos un mensaje
+				    	        				Toast.makeText(InicialCamarero.this, "Esa mesa ya está siendo atendida", Toast.LENGTH_LONG).show();
+				    	        			}else{//la mesa no existe. La introducimos     				
+				    	            			gridviewCam = (GridView) findViewById(R.id.gridViewInicial);
+				    	            			Iterator<MesaView> it = mesas.iterator();
+				    	            			MesaView mesaAux = new MesaView(InicialCamarero.this);
+				    	            			while(it.hasNext()){
+				    	            				MesaView mesaAntigua = it.next();
+				    	            				if (mesaAntigua.getNumMesa() == numeroMesaAEditar)
+				    	            					mesaAux = mesaAntigua;
+				    	            			}
+				    	            			mesas.remove(mesaAux);
+				    	                    	MesaView mesaNueva = new MesaView(InicialCamarero.this);
+				    	                    	mesaNueva.setNumMesa(numeroMesa);
+				    	                    	mesaNueva.setNumPersonas(mesaAux.getNumPersonas());
+				    	                    	mesas.add(mesaNueva);
+				    	                    	
+				    	                    	Toast.makeText(getApplicationContext(),
+				    	                    			"Mesa '"+numeroMesaAEditar+"' cambiada a '"+numeroMesa+"' correctamente", Toast.LENGTH_LONG).show();
+				    	                    	
+				    	                    	//Ordenamos y refrescamos
+				    	                        ordenaMesas();
+				    	                    	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
+				    	                    	gridviewCam.setAdapter(adapterCam);  
+				    	                    	
+				    	                    	//Modificamos el campo NumMesa de la base de datos de cada plato
+				    	                    	ContentValues valores = new ContentValues();
+				    	                    	valores.put("NumMesa", numeroMesa);
+				    	                    	String[] info = {numeroMesaAEditar};
+				    	                    	
+				    	                    	dbMesas.update("Mesas", valores, "NumMesa=?", info);
+				    	                    }//fin de existe mesa
+				    	        		}//fin de ha introducido la mesa
+				    				}//cierra en numero
+				    			}//cierra onClick de aceptar
+				    		});//cierra el oyente de aceptar
+				    		ventEmergEditMesa.setView(textEntryView);
+				    		ventEmergEditMesa.show();
+				    		//----------------- onClickListener de editar número de personas --------------------------------
+				    	}else if(item == 2){
+				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);
+				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
+				    		final TextView tituloPersonas = (TextView) textEntryView.findViewById(R.id.textViewEditar);
+				    		final EditText numPersonas = (EditText) textEntryView.findViewById(R.id.editTextEditar);
+				    		tituloPersonas.setText("Indica el nuevo número de personas: ");
+				    		numPersonas.setText("", TextView.BufferType.EDITABLE);
+				    		//Limitamos a 2 el máximo número de caracteres en la mesa
+				    		InputFilter[] filterArray = new InputFilter[1];
+				    		filterArray[0] = new InputFilter.LengthFilter(2);
+				    		numPersonas.setFilters(filterArray);
+				    		//Creación y configuración de la ventana emergente
+				    		AlertDialog.Builder ventEmergEditMesa = new AlertDialog.Builder(InicialCamarero.this);
+				    		ventEmergEditMesa.setNegativeButton("Cancelar", null);
+				    		ventEmergEditMesa.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
+				    			
+				    			public void onClick(DialogInterface dialog, int whichButton) {
+				    				//Comprobamos que ha introducido un numero porque si no a la hora de ordenar 
+				    				//puede mezclar numeros y letras y no es valido
+				    				if(!esNumero(numPersonas.getText().toString())){
+				    					Toast.makeText(InicialCamarero.this, "Las personas han de ser un número", Toast.LENGTH_LONG).show();           			
+				            		}else{
+				    					String numeroPersonas = numPersonas.getText().toString();
+				    					if(numeroPersonas.equals("")){
+				    	        			Toast.makeText(InicialCamarero.this, "Introduce las personas", Toast.LENGTH_LONG).show();           			
+				    	        		}else{//ha introducido las personas
+				    	            			gridviewCam = (GridView) findViewById(R.id.gridViewInicial);
+				    	            			Iterator<MesaView> it = mesas.iterator();
+				    	            			MesaView mesaAux = new MesaView(InicialCamarero.this);
+				    	            			while(it.hasNext()){
+				    	            				MesaView mesaAntigua = it.next();
+				    	            				if (mesaAntigua.getNumMesa() == numeroMesaAEditar)
+				    	            					mesaAux = mesaAntigua;
+				    	            			}
+				    	                    	mesaAux.setNumPersonas(numeroPersonas);
+				    	                    	
+				    	                    	Toast.makeText(getApplicationContext(),
+				    	                    			"Ahora hay "+numeroPersonas+" personas en la mesa "+numeroMesaAEditar, Toast.LENGTH_LONG).show();
+				    	                    	ordenaMesas();
+				    	                    	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
+				    	                    	gridviewCam.setAdapter(adapterCam);  
+				    	                    	
+				    	                    	//Modificamos el campo NumMesa de la base de datos de cada plato
+				    	                    	ContentValues valores = new ContentValues();
+				    	                    	valores.put("Personas", numeroPersonas);
+				    	                    	String[] info = {numeroMesaAEditar};
+				    	                    	
+				    	                    	dbMesas.update("Mesas", valores, "NumMesa=?", info);
+				    	        		}//fin de ha introducido numero de personas
+				    				}//cierra en numero
+				    			}//cierra onClick de aceptar
+				    		});//cierra el oyente de aceptar
+				    		ventEmergEditMesa.setView(textEntryView);
+				    		ventEmergEditMesa.show();
+				    	}else if (item == 3){
+							 AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
+				             alert.setMessage("¿Seguro que quieres eliminar esta mesa? "); //mensaje            
+				             alert.setNegativeButton("Cancelar", null);
+				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
+				               	public void onClick(DialogInterface dialog, int whichButton) {
+					                //eliminamos la mesa de la lista de MesaView		
+				               		Iterator<MesaView> it = mesas.iterator();
+	    	            			MesaView mesaAux = new MesaView(InicialCamarero.this);
+	    	            			while(it.hasNext()){
+	    	            				MesaView mesaAntigua = it.next();
+	    	            				if (mesaAntigua.getNumMesa() == numeroMesaAEditar)
+	    	            					mesaAux = mesaAntigua;
+	    	            			}
+	    	                    	mesas.remove(mesaAux);
+					            	//Eliminar un registro
+					             	String[] args = new String[]{numeroMesaAEditar};
+					             	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
+					                
+					             	//Ordenamos y refrescamos  
+					                ordenaMesas();
+					             	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
+					             	gridviewCam.setAdapter(adapterCam);
+				               	}
+				             });//fin onclick aceptar
+				             alert.show();
+				    	} //fin else item 3
 				    }
 				});
-				AlertDialog alert = ventEmergente.create();
-						/*
-						 posicionMesaABorrar = position;
-						 AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
-			             alert.setMessage("¿Seguro que quieres eliminar esta mesa? "); //mensaje            
-			             alert.setPositiveButton("Cancelar", null);
-			             alert.setNegativeButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
-			               	public void onClick(DialogInterface dialog, int whichButton) {
-			                //sacamos el numero de mesa de la mesa a borrar 		
-							String valAux = mesas.get(posicionMesaABorrar).getNumMesa();
-			            	//Eliminar un registro
-			             	String[] args = new String[]{valAux};
-			             	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
-			                //Lo eliminamos tambien de la lista de mesas	
-			             	Boolean enc = false;
-			             	Iterator<MesaView> it = mesas.iterator();
-			             	while (it.hasNext() && !enc){
-			             		MesaView atratar = it.next();
-			             		if(atratar.getNumMesa().equals(valAux)){
-			             			enc=true;
-			             			mesas.remove(atratar);
-			             		}
-			             	}
-			             	//Ordenamos y refrescamos  
-			                ordenaMesas();
-			             	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
-			             	gridviewCam.setAdapter(adapterCam);
-			                }
-						
-			            
-			        });//fin aceptar
-			        */
-			            alert.show();
-			         	return true;
-					}
+			    ventEmergente.show();
+			    return true;
+			}
 				
-		        });
+		});
         
-		}//fin del oncreate
+	}//fin del oncreate
 	
     /**
      * 
@@ -228,7 +350,7 @@ public class InicialCamarero extends Activity{
 		//Construimos el AlertDialog y le metemos la vista que hemos personalizado
 		AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
 		alert.setView(textEntryView);
-		alert.setNegativeButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
+		alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 			
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//Comprobamos que ha introducido un numero porque si no a la hora de ordenar 
@@ -281,7 +403,8 @@ public class InicialCamarero extends Activity{
 	                		}
 	                       	
 	                    	//rellenamos la base de datos con lo que nos ha venido del chip que esta en datos
-	                    	for(int j = 0; j < datos.size(); j++ ){//concatenamos los extras para guardarlos en string separados por comas
+	                    	for(int j = 0; j < datos.size(); j++ ){
+	                    		//concatenamos los extras para guardarlos en string separados por comas
 		                    	String extr = "";
 		                    	for (int i = 0; i < datos.get(j).getExtras().size(); i++ ){
 		                    		extr= extr + datos.get(j).getExtras().get(i) + ",";
@@ -320,7 +443,7 @@ public class InicialCamarero extends Activity{
 			}//cierra onClick de aceptar
 		});//cierra el oyente de aceptar
 
-		alert.setPositiveButton("Cancelar", null);
+		alert.setNegativeButton("Cancelar", null);
 
 		alert.show();
    }
@@ -335,8 +458,8 @@ public class InicialCamarero extends Activity{
              input.setInputType(InputType.TYPE_CLASS_NUMBER);
              alert.setView(input); //añadimos el edit text a la vista del AlertDialog
              //añadimos los botones
-             alert.setPositiveButton("Cancelar", null);
-             alert.setNegativeButton("Aceptar",new  DialogInterface.OnClickListener() { 
+             alert.setNegativeButton("Cancelar", null);
+             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { 
                	public void onClick(DialogInterface dialog, int whichButton) {
                  		String value =input.getText().toString();
                  		gridviewCam = (GridView) findViewById(R.id.gridViewInicial);
