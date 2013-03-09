@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +20,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -47,9 +49,14 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 		
+
+		
 			convertView = inflater.inflate(R.layout.contenido_hijo_lista_anadir_plato, parent,false);
 			
+	
+			
 			GridView gridViewAnadir = (GridView) convertView.findViewById(R.id.gridViewAnadirPlato);			 
+	
 			
 			ArrayList<String> idHijos = padresExpandableList.get(groupPosition).getHijo().getIds();
 			ArrayList<Integer> imgHijos = padresExpandableList.get(groupPosition).getHijo().getNumImagenes();
@@ -84,7 +91,8 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 	            	//sacará ventana emergente         	
 	            	String pulsado= platos.get(position).getIdPlato();
-	            	Toast.makeText(context,pulsado,Toast.LENGTH_SHORT).show();	
+	            	Toast.makeText(context,pulsado,Toast.LENGTH_SHORT).show();
+
 	                }
 	        });
 		
