@@ -4,17 +4,23 @@ package com.example.nfcook_camarero;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ExpandableListView;
+import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 public class AnadirPlatos extends Activity{
@@ -41,11 +47,17 @@ public class AnadirPlatos extends Activity{
      // Obtenemos el numro de mesa de la pantalla anterior
 //        Bundle bundle = getIntent().getExtras();
 //        numeroMesa = bundle.getString("numMesa");
+        
+        //Creamos la busqueda
+        SearchView busqueda = (SearchView)findViewById(R.id.searchViewPlatos);
+    	SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+    	SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+        busqueda.setSearchableInfo(searchableInfo);
     }
 		
 	
-	public void crearExpandableList() {	    	
-		
+	public void crearExpandableList() {	  
+	
 		ArrayList<PadreExpandableListAnadirPlato> padres = new ArrayList<PadreExpandableListAnadirPlato>();
 		
 		//De momento leer todos los platos para probar de MiBase.db
