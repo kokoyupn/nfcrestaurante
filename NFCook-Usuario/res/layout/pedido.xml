@@ -10,27 +10,40 @@
         android:layout_marginBottom="60dp"
         android:orientation="vertical" >
 
-        <ExpandableListView
-            android:id="@+id/expandableListPedido"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:childDivider="?android:attr/listDivider"
-            android:divider="?android:attr/listDividerAlertDialog" >
+            android:background="#BFE4F2" >
 
-        </ExpandableListView>
+            <TextView
+                android:id="@+id/textViewTituloPedido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Pedido"
+                android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+                android:textSize="30sp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ExpandableListView
+                android:id="@+id/expandableListPedido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:childDivider="?android:attr/listDivider"
+                android:divider="?android:attr/listDividerAlertDialog" >
+	
+	        </ExpandableListView>
+
+        </FrameLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewTituloPedido"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:text="Pedido"
-        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-        android:textSize="30sp" />
 
     <ImageButton
         android:id="@+id/imageButtonNFCSincronizar"

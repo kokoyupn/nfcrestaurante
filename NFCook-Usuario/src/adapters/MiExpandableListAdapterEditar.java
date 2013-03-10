@@ -174,7 +174,14 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 		TextView textViewNombreCategoria = (TextView) convertView.findViewById(R.id.textViewPadre);
 		textViewNombreCategoria.setText(padresExpandableList.get(groupPosition).getCategoriaExtra());
         
-        return convertView;
+        if(padresExpandableList.get(groupPosition).isExpandido()){
+        	if(esEditar){
+        		DescripcionPlatoEditar.expandeGrupoLista(groupPosition);
+        	}else{
+        		DescripcionPlato.expandeGrupoLista(groupPosition);
+        	}
+        }
+		return convertView;
 
 	}
 

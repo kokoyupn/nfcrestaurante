@@ -121,6 +121,9 @@ public class DescripcionPlatoEditar extends Activity {
 					// Añadimos la información del hijo a la lista de hijos
 					variedadExtrasListaHijos.add(extrasDeUnaCategoria);
 					PadreExpandableListEditar padreCategoriaExtra = new PadreExpandableListEditar(idPlato,categoriaExtraPadre, variedadExtrasListaHijos);
+					if(i==0){//Expandimos el primer padre por estetica
+						padreCategoriaExtra.setExpandido(true);
+					}
 					// Añadimos la información del padre a la lista de padres
 					categoriasExtras.add(padreCategoriaExtra);
 				}catch(Exception e){
