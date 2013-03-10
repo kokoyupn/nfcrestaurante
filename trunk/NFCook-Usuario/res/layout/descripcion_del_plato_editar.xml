@@ -3,7 +3,9 @@
     android:id="@+id/FrameLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFC" >
+    android:background="#FFC" 
+    android:focusable="true" 
+    android:focusableInTouchMode="true">
     
     <AutoCompleteTextView
         android:id="@+id/AutoCompleteTextViewOpciones"
