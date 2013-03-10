@@ -42,6 +42,7 @@ public class InicialCamarero extends Activity{
     private String nombre;
     private String numeroMesaAEditar;
     private int precio,posicionMesaABorrar;
+    private int idUnico = 0;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
     
@@ -433,7 +434,10 @@ public class InicialCamarero extends Activity{
 		                    	registro.put("Nombre", nombre);
 		                    	registro.put("Precio", precio);
 		                    	registro.put("Personas", numeroPersonas);
-		                	   
+		                    	registro.put("IdUnico", idUnico);
+		                    	//aumentamos el idUnico
+		                    	idUnico ++;
+		                	    //insertamos el registro en la base de datos
 		                	   	dbMesas.insert("Mesas", null, registro);
 		                	   
 	                    	}//fin de relleno de la base de datos con lo que nos viene del chip
