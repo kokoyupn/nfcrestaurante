@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/numeroDeMesa"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+
+			</TextView>
+
+            <ImageView
+                android:id="@+id/imagenPrecio"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/total" />
+
+            <TextView
+                android:id="@+id/precioTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listaPlatos"
+            android:layout_width="match_parent"
+            android:layout_height="342dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" >
+
+        </ListView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <Button
+                android:id="@+id/botonCobrar"
+                android:layout_width="47dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/pagar" />
+
+            <Button
+                android:id="@+id/aniadirPlato"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/iconomas" />
+
+            <ImageView
+                android:id="@+id/imagenComida"
+                android:layout_width="57dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/iconohambuguesa" />
+
+            <Button
+                android:id="@+id/aniadirBebida"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/iconomas" />
+
+            <ImageView
+                android:id="@+id/imagenBebida"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:src="@drawable/iconobebida" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
