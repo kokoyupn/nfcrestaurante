@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.1" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="baseDatos.HandlerGenerico" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/baseDatos/HandlerGenerico.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="119" x="638" y="255"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="adapters.InicialCamareroAdapter" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/InicialCamareroAdapter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="159" x="998" y="265"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.example.nfcook_camarero.AnadirPlatos" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/AnadirPlatos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="225" y="116"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.example.nfcook_camarero.MainActivity" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/MainActivity.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="422" y="63"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="adapters.AnadirPlatoAdapter" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/AnadirPlatoAdapter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="135" x="-3" y="271"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="adapters.PadreExpandableListAnadirPlato" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/PadreExpandableListAnadirPlato.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="211" x="205" y="398"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="com.example.nfcook_camarero.MesaView" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/MesaView.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="654" y="400"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="adapters.ContenidoListMesa" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/ContenidoListMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="133" x="499" y="547"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="adapters.MiListAdapterMesa" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/MiListAdapterMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="134" x="459" y="470"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.example.nfcook_camarero.Historico" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/Historico.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="602" y="175"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.example.nfcook_camarero.PlatoView" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/PlatoView.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="30" y="398"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.example.nfcook_camarero.AnadirBebidas" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/AnadirBebidas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="41" y="100"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="adapters.HijoExpandableListAnadirPlato" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/HijoExpandableListAnadirPlato.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="261" x="185" y="475"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.example.nfcook_camarero.InicialCamarero" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/InicialCamarero.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="861" y="108"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="adapters.MiExpandableListAdapterAnadirPlato" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/adapters/MiExpandableListAdapterAnadirPlato.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="235" x="183" y="301"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.example.nfcook_camarero.Mesa" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/Mesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="457" y="297"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.example.nfcook_camarero.InfoPlato" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/InfoPlato.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="844" y="271"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <note id="18">    
+    <position height="45" width="116" x="439" y="-2"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML 
+activity_main]]>
+    </text>  
+  </note>  
+  <note id="19">    
+    <position height="50" width="128" x="57" y="36"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+bebidaslayout]]>
+    </text>  
+  </note>  
+  <note id="20">    
+    <position height="56" width="184" x="199" y="41"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+expandable_list_anadir_plato
+]]>
+    </text>  
+  </note>  
+  <note id="21">    
+    <position height="52" width="100" x="698" y="108"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+padres_historico]]>
+    </text>  
+  </note>  
+  <note id="22">    
+    <position height="48" width="109" x="839" y="35"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+inicial_camarero]]>
+    </text>  
+  </note>  
+  <note id="23">    
+    <position height="48" width="84" x="1032" y="162"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+imagen_mesa]]>
+    </text>  
+  </note>  
+  <note id="24">    
+    <position height="44" width="128" x="658" y="326"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+imagen_mesa]]>
+    </text>  
+  </note>  
+  <note id="25">    
+    <position height="52" width="137" x="438" y="391"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+contenido_lista_mesa]]>
+    </text>  
+  </note>  
+  <note id="26">    
+    <position height="41" width="77" x="488" y="234"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+pedidomesa]]>
+    </text>  
+  </note>  
+  <note id="27">    
+    <position height="56" width="199" x="191" y="200"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+contenido_hijo_lista_anadir_plato]]>
+    </text>  
+  </note>  
+  <note id="28">    
+    <position height="42" width="120" x="14" y="205"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+imagen_plato]]>
+    </text>  
+  </note>  
+  <note id="29">    
+    <position height="40" width="84" x="3" y="342"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+imagen_plato]]>
+    </text>  
+  </note>  
+  <note id="30">    
+    <position height="40" width="80" x="594" y="117"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+hijos_historico]]>
+    </text>  
+  </note>  
+  <note id="31">    
+    <position height="41" width="108" x="1071" y="38"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+alert_dialog_edit]]>
+    </text>  
+  </note>  
+  <note id="32">    
+    <position height="44" width="105" x="958" y="41"/>    
+    <background red="255" green="128" blue="128"/>    
+    <text><![CDATA[XML
+alert_dialog_view]]>
+    </text>  
+  </note>  
+  <text-link id="33">    
+    <link-end type="SOURCE" refId="29"/>    
+    <link-end type="TARGET" refId="11"/>  
+  </text-link>  
+  <text-link id="34">    
+    <link-end type="SOURCE" refId="28"/>    
+    <link-end type="TARGET" refId="5"/>  
+  </text-link>  
+  <text-link id="35">    
+    <link-end type="SOURCE" refId="30"/>    
+    <link-end type="TARGET" refId="10"/>  
+  </text-link>  
+  <text-link id="36">    
+    <link-end type="SOURCE" refId="23"/>    
+    <link-end type="TARGET" refId="2"/>  
+  </text-link>  
+  <association id="37">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="38" name="hijo"/>      
+      <multiplicity id="39" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="40">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="41" name="sqlMiBase"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="43">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="44" name="adapterCam"/>      
+      <multiplicity id="45" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="46">    
+    <link-end type="SOURCE" refId="21"/>    
+    <link-end type="TARGET" refId="10"/>  
+  </text-link>  
+  <association id="47">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="48" name="datos"/>      
+      <multiplicity id="49" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="50">    
+    <link-end type="SOURCE" refId="24"/>    
+    <link-end type="TARGET" refId="7"/>  
+  </text-link>  
+  <text-link id="51">    
+    <link-end type="SOURCE" refId="20"/>    
+    <link-end type="TARGET" refId="3"/>  
+  </text-link>  
+  <association id="52">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="53" name="mesas"/>      
+      <multiplicity id="54" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="55">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="56" name="padresExpandableList"/>      
+      <multiplicity id="57" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="58">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="59" name="adapter"/>      
+      <multiplicity id="60" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="61">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="62" name="platos"/>      
+      <multiplicity id="63" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="64">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </dependency>  
+  <association id="65">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="66" name="adapterExpandableListAnadirPlato"/>      
+      <multiplicity id="67" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="68">    
+    <bendpoint x="640" y="498"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="69" name="elemLista"/>      
+      <multiplicity id="70" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="71">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="72" name="mesas"/>      
+      <multiplicity id="73" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="74">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="75" name="listaDeMesas"/>      
+      <multiplicity id="76" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="77">    
+    <link-end type="SOURCE" refId="25"/>    
+    <link-end type="TARGET" refId="9"/>  
+  </text-link>  
+  <association id="78">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="79" name="contenido"/>      
+      <multiplicity id="80" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="81">    
+    <link-end type="SOURCE" refId="26"/>    
+    <link-end type="TARGET" refId="16"/>  
+  </text-link>  
+  <association id="82">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="83" name="sqlMiBase"/>      
+      <multiplicity id="84" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="85">    
+    <link-end type="SOURCE" refId="18"/>    
+    <link-end type="TARGET" refId="4"/>  
+  </text-link>  
+  <text-link id="86">    
+    <link-end type="SOURCE" refId="27"/>    
+    <link-end type="TARGET" refId="15"/>  
+  </text-link>  
+  <association id="87">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="88" name="sqlMesas"/>      
+      <multiplicity id="89" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="90">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="91" name="sql"/>      
+      <multiplicity id="92" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="93">    
+    <link-end type="SOURCE" refId="31"/>    
+    <link-end type="TARGET" refId="14"/>  
+  </text-link>  
+  <association id="94">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="95" name="platos"/>      
+      <multiplicity id="96" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <text-link id="97">    
+    <link-end type="SOURCE" refId="22"/>    
+    <link-end type="TARGET" refId="14"/>  
+  </text-link>  
+  <text-link id="98">    
+    <link-end type="SOURCE" refId="32"/>    
+    <link-end type="TARGET" refId="14"/>  
+  </text-link>  
+  <text-link id="99">    
+    <link-end type="SOURCE" refId="19"/>    
+    <link-end type="TARGET" refId="12"/>  
+  </text-link>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
