@@ -20,14 +20,14 @@ public class PantallaInicialRestaurante extends Fragment{
 	@SuppressLint("DefaultLocale")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		vista = inflater.inflate(R.layout.contenedor_tabs, container, false);
+		vista = inflater.inflate(R.layout.inicio_restaurante, container, false);
 		
 		// Cargamos el logo del restaurante para la pantalla de bienvenida
-		String nombreLogo = "logo_" + restaurante.toLowerCase() + "_pantalla_inicial";
-		logo = (ImageView)vista.findViewById(R.id.imageViewLogoRestaurante);
-		logo.setImageResource(getResources().getIdentifier(nombreLogo,"drawable",this.getActivity().getPackageName()));	
+		String nombreLogo = "logo_" + restaurante.toLowerCase() + "_inicio";
+		logo = (ImageView)vista.findViewById(R.id.ImageViewLogoInicioRestaurante);
+		logo.setImageResource(getResources().getIdentifier(nombreLogo,"drawable",this.getActivity().getPackageName()));
 		
-		TextView bienvenida = (TextView)vista.findViewById(R.id.textViewBienvenidarestaurante);
+		TextView bienvenida = (TextView)vista.findViewById(R.id.textViewBienvenidaRestaurante);
 		// Mal introducido el nombre del Foster en la base de datos
 		if(restaurante.equals("Foster"))
 			restaurante = "Foster's Hollywood";

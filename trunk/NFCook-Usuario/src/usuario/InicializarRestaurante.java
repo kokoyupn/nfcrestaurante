@@ -14,8 +14,10 @@ import fragments.ContenidoTabsSuperioresFragment;
 
 import baseDatos.Handler;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -24,7 +26,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -36,6 +37,15 @@ import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Esta clase es la encargada de cargar toda la información del restaurarnte que hemos seleccionado.
+ * 
+ * Carga los tabs superiores con las distintas categorías que ofreza el restaurante.
+ * Carga el logo y el texto de bienvenida del restaurante.
+ * Carga los tabs inferiores, que serán comunes para todos los restaurantes.
+ * @author Abel
+ *
+ */
 public class InicializarRestaurante extends Activity implements TabContentFactory, OnTabChangeListener{
 	
 	private ImageView imagenRestaurante;
@@ -52,7 +62,14 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private TabHost tabs;
 	// Vista de los tabs inferiores
 	private View tabInferiorContentView;
-	// Array de booleanos para indicar cuando si se ha pulsado ya ese tab
+	
+	// Información de que tab está seleccionado
+	private static String tabInferiorPulsado;
+	private static boolean pulsadoTabSuperior;
+	
+	public static void setPulsadoTabSuperior(boolean pulsado){
+		pulsadoTabSuperior = pulsado;
+	}
 		
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +81,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         Bundle bundle = getIntent().getExtras();
 	    imagenRestaurante.setImageResource(bundle.getInt("logoRestaurante"));
 		restaurante = bundle.getString("nombreRestaurante");
-		 
+		
 		// Importamos la base de datos
 		importarBaseDatatos();
 	 
@@ -79,8 +96,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		inicializarTabsInferiores();
 		cargarTabsInferiores();
 		
-		// Cargamos en el fragment la pantalla de bienvenida del restaurante
-		lanzarPantallaBienvenida();
+		// Inicializamos el control de los tabs
+		tabInferiorPulsado = tabs.getCurrentTabTag();
+		pulsadoTabSuperior = false;
     }
     
     /* Metodo encargado de implementar el botón back.
@@ -116,7 +134,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     }
     
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
-    private void cargarTabsSuperiores(){
+    @SuppressLint("NewApi")
+	private void cargarTabsSuperiores(){
     	Set<String> tipos = new HashSet<String>();
     	Iterator<String> it;
     	
@@ -160,6 +179,14 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     		// Añadimos dicha categoría como tab
     		actionbar.addTab(tab);
     	}
+    	
+    	// Quitamos la barra del actionbar
+    	/*
+    	 * TODO En un futuro incorporaremos funciones al actionbar y habrá que habilitarla de buevo
+    	 */
+    	actionbar.setDisplayShowHomeEnabled(false);
+    	actionbar.setDisplayShowTitleEnabled(false);
+    	actionbar.setDisplayUseLogoEnabled(false);
 	}
     
     // Metodo encargado de inicializar los tabs inferiores
@@ -173,30 +200,36 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     
     // Metodo encargado crear los tabs inferiores con las funcionalidades que ofrecemos al usuario
     private void cargarTabsInferiores(){
-    	// Creamos el tab1 --> Promociones
-        TabHost.TabSpec spec = tabs.newTabSpec("tabPromociones");
+    	// Creamos el tab1 --> Inicio
+        TabHost.TabSpec spec = tabs.newTabSpec("tabInicio");
         // Hacemos referencia a su layout correspondiente
         spec.setContent(R.id.tab1);
         // Preparamos la vista del tab con el layout que hemos preparado
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabPromociones"));
+        spec.setIndicator(prepararTabView(getApplicationContext(),"tabInicio"));
         // Lo añadimos
         tabs.addTab(spec);
         
-        // Creamos el tab2 --> Pedido a sincronizar
-        spec=tabs.newTabSpec("tabPedidoSincronizar");
+        // Creamos el tab2 --> Promociones
+        spec = tabs.newTabSpec("tabPromociones");
         spec.setContent(R.id.tab2);
+        spec.setIndicator(prepararTabView(getApplicationContext(),"tabPromociones"));
+        tabs.addTab(spec);
+        
+        // Creamos el tab3 --> Pedido a sincronizar
+        spec = tabs.newTabSpec("tabPedidoSincronizar");
+        spec.setContent(R.id.tab3);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabPedidoSincronizar"));
         tabs.addTab(spec);
         
-        // Creamos el tab3 --> Cuenta
-        spec=tabs.newTabSpec("tabCuenta");
-        spec.setContent(R.id.tab3);
+        // Creamos el tab4 --> Cuenta
+        spec = tabs.newTabSpec("tabCuenta");
+        spec.setContent(R.id.tab4);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabCuenta"));
         tabs.addTab(spec);
         
-        // Creamos el tab4 --> Calculadora
-        spec=tabs.newTabSpec("tabCalculadora");
-        spec.setContent(R.id.tab4);
+        // Creamos el tab5 --> Calculadora
+        spec = tabs.newTabSpec("tabCalculadora");
+        spec.setContent(R.id.tab5);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabCalculadora"));
         tabs.addTab(spec);
         
@@ -210,19 +243,27 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
             	public boolean onTouch(View v, MotionEvent event){
             		// Cuando pulsamos el tab
             		if(event.getAction()==MotionEvent.ACTION_UP){
-	                	if(tabs.getCurrentTabTag().equals("tabPromociones")){
+            			if(tabs.getCurrentTabTag().equals("tabInicio")){
+	                		/*
+	            			 * TODO Completar funcionalidad de la pantalla de bienvenida
+	            			 */
+	        				// Cargamos en el fragment de la pantalla de bienvenida del restaurante
+	        				Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
+	        				((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
+	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
+	        		        m.commit();
+            			}else if(tabs.getCurrentTabTag().equals("tabPromociones")){
 	                		/*
 	            			 * TODO Hacer su layout y su funcionalidad
+	            			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún
 	            			 */
-	        				Log.i("touch", "Promociones");
 	        			}else if(tabs.getCurrentTabTag().equals("tabPedidoSincronizar")){
-	        				Log.i("touch", "Pedido a Sinccronizar");
 	        				Fragment fragmentPedido = new PedidoFragment();
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        		        m.commit();
 	        			}else if(tabs.getCurrentTabTag().equals("tabCuenta")){
-	        				Log.i("touch", "Cuenta");
 	        				Fragment fragmentCuenta = new CuentaFragment();
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
@@ -230,14 +271,14 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        			}else if(tabs.getCurrentTabTag().equals("tabCalculadora")){
 	        				/*
 	        				 * TODO Hacer su layout y su funcionalidad
+	        				 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún
 	        				 */
-	        				Log.i("touch", "Calculadora");
 	        			}
             		}
             		return false;
                 }
             });
-        }       
+        }
     }
     
     // Metodo encargado de preparar las vistas de cada tab inferior
@@ -250,7 +291,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	TextView textoTab = (TextView)tabInferiorContentView.findViewById(R.id.textViewTabInferior);
     	textoTab.setTextColor(Color.BLACK);
     	// Asignamos el título e icono para cada tab
-    	if(nombreTab.equals("tabPromociones")){
+    	if(nombreTab.equals("tabInicio")){
+     		textoTab.setText("Inicio");
+     		imagenTab.setImageResource(getResources().getIdentifier("inicio","drawable",this.getPackageName()));
+     	}else if(nombreTab.equals("tabPromociones")){
     		textoTab.setText("Promociones");
     		imagenTab.setImageResource(getResources().getIdentifier("ofertas","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabPedidoSincronizar")){
@@ -268,20 +312,51 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
-		if(tabId.equals("tabPromociones")){
+		if(tabs.getCurrentTabTag().equals("tabInicio")){
+			pulsadoTabSuperior = false;
+			tabInferiorPulsado = "tabInicio";
+    		/*
+			 * TODO Completar funcionalidad de la pantalla de bienvenida
+			 */
+			// Cargamos en el fragment la pantalla de bienvenida del restaurante
+			Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
+			((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
+	        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
+	        m.commit();
+		}else if(tabId.equals("tabPromociones")){
 			/*
 			 * TODO Hacer su layout y su funcionalidad
+			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún.
 			 */
-			Log.i("changed", "Promociones");
+			//Creación y configuración de la ventana emergente
+			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this);
+			ventanaEmergente.setPositiveButton("Aceptar", null);
+			View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.aviso_seccion_no_disponible, null);
+			ventanaEmergente.setView(vistaAviso);
+			ventanaEmergente.show();
+			/*
+			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
+			 */
+			/**********************************************************************************************/
+			if(pulsadoTabSuperior){
+				tabs.setCurrentTab(0);
+				actionbar.selectTab(actionbar.getSelectedTab());
+			}else{
+				tabs.setCurrentTabByTag(tabInferiorPulsado);
+			}
+			/**********************************************************************************************/
 		}else if(tabId.equals("tabPedidoSincronizar")){
-			Log.i("changed", "Pedido a Sinccronizar");
+			pulsadoTabSuperior = false;
+			tabInferiorPulsado = "tabPedidoSincronizar";
 			Fragment fragmentPedido = new PedidoFragment();
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        m.addToBackStack("Pedido");
 	        m.commit();
 		}else if(tabId.equals("tabCuenta")){
-			Log.i("changed", "Cuenta");
+			pulsadoTabSuperior = false;
+			tabInferiorPulsado = "tabCuenta";
 			Fragment fragmentCuenta = new CuentaFragment();
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
@@ -290,24 +365,30 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		}else if(tabId.equals("tabCalculadora")){
 			/*
 			 * TODO Hacer su layout y su funcionalidad
+			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún.
 			 */
-			Log.i("changed", "Calculadora");
+			//Creación y configuración de la ventana emergente
+			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this);
+			ventanaEmergente.setPositiveButton("Aceptar", null);
+			View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.aviso_seccion_no_disponible, null);
+			ventanaEmergente.setView(vistaAviso);
+			ventanaEmergente.show();
+			/*
+			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
+			 */
+			/**********************************************************************************************/
+			if(pulsadoTabSuperior){
+				tabs.setCurrentTab(0);
+				actionbar.selectTab(actionbar.getSelectedTab());
+			}else{
+				tabs.setCurrentTabByTag(tabInferiorPulsado);
+			}
+			/**********************************************************************************************/
 		}
 	}
 
 	// Metodo encargado de devolver el contenido de cada tab
 	public View createTabContent(String tag) {
         return tabInferiorContentView;
-	}
-	
-	// Metodo encargado de lanzar la pantalla de bienvenida
-	public void lanzarPantallaBienvenida(){
-		// Mostramos la pantalla inicial del restaurante con su logo y un mensaje de bienvenida
-		Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
-		((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
-        FragmentTransaction m = getFragmentManager().beginTransaction();
-        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
-        m.addToBackStack("Pantalla Bienvenida");
-        m.commit();
 	}
 }

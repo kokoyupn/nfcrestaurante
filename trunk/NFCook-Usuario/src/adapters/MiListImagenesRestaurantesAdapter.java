@@ -36,8 +36,8 @@ public class MiListImagenesRestaurantesAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView itemImage;
 		if (convertView == null) {
-			convertView = l_Inflater.inflate(R.layout.imagen_fondo_restaurante, null);
-			itemImage = (ImageView) convertView.findViewById(R.id.photo);
+			convertView = l_Inflater.inflate(R.layout.inicio_restaurante, null);
+			itemImage = (ImageView) convertView.findViewById(R.id.ImageViewLogoInicioRestaurante);
 			convertView.setTag(itemImage);
 		} else {
 			itemImage = (ImageView) convertView.getTag();
