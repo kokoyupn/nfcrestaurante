@@ -11,11 +11,15 @@ import baseDatos.Handler;
 
 import adapters.MiListImagenesRestaurantesAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,11 +45,14 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        
         importarBaseDatatos();
     	crearRestaurantesListView();
-    	
-    	// Cerramos la base de datos
+		
+		// Cerramos la base de datos
     	sql.close();
+    	
+    	cargarPedidoAnterior();
     }
     
     private void crearRestaurantesListView() {	
@@ -107,10 +114,69 @@ public class MainActivity extends Activity{
 		}
 		nombreRestaurante = it.next();
     	
+		//Almacenamos la posición en la lista del ultimo restaurante selecionado para que al abrir la aplicación podamos cargarlo
+		setUltimoRestaurante(posicion);
+		
     	Intent intent = new Intent(this,InicializarRestaurante.class);
 		intent.putExtra("nombreRestaurante", nombreRestaurante);
     	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
     	startActivity(intent);
-    }	
+    }
+	
+	public void setUltimoRestaurante(int posicion){
+		//Almacenamos la posicion del restaurante de la lista
+		SharedPreferences preferencia = getSharedPreferences("Nombre_Restaurante", 0);
+		SharedPreferences.Editor editor = preferencia.edit();
+		editor.putInt("PosicionRestaurante", posicion);
+		editor.commit(); //Para que surja efecto el cambio
+	}
+	public int getUltimoRestaurante(){
+		//SharedPreferences nos permite recuperar datos aunque la aplicacion se haya cerrado
+		SharedPreferences ultimoRestaurante = getSharedPreferences("Nombre_Restaurante", 0);
+		return ultimoRestaurante.getInt("PosicionRestaurante", -1); // -1 es lo que devuelve si no hubiese nada con esa clave
+	}
+	
+	public void onClickBotonAceptarAlertDialog(AlertDialog.Builder ventanaEmergente, final int posicion){
+		ventanaEmergente.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				lanzar(posicion);
+			}
+		});
+	}
+	
+	public void onClickBotonCancelarAlertDialog(AlertDialog.Builder ventanaEmergente){
+		ventanaEmergente.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				try{
+					Handler sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
+					SQLiteDatabase dbPedido = sqlPedido.open();
+					dbPedido.delete("Pedido", null, null);
+					sqlPedido.close();
+		        }catch(SQLiteException e){
+		         	Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
+		        }
+				
+			}
+		});
+	}
+	
+	public void cargarPedidoAnterior(){
+    	 
+		int posicion = getUltimoRestaurante();
+		
+		if(posicion!=-1){ // Si nunca hemos ejecutado la aplicación no habra un restaurante seleccionado
+			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(MainActivity.this);
+			onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
+			onClickBotonCancelarAlertDialog(ventanaEmergente);
+			View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.aviso_continuar_pedido, null);
+			ventanaEmergente.setView(vistaAviso);
+			ventanaEmergente.show();
+		}
+		
+	}
+	
+	
 }
 
