@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_ubt0wItUEeKRCJdmCPhAjA" name="model">
+  <packagedElement xmi:type="uml:Actor" xmi:id="_vJlAUItUEeKRCJdmCPhAjA" name="Actor"/>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_ve8MUItUEeKRCJdmCPhAjA" name="Editar_Plato">
+    <generalization xmi:id="_zO0XYItUEeKRCJdmCPhAjA" general="_yjPDwItUEeKRCJdmCPhAjA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Actor" xmi:id="_yjPDwItUEeKRCJdmCPhAjA" name="Camarero"/>
+</uml:Model>

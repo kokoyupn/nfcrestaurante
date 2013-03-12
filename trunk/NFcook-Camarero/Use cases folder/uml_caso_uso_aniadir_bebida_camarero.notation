@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_jYvE8ItTEeKRCJdmCPhAjA" type="UseCase" name="NewDiagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_kKtUcItTEeKRCJdmCPhAjA" type="2011" fontName="Segoe UI" lineColor="0">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_kKt7gItTEeKRCJdmCPhAjA" source="ShadowFigure">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kKt7gYtTEeKRCJdmCPhAjA" key="ShadowFigure_Value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_kKt7gotTEeKRCJdmCPhAjA" source="displayNameLabelIcon">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kKuikItTEeKRCJdmCPhAjA" key="displayNameLabelIcon_value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_kKuikYtTEeKRCJdmCPhAjA" source="QualifiedName">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kKuikotTEeKRCJdmCPhAjA" key="QualifiedNameDepth" value="1000"/>
+    </eAnnotations>
+    <children xmi:type="notation:DecorationNode" xmi:id="_kKuik4tTEeKRCJdmCPhAjA" type="5014">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_kKuilItTEeKRCJdmCPhAjA" x="20" y="60"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_kKuilYtTEeKRCJdmCPhAjA" type="6029">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_kKuilotTEeKRCJdmCPhAjA" x="20" y="100"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_kKvJoItTEeKRCJdmCPhAjA" type="6037">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_kKvJoYtTEeKRCJdmCPhAjA" x="20" y="80"/>
+    </children>
+    <element xmi:type="uml:Actor" href="uml_caso_uso_aniadir_bebida_camarero.uml#_kKqRIItTEeKRCJdmCPhAjA"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kKtUcYtTEeKRCJdmCPhAjA" x="89" y="130"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_k4BGYItTEeKRCJdmCPhAjA" type="2013" fontName="Segoe UI" lineColor="0">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_k4BtcItTEeKRCJdmCPhAjA" source="ShadowFigure">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_k4BtcYtTEeKRCJdmCPhAjA" key="ShadowFigure_Value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_k4CUgItTEeKRCJdmCPhAjA" source="displayNameLabelIcon">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_k4CUgYtTEeKRCJdmCPhAjA" key="displayNameLabelIcon_value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_k4CUgotTEeKRCJdmCPhAjA" source="QualifiedName">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_k4CUg4tTEeKRCJdmCPhAjA" key="QualifiedNameDepth" value="1000"/>
+    </eAnnotations>
+    <children xmi:type="notation:DecorationNode" xmi:id="_k4CUhItTEeKRCJdmCPhAjA" type="5016"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_k4CUhYtTEeKRCJdmCPhAjA" type="7009">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_k4CUhotTEeKRCJdmCPhAjA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_k4CUh4tTEeKRCJdmCPhAjA"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_k4CUiItTEeKRCJdmCPhAjA"/>
+    </children>
+    <element xmi:type="uml:UseCase" href="uml_caso_uso_aniadir_bebida_camarero.uml#_k3-qIItTEeKRCJdmCPhAjA"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_k4BGYYtTEeKRCJdmCPhAjA" x="335" y="155"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_jYvE8YtTEeKRCJdmCPhAjA"/>
+  <element xmi:type="uml:Model" href="uml_caso_uso_aniadir_bebida_camarero.uml#_jYtPwItTEeKRCJdmCPhAjA"/>
+  <edges xmi:type="notation:Connector" xmi:id="_mHcG4ItTEeKRCJdmCPhAjA" type="4010" source="_k4BGYItTEeKRCJdmCPhAjA" target="_kKtUcItTEeKRCJdmCPhAjA" lineColor="0">
+    <children xmi:type="notation:DecorationNode" xmi:id="_mHdVAItTEeKRCJdmCPhAjA" type="6032">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_mHdVAYtTEeKRCJdmCPhAjA" y="-20"/>
+    </children>
+    <styles xmi:type="notation:FontStyle" xmi:id="_mHcG4YtTEeKRCJdmCPhAjA" fontName="Segoe UI"/>
+    <element xmi:type="uml:Generalization" href="uml_caso_uso_aniadir_bebida_camarero.uml#_mHa4wItTEeKRCJdmCPhAjA"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_mHcG4otTEeKRCJdmCPhAjA" points="[-70, -5, 205, 14]$[-279, -5, -4, 14]"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_mHi0kItTEeKRCJdmCPhAjA" id="(0.45,0.7666666666666667)"/>
+  </edges>
+</notation:Diagram>
