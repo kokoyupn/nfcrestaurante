@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="com.example.nfcook_camarero.AnadirBebidas" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/AnadirBebidas.java" binary="false" label="anadirBebidas" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="119" y="0"/>    
+    <execution id="2">      
+      <position height="356" width="139" x="5" y="89"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="293" width="139" x="5" y="131"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="225"/>    
+    </execution>  
+  </object>  
+  <object id="17" language="java" name="android.widget.Button" project="NFcook-Camarero" 
+    file="C:/Program Files (x86)/Android/android-sdk/platforms/android-16/android.jar" binary="true" label="botonAnadir" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="6">      
+      <position height="21" width="0" x="0" y="162"/>    
+    </execution>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="256"/>    
+    </execution>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="298"/>    
+    </execution>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="340"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="382"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="insertaBotonAnadir():android.widget.Button">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="Button(android.content.Context)">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="getApplicationContext():android.content.Context">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="setTextColor(int):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="setTextSize(float):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="setOnClickListener(android.view.View.OnClickListener):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>
+</sequence-diagram>

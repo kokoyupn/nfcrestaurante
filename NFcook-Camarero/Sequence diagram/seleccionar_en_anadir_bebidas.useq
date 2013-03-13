@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="com.example.nfcook_camarero.AnadirBebidas" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/AnadirBebidas.java" binary="false" label="anadirBebidas" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="158" y="0"/>    
+    <execution id="2">      
+      <position height="391" width="139" x="5" y="98"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="328" width="139" x="5" y="140"/>    
+    </execution>  
+  </object>  
+  <object id="19" language="java" name="java.util.ArrayList" project="NFcook-Camarero" 
+    file="C:/Program Files (x86)/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="botonesBebidas" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="6">      
+      <position height="21" width="0" x="0" y="171"/>    
+    </execution>  
+  </object>  
+  <object id="20" language="java" name="java.util.ArrayList" project="NFcook-Camarero" 
+    file="C:/Program Files (x86)/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="textViewsBebidas" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="216"/>    
+    </execution>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="300"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="384"/>    
+    </execution>  
+  </object>  
+  <object id="21" language="java" name="android.widget.TextView" project="NFcook-Camarero" 
+    file="C:/Program Files (x86)/Android/android-sdk/platforms/android-16/android.jar" binary="true" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="258"/>    
+    </execution>  
+  </object>  
+  <object id="22" language="java" name="android.widget.TextView" project="NFcook-Camarero" 
+    file="C:/Program Files (x86)/Android/android-sdk/platforms/android-16/android.jar" binary="true" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="342"/>    
+    </execution>  
+  </object>  
+  <object id="23" language="java" name="android.widget.TextView" project="NFcook-Camarero" 
+    file="C:/Program Files (x86)/Android/android-sdk/platforms/android-16/android.jar" binary="true" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="18">      
+      <position height="21" width="0" x="0" y="426"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="onClickBotonBebida(android.view.View):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="iterator():java.util.Iterator&lt;E&gt;">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="get(int):E">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="getText():java.lang.CharSequence">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="get(int):E">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="get(int):E">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>
+</sequence-diagram>
