@@ -41,9 +41,12 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import adapters.HijoExpandableListEditar;
 import adapters.MiListAdapterMesa;
 import adapters.ContenidoListMesa;
+import adapters.PadreExpandableListEditar;
 
 /**
  * Añade los componentes de cada pedido a la mesa
@@ -62,8 +65,9 @@ import adapters.ContenidoListMesa;
 
 
 public class Mesa extends Activity {
-	private String numMesa="6";//FIXME introducir desde fuera
-	private SQLiteDatabase dbPedido,dbHistorico;
+	private String numMesa="1";//FIXME introducir desde fuera
+	private HandlerGenerico sqlMesas;
+	private SQLiteDatabase dbMesas,dbHistorico;
 	private ListView platos;
 	private ArrayList<ContenidoListMesa> elemLista;
 	private MiListAdapterMesa adapter;
@@ -85,10 +89,10 @@ public class Mesa extends Activity {
 		TextView mesa = (TextView)findViewById(R.id.numeroDeMesa);
 		mesa.setText("Mesa: "+ String.valueOf(numMesa) );
 		
-		
 		try{
-			dbPedido= SQLiteDatabase.openDatabase(rutaPedido, null, SQLiteDatabase.OPEN_READWRITE);
-			dbHistorico= SQLiteDatabase.openDatabase(rutaHistorico, null, SQLiteDatabase.OPEN_READWRITE);
+			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();
+			//dbHistorico= SQLiteDatabase.openDatabase(rutaHistorico, null, SQLiteDatabase.OPEN_READWRITE);
 			
 			//Añadir platos a la ListView----------------------------------------------------
 	  	  	platos = (ListView)findViewById(R.id.listaPlatos);
@@ -103,7 +107,7 @@ public class Mesa extends Activity {
 	  	    
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id) {
-	  	    		//Ir a editar el plato
+	  	    		//PRADO
 	  	    	}
 	  	    });
 	  	    
@@ -125,7 +129,7 @@ public class Mesa extends Activity {
 		    			ContenidoListMesa platoSeleccionado = (ContenidoListMesa) adapter.getItem(indicePulsado);
 	    				String identificador = Integer.toString(platoSeleccionado.getId());
 	    				try{
-	    					dbPedido.delete("Mesas", "IdUnico=?",new String[]{identificador});
+	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
 	    				}catch(Exception e){
 	    					System.out.println("Error borrar de la base pedido en ondrag");
 	    				}
@@ -150,7 +154,7 @@ public class Mesa extends Activity {
             public void onClick(View view) {
             	try{
             		String[] numeroDeMesa = new String[]{numMesa};
-        		    Cursor filasPedido = dbPedido.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
+        		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
             		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
             		
             		while(filasPedido.moveToNext()){
@@ -188,7 +192,7 @@ public class Mesa extends Activity {
             		precioTotal.setText(Float.toString(adapter.getPrecio())+" €");
             		
             		//Borra de la base de datos los platos de esta mesa
-            		dbPedido.delete("Mesas", "NumMesa=numMesa", null);
+            		dbMesas.delete("Mesas", "NumMesa=numMesa", null);
             		
             		//Se borra la mesa y se vuelve a la pantalla anterior.
             		Intent intent = new Intent(actividad, InicialCamarero.class);
@@ -228,11 +232,11 @@ public class Mesa extends Activity {
 		aniadirBebida.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
-            		dbPedido.openDatabase(rutaPedido, null,SQLiteDatabase.OPEN_READWRITE);
+            		dbMesas.openDatabase(rutaPedido, null,SQLiteDatabase.OPEN_READWRITE);
             		String[] campos = new String[]{"IdCamarero","Personas"};
         		    String[] numeroDeMesa = new String[]{numMesa};
         		    
-        		    Cursor c = dbPedido.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
+        		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
         		    c.moveToNext();
         		    
         		    Intent intent = new Intent(actividad, AnadirBebidas.class);
@@ -262,10 +266,10 @@ public class Mesa extends Activity {
 	private ArrayList<ContenidoListMesa> obtenerElementos() {
 		ArrayList<ContenidoListMesa> elementos=null;
 		try{
-			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico"};
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico",};
 		    String[] numeroDeMesa = new String[]{numMesa};
 		    
-		    Cursor c = dbPedido.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
+		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
 		    
 		    elementos = new ArrayList<ContenidoListMesa>();
 		     
