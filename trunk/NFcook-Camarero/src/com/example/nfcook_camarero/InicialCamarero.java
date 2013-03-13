@@ -37,11 +37,11 @@ import android.widget.Toast;
 public class InicialCamarero extends Activity{
 	private GridView gridviewCam;
 	private InicialCamareroAdapter adapterCam;
-    private ArrayList<MesaView> mesas;
+    private static ArrayList<MesaView> mesas;
     private String idCamarero;
     private String nombre;
     private String numeroMesaAEditar;
-    private int precio,posicionMesaABorrar;
+    private int precio;
     private int idUnico = 0;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
@@ -76,8 +76,8 @@ public class InicialCamarero extends Activity{
 	    info.setIdPlato("fh4");
 	   
 	    ArrayList<String> extras2 = new ArrayList<String>();
-	    extras2.add("Barbacoa");
 	    extras2.add("Poco hecha");
+	    extras2.add("Roquefort");
 	    extras2.add("Patata Asada");
 	    InfoPlato info2 = new InfoPlato();
 	    info2.setExtras(extras2); 
@@ -146,7 +146,7 @@ public class InicialCamarero extends Activity{
 				    public void onClick(DialogInterface dialog, int item) {
 				    	if (item == 0){
 				    		Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
-				    	//----------------- onClickListener de editar número de mesas --------------------------------
+				    	//----------------- onClickListener de editar número de mesa --------------------------------
 				    	}else if(item == 1){
 				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
@@ -154,21 +154,12 @@ public class InicialCamarero extends Activity{
 				    		final EditText numMesa = (EditText) textEntryView.findViewById(R.id.editTextEditar);
 				    		tituloMesa.setText("Indica el nuevo número de mesa: ");
 				    		numMesa.setText("", TextView.BufferType.EDITABLE);
-				    		//Limitamos a 4 el máximo número de caracteres en la mesa
-				    		InputFilter[] filterArray = new InputFilter[1];
-				    		filterArray[0] = new InputFilter.LengthFilter(4);
-				    		numMesa.setFilters(filterArray);
 				    		//Creación y configuración de la ventana emergente
 				    		AlertDialog.Builder ventEmergEditMesa = new AlertDialog.Builder(InicialCamarero.this);
 				    		ventEmergEditMesa.setNegativeButton("Cancelar", null);
 				    		ventEmergEditMesa.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
 				    			
 				    			public void onClick(DialogInterface dialog, int whichButton) {
-				    				//Comprobamos que ha introducido un numero porque si no a la hora de ordenar 
-				    				//puede mezclar numeros y letras y no es valido
-				    				if(!esNumero(numMesa.getText().toString())){
-				    					Toast.makeText(InicialCamarero.this, "La mesa ha de ser un número", Toast.LENGTH_LONG).show();           			
-				            		}else{
 				    					String numeroMesa = numMesa.getText().toString();
 				    					if(numeroMesa.equals("")){
 				    	        			Toast.makeText(InicialCamarero.this, "Introduce la mesa", Toast.LENGTH_LONG).show();           			
@@ -209,7 +200,6 @@ public class InicialCamarero extends Activity{
 				    	                    	dbMesas.update("Mesas", valores, "NumMesa=?", info);
 				    	                    }//fin de existe mesa
 				    	        		}//fin de ha introducido la mesa
-				    				}//cierra en numero
 				    			}//cierra onClick de aceptar
 				    		});//cierra el oyente de aceptar
 				    		ventEmergEditMesa.setView(textEntryView);
@@ -222,7 +212,7 @@ public class InicialCamarero extends Activity{
 				    		final EditText numPersonas = (EditText) textEntryView.findViewById(R.id.editTextEditar);
 				    		tituloPersonas.setText("Indica el nuevo número de personas: ");
 				    		numPersonas.setText("", TextView.BufferType.EDITABLE);
-				    		//Limitamos a 2 el máximo número de caracteres en la mesa
+				    		//Limitamos a 99 el máximo de personas en la mesa
 				    		InputFilter[] filterArray = new InputFilter[1];
 				    		filterArray[0] = new InputFilter.LengthFilter(2);
 				    		numPersonas.setFilters(filterArray);
@@ -334,18 +324,14 @@ public class InicialCamarero extends Activity{
 		final TextView tituloMesa = (TextView) textEntryView.findViewById(R.id.textViewNumMesa);
 		final TextView tituloPersonas = (TextView) textEntryView.findViewById(R.id.textViewNumPersonas);
 		//Obligamos a que el teclado sea sólo numérico para la comodidad del camarero
-		numMesa.setInputType(InputType.TYPE_CLASS_NUMBER);
 		numPersonas.setInputType(InputType.TYPE_CLASS_NUMBER);
 		//Damos valor a los campos		
 		numPersonas.setText("", TextView.BufferType.EDITABLE);
 		numMesa.setText("", TextView.BufferType.EDITABLE);
-		//Limitamos a 99 el número de personas por mesa y a 999 el número de mesa
+		//Limitamos a 99 el número de personas por mesa
 		InputFilter[] filterArrayP = new InputFilter[1];
 		filterArrayP[0] = new InputFilter.LengthFilter(2);
 		numPersonas.setFilters(filterArrayP);
-		InputFilter[] filterArrayM = new InputFilter[1];
-		filterArrayM[0] = new InputFilter.LengthFilter(3);
-		numMesa.setFilters(filterArrayM);
 		tituloMesa.setText("Elige el número de mesa:");
 		tituloPersonas.setText("Elige el número de personas:");
 		//Construimos el AlertDialog y le metemos la vista que hemos personalizado
@@ -354,11 +340,6 @@ public class InicialCamarero extends Activity{
 		alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 			
 			public void onClick(DialogInterface dialog, int whichButton) {
-				//Comprobamos que ha introducido un numero porque si no a la hora de ordenar 
-				//puede mezclar numeros y letras y no es valido
-				if(!esNumero(numMesa.getText().toString())){
-					Toast.makeText(InicialCamarero.this, "La mesa ha de ser un número", Toast.LENGTH_LONG).show();           			
-        		}else{
 					String numeroMesa = numMesa.getText().toString();
 					String numeroPersonas = numPersonas.getText().toString();
 					if(numeroMesa.equals("")){
@@ -443,7 +424,6 @@ public class InicialCamarero extends Activity{
 	                    	}//fin de relleno de la base de datos con lo que nos viene del chip
 	                    }//fin de existe mesa
 	        		}//fin de ha introducido la mesa y numero de personas
-				}//cierra en numero
 			}//cierra onClick de aceptar
 		});//cierra el oyente de aceptar
 
@@ -458,8 +438,6 @@ public class InicialCamarero extends Activity{
              AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
              alert.setMessage("Introduce el número de la mesa que desea borrar: "); //mensaje
              final EditText input = new EditText(InicialCamarero.this); //creamos un Edit Text
-             //Obligamos a que el teclado sea sólo numérico para la comodidad del camarero
-             input.setInputType(InputType.TYPE_CLASS_NUMBER);
              alert.setView(input); //añadimos el edit text a la vista del AlertDialog
              //añadimos los botones
              alert.setNegativeButton("Cancelar", null);
@@ -498,25 +476,63 @@ public class InicialCamarero extends Activity{
           }	
 	
 	
-	public void ordenaMesas(){
-		//en mesasAux vamos añadiendo ordenado
-		ArrayList<MesaView> mesasAux = new ArrayList<MesaView>();
-		//buscamos la mesa con menor numero de mesa, la eliminamos de mesas y la añadimos a mesasAux
-		while(mesas.size() > 0){
-			MesaView mesaMin = buscaMin(mesas);
-			mesas.remove(mesaMin);
-			mesasAux.add(mesaMin);
+	public void ordenaMesas(){		
+		//en mesasnumero guardamos las mesas que son un numero
+		ArrayList<MesaView> mesasNumero = new ArrayList<MesaView>();
+		ArrayList<MesaView> mesasNumeroAux = new ArrayList<MesaView>();
+		//en mesastexto guardamos las mesas que son texto
+		ArrayList<MesaView> mesasTexto = new ArrayList<MesaView>();
+		ArrayList<MesaView> mesasTextoAux = new ArrayList<MesaView>();
+		
+		for(int i = 0; i < mesas.size(); i++){
+			if (esNumero(mesas.get(i).getNumMesa())) mesasNumero.add(mesas.get(i));
+			else mesasTexto.add(mesas.get(i));
 		}
-		mesas = mesasAux;
+		//recorremos el array  mesasNumero y lo ordenamos
+		while(mesasNumero.size() > 0){
+			MesaView mesaMin = buscaMinNumero(mesasNumero);
+			mesasNumero.remove(mesaMin);
+			mesasNumeroAux.add(mesaMin);
+		}
+		mesasNumero = mesasNumeroAux;
+		
+		//recorremos el array  mesasTexto y lo ordenamos
+				while(mesasTexto.size() > 0){
+					MesaView mesaMin = buscaMinTexto(mesasTexto);
+					mesasTexto.remove(mesaMin);
+					mesasTextoAux.add(mesaMin);
+				}
+		mesasTexto = mesasTextoAux;
+		//concatenamos los dos arrayList. Primero numeros y luego textos
+		for(int i = 0; i < mesasTexto.size(); i++){
+			mesasNumero.add(mesasTexto.get(i));
+		}
+		mesas = mesasNumero;
 	}
 	 
-	public MesaView buscaMin(ArrayList<MesaView> arrayMesas){
+	public MesaView buscaMinNumero(ArrayList<MesaView> arrayMesas){
 		//recorremos todas las mesas buscando la que tiene menor numero de mesa
 		MesaView mesaMin = arrayMesas.get(0);//Pongo el primero
 		int i = 1;
 		while (i < arrayMesas.size())
 		{
 			if(Integer.parseInt(arrayMesas.get(i).getNumMesa()) < Integer.parseInt(mesaMin.getNumMesa())) {
+				mesaMin = arrayMesas.get(i);
+			}
+			i++;
+		}
+		
+	
+		return mesaMin;
+	}
+	
+	public MesaView buscaMinTexto(ArrayList<MesaView> arrayMesas){
+		//recorremos todas las mesas buscando la que tiene menor numero de mesa
+		MesaView mesaMin = arrayMesas.get(0);//Pongo el primero
+		int i = 1;
+		while (i < arrayMesas.size())
+		{
+			if(arrayMesas.get(i).getNumMesa().compareTo(mesaMin.getNumMesa()) == -1) {
 				mesaMin = arrayMesas.get(i);
 			}
 			i++;
@@ -537,6 +553,18 @@ public class InicialCamarero extends Activity{
 			return false;
 		}
 	}
+	
+	private static void eliminarDeArray(final String numeroMesa){
+		Boolean enc = false;
+     	Iterator<MesaView> it = mesas.iterator();
+     	while (it.hasNext() && !enc){
+     		MesaView atratar = it.next();
+     		if(atratar.getNumMesa().equals(numeroMesa)){
+     			enc=true;
+     			mesas.remove(atratar);
+     		}
+     	}	}
+	
 	
 	
 }
