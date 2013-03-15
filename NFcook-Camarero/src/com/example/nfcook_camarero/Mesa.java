@@ -43,10 +43,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import adapters.HijoExpandableListEditar;
-import adapters.MiListAdapterMesa;
 import adapters.ContenidoListMesa;
-import adapters.PadreExpandableListEditar;
 
 /**
  * Añade los componentes de cada pedido a la mesa

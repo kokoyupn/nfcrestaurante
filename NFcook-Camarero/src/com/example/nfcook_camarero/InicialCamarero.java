@@ -21,6 +21,9 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -565,6 +568,18 @@ public class InicialCamarero extends Activity{
      		}
      	}	}
 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+            Intent intent = new Intent (getApplication(),Historico.class);
+            startActivity(intent);
+            return true;
+        }
 	
 	
 }
