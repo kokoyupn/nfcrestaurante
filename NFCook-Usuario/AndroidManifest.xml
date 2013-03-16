@@ -45,12 +45,19 @@
         </activity>
         <activity
             android:name="usuario.DescripcionPlatoEditar"
-            android:label="@string/pedido"
+            android:label="@string/descripcion_plato_editar"
             android:screenOrientation="portrait"  >
         </activity>
         <activity
             android:name="usuario.DescripcionPlato"
             android:label="@string/descripcion_plato"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+           >
+        </activity>
+        <activity
+            android:name="usuario.SincronizarPedido"
+            android:label="@string/sincronizar_pedido"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
            >

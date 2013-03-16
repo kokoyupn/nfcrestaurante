@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import java.util.Set;
 
+import usuario.SincronizarPedido;
+
 import baseDatos.Handler;
 
 import com.example.nfcook.R;
@@ -14,6 +16,7 @@ import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -22,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class PedidoFragment extends Fragment{
@@ -41,9 +45,11 @@ public class PedidoFragment extends Fragment{
 		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
         importarBaseDatatos();
         crearExpandableList();
+		ponerOnClickSincronizarPedido();
         return vistaConExpandaleList;
 	}
-   
+  	
+	
 	public void crearExpandableList() {
 		try{
 			String[] campos = new String[]{"Plato"};//Campos que quieres recuperar
@@ -97,6 +103,20 @@ public class PedidoFragment extends Fragment{
 	         	Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show();
 	      		
 	         }
+	}
+	
+	private void ponerOnClickSincronizarPedido() {
+		ImageButton botonNFC = (ImageButton) vistaConExpandaleList.findViewById(R.id.imageButtonNFCSincronizar);
+		
+		//OnClick boton borrar de cada hijo.
+		botonNFC.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(),SincronizarPedido.class);
+		    	startActivity(intent);
+			}
+		});
+		
 	}
 
 	public float getTotal() {

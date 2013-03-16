@@ -18,6 +18,9 @@
     <string name="pestanas">Pestañas</string>
     <string name="tituloCantidad">Cantidad:</string>
     <string name="descripcion_plato">Descripcion plato:</string>
+    <string name="descripcion_plato_editar">Descripcion plato:</string>
+    <string name="sincronizar_pedido">Sincronizar pedido:</string>
+    
        
     <string-array name="cantidades">
         <item>1</item>
