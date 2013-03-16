@@ -1,17 +1,34 @@
 package com.example.nfcook_camarero;
 
+import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+
+
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -22,6 +39,7 @@ public class MainActivity extends Activity {
 	String rutaLogin="/data/data/com.example.nfcook_camarero/databases/";
 	private SQLiteDatabase dbLogin;
 	private HandlerGenerico sql;
+	public AlertDialog ventanaEmergente;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +65,7 @@ public class MainActivity extends Activity {
   * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
   * esta en la base de datos de camareros 
   * @param boton
+  * autor:Daniel
   */
 
 public void  onClickBotonEntrar(View boton)
@@ -79,21 +98,50 @@ public void  onClickBotonEntrar(View boton)
        		
 	  	   if (cont.equals(password.getText().toString()))//Si las contraseña que hay en la base de datos y la que a introducido el usuario son iguales
           
-    	   {  Toast.makeText(getApplicationContext(),"Usuario: "+usu+"\n"+"Contraseña: "+cont, Toast.LENGTH_SHORT).show();
-           	 	//Iniciamos la nueva actividad
+    	   {  
+    	   	  abrir_ventanaEmergente("Bienvenido: "+usu,R.drawable.icono_usuario);
+           	  //Iniciamos la nueva actividad
     	   	  Intent intent = new Intent(this, InicialCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
            	  startActivity(intent);	
     	   }
     	   else{
     		   //La contraseña no es la misma que la guardada en la base de datos
-    		   Toast.makeText(getApplicationContext(),"Contraseña incorrecta", Toast.LENGTH_SHORT).show(); 
+    		   abrir_ventanaEmergente("Contraseña incorrecta",R.drawable.icono_password);
+   			
     	   }
   	
 		}catch(Exception e){
 			//No existe ese usuario en la base de datos
-			Toast.makeText(getApplicationContext(),"No existe ese usuario", Toast.LENGTH_SHORT).show();
+			abrir_ventanaEmergente("No existe ese usuario",R.drawable.icono_usuario);
 		}
 	   
    }
+
+/**
+ * Metodo encargado de sacar un mensaje por pantalla durante 2 segundos con le mensaje indicadopor parametro y la foto indicada
+ * * @param text
+ * @param foto
+ */
+
+private void abrir_ventanaEmergente(String text, int foto) {
+	 	View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.aviso_camarero, null);
+	    ImageView img= (ImageView) vistaAviso.findViewById(R.id.imageAvisoCamarero);
+		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewAvisoCamarero);
+		texto.setText(text);
+		img.setImageResource(foto);
+	    ventanaEmergente = new AlertDialog.Builder(MainActivity.this).create();
+		ventanaEmergente.setView(vistaAviso);
+		ventanaEmergente.show();
+		
+		//Crea el timer para que el mensaje solo aparezca durante 2 segundos
+		final Timer t = new Timer();
+     t.schedule(new TimerTask() {
+         public void run() {
+            ventanaEmergente.dismiss(); 
+             t.cancel(); 
+         }
+     }, 2000);
+	
+}
 }
