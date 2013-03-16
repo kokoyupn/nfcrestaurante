@@ -125,25 +125,7 @@ public class HandlerGenerico extends SQLiteOpenHelper {
     	  
     	 @Override
     	public void onCreate(SQLiteDatabase db) {
-    		 String query = "";
-    		 if (DB_NAME == "MiBase.db"){
-    			 	query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
-    					 "TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER)";
-    		 }else{
-    			 if (DB_NAME == "Mesas.db"){  
-    			 	 query="CREATE TABLE Mesas(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
- 	 					"Observaciones TEXT,Extras TEXT, FechaHora TEXT, Nombre TEXT, Precio INTEGER, Personas INTEGER, IdUnico INTEGER)";	
-    			 	 // NumMesa es el número que identifica la mesa
-    			 	 // IdCamarero identifica a cada camarero
-    			 	 // IdPlato identifica a cada plato
-    			 	 // Nombre indica el nombre de cada plato
-    			 	 // Precio indica el precio de cada plato
-    			 	 // Personas indica el número de personas que hay en la mesa
-    			 	 // IdUnico da a cada plato un valor diferente de cuaquier otro, aunque sea del mismo tipo
-    		 		}
-    		 }
- 			 
- 		 	db.execSQL(query);
+    		
     	}
 
     	  
