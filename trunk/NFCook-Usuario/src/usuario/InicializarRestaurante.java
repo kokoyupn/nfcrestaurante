@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -30,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -70,6 +72,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	public static void setPulsadoTabSuperior(boolean pulsado){
 		pulsadoTabSuperior = pulsado;
 	}
+	Context contexto;
 		
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		// Inicializamos el control de los tabs
 		tabInferiorPulsado = tabs.getCurrentTabTag();
 		pulsadoTabSuperior = false;
+		
     }
     
     /* Metodo encargado de implementar el botón back.
