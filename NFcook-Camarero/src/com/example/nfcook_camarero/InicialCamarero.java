@@ -119,7 +119,7 @@ public class InicialCamarero extends Activity{
         }
 
         ordenaMesas();
-        //Llamamos al adapter para que muestre en la atalla los cambios realizados
+        //Llamamos al adapter para que muestre en la pantalla los cambios realizados
         adapterCam= new InicialCamareroAdapter(this, mesas);
         gridviewCam.setAdapter(adapterCam);
         //creamos el oyente del gridView
