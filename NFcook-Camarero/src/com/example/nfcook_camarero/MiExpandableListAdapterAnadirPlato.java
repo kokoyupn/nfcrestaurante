@@ -3,6 +3,8 @@ package com.example.nfcook_camarero;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import junit.framework.Assert;
+
 
 import android.app.Fragment;
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,18 +51,13 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	
 	
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-		
-
-		
-			convertView = inflater.inflate(R.layout.contenido_hijo_lista_anadir_plato, parent,false);
-			
 	
-			
+			convertView = inflater.inflate(R.layout.contenido_hijo_lista_anadir_plato, parent,false);
 			GridView gridViewAnadir = (GridView) convertView.findViewById(R.id.gridViewAnadirPlato);			 
 	
 			
 			ArrayList<String> idHijos = padresExpandableList.get(groupPosition).getHijo().getIds();
-			ArrayList<Integer> imgHijos = padresExpandableList.get(groupPosition).getHijo().getNumImagenes();
+			ArrayList<String> imgHijos = padresExpandableList.get(groupPosition).getHijo().getNumImagenes();
 			ArrayList<String> nombreHijos = padresExpandableList.get(groupPosition).getHijo().getNombrePl();
 
 			platos = new ArrayList<PlatoView>();
@@ -68,16 +66,15 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			int pos = 0; 
 			while(pos < nombreHijos.size()){
 				
-				ImageView img = new ImageView(convertView.getContext());
-				img.setImageResource(imgHijos.get(pos));
+				ImageView img = new ImageView(convertView.getContext());				
+			    img.setImageResource(getDrawable(convertView.getContext(),imgHijos.get(pos)));
 			
-				//traer las cosas de platoView
-				
-				PlatoView plato1= new PlatoView(context);
-				plato1.setNombrePlato(nombreHijos.get(pos));
-				plato1.setImagenPlato(imgHijos.get(pos));
-				plato1.setIdPlato(idHijos.get(pos));
-	    		platos.add(plato1);
+				//traer las cosas de platoView				
+				PlatoView plato= new PlatoView(context);
+				plato.setNombrePlato(nombreHijos.get(pos));
+				plato.setImagenPlato(imgHijos.get(pos));
+				plato.setIdPlato(idHijos.get(pos));
+	    		platos.add(plato);
 	    		
 	    		pos++;
 			}
@@ -100,18 +97,6 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	
 		}
 	
-		
-	/**
-	 * Expande los padres que ya estuviesen expandidos en un inicio. De esta forma cuando hagamos una
-	 *  modificación en la lista la encontraremos en el mismo estado, pero con esos elementos modificados.
-	 */
-/*	public void expandePadres(){
-		for(int i=0;i<padresExpandableList.size();i++){
-			if(padresExpandableList.get(i).isExpandido()){
-				PedidoFragment.expandeGrupoLista(i);
-			}
-		}
-	}*/
 
 	public int getChildrenCount(int groupPosition) {
 		return 1;
@@ -153,10 +138,22 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	
 	@Override
 	public void registerDataSetObserver(DataSetObserver observer) {
-        /* used to make the notifyDataSetChanged() method work */
         super.registerDataSetObserver(observer);
     }
 	
+	/**
+	 * 
+	 * @param context
+	 * @param name
+	 * @return devuelve el entero que corresponde al drawable con nombre name
+	 */
+	public static int getDrawable(Context context, String name)
+	{
+	    Assert.assertNotNull(context);
+	    Assert.assertNotNull(name);
 
+	    return context.getResources().getIdentifier(name,
+	            "drawable", context.getPackageName());
+	}
 	
 }

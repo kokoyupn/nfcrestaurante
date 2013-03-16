@@ -13,15 +13,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
-            android:text="Añadir plato" />
+            android:text="Añadir plato" 
+            android:background="#BFE4F2"
+            android:textSize="22sp" 
+            android:textStyle="bold" />
 
-        <SearchView
-            android:id="@+id/searchViewPlatos"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false" >
+            android:layout_height="wrap_content" >
 
-        </SearchView>
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/buscarplato" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewBuscadorPlatos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:ems="10" >
+
+                <requestFocus />
+            </AutoCompleteTextView>
+
+        </FrameLayout>
 
         <ExpandableListView
             android:id="@+id/expandableListPlatos"
