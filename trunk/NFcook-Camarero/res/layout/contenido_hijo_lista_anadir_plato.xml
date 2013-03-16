@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/FrameLayoutGridAnadir"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout2"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
     <GridView
         android:id="@+id/gridViewAnadirPlato"
         android:layout_width="match_parent"
-        android:layout_height="462dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:numColumns="auto_fit"
-        android:visibility="visible" 
-        >
+        android:scrollbars="vertical"
+        android:visibility="visible" >
 
     </GridView>
-    
-</FrameLayout>
+
+</LinearLayout>

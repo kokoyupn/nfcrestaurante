@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <FrameLayout
@@ -29,12 +29,14 @@
             android:layout_gravity="center_horizontal"
             android:text="NombrePlato"
             android:textColor="@android:color/black" />
-    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/linea_azul_horizontal" />
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:src="@drawable/linea_azul_horizontal" />
+
+    </FrameLayout>
 
 </LinearLayout>

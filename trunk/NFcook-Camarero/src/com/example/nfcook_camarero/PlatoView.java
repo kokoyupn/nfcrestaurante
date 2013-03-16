@@ -10,11 +10,13 @@ public class PlatoView extends LinearLayout{
 	private ImageView imagenPlato;
     private TextView nombrePlato;
     private String nombreP; 
-    private Integer enteroImagen;
+    private String Imagen;
     private String idPlato;
+    private Context contexto;
     
     public PlatoView(Context context) {
         super(context);
+        contexto = context;
         inflate(context, R.layout.imagen_plato, this);    
     }
 
@@ -27,15 +29,15 @@ public class PlatoView extends LinearLayout{
     	return nombreP;
     }
     
-    public void setImagenPlato(Integer img) {
+    public void setImagenPlato(String img) {
     	imagenPlato = (ImageView)findViewById(R.id.imageViewPlato);
-    	imagenPlato.setImageResource(img);
-    	enteroImagen = img;
+    	imagenPlato.setImageResource(MiExpandableListAdapterAnadirPlato.getDrawable(contexto, img));
+    	Imagen = img;
     }
 
 
-	public Integer getEnteroImagen() {
-		return enteroImagen;
+	public String getImagen() {
+		return Imagen;
 	}
 
 	public void setImageResource(PlatoView platoView) {

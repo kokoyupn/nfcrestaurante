@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class HijoExpandableListAnadirPlato {
 	private ArrayList<String> idHijos;
-	private ArrayList<Integer> numImag;
+	private ArrayList<String> numImag;
 	private ArrayList<String> nombrePl;
 	
 	
-	public HijoExpandableListAnadirPlato(ArrayList<String> idHijos, ArrayList<Integer> numImag, ArrayList<String> nombrePl) {
+	public HijoExpandableListAnadirPlato(ArrayList<String> idHijos, ArrayList<String> numImag, ArrayList<String> nombrePl) {
 		this.idHijos = idHijos;
 		this.numImag = numImag;
 		this.nombrePl = nombrePl;
@@ -19,7 +19,7 @@ public class HijoExpandableListAnadirPlato {
 		return idHijos;
 	}
 	
-	public ArrayList<Integer> getNumImagenes() {
+	public ArrayList<String> getNumImagenes() {
 		return numImag;
 	}
 	
