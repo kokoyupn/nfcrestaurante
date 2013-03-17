@@ -12,11 +12,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
-
-
-
-
-public class Handler extends SQLiteOpenHelper {
+public class HandlerDB extends SQLiteOpenHelper {
 	
     //Ruta por defecto de las bases de datos en el sistema Android
 	private static String DB_PATH = "/data/data/com.example.nfcook/databases/";
@@ -28,7 +24,7 @@ public class Handler extends SQLiteOpenHelper {
 
  
 
-     public Handler(Context context) {
+     public HandlerDB(Context context) {
     	 //el uno corresponde a la version de la base de datos;
     	 super(context, "MiBase.db", null, 1);
     	 DB_NAME = "MiBase.db";
@@ -36,7 +32,7 @@ public class Handler extends SQLiteOpenHelper {
 
      }
      
-     public Handler(Context context,String DB_NAME) {
+     public HandlerDB(Context context,String DB_NAME) {
     	 //el uno corresponde a la version de la base de datos;
     	 super(context, DB_NAME, null, 1);
     	this.DB_NAME = DB_NAME;

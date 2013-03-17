@@ -2,7 +2,7 @@ package fragments;
 
 import java.util.ArrayList;
 
-import baseDatos.Handler;
+import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
@@ -25,7 +25,7 @@ public class CuentaFragment extends Fragment{
 	private View vista;
 	private double total;
 	
-	private Handler sqlCuenta;
+	private HandlerDB sqlCuenta;
 	private SQLiteDatabase dbCuenta;
 	
 	private ArrayList<PadreListCuenta> cuenta;
@@ -70,7 +70,7 @@ public class CuentaFragment extends Fragment{
 		 * Actualmente el código ha sido tirado para la base de datos de pedido.
 		 */
 		// Importamos la base de datos
-        sqlCuenta  =new Handler(this.getActivity().getApplicationContext(),"Pedido.db"); 
+        sqlCuenta  =new HandlerDB(this.getActivity().getApplicationContext(),"Pedido.db"); 
      	dbCuenta = sqlCuenta.open();
      	
      	// Creamos la estructura cuenta

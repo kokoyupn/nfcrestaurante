@@ -1,5 +1,5 @@
 package fragments;
-import  baseDatos.Handler;
+import  baseDatos.HandlerDB;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 		public ListView listaCategoriaUnica;
 		private boolean esListaExpandible;
 		
-		private Handler sql;
+		private HandlerDB sql;
 		private SQLiteDatabase db;
 		
 		private String tipoTab, restaurante;
@@ -83,7 +83,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	    
 	    public void importarBaseDatatos(View v ) {
 	        try{
-	     	   sql=new Handler(v.getContext()); 
+	     	   sql=new HandlerDB(v.getContext()); 
 	     	   db=sql.open();
 	         }catch(SQLiteException e){
 	         	Toast.makeText(v.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();

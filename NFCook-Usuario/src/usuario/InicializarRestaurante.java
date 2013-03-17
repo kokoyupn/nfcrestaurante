@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 
+import baseDatos.HandlerDB;
+
 import com.example.nfcook.R;
 
 import fragments.CuentaFragment;
@@ -11,8 +13,6 @@ import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
-
-import baseDatos.Handler;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -54,7 +54,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private String restaurante;
 	
 	// Base de datos
-	private Handler sql;
+	private HandlerDB sql;
 	private SQLiteDatabase db;
 	
 	// Actionbar para los tabs superiores con las categrías de los platos
@@ -121,7 +121,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     // Importamos la base de datos
     private void importarBaseDatatos(){
         try{
-        	sql = new Handler(getApplicationContext()); 
+        	sql = new HandlerDB(getApplicationContext()); 
         	db = sql.open();
         }catch(SQLiteException e){
          	Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();

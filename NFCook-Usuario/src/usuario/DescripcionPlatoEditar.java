@@ -6,7 +6,7 @@ import com.example.nfcook.R;
 
 import fragments.PedidoFragment;
 
-import baseDatos.Handler;
+import baseDatos.HandlerDB;
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
 import adapters.PadreExpandableListEditar;
@@ -37,7 +37,7 @@ public class DescripcionPlatoEditar extends Activity {
 	private String observaciones, idPlato, nombrePlato;
 	private String idHijo;
 	
-	public Handler sql,sqlPedido;
+	public HandlerDB sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
 	
 	
@@ -181,7 +181,7 @@ public class DescripcionPlatoEditar extends Activity {
     
     private void importarBaseDatatos() {
     	try{
-        	sql=new Handler(getApplicationContext()); 
+        	sql=new HandlerDB(getApplicationContext()); 
          	db=sql.open();
         }catch(SQLiteException e){
             Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
@@ -190,7 +190,7 @@ public class DescripcionPlatoEditar extends Activity {
     
     private void importarBaseDatatosPedido() {
 		 try{
-	     	   sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
+	     	   sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
 	     	   dbPedido=sqlPedido.open();
 	         }catch(SQLiteException e){
 	         	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show();

@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/FrameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/bordes_redondeados_lista_seleccion_restaurantes"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
+
+    <ImageView
+        android:id="@+id/imageViewLogoListaSeleccionRestaurantes"
+        android:layout_gravity="center"
+        android:layout_width="180dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/alert_light_frame"
+         />
+
+</FrameLayout>
