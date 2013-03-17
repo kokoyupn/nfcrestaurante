@@ -127,6 +127,8 @@ public class MiListAdapterMesa extends BaseAdapter {
 	public void deletePosicion(int posicion){
 		contenido.remove(posicion);
 	}
+	
+	
 
 	
 
