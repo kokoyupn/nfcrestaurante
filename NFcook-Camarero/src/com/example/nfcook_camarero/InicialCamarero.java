@@ -1,6 +1,7 @@
 package com.example.nfcook_camarero;
 
  
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +46,7 @@ public class InicialCamarero extends Activity{
     private String nombre;
     private String numeroMesaAEditar;
     private int precio;
-    private int idUnico = 0;
+    private static int idUnico = 0;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
     
@@ -86,10 +87,22 @@ public class InicialCamarero extends Activity{
 	    info2.setExtras(extras2); 
 	    info2.setObservaciones("Sin sal");
 	    info2.setIdPlato("fh11");
+	    
+	    InfoPlato info3 = new InfoPlato();
+	    info3.setExtras(new ArrayList<String>());
+	    info3.setObservaciones("");
+	    info3.setIdPlato("fh41");
+	    
+	    InfoPlato info4 = new InfoPlato();
+	    info4.setExtras(new ArrayList<String>());
+	    info4.setObservaciones("Sabrosón");
+	    info4.setObservaciones("fh42");
 	   
 	    datos = new  ArrayList<InfoPlato>(); 
 	    datos.add(info);
 	    datos.add(info2);
+	    datos.add(info3);
+	    datos.add(info4);
 	    //fin de creacion de datos
 	   
 	   //Para importar la base de Assets
