@@ -1,9 +1,8 @@
 <resources>
 
-    <string name="app_name">NFCook</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">NFCook Usuario</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">Seleccion de restaurante</string>
+    <string name="title_activity_main">NFCook Usuario</string>
     <string name="principales">Principales</string>
     <string name="entrantes">Entrantes</string>
     <string name="postres">Postres</string>

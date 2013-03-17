@@ -3,6 +3,8 @@ package usuario;
 import java.util.ArrayList;
 
 
+import baseDatos.HandlerDB;
+
 import com.example.nfcook.R;
 
 import adapters.HijoExpandableListEditar;
@@ -28,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import baseDatos.Handler;
 
 public class DescripcionPlato extends Activity {
 	
@@ -43,7 +44,7 @@ public class DescripcionPlato extends Activity {
 	private static ExpandableListView expandableListExtras;
 	private static MiExpandableListAdapterEditar adapterExpandableListExtras;
 	
-	public Handler sql,sqlPedido;
+	public HandlerDB sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
 	
 	
@@ -71,7 +72,7 @@ public class DescripcionPlato extends Activity {
      
         // Importamos la base de datos para su posterior lectura
         try{
-        	sql=new Handler(getApplicationContext()); 
+        	sql=new HandlerDB(getApplicationContext()); 
          	db=sql.open();
         }catch(SQLiteException e){
             Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
@@ -196,7 +197,7 @@ public class DescripcionPlato extends Activity {
     		}
     	}
     	if(bienEditado){
-    		sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
+    		sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
          	dbPedido=sqlPedido.open();
         	ContentValues plato = new ContentValues();
         	plato.put("Id", idPlato);

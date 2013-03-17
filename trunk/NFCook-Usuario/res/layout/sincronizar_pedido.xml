@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,11 +10,11 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#BFE4F2" >
+            android:layout_height="wrap_content" 
+            android:background="@color/azul" >
 
             <TextView
-                android:id="@+id/textViewTituloPedido"
+                android:id="@+id/textViewTituloSincronizarPedido"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -23,14 +23,16 @@
                 android:text="Sincronizar Pedido"
                 android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
                 android:textSize="30sp" />
+
         </FrameLayout>
-
+
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/imageViewSincronizarPedido"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="50dp"
             android:layout_weight="0.88"
+            android:onClick="onClickNFCVolver"
             android:src="@drawable/sinc_nfc" />
 
     </LinearLayout>

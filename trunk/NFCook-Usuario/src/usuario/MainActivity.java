@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.example.nfcook.R;
 
-import baseDatos.Handler;
+import baseDatos.HandlerDB;
 
 import adapters.MiListImagenesRestaurantesAdapter;
 import android.app.Activity;
@@ -32,7 +32,7 @@ public class MainActivity extends Activity{
 	private ArrayList<Integer> logosRestaurantesListaInicial, logosRestaurantes;
 	private Set<String> nombresRestaurantes;
 	
-	private Handler sql;
+	private HandlerDB sql;
 	private SQLiteDatabase db;
 	
     @Override
@@ -69,7 +69,7 @@ public class MainActivity extends Activity{
 	    	} 
 	    }catch(SQLiteException e){
 	        Toast.makeText(getApplicationContext(),"ERROR BASE DE DATOS -> TABS",Toast.LENGTH_SHORT).show();	
-	    }
+	    }  	
     	
     	// Creamos la lista de Imagenes del restaurante
     	logosRestaurantesListaInicial = new ArrayList<Integer>();
@@ -84,6 +84,9 @@ public class MainActivity extends Activity{
     		logosRestaurantes.add(getResources().getIdentifier(logo,"drawable",this.getPackageName()));
     	}
     	
+    	logosRestaurantesListaInicial.add(getResources().getIdentifier("fridays","drawable",this.getPackageName()));
+    	logosRestaurantesListaInicial.add(getResources().getIdentifier("ginos","drawable",this.getPackageName()));
+    	
     	ListView lv = (ListView) findViewById(R.id.listaLogosRestarurtantes);
         lv.setAdapter(new MiListImagenesRestaurantesAdapter(this, logosRestaurantesListaInicial));
 
@@ -91,12 +94,12 @@ public class MainActivity extends Activity{
 			public void onItemClick(AdapterView<?> a, View v, int position, long id){
 				lanzar(position); 
 			}
-        });	
+        });	      
 	}
-    
+     
     private void importarBaseDatatos(){
         try{
-        	sql = new Handler(getApplicationContext()); 
+        	sql = new HandlerDB(getApplicationContext()); 
         	db = sql.open();
         }catch(SQLiteException e){
          	Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
@@ -104,23 +107,33 @@ public class MainActivity extends Activity{
 	}
 
 	public void lanzar(int posicion){
-		String nombreRestaurante;
-		int i = 0;
-		
-		Iterator<String> it = nombresRestaurantes.iterator();
-		while(it.hasNext() && i<posicion){
-			it.next();
-			i++;
+		if (posicion > 1) {
+			//Creación y configuración de la ventana emergente
+			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(MainActivity.this);
+			ventanaEmergente.setPositiveButton("Aceptar", null);
+			View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.aviso_restaurante_no_disponible, null);
+			ventanaEmergente.setView(vistaAviso);
+			ventanaEmergente.show();
 		}
-		nombreRestaurante = it.next();
-    	
-		//Almacenamos la posición en la lista del ultimo restaurante selecionado para que al abrir la aplicación podamos cargarlo
-		setUltimoRestaurante(posicion);
-		
-    	Intent intent = new Intent(this,InicializarRestaurante.class);
-		intent.putExtra("nombreRestaurante", nombreRestaurante);
-    	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
-    	startActivity(intent);
+		else {
+			String nombreRestaurante;
+			int i = 0;
+			
+			Iterator<String> it = nombresRestaurantes.iterator();
+			while(it.hasNext() && i<posicion){
+				it.next();
+				i++;
+			}
+			nombreRestaurante = it.next();
+	    	
+			//Almacenamos la posición en la lista del ultimo restaurante selecionado para que al abrir la aplicación podamos cargarlo
+			setUltimoRestaurante(posicion);
+			
+	    	Intent intent = new Intent(this,InicializarRestaurante.class);
+			intent.putExtra("nombreRestaurante", nombreRestaurante);
+	    	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
+	    	startActivity(intent);
+		}
     }
 	
 	public void setUltimoRestaurante(int posicion){
@@ -150,7 +163,7 @@ public class MainActivity extends Activity{
 			
 			public void onClick(DialogInterface dialog, int which) {
 				try{
-					Handler sqlPedido=new Handler(getApplicationContext(),"Pedido.db"); 
+					HandlerDB sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
 					SQLiteDatabase dbPedido = sqlPedido.open();
 					dbPedido.delete("Pedido", null, null);
 					sqlPedido.close();

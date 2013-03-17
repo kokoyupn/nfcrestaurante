@@ -13,39 +13,39 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 public class MiListImagenesRestaurantesAdapter extends BaseAdapter {
-	private ArrayList<Integer> restaurantes;
-	private LayoutInflater l_Inflater;
+        private ArrayList<Integer> restaurantes;
+        private LayoutInflater l_Inflater;
 
-	public MiListImagenesRestaurantesAdapter(Context context, ArrayList<Integer> restaurantes) {
-		this.restaurantes = restaurantes;
-		this.l_Inflater = LayoutInflater.from(context);
-	}
+        public MiListImagenesRestaurantesAdapter(Context context, ArrayList<Integer> restaurantes) {
+        	this.restaurantes = restaurantes;
+        	this.l_Inflater = LayoutInflater.from(context);
+        }
 
-	public int getCount() {
-		return restaurantes.size();
-	}
+        public int getCount() {
+        	return restaurantes.size();
+        }
 
-	public Object getItem(int position) {
-		return restaurantes.get(position);
-	}
+        public Object getItem(int position) {
+        	return restaurantes.get(position);
+        }
 
-	public long getItemId(int position) {
-		return position;
-	}
+        public long getItemId(int position) {
+        	return position;
+        }
 
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ImageView itemImage;
-		if (convertView == null) {
-			convertView = l_Inflater.inflate(R.layout.inicio_restaurante, null);
-			itemImage = (ImageView) convertView.findViewById(R.id.ImageViewLogoInicioRestaurante);
-			convertView.setTag(itemImage);
-		} else {
-			itemImage = (ImageView) convertView.getTag();
-		}
-		
-		itemImage.setImageResource(restaurantes.get(position));
-		
-		return convertView;
-	}
+        public View getView(int position, View convertView, ViewGroup parent) {
+        	ImageView itemImage;
+        	if (convertView == null) {
+        		convertView = l_Inflater.inflate(R.layout.interior_list_view_seleccion_restaurantes, null);
+                itemImage = (ImageView) convertView.findViewById(R.id.imageViewLogoListaSeleccionRestaurantes);
+                convertView.setTag(itemImage);
+            } else {
+            	itemImage = (ImageView) convertView.getTag();
+            }
+                
+            itemImage.setImageResource(restaurantes.get(position));
+                
+            return convertView;
+        }
 
 }
