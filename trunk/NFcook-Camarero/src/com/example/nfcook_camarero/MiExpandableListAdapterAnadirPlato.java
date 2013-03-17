@@ -59,6 +59,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			ArrayList<String> idHijos = padresExpandableList.get(groupPosition).getHijo().getIds();
 			ArrayList<String> imgHijos = padresExpandableList.get(groupPosition).getHijo().getNumImagenes();
 			ArrayList<String> nombreHijos = padresExpandableList.get(groupPosition).getHijo().getNombrePl();
+			ArrayList<Float> precioHijos = padresExpandableList.get(groupPosition).getHijo().getPrecio();
 
 			platos = new ArrayList<PlatoView>();
 			//Recorremos con una variable que indica la posicion, porque necesitariamos tres iteradores.
@@ -70,10 +71,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			    img.setImageResource(getDrawable(convertView.getContext(),imgHijos.get(pos)));
 			
 				//traer las cosas de platoView				
-				PlatoView plato= new PlatoView(context);
-				plato.setNombrePlato(nombreHijos.get(pos));
-				plato.setImagenPlato(imgHijos.get(pos));
-				plato.setIdPlato(idHijos.get(pos));
+				PlatoView plato= new PlatoView(nombreHijos.get(pos),imgHijos.get(pos),idHijos.get(pos),precioHijos.get(pos));
 	    		platos.add(plato);
 	    		
 	    		pos++;

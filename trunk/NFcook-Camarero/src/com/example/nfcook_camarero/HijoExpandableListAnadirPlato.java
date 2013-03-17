@@ -7,12 +7,14 @@ public class HijoExpandableListAnadirPlato {
 	private ArrayList<String> idHijos;
 	private ArrayList<String> numImag;
 	private ArrayList<String> nombrePl;
+	private ArrayList<Float> precio;
 	
 	
-	public HijoExpandableListAnadirPlato(ArrayList<String> idHijos, ArrayList<String> numImag, ArrayList<String> nombrePl) {
+	public HijoExpandableListAnadirPlato(ArrayList<String> idHijos, ArrayList<String> numImag, ArrayList<String> nombrePl, ArrayList<Float> precio) {
 		this.idHijos = idHijos;
 		this.numImag = numImag;
 		this.nombrePl = nombrePl;
+		this.precio = precio;
 	}
 
 	public ArrayList<String> getIds() {
@@ -25,6 +27,10 @@ public class HijoExpandableListAnadirPlato {
 	
 	public ArrayList<String> getNombrePl() {
 		return nombrePl;
+	}
+	
+	public ArrayList<Float> getPrecio() {
+		return precio;
 	}
 	
 }

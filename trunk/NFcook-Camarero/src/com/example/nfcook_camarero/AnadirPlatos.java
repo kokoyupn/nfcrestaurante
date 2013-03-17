@@ -47,8 +47,6 @@ public class AnadirPlatos extends Activity{
         setContentView(R.layout.expandable_list_anadir_plato); 
         cargarBarraDeBusqueda();
         crearExpandableList();
-
-
     }
 		
 	
@@ -77,7 +75,7 @@ public class AnadirPlatos extends Activity{
    			if(!tipoSinRepe.contains(tipoPlato)){
    				tipoSinRepe.add(tipoPlato);
 	   			//Sacamos los platos con tipoPlato=al del padre de la base de datos MiBase.db. Seran los hijos
-	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre"};
+	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre","Precio"};
 	   	    	String[] info = new String[]{tipoPlato,"Foster"};
 	   	   		Cursor cPMiBase2 = dbMiBase.query("Restaurantes", infoPlato, "TipoPlato=? AND Restaurante=?",info,null, null,null);
 	   	   		
@@ -85,13 +83,15 @@ public class AnadirPlatos extends Activity{
 	   	   		ArrayList<String> idHijos= new ArrayList<String>();
 	   	   		ArrayList<String> numImags= new ArrayList<String>();
 	   	   		ArrayList<String> nombrePlatos= new ArrayList<String>();
+	   	   		ArrayList<Float> precio= new ArrayList<Float>();
 	   	   		while(cPMiBase2.moveToNext() ){
 	   	   			idHijos.add(cPMiBase2.getString(0));
 	   	   			numImags.add(cPMiBase2.getString(1));
 	   	   			nombrePlatos.add(cPMiBase2.getString(2));
+	   	   			precio.add((float)cPMiBase2.getInt(3));
 	   	   		}
    			
-	   	   		HijoExpandableListAnadirPlato unHijo = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos);
+	   	   		HijoExpandableListAnadirPlato unHijo = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
 	   	   		PadreExpandableListAnadirPlato unPadre = new PadreExpandableListAnadirPlato(tipoPlato, unHijo);
 	   	   		padres.add(unPadre);
    			}//fin de esta
