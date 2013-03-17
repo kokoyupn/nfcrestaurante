@@ -12,6 +12,7 @@ import android.content.ClipData;
 import android.content.ClipData.Item;
 import android.content.ClipDescription;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,6 +28,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
@@ -62,7 +65,7 @@ import adapters.ContenidoListMesa;
 
 
 public class Mesa extends Activity {
-	private String numMesa="1";//FIXME introducir desde fuera
+	private String numMesa;//FIXME introducir desde fuera
 	private HandlerGenerico sqlMesas;
 	private SQLiteDatabase dbMesas,dbHistorico;
 	private ListView platos;
@@ -80,8 +83,19 @@ public class Mesa extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Quitamos barra de titulo de la aplicacion
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //Quitamos barra de notificaciones
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+		
 		setContentView(R.layout.pedidomesa);
 		actividad = this;
+		
+		//El numero de la mesa se obtiene de la pantalla anterior
+		Bundle bundle = getIntent().getExtras();
+		numMesa = bundle.getString("numMesa");
 		
 		TextView mesa = (TextView)findViewById(R.id.numeroDeMesa);
 		mesa.setText("Mesa: "+ String.valueOf(numMesa) );
@@ -112,6 +126,15 @@ public class Mesa extends Activity {
 	  	    	public boolean onItemLongClick(AdapterView<?> l, View v, int position, long id) {
 	  	    		indicePulsado=position;
 					DragShadowBuilder myShadow = new DragShadowBuilder(v);
+					
+					//Prueba
+					View borrando;
+					LayoutInflater inflater = (LayoutInflater) actividad.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				    borrando = inflater.inflate(com.example.nfcook_camarero.R.layout.hijo_mesa_borrado, null);
+				    v.setBackgroundColor(Color.BLACK);
+				    //Prueba
+							
+					
 					//ClipData info = ClipData.newPlainText("posicion", Integer.toString(position));
 					v.startDrag(null,myShadow,v,0);
 					
