@@ -27,7 +27,7 @@ public class MainActivity extends Activity{
 	 * dónde se cree y configurar el lanzar de esta actividad para que cuando corramos el proyecto y 
 	 * pulsemos sobre la opción de la lista se genera la base de datos.
 	 */
-	private String titulosBases[] = {"Generar Bases Datos de Restaurantes"};
+	private String titulosBases[] = {"Generar Bases Datos de Restaurantes","Generar Bases Datos de Login"};
 	public Handler base;
 	 
     @Override
@@ -47,15 +47,22 @@ public class MainActivity extends Activity{
     
     // Metodo en donde configuraremos la actividad que genera la base de datos que seleccionemos
     public void  lanzar(int arg2)
-    {
+    { Intent intent;
     	switch (arg2){
     		// Generar base de datos de restaurantes
+    		
     		case 0:
-    			Intent intent = new Intent(this,BaseDatosRestaurantes.class);
+    			intent = new Intent(this,BaseDatosRestaurantes.class);
+    	    	startActivity(intent);
+    	    	break;
+    		case 1:
+    			intent = new Intent(this,BaseDatosLogin.class);
     	    	startActivity(intent);
     	    break;
     	}
     		
     }
 }
+
+
 
