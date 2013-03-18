@@ -3,48 +3,41 @@ package com.example.nfcook_camarero;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 import adapters.MiListAdapterMesa;
 import android.os.Bundle;
-import android.annotation.SuppressLint;
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipData.Item;
-import android.content.ClipDescription;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Canvas;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import adapters.HijoExpandableListEditar;
+import adapters.MiExpandableListAdapterEditar;
+import adapters.PadreExpandableListEditar;
 
 import adapters.ContenidoListMesa;
 
@@ -65,19 +58,26 @@ import adapters.ContenidoListMesa;
 
 
 public class Mesa extends Activity {
-	private String numMesa;//FIXME introducir desde fuera
+	private String numMesa;
+	private String idCamarero;
+	private String numPersonas; 
 	private HandlerGenerico sqlMesas;
 	private SQLiteDatabase dbMesas,dbHistorico;
-	private ListView platos;
+	private static ListView platos;
 	private ArrayList<ContenidoListMesa> elemLista;
-	private MiListAdapterMesa adapter;
+	private static MiListAdapterMesa adapter;
 	private TextView precioTotal;
 	private int indicePulsado;
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
 	
-	String rutaPedido="/data/data/com.example.nfcook_camarero/databases/Mesas.db";
-	String rutaHistorico="/data/data/com.example.nfcook_camarero/databases/Historico.db";
+	
+	private AutoCompleteTextView actwObservaciones;
+	
+	
+	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
+	private static ExpandableListView expandableListEditarExtras;
+	private static Context context;
 	
 
 	@Override
@@ -93,9 +93,14 @@ public class Mesa extends Activity {
 		setContentView(R.layout.pedidomesa);
 		actividad = this;
 		
+		//Necesario para actualizar la lista de las mesas al añadir un plato
+		context = Mesa.this;
+		
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
-		numMesa = bundle.getString("numMesa");
+		numMesa = bundle.getString("NumMesa");
+		numPersonas = bundle.getString("Personas");
+		idCamarero = bundle.getString("IdCamarero");
 		
 		TextView mesa = (TextView)findViewById(R.id.numeroDeMesa);
 		mesa.setText("Mesa: "+ String.valueOf(numMesa) );
@@ -114,11 +119,26 @@ public class Mesa extends Activity {
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
 	  	    precioTotal.setText(Float.toString(adapter.getPrecio())+" €");
 	  	     
-	  	    platos.setAdapter(adapter); 
+	  	    platos.setAdapter(adapter);
+	  	    
 	  	    
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
-	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id) {
-	  	    		//PRADO
+	  	    	
+	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
+	  	    		
+	  	    		AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
+	  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
+	  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
+	  				//onClickBotonCancelarAlertDialog(ventanaEmergente);
+	  				View vistaAviso = LayoutInflater.from(Mesa.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
+	  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
+	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
+	  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+	  				tituloPlato.setText(adapter.getNombrePlato(posicion));
+	  				actwObservaciones.setText(adapter.getObservacionesPlato(posicion));
+	  				cargarExpandableListExtras(posicion);
+	  				ventanaEmergente.setView(vistaAviso);
+	  				ventanaEmergente.show();
 	  	    	}
 	  	    });
 	  	    
@@ -235,7 +255,10 @@ public class Mesa extends Activity {
             public void onClick(View view) {
             	try{
             		Intent intent = new Intent(actividad, AnadirPlatos.class);
-            		intent.putExtra("numMesa", numMesa);
+            		//Le pasamos a la siguiente pantalla el numero de la mesa que se ha pulsado
+            		intent.putExtra("NumMesa", numMesa);
+            		intent.putExtra("IdCamarero",idCamarero);
+            		intent.putExtra("Personas", numPersonas);
             		startActivity(intent);
             		
             	}catch(Exception e){
@@ -252,7 +275,7 @@ public class Mesa extends Activity {
 		aniadirBebida.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
-            		dbMesas.openDatabase(rutaPedido, null,SQLiteDatabase.OPEN_READWRITE);
+            		importarBaseDatatosMesa();
             		String[] campos = new String[]{"IdCamarero","Personas"};
         		    String[] numeroDeMesa = new String[]{numMesa};
         		    
@@ -263,7 +286,7 @@ public class Mesa extends Activity {
             		intent.putExtra("numMesa", numMesa);
             		intent.putExtra("idCamarero",c.getString(0));
             		intent.putExtra("personasMesa", c.getString(1));
-            		
+            		sqlMesas.close();
             		startActivity(intent);
             		
             	}catch(Exception e){
@@ -274,9 +297,7 @@ public class Mesa extends Activity {
         });
 		//Boton AñadirBebida--------------------------------------------------------------
 	}
-	
-	
-	
+
 	/**
 	 * Obtiene los elementos del aArrayList, en funcion de la base de datos y del contenido 
 	 * de la mesa actual, que servirá para confeccionar el adapter de la ListView.
@@ -286,7 +307,7 @@ public class Mesa extends Activity {
 	private ArrayList<ContenidoListMesa> obtenerElementos() {
 		ArrayList<ContenidoListMesa> elementos=null;
 		try{
-			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico",};
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
 		    String[] numeroDeMesa = new String[]{numMesa};
 		    
 		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
@@ -294,7 +315,7 @@ public class Mesa extends Activity {
 		    elementos = new ArrayList<ContenidoListMesa>();
 		     
 		    while(c.moveToNext())
-		    	elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Float.parseFloat(c.getString(3)),c.getInt(4)));
+		    	elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Float.parseFloat(c.getString(3)),c.getInt(4),c.getString(5)));
 		    	
 		    return elementos;
 		    
@@ -330,4 +351,130 @@ public class Mesa extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
+	
+	protected void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,final int posicion) {
+		
+		ventanaEmergente.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				importarBaseDatatosMesa();
+				String nuevosExtrasMarcados = null;
+				if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
+					nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
+				}
+		    	
+		    	String observacionesNuevas;
+		    	if(!actwObservaciones.getText().toString().equals("")){
+		    		observacionesNuevas = actwObservaciones.getText().toString();
+		    	}else{
+		    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
+		    	}
+		    	
+		    	ContentValues platoEditado = new ContentValues();
+		    	platoEditado.put("Extras", nuevosExtrasMarcados);
+		    	platoEditado.put("Observaciones", observacionesNuevas);
+		        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
+		        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
+				sqlMesas.close();
+				
+				adapter.setExtras(posicion,nuevosExtrasMarcados);
+				adapter.setObservaciones(posicion,observacionesNuevas);
+				platos.setAdapter(adapter);
+			}
+		});
+		
+	}
+	
+	
+	private void importarBaseDatatosMesa(){
+		try{
+			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();
+		}catch(SQLiteException e){
+		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
+		}	
+	}
+	
+	public void cargarExpandableListExtras(int posicion){
+		HandlerGenerico sqlMiBase=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		SQLiteDatabase dbMiBase= sqlMiBase.open();
+  		String[] campos = new String[]{"Extras"};
+  		String[] datos = new String[]{adapter.getIdPlato(posicion)};
+  		
+  		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Id =?",datos,null,null,null); 
+  		cursor.moveToFirst();
+  		
+  		String extrasPlato = cursor.getString(0);
+  		String extrasMarcados = adapter.getExtrasMarcados(posicion);
+  		  		
+  		if(extrasMarcados!=null){
+  			String[] tokensExtrasMarcados = extrasMarcados.split(",");
+  			String[] tokens = extrasPlato.split("/");
+	            ArrayList<PadreExpandableListEditar> categoriasExtras =  new ArrayList<PadreExpandableListEditar>();
+		        for(int i= 0; i< tokens.length ;i++){
+		        	String[] nombreExtra = null;
+		        	String extraSeleccionadoPradreI = tokensExtrasMarcados[i];
+					try{
+						nombreExtra = tokens[i].split(":");
+						
+						String categoriaExtraPadre = nombreExtra[0];
+						
+						// Creamos los hijos, serán la variedad de extras
+						String[] elementosExtra = null;
+
+						elementosExtra = nombreExtra[1].split(",");
+						
+						ArrayList<HijoExpandableListEditar> variedadExtrasListaHijos = new ArrayList<HijoExpandableListEditar>();
+						ArrayList<String> extrasHijo = new ArrayList<String>();
+						boolean[] extrasPulsados = new boolean[elementosExtra.length];
+						for(int j=0; j<elementosExtra.length;j++)
+						{
+							if(extraSeleccionadoPradreI.contains(elementosExtra[j])){
+								extrasPulsados[j] = true;
+							}else{
+								extrasPulsados[j] = false;
+							}
+							extrasHijo.add(elementosExtra[j]);
+						}
+						HijoExpandableListEditar extrasDeUnaCategoria = new HijoExpandableListEditar(extrasHijo, extrasPulsados);
+						// Añadimos la información del hijo a la lista de hijos
+						variedadExtrasListaHijos.add(extrasDeUnaCategoria);
+						PadreExpandableListEditar padreCategoriaExtra = new PadreExpandableListEditar(adapter.getIdPlato(posicion),categoriaExtraPadre, variedadExtrasListaHijos);
+						// Añadimos la información del padre a la lista de padres
+						categoriasExtras.add(padreCategoriaExtra);
+					}catch(Exception e){
+						Toast.makeText(getApplicationContext(),"Error en el formato de extra en la BD", Toast.LENGTH_SHORT).show();
+					}
+				}
+		        // Creamos el adapater para adaptar la lista a la pantalla.
+		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(getApplicationContext(), categoriasExtras,true);
+		        expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
+  		}else{
+  			//Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
+  			adapterExpandableListEditarExtras = null;
+  			expandableListEditarExtras.setVisibility(ExpandableListView.INVISIBLE);
+  		}
+	}
+
+	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
+		HandlerGenerico sqlMesas = null;
+		SQLiteDatabase dbMesas = null;
+		try{
+			sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();
+		}catch(SQLiteException e){
+		 	Toast.makeText(context,"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
+		}
+		adapter.addPlato(platoNuevo);
+		platos.setAdapter(adapter);
+	}
+
+	public static void actualizaExpandableList() {
+		expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);
+	}
+
+	public static void expandeGrupoLista(int groupPositionMarcar) {
+		expandableListEditarExtras.expandGroup(groupPositionMarcar);
+	}
+	
 }

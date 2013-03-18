@@ -130,6 +130,38 @@ public class MiListAdapterMesa extends BaseAdapter {
 	
 	
 
+	public String getExtrasMarcados(int posicion) {
+		return contenido.get(posicion).getExtras();
+	}
+
+	public String getIdPlato(int posicion) {
+		return contenido.get(posicion).getIdPlato();
+	}
+	
+	public int getIdPlatoUnico(int posicion) {
+		return contenido.get(posicion).getId();
+	}
+
+	public String getNombrePlato(int posicion) {
+		return contenido.get(posicion).getNombre();
+	}
+
+	public String getObservacionesPlato(int posicion) {
+		return contenido.get(posicion).getObservaciones();	
+	}
+
+	public void setExtras(int posicion,String extras) {
+		contenido.get(posicion).setExtras(extras);
+	}
+
+	public void setObservaciones(int posicion, String observacionesNuevas) {
+		contenido.get(posicion).setObservaciones(observacionesNuevas);		
+	}
+
+	public void addPlato(ContenidoListMesa platoNuevo) {
+		contenido.add(platoNuevo);
+	}
+
 	
 
 }

@@ -1,7 +1,6 @@
 package com.example.nfcook_camarero;
 
  
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -144,6 +143,8 @@ public class InicialCamarero extends Activity{
             	Intent intent = new Intent(InicialCamarero.this,Mesa.class);
             	//Le pasamos a la siguiente pantalla el numero de la mesa que se ha pulsado
         		intent.putExtra("NumMesa", pulsada.getNumMesa());
+        		intent.putExtra("IdCamarero",idCamarero);
+        		intent.putExtra("Personas", pulsada.getNumPersonas());
         		//Lanzamos la actividad
         		startActivity(intent);
                 }
@@ -594,6 +595,11 @@ public class InicialCamarero extends Activity{
             startActivity(intent);
             return true;
         }
+    
+    public static int getIdUnico(){
+    	idUnico++;
+    	return idUnico;
+    }
 	
 	
 }
