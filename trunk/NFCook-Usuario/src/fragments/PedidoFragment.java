@@ -117,10 +117,20 @@ public class PedidoFragment extends Fragment{
 			
 			public void onClick(View v) {
 				
-		        Intent intent = new Intent(getActivity(),SincronizarPedido.class);
+				Intent intent = new Intent(getActivity(),SincronizarPedido.class);
 		        intent.putExtra("Restaurante", restaurante);
 				startActivity(intent);
-		        
+				
+				/*new Thread(new Runnable() {
+		  		    public void run() {
+		  		    	Fragment fragmentCuenta = new CuentaFragment();
+                    	((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+        		        FragmentTransaction m = getFragmentManager().beginTransaction();
+        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+        		        m.commit();
+		  		    }
+		  		}).start();	*/
+				
 				new Handler().postDelayed(new Runnable(){
                     
                     public void run() {
@@ -130,7 +140,7 @@ public class PedidoFragment extends Fragment{
         		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
         		        m.commit();
                     }
-                }, 3400); //tiempo para retrasar la accion
+                }, 4400); //tiempo para retrasar la accion
 
 				
 		    	
