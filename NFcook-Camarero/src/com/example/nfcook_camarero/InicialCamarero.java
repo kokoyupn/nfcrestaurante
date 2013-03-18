@@ -572,7 +572,7 @@ public class InicialCamarero extends Activity{
 		}
 	}
 	
-	private static void eliminarDeArray(final String numeroMesa){
+	static void eliminarDeArray(final String numeroMesa){
 		Boolean enc = false;
      	Iterator<MesaView> it = mesas.iterator();
      	while (it.hasNext() && !enc){

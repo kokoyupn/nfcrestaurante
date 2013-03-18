@@ -64,8 +64,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	
 			convertView = inflater.inflate(R.layout.contenido_hijo_lista_anadir_plato, parent,false);
-			GridView gridViewAnadir = (GridView) convertView.findViewById(R.id.gridViewAnadirPlato);			 
-	
+			GridView gridViewAnadir = (GridView) convertView.findViewById(R.id.gridViewAnadirPlato);
 			
 			ArrayList<String> idHijos = padresExpandableList.get(groupPosition).getHijo().getIds();
 			ArrayList<String> imgHijos = padresExpandableList.get(groupPosition).getHijo().getNumImagenes();
@@ -87,6 +86,28 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	    		
 	    		pos++;
 			}
+			
+			/////   OPERACIONES PARA QUE SE EXPANDA EL GRIDVIEW COMPLETO AL PINCHAR EN UN PADRE
+			///////////////////////////////////////////////////////////////////////////////////
+			
+		    final int spacingDp = 10; //espacio entre celdas en dp's
+		    final int colWidthDp = 80; //tamaño de cada columna en dp's
+		    final int rowHeightDp = 120; //tamaño de cada fila en dp's
+
+		    // pasamos los dp's a pixeles
+		    final float COL_WIDTH = convertView.getResources().getDisplayMetrics().density * colWidthDp;
+		    final float ROW_HEIGHT = convertView.getResources().getDisplayMetrics().density * rowHeightDp;
+		    final float SPACING = convertView.getResources().getDisplayMetrics().density * spacingDp;
+
+		    // calculamos el número de filas y de columnas en nuestro gridView
+		    final int colCount = (int)Math.floor((parent.getWidth() - (2 * SPACING)) / (COL_WIDTH + SPACING));
+		    final int rowCount = (int)Math.ceil((platos.size() + 0d) / colCount);
+
+		    // calculamos ahora la altura total del grid
+		    final int GRID_HEIGHT = Math.round(rowCount * (ROW_HEIGHT + SPACING + 10));
+
+		    // set the height of the current grid
+		    gridViewAnadir.getLayoutParams().height = GRID_HEIGHT;
 			
 			//Llamamos al adapter para que muestre en la pantalla los cambios realizados
 			AnadirPlatoAdapter adapterAnadir;
