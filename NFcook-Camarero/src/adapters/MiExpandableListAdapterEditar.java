@@ -3,6 +3,7 @@ package adapters;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.example.nfcook_camarero.AnadirPlatos;
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.MiExpandableListAdapterAnadirPlato;
 import com.example.nfcook_camarero.R;
@@ -37,13 +38,18 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 	private LayoutInflater inflater;
     private ArrayList<PadreExpandableListEditar> padresExpandableList;
     private Context context;
-    private boolean esEditar;
+    private int zonaAlertDialog;
+    /*
+     * 0 -> Añadir plato.
+     * 1 -> Editar plato.
+     * 2 -> Buscador de platos.
+     */
     
-    public MiExpandableListAdapterEditar(Context context, ArrayList<PadreExpandableListEditar> arrayCategorias, boolean esEditar){
+    public MiExpandableListAdapterEditar(Context context, ArrayList<PadreExpandableListEditar> arrayCategorias, int zonaAlertDialog){
     	this.context =  context;
     	this.padresExpandableList = arrayCategorias;
         inflater = LayoutInflater.from(context);
-        this.esEditar = esEditar;
+        this.zonaAlertDialog = zonaAlertDialog;
     }
 
 	public MiExpandableListAdapterEditar() {
@@ -105,17 +111,29 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 				
 				public void onClick(View v) {
 					padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).setCheck(posicionRadioButton);
-					if(esEditar){
-						Mesa.actualizaExpandableList();
-					}else{
+					switch(zonaAlertDialog){
+					case 0 :
 						MiExpandableListAdapterAnadirPlato.actualizaExpandableList();
+						break;
+					case 1 :
+						Mesa.actualizaExpandableList();
+						break;
+					case 2 :
+						AnadirPlatos.actualizaExpandableList();
+						break;
 					}
 					for(int i=0;i<padresExpandableList.size();i++){
 						if(padresExpandableList.get(i).isExpandido()){
-							if(esEditar){
-								Mesa.expandeGrupoLista(i);
-							}else{
+							switch(zonaAlertDialog){
+							case 0 :
 								MiExpandableListAdapterAnadirPlato.expandeGrupoLista(i);
+								break;
+							case 1 :
+								Mesa.expandeGrupoLista(i);
+								break;
+							case 2 :
+								AnadirPlatos.expandeGrupoLista(i);
+								break;
 							}
 						}
 					}
@@ -176,11 +194,17 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 		textViewNombreCategoria.setText(padresExpandableList.get(groupPosition).getCategoriaExtra());
         
         if(padresExpandableList.get(groupPosition).isExpandido()){
-        	if(esEditar){
-        		Mesa.expandeGrupoLista(groupPosition);
-        	}else{
-        		MiExpandableListAdapterAnadirPlato.expandeGrupoLista(groupPosition);
-        	}
+        	switch(zonaAlertDialog){
+			case 0 :
+				MiExpandableListAdapterAnadirPlato.expandeGrupoLista(groupPosition);
+				break;
+			case 1 :
+				Mesa.expandeGrupoLista(groupPosition);
+				break;
+			case 2 :
+				AnadirPlatos.expandeGrupoLista(groupPosition);
+				break;
+			}
         }
 		return convertView;
 

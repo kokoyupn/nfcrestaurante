@@ -118,70 +118,6 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	    return convertView;
 	
 		}
-	
-
-	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion) {
-		
-		
-		ventanaEmergente.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-			
-			public void onClick(DialogInterface dialog, int which) {
-				boolean bienEditado = true;
-		    	String observaciones = null;
-		    	String nuevosExtrasMarcados = null;
-		    	if(!actwObservaciones.getText().toString().equals("")){
-		        	observaciones = actwObservaciones.getText().toString();
-		    	}
-		    	if(adapterExpandableListEditarExtras!=null){ //Es un plato con extras
-		    		nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
-		    		if(nuevosExtrasMarcados == null){
-		    			bienEditado = false;
-		    		}
-		    	}
-		    	if(bienEditado){
-		    		HandlerGenerico sqlMesas = null;
-		    		SQLiteDatabase dbMesas = null;
-		    		try{
-		    			sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-		    			dbMesas = sqlMesas.open();
-		    		}catch(SQLiteException e){
-		    		 	Toast.makeText(context,"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
-		    		}
-		    		//Sacamos la fecha a la que el camarero ha introducido la mesa
-                	Calendar cal = new GregorianCalendar();
-                    Date date = cal.getTime();
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    String formatteDate = df.format(date);
-                    //Sacamos la hora a la que el camarero ha introducido la mesa
-                    Date dt = new Date();
-                    SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
-                    String formatteHour = dtf.format(dt.getTime());
-                    
-		        	ContentValues plato = new ContentValues();
-		        	int idUnico = InicialCamarero.getIdUnico();
-		        	plato.put("NumMesa",AnadirPlatos.getNumMesa());
-		        	plato.put("IdCamarero",AnadirPlatos.getNumMesa());
-		        	plato.put("IdPlato", platos.get(posicion).getIdPlato());
-		        	plato.put("Observaciones", observaciones);
-		        	plato.put("Extras", nuevosExtrasMarcados);
-		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
-		        	plato.put("Nombre", platos.get(posicion).getNombrePlato());
-		        	plato.put("Precio",platos.get(posicion).getPrecio());
-		        	plato.put("Personas",AnadirPlatos.getNumPersonas());
-		        	plato.put("IdUnico", idUnico);
-		        	dbMesas.insert("Mesas", null, plato);
-		        	dbMesas.close();
-		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(platos.get(posicion).getNombrePlato(),nuevosExtrasMarcados,observaciones,platos.get(posicion).getPrecio(),idUnico,platos.get(posicion).getIdPlato());
-		        	Mesa.actualizaListPlatos(platoNuevo);
-		    	}else{
-		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
-		    	}				
-			}
-			
-		});
-		
-		
-	}
 
 	public int getChildrenCount(int groupPosition) {
 		return 1;
@@ -253,7 +189,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
   		
   		String extrasPlato = cursor.getString(0);
   		  		
-  		if(extrasPlato!=null){
+  		if(!extrasPlato.equals("")){
   			String[] tokens = extrasPlato.split("/");
 	            ArrayList<PadreExpandableListEditar> categoriasExtras =  new ArrayList<PadreExpandableListEditar>();
 		        for(int i= 0; i< tokens.length ;i++){
@@ -287,13 +223,74 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 					}
 				}
 		        // Creamos el adapater para adaptar la lista a la pantalla.
-		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(context, categoriasExtras,false);
+		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(context, categoriasExtras,0);
 		        expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
   		}else{
   			//Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
   			adapterExpandableListEditarExtras = null;
   			expandableListEditarExtras.setVisibility(ExpandableListView.INVISIBLE);
   		}
+	}
+	
+	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion) {
+		
+		
+		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				boolean bienEditado = true;
+		    	String observaciones = null;
+		    	String nuevosExtrasMarcados = null;
+		    	if(!actwObservaciones.getText().toString().equals("")){
+		        	observaciones = actwObservaciones.getText().toString();
+		    	}
+		    	if(adapterExpandableListEditarExtras!=null){ //Es un plato con extras
+		    		nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
+		    		if(nuevosExtrasMarcados == null){
+		    			bienEditado = false;
+		    		}
+		    	}
+		    	if(bienEditado){
+		    		HandlerGenerico sqlMesas = null;
+		    		SQLiteDatabase dbMesas = null;
+		    		try{
+		    			sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+		    			dbMesas = sqlMesas.open();
+		    		}catch(SQLiteException e){
+		    		 	Toast.makeText(context,"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
+		    		}
+		    		//Sacamos la fecha a la que el camarero ha introducido la mesa
+                	Calendar cal = new GregorianCalendar();
+                    Date date = cal.getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    String formatteDate = df.format(date);
+                    //Sacamos la hora a la que el camarero ha introducido la mesa
+                    Date dt = new Date();
+                    SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+                    String formatteHour = dtf.format(dt.getTime());
+                    
+		        	ContentValues plato = new ContentValues();
+		        	int idUnico = InicialCamarero.getIdUnico();
+		        	plato.put("NumMesa",AnadirPlatos.getNumMesa());
+		        	plato.put("IdCamarero",AnadirPlatos.getIdCamarero());
+		        	plato.put("IdPlato", platos.get(posicion).getIdPlato());
+		        	plato.put("Observaciones", observaciones);
+		        	plato.put("Extras", nuevosExtrasMarcados);
+		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
+		        	plato.put("Nombre", platos.get(posicion).getNombrePlato());
+		        	plato.put("Precio",platos.get(posicion).getPrecio());
+		        	plato.put("Personas",AnadirPlatos.getNumPersonas());
+		        	plato.put("IdUnico", idUnico);
+		        	dbMesas.insert("Mesas", null, plato);
+		        	dbMesas.close();
+		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(platos.get(posicion).getNombrePlato(),nuevosExtrasMarcados,observaciones,platos.get(posicion).getPrecio(),idUnico,platos.get(posicion).getIdPlato());
+		        	Mesa.actualizaListPlatos(platoNuevo);
+		    	}else{
+		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
+		    	}				
+			}
+			
+		});
 	}
 	
 	public static void actualizaExpandableList() {

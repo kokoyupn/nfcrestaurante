@@ -1,20 +1,34 @@
 package com.example.nfcook_camarero;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import adapters.ContenidoListMesa;
+import adapters.HijoExpandableListEditar;
 import adapters.MiCursorAdapterBuscadorPlatos;
+import adapters.MiExpandableListAdapterEditar;
+import adapters.PadreExpandableListEditar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -31,6 +45,10 @@ public class AnadirPlatos extends Activity{
 	private static String numMesa;
 	private static String idCamarero;
 	private static String numPersonas; 
+	
+	private static ExpandableListView expandableListEditarExtras;
+	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
+	private AutoCompleteTextView actwObservaciones;
 	
 	//private ArrayList<InfoPlato> platosAñadidos; //aqui vaos guardando los platos que ha añadido para luego pasarselos a la pantalla de Mesa 
 	//cuando añade un plato se añade a la base de datos de mesas
@@ -62,7 +80,7 @@ public class AnadirPlatos extends Activity{
 			System.out.println("CATCH");
 			Toast.makeText(getApplicationContext(),"NO EXISTE LA BASE DE DATOS",Toast.LENGTH_SHORT).show();
 		}
-      //Sacamos el TipoPlato de la base de datos MiBase.db. Seran los padres
+        //Sacamos el TipoPlato de la base de datos MiBase.db. Seran los padres
     	String[] infoTipoPlato = new String[]{"TipoPlato"};
     	//solo leemos los platos de Foster
     	String[] datos = new String[]{"Foster"};
@@ -127,24 +145,167 @@ public class AnadirPlatos extends Activity{
 					   //Es lo que vamos a mostrar en la barra de busqueda una vez pinchada una sugerencia.
 					   Cursor c = (Cursor) arg0.getAdapter().getItem(position);
 					   buscador.setText("");
-					   Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-					   startActivity(intent);
+					   String nombrePlato = c.getString(1);
+					   //sacará ventana emergente
+					   AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(AnadirPlatos.this);
+					   ventanaEmergente.setNegativeButton("Cancelar", null);
+					   onClickBotonAceptarAlertDialog(ventanaEmergente, position, nombrePlato);
+					   View vistaAviso = LayoutInflater.from(AnadirPlatos.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
+					   expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
+					   actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+					   TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
+					   tituloPlato.setText(nombrePlato);
+					   cargarExpandableListAnadirExtras(nombrePlato);
+					   ventanaEmergente.setView(vistaAviso);
+					   ventanaEmergente.show();
 				    }
 				      
 				 });
-	    }
+	 }
 	 
-	 public static String getNumMesa() {
+	 protected void cargarExpandableListAnadirExtras(String nombrePlato) {
+		 HandlerGenerico sqlMiBase=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		 SQLiteDatabase dbMiBase= sqlMiBase.open();
+		 
+		 String[] campos = new String[]{"Extras","Id"};
+		 String[] datos = new String[]{"Foster",nombrePlato};
+		 Cursor cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Nombre=?",datos,null,null,null);
+		 
+		 cursor.moveToFirst();
+		 String extrasPlato = cursor.getString(0);
+		 String idPlatoPulsado = cursor.getString(1);
+		 
+  		 if(!extrasPlato.equals("")){
+  			 String[] tokens = extrasPlato.split("/");
+  			 ArrayList<PadreExpandableListEditar> categoriasExtras =  new ArrayList<PadreExpandableListEditar>();
+  			 for(int i= 0; i< tokens.length ;i++){
+  				 String[] nombreExtra = null;
+  				 try{
+  					 nombreExtra = tokens[i].split(":");
+  					 String categoriaExtraPadre = nombreExtra[0];
+  					 // Creamos los hijos, serán la variedad de extras
+  					 String[] elementosExtra = null;
+  					 elementosExtra = nombreExtra[1].split(",");
+  					 ArrayList<HijoExpandableListEditar> variedadExtrasListaHijos = new ArrayList<HijoExpandableListEditar>();
+  					 ArrayList<String> extrasHijo = new ArrayList<String>();
+  					 boolean[] extrasPulsados = new boolean[elementosExtra.length];
+  					 for(int j=0; j<elementosExtra.length;j++){
+  						 extrasPulsados[j] = false;
+  						 extrasHijo.add(elementosExtra[j]);
+  						 }
+  					 HijoExpandableListEditar extrasDeUnaCategoria = new HijoExpandableListEditar(extrasHijo, extrasPulsados);
+  					 // Añadimos la información del hijo a la lista de hijos
+  					 variedadExtrasListaHijos.add(extrasDeUnaCategoria);
+  					 PadreExpandableListEditar padreCategoriaExtra = new PadreExpandableListEditar(idPlatoPulsado, categoriaExtraPadre, variedadExtrasListaHijos);
+  					 // Añadimos la información del padre a la lista de padres
+  					 categoriasExtras.add(padreCategoriaExtra);
+  				 }catch(Exception e){
+					Toast.makeText(getApplicationContext(),"Error en el formato de extra en la BD", Toast.LENGTH_SHORT).show();
+				 }
+  			 }
+  			 // Creamos el adapater para adaptar la lista a la pantalla.
+  			 adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(getApplicationContext(), categoriasExtras,2);
+  			 expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
+  		 }else{
+  			 //Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
+  			 adapterExpandableListEditarExtras = null;
+  			 expandableListEditarExtras.setVisibility(ExpandableListView.INVISIBLE);
+  		}
+	}
+
+	public static String getNumMesa() {
 		return numMesa;	
-	 }
+	}
 	 
-	 public static String getIdCamarero() {
+	public static String getIdCamarero() {
 		return idCamarero;
-	 }
+	}
 	
-	 public static String getNumPersonas() {
+	public static String getNumPersonas() {
 		 return numPersonas;
-	 }
+	}
+	
+	public static void actualizaExpandableList() {
+		expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);
+	}
+
+	public static void expandeGrupoLista(int groupPositionMarcar) {
+		expandableListEditarExtras.expandGroup(groupPositionMarcar);
+	}
+	
+protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion, final String nombrePlato) {
+		
+		
+		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				boolean bienEditado = true;
+		    	String observaciones = null;
+		    	String nuevosExtrasMarcados = null;
+		    	if(!actwObservaciones.getText().toString().equals("")){
+		        	observaciones = actwObservaciones.getText().toString();
+		    	}
+		    	if(adapterExpandableListEditarExtras!=null){ //Es un plato con extras
+		    		nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
+		    		if(nuevosExtrasMarcados == null){
+		    			bienEditado = false;
+		    		}
+		    	}
+		    	if(bienEditado){
+		    		HandlerGenerico sqlMesas = null, sqlRestaurate = null;
+		    		SQLiteDatabase dbMesas = null, dbRestaurante = null;
+		    		try{
+		    			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+		    			dbMesas = sqlMesas.open();
+		    		}catch(SQLiteException e){
+		    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
+		    		}
+		    		try{
+		    			sqlRestaurate =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		    			dbRestaurante = sqlRestaurate.open();
+		    		}catch(SQLiteException e){
+		    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MiBase(Restaurante)",Toast.LENGTH_SHORT).show();
+		    		}
+		    		
+		    		String[] campos = new String[]{"Id","Precio"};
+		      		String[] datos = new String[]{"Foster",nombrePlato};
+		      		
+		      		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Nombre=?",datos,null,null,null); 
+		      		cursor.moveToFirst();
+		    		
+		    		//Sacamos la fecha a la que el camarero ha introducido la mesa
+                	Calendar cal = new GregorianCalendar();
+                    Date date = cal.getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    String formatteDate = df.format(date);
+                    //Sacamos la hora a la que el camarero ha introducido la mesa
+                    Date dt = new Date();
+                    SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+                    String formatteHour = dtf.format(dt.getTime());
+                    
+		        	ContentValues plato = new ContentValues();
+		        	int idUnico = InicialCamarero.getIdUnico();
+		        	plato.put("NumMesa", numMesa);
+		        	plato.put("IdCamarero", idCamarero);
+		        	plato.put("IdPlato", cursor.getString(0));
+		        	plato.put("Observaciones", observaciones);
+		        	plato.put("Extras", nuevosExtrasMarcados);
+		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
+		        	plato.put("Nombre", nombrePlato);
+		        	plato.put("Precio",cursor.getFloat(1));
+		        	plato.put("Personas",numPersonas);
+		        	plato.put("IdUnico", idUnico);
+		        	dbMesas.insert("Mesas", null, plato);
+		        	dbMesas.close();
+		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(nombrePlato,nuevosExtrasMarcados, observaciones, cursor.getFloat(1),idUnico,cursor.getString(0));
+		        	Mesa.actualizaListPlatos(platoNuevo);
+		    	}else{
+		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
+		    	}				
+			}
+			
+		});	
+	}
 	
 }
  
