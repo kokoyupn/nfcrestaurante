@@ -5,27 +5,16 @@ import java.util.ArrayList;
 
 import adapters.MiCursorAdapterBuscadorPlatos;
 import android.app.Activity;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ScrollView;
-import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -38,17 +27,27 @@ public class AnadirPlatos extends Activity{
 	private HandlerGenerico sqlMiBase, sqlBuscador;
 	private AutoCompleteTextView buscador;
 	private SQLiteDatabase dbMiBase, dbBuscador;
+	
+	private static String numMesa;
+	private static String idCamarero;
+	private static String numPersonas; 
+	
 	//private ArrayList<InfoPlato> platosAñadidos; //aqui vaos guardando los platos que ha añadido para luego pasarselos a la pantalla de Mesa 
 	//cuando añade un plato se añade a la base de datos de mesas
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);  
-        setContentView(R.layout.expandable_list_anadir_plato); 
-        cargarBarraDeBusqueda();
+        setContentView(R.layout.expandable_list_anadir_plato);
+        
+        Bundle bundle = getIntent().getExtras();
+		numMesa = bundle.getString("NumMesa");
+		numPersonas = bundle.getString("Personas");
+		idCamarero = bundle.getString("IdCamarero");
+        
+		cargarBarraDeBusqueda();
         crearExpandableList();
-    }
-		
+	}
 	
 	public void crearExpandableList() {	  
 	
@@ -97,7 +96,7 @@ public class AnadirPlatos extends Activity{
    			}//fin de esta
    		}
    		expandableListAnadirPlato = (ExpandableListView) findViewById(R.id.expandableListPlatos);
-		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(getApplicationContext(), padres);
+		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(AnadirPlatos.this, padres);
 		expandableListAnadirPlato.setAdapter(adapterExpandableListAnadirPlato);
 		
 	}
@@ -134,9 +133,18 @@ public class AnadirPlatos extends Activity{
 				      
 				 });
 	    }
+	 
+	 public static String getNumMesa() {
+		return numMesa;	
+	 }
+	 
+	 public static String getIdCamarero() {
+		return idCamarero;
+	 }
 	
-	
-	
+	 public static String getNumPersonas() {
+		 return numPersonas;
+	 }
 	
 }
  
