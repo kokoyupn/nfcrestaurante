@@ -44,8 +44,13 @@ public class SincronizarPedido extends Activity implements DialogInterface.OnDis
   		Bundle bundle = getIntent().getExtras();
   		restaurante = bundle.getString("Restaurante");
         
-  		cargarBaseDeDatosCuenta();
-        
+  		new Thread(new Runnable() {
+  		    public void run() {
+  		        //Aquí ejecutamos nuestras tareas costosas
+  		    	cargarBaseDeDatosCuenta();
+  		    }
+  		}).start();	
+  		
   		sincronizarPedido();
            
 	}
@@ -95,20 +100,7 @@ public class SincronizarPedido extends Activity implements DialogInterface.OnDis
 	
 	public void onDismiss(DialogInterface dialog) {
 		
-		
-		Toast.makeText(this, "Pedido sincronizado correctamente", Toast.LENGTH_LONG ).show();
-		/*
-		alertaSincCorrecta  = new AlertDialog.Builder(this);
-		alertaSincCorrecta.setMessage("Pincha en cuenta para verlo");
-		alertaSincCorrecta.create();
-		alertaSincCorrecta.show();
-		try {
-			alertaSincCorrecta.wait(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
+		Toast.makeText(this, "Pedido sincronizado correctamente", Toast.LENGTH_LONG ).show();		
         finish();
 		
 	}
@@ -128,7 +120,7 @@ public class SincronizarPedido extends Activity implements DialogInterface.OnDis
 		Thread hiloProgressDialog = new Thread(new Runnable() { 
 			public void run() {
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(4000);
 					
 				} catch (InterruptedException e) { 
 					Log.i("Thead: ","Error en hilo de sincronizar pedido");
