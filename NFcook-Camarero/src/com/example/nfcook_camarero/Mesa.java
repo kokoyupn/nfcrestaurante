@@ -58,10 +58,11 @@ import adapters.ContenidoListMesa;
 
 
 public class Mesa extends Activity {
+
+	private HandlerGenerico sqlMesas,sqlHistorico;
 	private String numMesa;
 	private String idCamarero;
 	private String numPersonas; 
-	private HandlerGenerico sqlMesas;
 	private SQLiteDatabase dbMesas,dbHistorico;
 	private static ListView platos;
 	private ArrayList<ContenidoListMesa> elemLista;
@@ -70,6 +71,7 @@ public class Mesa extends Activity {
 	private int indicePulsado;
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
+	private int x;
 	
 	
 	private AutoCompleteTextView actwObservaciones;
@@ -85,9 +87,9 @@ public class Mesa extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		//Quitamos barra de titulo de la aplicacion
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Quitamos barra de notificaciones
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
 		
 		setContentView(R.layout.pedidomesa);
@@ -108,7 +110,6 @@ public class Mesa extends Activity {
 		try{
 			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			dbMesas= sqlMesas.open();
-			//dbHistorico= SQLiteDatabase.openDatabase(rutaHistorico, null, SQLiteDatabase.OPEN_READWRITE);
 			
 			//Añadir platos a la ListView----------------------------------------------------
 	  	  	platos = (ListView)findViewById(R.id.listaPlatos);
@@ -121,7 +122,7 @@ public class Mesa extends Activity {
 	  	     
 	  	    platos.setAdapter(adapter);
 	  	    
-	  	    
+
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
@@ -142,17 +143,19 @@ public class Mesa extends Activity {
 	  	    	}
 	  	    });
 	  	    
+	  	    
 	  	    platos.setOnItemLongClickListener(new OnItemLongClickListener(){
 	  	    	public boolean onItemLongClick(AdapterView<?> l, View v, int position, long id) {
 	  	    		indicePulsado=position;
+	  	    		
 					DragShadowBuilder myShadow = new DragShadowBuilder(v);
 					
-					//Prueba
+					/*/Prueba
 					View borrando;
 					LayoutInflater inflater = (LayoutInflater) actividad.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				    borrando = inflater.inflate(com.example.nfcook_camarero.R.layout.hijo_mesa_borrado, null);
 				    v.setBackgroundColor(Color.BLACK);
-				    //Prueba
+				    //Prueba*/
 							
 					
 					//ClipData info = ClipData.newPlainText("posicion", Integer.toString(position));
@@ -163,6 +166,7 @@ public class Mesa extends Activity {
 	  	    
 	  	   platos.setOnDragListener(new OnDragListener() {
 		    	public boolean onDrag(View view, DragEvent event) {
+		    		
 		    		//Las acciones se realizan al soltar el elemento de la lista arrastrado.
 		    		if(event.getAction()==DragEvent.ACTION_DRAG_ENDED){
 		    			
@@ -179,6 +183,7 @@ public class Mesa extends Activity {
 	    				
 	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
 	            		precioTotal.setText(Float.toString(adapter.getPrecio())+" €");
+		    		
 		    		}
 		    	    return true;
 		    	}
@@ -193,9 +198,13 @@ public class Mesa extends Activity {
 		cobrar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
+            		sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
+        			dbHistorico= sqlHistorico.open();
+        			
             		String[] numeroDeMesa = new String[]{numMesa};
         		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
             		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
+            		System.out.println("LLEGA");
             		
             		while(filasPedido.moveToNext()){
             			//Añades los platos a la base de datos del historico y borras de la lista de platos
@@ -235,11 +244,9 @@ public class Mesa extends Activity {
             		dbMesas.delete("Mesas", "NumMesa=numMesa", null);
             		
             		//Se borra la mesa y se vuelve a la pantalla anterior.
-            		Intent intent = new Intent(actividad, InicialCamarero.class);
-            		Log.d("sdsd","sdsd");//Aqui si q llega
-            		intent.putExtra("mesas", borrarMesaActual());//Casca aqui porque listaDeMesas es vacio
-            		Log.d("sdsd","sdsd");
-            		startActivity(intent);
+            		InicialCamarero.eliminarDeArray(numMesa);
+            		finish();
+            			
             		
             	}catch(Exception e){
             		System.out.println("Error funcionalidad de boton cobrar");
