@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -52,56 +53,56 @@
 
         </ListView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp" >
+
+        <Button
+            android:id="@+id/botonCobrar"
+            android:layout_width="47dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="5dp"
+            android:layout_gravity="fill_vertical"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp" >
+            android:layout_marginRight="20dp"
+            android:background="@drawable/pagar" />
 
-            <Button
-                android:id="@+id/botonCobrar"
-                android:layout_width="47dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_vertical"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/pagar" />
+        <Button
+            android:id="@+id/aniadirPlato"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/iconomas" />
 
-            <Button
-                android:id="@+id/aniadirPlato"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_vertical"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/iconomas" />
+        <ImageView
+            android:id="@+id/imagenComida"
+            android:layout_width="57dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/iconohambuguesa" />
 
-            <ImageView
-                android:id="@+id/imagenComida"
-                android:layout_width="57dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_vertical"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/iconohambuguesa" />
+        <Button
+            android:id="@+id/aniadirBebida"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/iconomas" />
 
-            <Button
-                android:id="@+id/aniadirBebida"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_vertical"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/iconomas" />
-
-            <ImageView
-                android:id="@+id/imagenBebida"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_vertical"
-                android:src="@drawable/iconobebida" />
-
-        </LinearLayout>
-
+        <ImageView
+            android:id="@+id/imagenBebida"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical"
+            android:src="@drawable/iconobebida" />
     </LinearLayout>
 
 </FrameLayout>
