@@ -18,16 +18,11 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -199,25 +194,25 @@ public class DescripcionPlato extends Activity {
     	if(bienEditado){
     		sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
          	dbPedido=sqlPedido.open();
-        	ContentValues plato = new ContentValues();
-        	plato.put("Id", idPlato);
-        	plato.put("Plato", nombrePlato);
-        	plato.put("Observaciones", observaciones);
-        	plato.put("Extras", nuevosExtrasMarcados);
-        	plato.put("PrecioPlato",precioPlato);
-        	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
-        	identificadorUnicoHijoPedido++;
-    		dbPedido.insert("Pedido", null, plato);
-    		dbPedido.close();
-    		Toast.makeText(getApplicationContext(),"Plato Nº " + cantidad + " confirmado", Toast.LENGTH_SHORT).show();
-        	if(cantidad == 1){
-        		this.finish();
-        	}else{
+    		while(cantidad>0){
+            	ContentValues plato = new ContentValues();
+            	plato.put("Restaurante", restaurante);
+            	plato.put("Id", idPlato);
+            	plato.put("Plato", nombrePlato);
+            	plato.put("Observaciones", observaciones);
+            	plato.put("Extras", nuevosExtrasMarcados);
+            	plato.put("PrecioPlato",precioPlato);
+            	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
+            	identificadorUnicoHijoPedido++;
+        		dbPedido.insert("Pedido", null, plato);
         		cantidad--;
-        	}
+    		}
+    		dbPedido.close();
+    		Toast.makeText(getApplicationContext(),"Todos sus platos han sido confirmados.", Toast.LENGTH_SHORT).show();
+    		this.finish();
     	}else{
     		adapterExpandableListExtras.expandeTodosLosPadres();
-    		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes", Toast.LENGTH_SHORT).show();
+    		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes.", Toast.LENGTH_SHORT).show();
     	}
     }
 
