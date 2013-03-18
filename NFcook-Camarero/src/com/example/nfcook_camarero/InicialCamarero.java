@@ -96,7 +96,7 @@ public class InicialCamarero extends Activity{
 	    InfoPlato info4 = new InfoPlato();
 	    info4.setExtras(new ArrayList<String>());
 	    info4.setObservaciones("Sabrosón");
-	    info4.setObservaciones("fh42");
+	    info4.setIdPlato("fh42");
 	   
 	    datos = new  ArrayList<InfoPlato>(); 
 	    datos.add(info);
@@ -407,8 +407,9 @@ public class InicialCamarero extends Activity{
 		                    	for (int i = 0; i < datos.get(j).getExtras().size(); i++ ){
 		                    		extr= extr + datos.get(j).getExtras().get(i) + ",";
 		                    	}
-		                    	//quitamos la ultima coma
-		                    	extr= extr.substring(0,extr.length()-1);
+		                    	//si habia extras, quitamos la ultima coma
+		                    	if (extr.length() > 0)
+		                    		extr= extr.substring(0,extr.length()-1);
 		                    	
 		                    	//Sacamos el nombre del plato y el precio de la base de datos MiBase.db
 		                    	String[] infoMesa2 = new String[]{"Nombre","Precio"};
