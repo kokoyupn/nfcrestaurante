@@ -35,10 +35,13 @@ public class PedidoFragment extends Fragment{
 	private static ExpandableListView expandableListPedido;
 	private static View vistaConExpandaleList;
 	
+	private String restaurante;
+	
 	private float total;
 	
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
+	
 		
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -53,7 +56,8 @@ public class PedidoFragment extends Fragment{
 	public void crearExpandableList() {
 		try{
 			String[] campos = new String[]{"Plato"};//Campos que quieres recuperar
-	    	Cursor c = dbPedido.query("Pedido", campos, null, null,null, null,null);
+			String[] datosRestaurante = new String[]{restaurante};	
+	    	Cursor c = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
 
 			Set<String> conjuntoNombresPadres = new HashSet<String>();
 	    	while(c.moveToNext()){
@@ -67,8 +71,8 @@ public class PedidoFragment extends Fragment{
 	    		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones","PrecioPlato", "Id","IdHijo"};
 	    		String nombrePlato = iteradorConjunto.next();
 	    		String idPadre = "";
-		    	String[] datos = new String[]{nombrePlato};
-		    	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Plato=?", datos,null, null,null);
+		    	String[] datos = new String[]{restaurante, nombrePlato};
+		    	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Restaurante=? AND Plato=?", datos,null, null,null);
 		    	double precio = 0; //Para sumar todos los platos hijos de un padre
 		    	while(cursor.moveToNext()){
 		    		idPadre = cursor.getString(3);
@@ -114,20 +118,20 @@ public class PedidoFragment extends Fragment{
 			public void onClick(View v) {
 				
 		        Intent intent = new Intent(getActivity(),SincronizarPedido.class);
+		        intent.putExtra("Restaurante", restaurante);
 				startActivity(intent);
 		        
 				new Handler().postDelayed(new Runnable(){
                     
                     public void run() {
-                		
-                    	Fragment fragmentCuenta = new CuentaFragment();
+    					Fragment fragmentCuenta = new CuentaFragment();
+                    	((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
         		        FragmentTransaction m = getFragmentManager().beginTransaction();
         		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
         		        m.commit();
                     }
                 }, 3400); //tiempo para retrasar la accion
 
-			
 				
 		    	
 			}
@@ -153,6 +157,10 @@ public class PedidoFragment extends Fragment{
 
 	public static SQLiteDatabase getDbPedido() {
 		return dbPedido;
+	}
+	
+	public void setRestaurante(String restaurante){
+		this.restaurante = restaurante;
 	}
 	
 }
