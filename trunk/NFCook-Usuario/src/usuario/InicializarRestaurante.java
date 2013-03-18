@@ -1,7 +1,4 @@
 package usuario;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.Stack;
 
 import baseDatos.HandlerDB;
@@ -21,7 +18,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -31,7 +27,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -140,8 +135,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
     @SuppressLint("NewApi")
 	private void cargarTabsSuperiores(){
-    	Set<String> tipos = new HashSet<String>();
-    	Iterator<String> it;
+    	Stack<String> tipos = new Stack<String>();
     	
     	// Obtenemos las distintas categorías de platos que hay
     	try{
@@ -152,7 +146,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	    	// Recorremos todos los registros
 	    	while(c.moveToNext()){
 	    		String tipo = c.getString(0);
-	    		tipos.add(tipo);
+	    		if(!tipos.contains(tipo))
+	    			tipos.add(tipo);
 	    	} 
 
 	    }catch(SQLiteException e){
@@ -162,9 +157,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	Stack<String> pilaTipos = new Stack<String>();
     	
     	// Solo sirve para mostrar bien los nombres de los tabs (para que salgan primero los principales...)
-    	it = tipos.iterator();
-    	while (it.hasNext()){
-    		pilaTipos.add(it.next());
+    	while (!tipos.isEmpty()){
+    		pilaTipos.add(tipos.pop());
     	}
     	
     	// Vamos añadiendo cada categoría a los tabs
