@@ -24,6 +24,7 @@ import android.widget.Toast;
 public class CuentaFragment extends Fragment{
 	private View vista;
 	private double total;
+	private String restaurante;
 	
 	private HandlerDB sqlCuenta;
 	private SQLiteDatabase dbCuenta;
@@ -65,12 +66,8 @@ public class CuentaFragment extends Fragment{
 	}
 	
 	public void cargarCuenta(){
-		/*
-		 * FIXME Hacer la base de datos de cuenta y cargar los datos de la misma.
-		 * Actualmente el código ha sido tirado para la base de datos de pedido.
-		 */
 		// Importamos la base de datos
-        sqlCuenta  =new HandlerDB(this.getActivity().getApplicationContext(),"Pedido.db"); 
+        sqlCuenta  =new HandlerDB(this.getActivity().getApplicationContext(),"Cuenta.db"); 
      	dbCuenta = sqlCuenta.open();
      	
      	// Creamos la estructura cuenta
@@ -79,7 +76,8 @@ public class CuentaFragment extends Fragment{
      	// Cargamos los datos de la bd
      	try{
 			String[] campos = new String[]{"Plato, PrecioPlato"};//Campos que quieres recuperar
-	    	Cursor c = dbCuenta.query("Pedido", campos, null, null,null, null,null);
+			String[] datos = new String[]{restaurante};	    	
+			Cursor c = dbCuenta.query("Cuenta", campos, "Restaurante=?", datos,null, null,null);
 	    	int i, numPlatos = 0;
 	    	boolean anadido;
 	    	PadreListCuenta padre;
@@ -124,6 +122,10 @@ public class CuentaFragment extends Fragment{
 	
 	public double getTotal() {
 		return Math.rint(total*100)/100;
+	}
+	
+	public void setRestaurante(String restaurante){
+		this.restaurante = restaurante;
 	}
 	
 }

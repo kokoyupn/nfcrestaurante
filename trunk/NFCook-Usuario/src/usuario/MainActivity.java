@@ -136,6 +136,32 @@ public class MainActivity extends Activity{
 		}
     }
 	
+	private boolean baseDeDatosPedidoyCuentaVacias() {
+		try{
+			HandlerDB sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
+			SQLiteDatabase dbPedido = sqlPedido.open();
+			HandlerDB sqlCuenta=new HandlerDB(getApplicationContext(),"Cuenta.db"); 
+			SQLiteDatabase dbCuenta = sqlCuenta.open();
+			
+			String[] camposPedido = new String[]{"Id"};//Campos que quieres recuperar
+			Cursor cursorPedido = dbPedido.query("Pedido", camposPedido, null, null,null, null,null);
+			if(!cursorPedido.moveToFirst()){
+				String[] camposCuenta = new String[]{"Id"};//Campos que quieres recuperar
+				Cursor cursorCuenta = dbCuenta.query("Pedido", camposCuenta, null, null,null, null,null);
+				if(!cursorCuenta.moveToFirst()){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+        }catch(SQLiteException e){
+         	Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
+         	return true;
+        }
+	}
+
 	public void setUltimoRestaurante(int posicion){
 		//Almacenamos la posicion del restaurante de la lista
 		SharedPreferences preferencia = getSharedPreferences("Nombre_Restaurante", 0);
@@ -150,7 +176,7 @@ public class MainActivity extends Activity{
 	}
 	
 	public void onClickBotonAceptarAlertDialog(AlertDialog.Builder ventanaEmergente, final int posicion){
-		ventanaEmergente.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+		ventanaEmergente.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
 				lanzar(posicion);
@@ -159,18 +185,21 @@ public class MainActivity extends Activity{
 	}
 	
 	public void onClickBotonCancelarAlertDialog(AlertDialog.Builder ventanaEmergente){
-		ventanaEmergente.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+		ventanaEmergente.setNegativeButton("No", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
 				try{
 					HandlerDB sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
 					SQLiteDatabase dbPedido = sqlPedido.open();
+					HandlerDB sqlCuenta=new HandlerDB(getApplicationContext(),"Cuenta.db"); 
+					SQLiteDatabase dbCuenta = sqlCuenta.open();
 					dbPedido.delete("Pedido", null, null);
+					dbCuenta.delete("Cuenta", null, null);
 					sqlPedido.close();
+					sqlCuenta.close();
 		        }catch(SQLiteException e){
 		         	Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
-		        }
-				
+		        }	
 			}
 		});
 	}
@@ -179,7 +208,7 @@ public class MainActivity extends Activity{
     	 
 		int posicion = getUltimoRestaurante();
 		
-		if(posicion!=-1){ // Si nunca hemos ejecutado la aplicación no habra un restaurante seleccionado
+		if(posicion!=-1 && !baseDeDatosPedidoyCuentaVacias()){ // Si nunca hemos ejecutado la aplicación no habra un restaurante seleccionado
 			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(MainActivity.this);
 			onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
 			onClickBotonCancelarAlertDialog(ventanaEmergente);

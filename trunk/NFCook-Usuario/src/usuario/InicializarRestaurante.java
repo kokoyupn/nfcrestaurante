@@ -18,10 +18,12 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -252,17 +254,22 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        		        m.commit();
             			}else if(tabs.getCurrentTabTag().equals("tabPromociones")){
-	                		/*
-	            			 * TODO Hacer su layout y su funcionalidad
-	            			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún
-	            			 */
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							if(restaurante.equals("Foster")){
+								intent.setData(Uri.parse("http://www.elchequegorron.es/"));
+							}else if(restaurante.equals("vips")){
+								intent.setData(Uri.parse("http://www.vips.es/promociones"));
+							}
+	                		startActivity(intent);
 	        			}else if(tabs.getCurrentTabTag().equals("tabPedidoSincronizar")){
 	        				Fragment fragmentPedido = new PedidoFragment();
+	        				((PedidoFragment) fragmentPedido).setRestaurante(restaurante);
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        		        m.commit();
 	        			}else if(tabs.getCurrentTabTag().equals("tabCuenta")){
 	        				Fragment fragmentCuenta = new CuentaFragment();
+	        				((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        		        m.commit();
@@ -348,6 +355,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			pulsadoTabSuperior = false;
 			tabInferiorPulsado = "tabPedidoSincronizar";
 			Fragment fragmentPedido = new PedidoFragment();
+			((PedidoFragment) fragmentPedido).setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        m.addToBackStack("Pedido");
@@ -356,6 +364,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			pulsadoTabSuperior = false;
 			tabInferiorPulsado = "tabCuenta";
 			Fragment fragmentCuenta = new CuentaFragment();
+			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        m.addToBackStack("Cuenta");
