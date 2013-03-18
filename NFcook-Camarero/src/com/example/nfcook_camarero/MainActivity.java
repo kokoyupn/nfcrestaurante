@@ -43,11 +43,10 @@ public class MainActivity extends Activity {
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	
-    	//Quitamos barra de titulo de la aplicacion
+
+    	 //Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //Quitamos barra de notificaciones
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         
     	super.onCreate(savedInstanceState);       
         setContentView(R.layout.activity_main);
@@ -141,7 +140,7 @@ private void abrir_ventanaEmergente(String text, int foto) {
             ventanaEmergente.dismiss(); 
              t.cancel(); 
          }
-     }, 2000);
+     }, 5000);
 	
 }
 }
