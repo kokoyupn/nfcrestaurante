@@ -407,7 +407,7 @@ public class Mesa extends Activity {
   		String extrasPlato = cursor.getString(0);
   		String extrasMarcados = adapter.getExtrasMarcados(posicion);
   		  		
-  		if(extrasMarcados!=null){
+  		if(!extrasPlato.equals("")){
   			String[] tokensExtrasMarcados = extrasMarcados.split(",");
   			String[] tokens = extrasPlato.split("/");
 	            ArrayList<PadreExpandableListEditar> categoriasExtras =  new ArrayList<PadreExpandableListEditar>();
@@ -447,7 +447,7 @@ public class Mesa extends Activity {
 					}
 				}
 		        // Creamos el adapater para adaptar la lista a la pantalla.
-		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(getApplicationContext(), categoriasExtras,true);
+		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(getApplicationContext(), categoriasExtras,1);
 		        expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
   		}else{
   			//Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
