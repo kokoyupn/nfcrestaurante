@@ -91,7 +91,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			///////////////////////////////////////////////////////////////////////////////////
 			
 		    final int spacingDp = 10; //espacio entre celdas en dp's
-		    final int colWidthDp = 80; //tamaño de cada columna en dp's
+		    final int colWidthDp = 90; //tamaño de cada columna en dp's
 		    final int rowHeightDp = 120; //tamaño de cada fila en dp's
 
 		    // pasamos los dp's a pixeles
@@ -104,7 +104,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 		    final int rowCount = (int)Math.ceil((platos.size() + 0d) / colCount);
 
 		    // calculamos ahora la altura total del grid
-		    final int GRID_HEIGHT = Math.round(rowCount * (ROW_HEIGHT + SPACING + 10));
+		    final int GRID_HEIGHT = Math.round(rowCount * (ROW_HEIGHT + SPACING) + 10);
 
 		    // set the height of the current grid
 		    gridViewAnadir.getLayoutParams().height = GRID_HEIGHT;

@@ -154,21 +154,31 @@ public class InicialCamarero extends Activity{
 				//Guardamos el número de la mesa pulsada
 				numeroMesaAEditar = mesas.get(position).getNumMesa();
 				//Preparamos los elementos que tendrá la lista
-				final CharSequence[] items = {"Sincronizar", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
+				final CharSequence[] items = {"Cobrar","Sincronizar", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
 
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(InicialCamarero.this);
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog, int item) {
+				    	//------------------- Cobrar Mesa ------------------------------------
 				    	if (item == 0){
+				    		Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
+				    	//------------------ Sincronizar -----------------------------------
+				    	}else if (item == 1){
 				    		Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
 				    	//----------------- onClickListener de editar número de mesa --------------------------------
-				    	}else if(item == 1){
+				    	}else if(item == 2){
 				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
+				    		final TextView tituloVentana = (TextView) textEntryView.findViewById(R.id.textViewTituloEditar);
 				    		final TextView tituloMesa = (TextView) textEntryView.findViewById(R.id.textViewEditar);
 				    		final EditText numMesa = (EditText) textEntryView.findViewById(R.id.editTextEditar);
+				    		tituloVentana.setText("Editar Mesa");
 				    		tituloMesa.setText("Indica el nuevo número de mesa: ");
 				    		numMesa.setText("", TextView.BufferType.EDITABLE);
+				    		//Limitamos a 4 caracteres como máximo en la mesa
+				    		InputFilter[] filterArray = new InputFilter[1];
+				    		filterArray[0] = new InputFilter.LengthFilter(4);
+				    		numMesa.setFilters(filterArray);
 				    		//Creación y configuración de la ventana emergente
 				    		AlertDialog.Builder ventEmergEditMesa = new AlertDialog.Builder(InicialCamarero.this);
 				    		ventEmergEditMesa.setNegativeButton("Cancelar", null);
@@ -220,11 +230,13 @@ public class InicialCamarero extends Activity{
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
 				    		//----------------- onClickListener de editar número de personas --------------------------------
-				    	}else if(item == 2){
+				    	}else if(item == 3){
 				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
+				    		final TextView tituloVentana = (TextView) textEntryView.findViewById(R.id.textViewTituloEditar);
 				    		final TextView tituloPersonas = (TextView) textEntryView.findViewById(R.id.textViewEditar);
 				    		final EditText numPersonas = (EditText) textEntryView.findViewById(R.id.editTextEditar);
+				    		tituloVentana.setText("Editar Personas");
 				    		tituloPersonas.setText("Indica el nuevo número de personas: ");
 				    		numPersonas.setText("", TextView.BufferType.EDITABLE);
 				    		//Limitamos a 99 el máximo de personas en la mesa
@@ -274,7 +286,7 @@ public class InicialCamarero extends Activity{
 				    		});//cierra el oyente de aceptar
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
-				    	}else if (item == 3){
+				    	}else if (item == 4){
 							 AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
 				             alert.setMessage("¿Seguro que quieres eliminar esta mesa? "); //mensaje            
 				             alert.setNegativeButton("Cancelar", null);
@@ -343,6 +355,10 @@ public class InicialCamarero extends Activity{
 		//Damos valor a los campos		
 		numPersonas.setText("", TextView.BufferType.EDITABLE);
 		numMesa.setText("", TextView.BufferType.EDITABLE);
+		//Limitamos a 4 caracteres como máximo en la mesa
+		InputFilter[] filterArray = new InputFilter[1];
+		filterArray[0] = new InputFilter.LengthFilter(4);
+		numMesa.setFilters(filterArray);
 		//Limitamos a 99 el número de personas por mesa
 		InputFilter[] filterArrayP = new InputFilter[1];
 		filterArrayP[0] = new InputFilter.LengthFilter(2);
