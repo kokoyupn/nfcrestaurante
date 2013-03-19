@@ -363,8 +363,8 @@ public class InicialCamarero extends Activity{
 		InputFilter[] filterArrayP = new InputFilter[1];
 		filterArrayP[0] = new InputFilter.LengthFilter(2);
 		numPersonas.setFilters(filterArrayP);
-		tituloMesa.setText("Elige el número de mesa:");
-		tituloPersonas.setText("Elige el número de personas:");
+		tituloMesa.setText("Nº de mesa:");
+		tituloPersonas.setText("Nº de personas:");
 		//Construimos el AlertDialog y le metemos la vista que hemos personalizado
 		AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
 		alert.setView(textEntryView);

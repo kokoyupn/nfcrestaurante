@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
@@ -137,6 +138,7 @@ public class AnadirPlatos extends Activity{
 		 
 		 
 			buscador = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewBuscadorPlatos); 
+			
 		    Cursor c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
 		      " FROM Restaurantes" + 
 		      " WHERE Restaurante ='"+ "foster" +"' and nombre LIKE '%" +""+ "%' ", null);
