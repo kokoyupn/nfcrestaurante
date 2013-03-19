@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import baseDatos.HandlerDB;
 
@@ -48,11 +49,18 @@ public class PedidoFragment extends Fragment{
 		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
         importarBaseDatatos();
         crearExpandableList();
+        actualizarPrecioPedido();
 		ponerOnClickSincronizarPedido();
         return vistaConExpandaleList;
 	}
   	
 	
+	private void actualizarPrecioPedido() {
+		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandaleList.findViewById(R.id.textViewTotalPedido);
+		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + "€");
+	}
+
+
 	public void crearExpandableList() {
 		try{
 			String[] campos = new String[]{"Plato"};//Campos que quieres recuperar
@@ -109,6 +117,26 @@ public class PedidoFragment extends Fragment{
 	         }
 	}
 	
+	private boolean baseDeDatosPedidoyCuentaVacias() {
+		try{
+			HandlerDB sqlPedido=new HandlerDB(getActivity(),"Pedido.db"); 
+			SQLiteDatabase dbPedido = sqlPedido.open();
+			
+			String[] camposPedido = new String[]{"Id"};//Campos que quieres recuperar
+			Cursor cursorPedido = dbPedido.query("Pedido", camposPedido, null, null,null, null,null);
+			if(!cursorPedido.moveToFirst()){
+				sqlPedido.close();
+				return true;
+			}else{
+				sqlPedido.close();
+				return false;
+			}
+        }catch(SQLiteException e){
+         	Toast.makeText(getActivity(),"Base de Datos Pedido vacía",Toast.LENGTH_SHORT).show();
+         	return true;
+        }
+	}
+	
 	private void ponerOnClickSincronizarPedido() {
 		ImageButton botonNFC = (ImageButton) vistaConExpandaleList.findViewById(R.id.imageButtonNFCSincronizar);
 		
@@ -117,33 +145,22 @@ public class PedidoFragment extends Fragment{
 			
 			public void onClick(View v) {
 				
-				Intent intent = new Intent(getActivity(),SincronizarPedido.class);
-		        intent.putExtra("Restaurante", restaurante);
-				startActivity(intent);
-				
-				/*new Thread(new Runnable() {
-		  		    public void run() {
-		  		    	Fragment fragmentCuenta = new CuentaFragment();
-                    	((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-        		        m.commit();
-		  		    }
-		  		}).start();	*/
-				
-				new Handler().postDelayed(new Runnable(){
-                    
-                    public void run() {
-    					Fragment fragmentCuenta = new CuentaFragment();
-                    	((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-        		        m.commit();
-                    }
-                }, 4400); //tiempo para retrasar la accion
-
-				
-		    	
+				if(!baseDeDatosPedidoyCuentaVacias()){
+					Intent intent = new Intent(getActivity(),SincronizarPedido.class);
+			        intent.putExtra("Restaurante", restaurante);
+					startActivity(intent);
+			        
+					new Handler().postDelayed(new Runnable(){
+	                    
+	                    public void run() {
+	    					Fragment fragmentCuenta = new CuentaFragment();
+	                    	((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+	        		        m.commit();
+	                    }
+	                }, 4400); //tiempo para retrasar la accion
+				}
 			}
 		});
 		
@@ -158,6 +175,8 @@ public class PedidoFragment extends Fragment{
 	}
 
 	public static void actualizaExpandableList() {
+		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandaleList.findViewById(R.id.textViewTotalPedido);
+		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + "€");
 		expandableListPedido.setAdapter(adapterExpandableListPedido);
 	}
 
