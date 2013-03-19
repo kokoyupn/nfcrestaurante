@@ -49,12 +49,27 @@
         android:id="@+id/imageButtonNFCSincronizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="15dp"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginTop="5dp"
         android:drawablePadding="10dp"
         android:minHeight="46dip"
-        android:minWidth="46dip" 
+        android:minWidth="46dip"
         android:src="@drawable/nfcicono" />
+    
+    <ImageView
+        android:id="@+id/imageViewMonedas"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="75dp"
+        android:src="@drawable/total" />
+
+    <TextView
+        android:id="@+id/textViewTotalPedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="10dp"
+        android:textSize="16dp" />
 
 </FrameLayout>

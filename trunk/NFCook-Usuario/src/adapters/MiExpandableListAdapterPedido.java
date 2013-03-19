@@ -1,6 +1,7 @@
 package adapters;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import usuario.DescripcionPlatoEditar;
 
@@ -76,36 +77,34 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		String observacionesPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getObservaciones();
 		String precioPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getPrecio() + "€";
 		
-		//Cargamos diferente layout en función de los campos a mostrar.
+		//Cargamos diferente el layout en función de los campos a mostrar.
+		
+		convertView = inflater.inflate(R.layout.hijo_lista_pedido, parent,false);
+		TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);			 
+		TextView textViewExtras = (TextView) convertView.findViewById(R.id.textViewPedidoExtras);
+		TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
+		
 		if(extrasPlato==null && observacionesPlato==null){
 			
-			convertView = inflater.inflate(R.layout.hijo_lista_pedido_sin_extras_ni_observaciones, parent,false);
-			
-			TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);			 
-			textViewPrecio.setText(precioPlato);
+			textViewExtras.setText("Sin guarnición");
+			textViewObservaciones.setText("Sin observaciones");
 		
 		}else if(extrasPlato==null && observacionesPlato!=null){
 			
-			convertView = inflater.inflate(R.layout.hijo_lista_pedido_sin_extras, parent,false);
-		
-			TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
-			TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);
-			 
-			textViewPrecio.setText(precioPlato);
+			textViewExtras.setText("Sin guarnición");			
 			textViewObservaciones.setText(observacionesPlato);
 		
 		}else{
 			
-			convertView = inflater.inflate(R.layout.hijo_lista_pedido, parent,false);
-			
-			TextView textViewExtras = (TextView) convertView.findViewById(R.id.textViewPedidoExtras);
-			TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
-			TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);
-			 
-			textViewPrecio.setText(precioPlato);
 			textViewExtras.setText(extrasPlato);
-			textViewObservaciones.setText(observacionesPlato);
+			if(observacionesPlato==null){
+				textViewObservaciones.setText("Sin observaciones");
+			}else{
+				textViewObservaciones.setText(observacionesPlato);
+			}
 		}
+		
+		textViewPrecio.setText(precioPlato);
 		
 		/*
 		 * Necesitamos que sean final para que por cada hijo mostrado de la lista guardemos en que posición
@@ -228,6 +227,16 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	@Override
 	public void onGroupCollapsed(int groupPosition){
 		padresExpandableList.get(groupPosition).setExpandido(false);
+	}
+	
+	public double getPrecioTotalPedido(){
+		Iterator<PadreExpandableListPedido> itPadres = padresExpandableList.iterator();
+		double precioTotal = 0;
+		while(itPadres.hasNext()){
+			PadreExpandableListPedido unPadre = itPadres.next();
+			precioTotal+=unPadre.getPrecio();
+		}
+		return precioTotal;
 	}
 
 	/**
