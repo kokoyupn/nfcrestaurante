@@ -132,8 +132,11 @@ public class Handler extends SQLiteOpenHelper {
 	else if(DB_NAME=="Login.db"){
 		String query="CREATE TABLE Camareros(Nombre TEXT,Contraseña TEXT)";
 					db.execSQL(query);
-	}
-	
+	}else if(DB_NAME=="Mesas.db"){
+		String query="CREATE TABLE Mesas(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
+		"Observaciones TEXT,Extras TEXT, FechaHora TEXT, Nombre TEXT, Precio INTEGER, Personas INTEGER, IdUnico INTEGER)";
+		db.execSQL(query);
+		}
 	}
 	
 	  

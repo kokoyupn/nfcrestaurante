@@ -30,6 +30,11 @@
             android:label="@string/inicial" >
 
         </activity>
+        <activity
+            android:name="generar_bd.BaseDatosMesas"
+            android:label="@string/inicial" >
+
+        </activity>
     </application>
 
 </manifest>
