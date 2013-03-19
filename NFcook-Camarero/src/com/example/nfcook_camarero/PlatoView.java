@@ -7,9 +7,9 @@ public class PlatoView{
     private String nombreP; 
     private String imagen;
     private String idPlato;
-    private Float precio;
+    private double precio;
     
-    public PlatoView(String nombre,String img, String id, Float prec) {
+    public PlatoView(String nombre,String img, String id, double prec) {
     	nombreP = nombre;
     	imagen = img;
     	idPlato = id;
@@ -28,7 +28,7 @@ public class PlatoView{
     	return idPlato;
     }
     
-    public Float getPrecio(){
+    public Double getPrecio(){
     	return precio;
     }
     
