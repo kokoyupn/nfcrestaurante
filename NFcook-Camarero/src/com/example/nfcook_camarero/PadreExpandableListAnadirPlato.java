@@ -29,5 +29,9 @@ public class PadreExpandableListAnadirPlato {
     public String toString(){
     	return titulo;
     }
+    public String getIdPlato(Integer position)
+    {	
+    	return hijo.getIdPlato(position);
+    }
 	
 }

@@ -63,6 +63,8 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	
+			final int groupPositioMarcar = groupPosition;
+		
 			convertView = inflater.inflate(R.layout.contenido_hijo_lista_anadir_plato, parent,false);
 			GridView gridViewAnadir = (GridView) convertView.findViewById(R.id.gridViewAnadirPlato);
 			
@@ -117,7 +119,11 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			gridViewAnadir.setOnItemClickListener(new OnItemClickListener() {
 	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 	            	//sacará ventana emergente       	
-	            	String idPlatoPulsado = platos.get(position).getIdPlato();
+	            	
+	            	//String idPlatoPulsado = platos.get(groupPositioMarcar).getIdPlato(position);  
+	            	String idPlatoPulsado = padresExpandableList.get(groupPositioMarcar).getIdPlato(position);
+	      
+	            	//String idPlatoPulsado = platos.get(position).getIdPlato();
 	            	Toast.makeText(context,idPlatoPulsado,Toast.LENGTH_SHORT).show();
 	            	
 	            	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(context);
