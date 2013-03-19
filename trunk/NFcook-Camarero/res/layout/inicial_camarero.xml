@@ -3,17 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/textViewTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.10"
         android:background="#BFE4F2"
-        android:gravity="center_horizontal|center_vertical"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:text="Mesas"
-        android:textSize="22sp"
-        android:textStyle="bold"/>
+        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+        android:textSize="30sp" />
     
     <GridView
         android:id="@+id/gridViewInicial"
