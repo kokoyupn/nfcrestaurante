@@ -5,9 +5,9 @@ public class ContenidoListMesa {
 	private String nombre, extras, observaciones;
 	private int id;
 	private String idPlato;
-	private float precio;
+	private double precio;
 	
-	public ContenidoListMesa(String nombre,String extras,String observaciones,float precio,int id,String idPlato){
+	public ContenidoListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato){
 		this.nombre = nombre;
 		this.extras = extras;
 		this.observaciones = observaciones;
@@ -41,7 +41,7 @@ public class ContenidoListMesa {
 		return observaciones;
 	}
 
-	public float getPrecio() {
+	public double getPrecio() {
 		return precio;
 	}
 

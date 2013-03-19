@@ -71,7 +71,7 @@ public class Mesa extends Activity {
 	private int indicePulsado;
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
-	private int x;
+	
 	
 	
 	private AutoCompleteTextView actwObservaciones;
@@ -102,7 +102,7 @@ public class Mesa extends Activity {
 		idCamarero = bundle.getString("IdCamarero");
 		
 		TextView mesa = (TextView)findViewById(R.id.numeroDeMesa);
-		mesa.setText("Mesa: "+ String.valueOf(numMesa) );
+		mesa.setText("Mesa "+ String.valueOf(numMesa) );
 		
 		try{
 			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
@@ -115,7 +115,7 @@ public class Mesa extends Activity {
 	  	    adapter = new MiListAdapterMesa(this, elemLista);
 	  	     
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
-	  	    precioTotal.setText(Float.toString(adapter.getPrecio())+" €");
+	  	    precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
 	  	     
 	  	    platos.setAdapter(adapter);
 	  	    
@@ -179,7 +179,7 @@ public class Mesa extends Activity {
 	    				platos.setAdapter(adapter);
 	    				
 	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-	            		precioTotal.setText(Float.toString(adapter.getPrecio())+" €");
+	            		precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
 		    		
 		    		}
 		    	    return true;
@@ -189,8 +189,9 @@ public class Mesa extends Activity {
 			System.out.println("Error lectura base de datos de Pedido");
 		}
 		
-		
+		/*
 		//Boton Cobrar--------------------------------------------------------------------
+		//Arreglado aunque no se hace aqui al final la accion de cobrar
 		Button cobrar = (Button)findViewById(R.id.botonCobrar);
 		cobrar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -201,7 +202,7 @@ public class Mesa extends Activity {
             		String[] numeroDeMesa = new String[]{numMesa};
         		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
             		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
-            		System.out.println("LLEGA");
+            		
             		
             		while(filasPedido.moveToNext()){
             			//Añades los platos a la base de datos del historico y borras de la lista de platos
@@ -209,25 +210,19 @@ public class Mesa extends Activity {
             			int plato=0;
             			
             			for (int i=0;i<filasPedido.getColumnCount();i++){
-            				for (int j=0;j<filasPedido.getColumnCount();j++){
+            				for (int j=0;j<filasHistorico.getColumnCount();j++){
             					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
             						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
             						
-	            					if(filasPedido.getColumnName(i).equals("IdUnico")){	
+            						if(filasPedido.getColumnName(i).equals("IdUnico")){	
+	            						
 	            						plato = Integer.parseInt(filasPedido.getString(i));
 	            						adapter.deleteId(plato);
 	            					}
+	            					
 	            				}
             				}
             			}
-            			/*FIXME No borrar por si las bases de historico y pedido tienen las mismas columnas
-            			for (int i=0;i<filasPedido.getColumnCount();i++){
-            				nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
-            				if(filasPedido.getColumnName(i).equals("IdUnico")){	
-        						plato = Integer.parseInt(filasPedido.getString(i));
-        						adapter.deleteId(plato);
-        					}
-            			}*/
             			dbHistorico.insert("Historico", null, nuevo);
 	            	}
             		
@@ -235,7 +230,7 @@ public class Mesa extends Activity {
             		platos.setAdapter(adapter); 
             		
             		//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-            		precioTotal.setText(Float.toString(adapter.getPrecio())+" €");
+            		precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
             		
             		//Borra de la base de datos los platos de esta mesa
             		dbMesas.delete("Mesas", "NumMesa=numMesa", null);
@@ -251,7 +246,7 @@ public class Mesa extends Activity {
             }
         });
 		//Boton Cobrar--------------------------------------------------------------------
-		
+		*/
 		
 		//Boton AñadirPlato---------------------------------------------------------------
 		Button aniadirPlato = (Button)findViewById(R.id.aniadirPlato);
@@ -319,7 +314,7 @@ public class Mesa extends Activity {
 		    elementos = new ArrayList<ContenidoListMesa>();
 		     
 		    while(c.moveToNext())
-		    	elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Float.parseFloat(c.getString(3)),c.getInt(4),c.getString(5)));
+		    	elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
 		    	
 		    return elementos;
 		    
@@ -329,7 +324,7 @@ public class Mesa extends Activity {
 		}
 	}
 	
-	private ArrayList<MesaView> borrarMesaActual(){
+	/*private ArrayList<MesaView> borrarMesaActual(){
 		System.out.println("llega");
 		Iterator<MesaView> it = listaDeMesas.iterator();
 		boolean encontrado=false;
@@ -347,7 +342,7 @@ public class Mesa extends Activity {
 			i++;
 		}
 		return listaDeMesas;
-	}
+	}*/
 
 
 	@Override
