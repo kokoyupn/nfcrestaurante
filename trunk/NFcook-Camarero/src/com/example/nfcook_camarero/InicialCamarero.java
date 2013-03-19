@@ -44,7 +44,7 @@ public class InicialCamarero extends Activity{
     private String idCamarero;
     private String nombre;
     private String numeroMesaAEditar;
-    private int precio;
+    private double precio;
     private static int idUnico = 0;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
@@ -66,42 +66,7 @@ public class InicialCamarero extends Activity{
         // Obtenemos el idCamarero de la pantalla anterior
         Bundle bundle = getIntent().getExtras();
         idCamarero = bundle.getString("usuario");
-        
-        //Creamos un datos (lo que nos llega del chip) para probarlo
-        ArrayList<String> extras = new ArrayList<String>();
-        extras.add("Barbacoa");
-       // extras.add("poco hecha");
-	    InfoPlato info = new InfoPlato();
-	    info.setExtras(extras);
-	    info.setObservaciones("Sin pepinillo");
-	    info.setIdPlato("fh4");
-	   
-	    ArrayList<String> extras2 = new ArrayList<String>();
-	    extras2.add("Poco hecha");
-	    extras2.add("Roquefort");
-	    extras2.add("Patata Asada");
-	    InfoPlato info2 = new InfoPlato();
-	    info2.setExtras(extras2); 
-	    info2.setObservaciones("Sin sal");
-	    info2.setIdPlato("fh11");
-	    
-	    InfoPlato info3 = new InfoPlato();
-	    info3.setExtras(new ArrayList<String>());
-	    info3.setObservaciones("");
-	    info3.setIdPlato("fh41");
-	    
-	    InfoPlato info4 = new InfoPlato();
-	    info4.setExtras(new ArrayList<String>());
-	    info4.setObservaciones("Sabrosón");
-	    info4.setIdPlato("fh42");
-	   
-	    datos = new  ArrayList<InfoPlato>(); 
-	    datos.add(info);
-	    datos.add(info2);
-	    datos.add(info3);
-	    datos.add(info4);
-	    //fin de creacion de datos
-	   
+
 	   //Para importar la base de Assets
         try{
 			sqlMesas = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db" );
@@ -434,7 +399,7 @@ public class InicialCamarero extends Activity{
 		                   		cPMiBase.moveToNext();
 		                   		if(cPMiBase.getCount() > 0){
 		                   			nombre=cPMiBase.getString(0);
-		                   			precio=cPMiBase.getInt(1);
+		                   			precio=cPMiBase.getDouble(1);
 		                   		}
 		                    	//Insertamos el plato en la tabla Platos
 		                    	ContentValues registro = new ContentValues();

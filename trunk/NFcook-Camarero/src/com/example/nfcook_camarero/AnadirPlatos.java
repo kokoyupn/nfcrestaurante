@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -93,11 +94,13 @@ public class AnadirPlatos extends Activity{
    		Cursor cPMiBase = dbMiBase.query("Restaurantes", infoTipoPlato, "Restaurante=?" ,datos,null, null,null);
    		
    		ArrayList<String> tipoSinRepe = new ArrayList<String>();//arrayList para meter los tipos sin repeticion
+   		ArrayList<String> categoriaSinRepe = new ArrayList<String>();//arrayList para meter las categorias sin repeticion
    		while(cPMiBase.moveToNext()){
    			String tipoPlato = cPMiBase.getString(0);
-   			if(!tipoSinRepe.contains(tipoPlato)){
+   			
+   			if((!tipoSinRepe.contains(tipoPlato)) && (!tipoPlato.equals(""))){
    				tipoSinRepe.add(tipoPlato);
-	   			//Sacamos los platos con tipoPlato=al del padre de la base de datos MiBase.db. Seran los hijos
+	   			//Sacamos los platos con tipoPlato igual al del padre de la base de datos MiBase.db. Seran los hijos
 	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre","Precio"};
 	   	    	String[] info = new String[]{tipoPlato,"Foster"};
 	   	   		Cursor cPMiBase2 = dbMiBase.query("Restaurantes", infoPlato, "TipoPlato=? AND Restaurante=?",info,null, null,null);
@@ -106,12 +109,12 @@ public class AnadirPlatos extends Activity{
 	   	   		ArrayList<String> idHijos= new ArrayList<String>();
 	   	   		ArrayList<String> numImags= new ArrayList<String>();
 	   	   		ArrayList<String> nombrePlatos= new ArrayList<String>();
-	   	   		ArrayList<Float> precio= new ArrayList<Float>();
+	   	   		ArrayList<Double> precio= new ArrayList<Double>();
 	   	   		while(cPMiBase2.moveToNext() ){
 	   	   			idHijos.add(cPMiBase2.getString(0));
 	   	   			numImags.add(cPMiBase2.getString(1));
 	   	   			nombrePlatos.add(cPMiBase2.getString(2));
-	   	   			precio.add((float)cPMiBase2.getInt(3));
+	   	   			precio.add(cPMiBase2.getDouble(3));
 	   	   		}
    			
 	   	   		HijoExpandableListAnadirPlato unHijo = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
@@ -119,6 +122,42 @@ public class AnadirPlatos extends Activity{
 	   	   		padres.add(unPadre);
    			}//fin de esta
    		}
+   		
+   		//Ha cargado todos los platos que tienen tipo
+   		//Si tipo es vacio miramos la categoria
+   		//Sacamos la categoria de la base de datos MiBase.db. Seran los padres
+    	String[] infoTipoPlatoCat = new String[]{"Categoria"};
+    	//solo leemos los platos de Foster
+    	String[] datosCat = new String[]{"Foster",""};
+   		Cursor cPMiBaseCat = dbMiBase.query("Restaurantes", infoTipoPlatoCat, "Restaurante=? AND TipoPlato=?" ,datosCat,null, null,null);
+   		
+   		while(cPMiBaseCat.moveToNext()){
+   			String categoriaPlato = cPMiBaseCat.getString(0);
+   			
+   			if(!categoriaSinRepe.contains(categoriaPlato)){
+   				categoriaSinRepe.add(categoriaPlato);
+	   			//Sacamos los platos con categoriaPlato igual al del padre de la base de datos MiBase.db. Seran los hijos
+	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre","Precio"};
+	   	    	String[] info = new String[]{categoriaPlato,"Foster"};
+	   	   		Cursor cPMiBaseCat2 = dbMiBase.query("Restaurantes", infoPlato, "Categoria=? AND Restaurante=?",info,null, null,null);
+	   	   		
+	   	   		ArrayList<String> idHijos= new ArrayList<String>();
+	   	   		ArrayList<String> numImags= new ArrayList<String>();
+	   	   		ArrayList<String> nombrePlatos= new ArrayList<String>();
+	   	   		ArrayList<Double> precio= new ArrayList<Double>();
+	   	   		while(cPMiBaseCat2.moveToNext() ){
+	   	   			idHijos.add(cPMiBaseCat2.getString(0));
+	   	   			numImags.add(cPMiBaseCat2.getString(1));
+	   	   			nombrePlatos.add(cPMiBaseCat2.getString(2));
+	   	   			precio.add(cPMiBaseCat2.getDouble(3));
+	   	   		}
+   			
+	   	   		HijoExpandableListAnadirPlato unHijo = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
+	   	   		PadreExpandableListAnadirPlato unPadre = new PadreExpandableListAnadirPlato(categoriaPlato, unHijo);
+	   	   		padres.add(unPadre);
+   			}//fin de esta
+   		}
+   	
    		expandableListAnadirPlato = (ExpandableListView) findViewById(R.id.expandableListPlatos);
 		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(AnadirPlatos.this, padres);
 		expandableListAnadirPlato.setAdapter(adapterExpandableListAnadirPlato);
@@ -240,7 +279,7 @@ public class AnadirPlatos extends Activity{
 		expandableListEditarExtras.expandGroup(groupPositionMarcar);
 	}
 	
-protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion, final String nombrePlato) {
+	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion, final String nombrePlato) {
 		
 		
 		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
@@ -299,12 +338,12 @@ protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,fin
 		        	plato.put("Extras", nuevosExtrasMarcados);
 		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
 		        	plato.put("Nombre", nombrePlato);
-		        	plato.put("Precio",cursor.getFloat(1));
+		        	plato.put("Precio",cursor.getDouble(1));
 		        	plato.put("Personas",numPersonas);
 		        	plato.put("IdUnico", idUnico);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
-		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(nombrePlato,nuevosExtrasMarcados, observaciones, cursor.getFloat(1),idUnico,cursor.getString(0));
+		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(nombrePlato,nuevosExtrasMarcados, observaciones, cursor.getDouble(1),idUnico,cursor.getString(0));
 		        	Mesa.actualizaListPlatos(platoNuevo);
 		    	}else{
 		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
