@@ -74,6 +74,34 @@ public class BaseDatosMesas extends Activity {
    	db.insert("Mesas", null, registro);
    	idUnico ++;
    	
+   	registro = new ContentValues();
+	registro.put("NumMesa", "1");
+	registro.put("IdCamarero", "22");
+	registro.put("IdPlato", "fh37");
+	registro.put("Observaciones",  "Muy fria");
+	registro.put("Extras", "");
+	registro.put("FechaHora", "2013-03-19" + "13:45:23");
+	registro.put("Nombre", "CocaCola");
+	registro.put("Precio", 3);
+	registro.put("Personas", "3");
+	registro.put("IdUnico", idUnico);
+   	db.insert("Mesas", null, registro);
+   	idUnico ++;
+   	
+   	registro = new ContentValues();
+	registro.put("NumMesa", "1");
+	registro.put("IdCamarero", "22");
+	registro.put("IdPlato", "fh37");
+	registro.put("Observaciones",  "Muy fria");
+	registro.put("Extras", "");
+	registro.put("FechaHora", "2013-03-19" + "13:45:23");
+	registro.put("Nombre", "CocaCola");
+	registro.put("Precio", 3);
+	registro.put("Personas", "3");
+	registro.put("IdUnico", idUnico);
+   	db.insert("Mesas", null, registro);
+   	idUnico ++;
+   	
   	registro = new ContentValues();
 	registro.put("NumMesa", "5");
 	registro.put("IdCamarero", "23");
@@ -84,6 +112,20 @@ public class BaseDatosMesas extends Activity {
 	registro.put("Nombre", "Mini Corn Dogs");
 	registro.put("Precio", 7.1);
 	registro.put("Personas", "1");
+	registro.put("IdUnico", idUnico);
+   	db.insert("Mesas", null, registro);
+   	idUnico ++;
+   	
+   	registro = new ContentValues();
+	registro.put("NumMesa", "1");
+	registro.put("IdCamarero", "22");
+	registro.put("IdPlato", "fh38");
+	registro.put("Observaciones",  "Sin gas");
+	registro.put("Extras", "");
+	registro.put("FechaHora", "2013-03-18" + "16:25:13");
+	registro.put("Nombre", "Fanta de naranja");
+	registro.put("Precio", 3);
+	registro.put("Personas", "3");
 	registro.put("IdUnico", idUnico);
    	db.insert("Mesas", null, registro);
    	idUnico ++;
