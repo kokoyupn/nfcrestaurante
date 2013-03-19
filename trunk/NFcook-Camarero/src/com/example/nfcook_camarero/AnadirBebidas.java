@@ -16,6 +16,7 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -35,6 +36,10 @@ public class AnadirBebidas extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Quitamos barra de titulo de la aplicacion
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		setContentView(R.layout.bebidaslayout);
 		// Declaraciones -------------------------------------
 		eliminarBebidas = anadirBebidas = false;

@@ -24,6 +24,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
@@ -56,6 +57,10 @@ public class AnadirPlatos extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);  
+        
+      //Quitamos barra de titulo de la aplicacion
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
         setContentView(R.layout.expandable_list_anadir_plato);
         
         Bundle bundle = getIntent().getExtras();

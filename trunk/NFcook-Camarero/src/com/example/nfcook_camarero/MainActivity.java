@@ -12,21 +12,16 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,7 +93,7 @@ public void  onClickBotonEntrar(View boton)
 	  	   if (cont.equals(password.getText().toString()))//Si las contraseña que hay en la base de datos y la que a introducido el usuario son iguales
           
     	   {  
-    	   	  abrir_ventanaEmergente("Bienvenido: "+usu,R.drawable.icono_usuario);
+    	   	  //abrir_ventanaEmergente("Bienvenido: "+usu,R.drawable.icono_usuario);
            	  //Iniciamos la nueva actividad
     	   	  Intent intent = new Intent(this, InicialCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
