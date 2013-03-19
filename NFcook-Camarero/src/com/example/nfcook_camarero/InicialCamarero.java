@@ -58,9 +58,7 @@ public class InicialCamarero extends Activity{
         
         //Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //Quitamos barra de notificaciones
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
+    
         setContentView(R.layout.inicial_camarero); 
         //creamos la lista de mesas
         mesas = new ArrayList<MesaView>();
