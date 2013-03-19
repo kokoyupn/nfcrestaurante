@@ -1,5 +1,7 @@
 package usuario;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import baseDatos.HandlerDB;
 
@@ -65,6 +67,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	// Información de que tab está seleccionado
 	private static String tabInferiorPulsado;
 	private static boolean pulsadoTabSuperior;
+	
+	//Ventana emergente
+	public AlertDialog ventanaEmergente;
 	
 	public static void setPulsadoTabSuperior(boolean pulsado){
 		pulsadoTabSuperior = pulsado;
@@ -335,11 +340,21 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún.
 			 */
 			//Creación y configuración de la ventana emergente
-			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this);
-			ventanaEmergente.setPositiveButton("Aceptar", null);
+			ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this).create();
 			View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.aviso_seccion_no_disponible, null);
 			ventanaEmergente.setView(vistaAviso);
 			ventanaEmergente.show();
+			
+			//Crea el timer para que el mensaje solo aparezca durante 3 segundos
+			final Timer t = new Timer();
+			t.schedule(new TimerTask() {
+	         public void run() {
+	            ventanaEmergente.dismiss(); 
+	             t.cancel(); 
+	         }
+			}, 2000);
+			
+			
 			/*
 			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
 			 */
@@ -375,11 +390,21 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún.
 			 */
 			//Creación y configuración de la ventana emergente
-			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this);
-			ventanaEmergente.setPositiveButton("Aceptar", null);
+			ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this).create();
 			View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.aviso_seccion_no_disponible, null);
 			ventanaEmergente.setView(vistaAviso);
 			ventanaEmergente.show();
+			
+			//Crea el timer para que el mensaje solo aparezca durante 3 segundos
+			final Timer t = new Timer();
+			t.schedule(new TimerTask() {
+	         public void run() {
+	            ventanaEmergente.dismiss(); 
+	             t.cancel(); 
+	         }
+			}, 2000);
+			
+			
 			/*
 			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
 			 */
