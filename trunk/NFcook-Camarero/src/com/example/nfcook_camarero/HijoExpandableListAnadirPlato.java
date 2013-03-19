@@ -10,6 +10,11 @@ public class HijoExpandableListAnadirPlato {
 	private ArrayList<Double> precio;
 	
 	
+	
+	public String getIdPlato(Integer position){
+		return idHijos.get(position);
+	}
+	
 	public HijoExpandableListAnadirPlato(ArrayList<String> idHijos, ArrayList<String> numImag, ArrayList<String> nombrePl, ArrayList<Double> precio) {
 		this.idHijos = idHijos;
 		this.numImag = numImag;
