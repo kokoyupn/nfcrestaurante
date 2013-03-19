@@ -4,48 +4,48 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textViewTituloAnadirMesa"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:background="#9be92c"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="Mesa"
-        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
+
+<TextView
+    android:id="@+id/textViewTituloAnadirMesa"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="10dp"
+    android:background="#9be92c"
+    android:gravity="center"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:text="Añadir Mesa"
+    android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+    android:textColor="#FFFFFF"
+    android:textSize="30sp"
+    android:textStyle="bold" />
+
     <TextView
         android:id="@+id/textViewNumMesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
         android:text="TextView"
         android:textColor="#000000" />
-
+
     <EditText
         android:id="@+id/editTextNumMesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
         android:ems="10"
         android:maxLines="1"
         android:textColor="#000000" >
 
         <requestFocus />
     </EditText>
-
+
     <TextView
         android:id="@+id/textViewNumPersonas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:text="TextView"
         android:textColor="#000000" />
@@ -54,7 +54,7 @@
         android:id="@+id/editTextNumPersonas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
         android:ems="10"
         android:maxLines="1" />
 
