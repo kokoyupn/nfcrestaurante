@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.example.nfcook.R;
 
@@ -34,6 +36,8 @@ public class MainActivity extends Activity{
 	
 	private HandlerDB sql;
 	private SQLiteDatabase db;
+	
+	public AlertDialog ventanaEmergente;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,11 +113,20 @@ public class MainActivity extends Activity{
 	public void lanzar(int posicion){
 		if (posicion > 1) {
 			//Creación y configuración de la ventana emergente
-			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(MainActivity.this);
-			ventanaEmergente.setPositiveButton("Aceptar", null);
+			ventanaEmergente = new AlertDialog.Builder(MainActivity.this).create();
 			View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.aviso_restaurante_no_disponible, null);
 			ventanaEmergente.setView(vistaAviso);
 			ventanaEmergente.show();
+			
+			//Crea el timer para que el mensaje solo aparezca durante 3 segundos
+			final Timer t = new Timer();
+			t.schedule(new TimerTask() {
+	         public void run() {
+	            ventanaEmergente.dismiss(); 
+	             t.cancel(); 
+	         }
+			}, 2000);
+			
 		}
 		else {
 			String nombreRestaurante;
