@@ -43,7 +43,6 @@ public class PedidoFragment extends Fragment{
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
 	
-		
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
@@ -96,7 +95,6 @@ public class PedidoFragment extends Fragment{
 			expandableListPedido.setAdapter(adapterExpandableListPedido);
 	    }catch(SQLiteException e){
 	        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL PEDIDO",Toast.LENGTH_SHORT).show();
-	    		
 	    }   
 	}
 	
@@ -144,7 +142,7 @@ public class PedidoFragment extends Fragment{
 		botonNFC.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				
+			
 				if(!baseDeDatosPedidoyCuentaVacias()){
 					Intent intent = new Intent(getActivity(),SincronizarPedido.class);
 			        intent.putExtra("Restaurante", restaurante);
