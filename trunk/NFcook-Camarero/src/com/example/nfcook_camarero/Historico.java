@@ -50,11 +50,11 @@ import android.widget.Toast;
      
      
      while(c.moveToNext()){
-       if (!c.getString(0).equals(ultimaMesaLeida)){
-    	   ultimaMesaLeida=c.getString(0);
+       if (!c.getString(4).equals(ultimaMesaLeida)){
+    	   ultimaMesaLeida=c.getString(4);
     	   precioMesa+=precioPedido;
     	   if (padreActual!=null){
-    		   padreActual.put(PRECIO,  String.valueOf(precioMesa) + " Û"); 
+    		   padreActual.put(PRECIO,  String.valueOf(precioMesa) + " E"); 
     		   listaHijos.add(hijo); 
     	   }
     	   padreActual = new HashMap<String, String>();  
@@ -67,34 +67,34 @@ import android.widget.Toast;
 
        }
        
-       if (!c.getString(5).equals(ultimaHoraPedido)){
+       if (!c.getString(1).equals(ultimaHoraPedido)){
     	  
     	   if (hijoActual!=null){
     		   hijoActual.put(CAMARERO, "Camarero: "+ camareroAnterior);  
-    		   hijoActual.put(PRECIO, "Precio: " + precioPedido + " Û");  
+    		   hijoActual.put(PRECIO, "Precio: " + precioPedido + " E");  
     	   }
     	   if (nuevaMesa){
     		   nuevaMesa=false;
     		   precioPedido=0;
     	   }
-    	   camareroAnterior=c.getString(1);
+    	   camareroAnterior=c.getString(3);
     	   precioMesa+=precioPedido;
     	   precioPedido=0;
-    	   ultimaHoraPedido=c.getString(5);
+    	   ultimaHoraPedido=c.getString(1);
     	   hijoActual = new HashMap<String, String>();  
     	   hijo.add(hijoActual);  
-    	   hijoActual.put(HORA, "Hora: " + ultimaHoraPedido);  
+    	   hijoActual.put(HORA, "Hora: " + ultimaHoraPedido.substring(ultimaHoraPedido.indexOf(" ")+1));  
     	    
        }  
-       precioPedido+=c.getInt(7);
+       precioPedido+=c.getInt(8);
      }
      
      try{
     	 listaHijos.add(hijo); 
          hijoActual.put(CAMARERO, "Camarero: "+ camareroAnterior);
-         hijoActual.put(PRECIO, "Precio: " + precioPedido + " Û");
+         hijoActual.put(PRECIO, "Precio: " + precioPedido + " E");
          precioMesa+=precioPedido;
-         padreActual.put(PRECIO,  String.valueOf(precioMesa) + " Û");
+         padreActual.put(PRECIO,  String.valueOf(precioMesa) + " E");
      }
     catch (Exception e){};
      
