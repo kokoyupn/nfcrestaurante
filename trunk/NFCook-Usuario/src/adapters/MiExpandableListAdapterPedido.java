@@ -132,8 +132,6 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 					PedidoFragment.actualizaExpandableList();// No se puede sacar del if, el orden importa
 					PedidoFragment.expandeGrupoLista(groupPositionMarcar);
 				}
-				String[] camposDelete = {idPadre,idHijo};
-				PedidoFragment.getDbPedido().delete("Pedido", "Id = ? AND IdHijo =?", camposDelete);
 				
 				/* Vemos si se trata de una bebida para actualizar la pantalla pedido
 				 * si fuera así.
@@ -154,6 +152,9 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	    				ContenidoTabSuperiorCategoriaBebidas.eliminarBebidaDesdePedido(idPadre, fragmentLista.getActivity());	
 	    			}
 	    		}
+	    		
+	    		String[] camposDelete = {idPadre,idHijo};
+				PedidoFragment.getDbPedido().delete("Pedido", "Id = ? AND IdHijo =?", camposDelete);
 				
 				expandePadres();
 			}
