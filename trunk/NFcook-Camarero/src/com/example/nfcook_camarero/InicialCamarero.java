@@ -50,9 +50,6 @@ public class InicialCamarero extends Activity{
     private String numeroMesaAEditar;
     private double precio;
     private static int idUnico = 0;
-    private static MiListAdapterMesa adapter;
-    private static ListView platos;
-    private static TextView precioTotal;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
     

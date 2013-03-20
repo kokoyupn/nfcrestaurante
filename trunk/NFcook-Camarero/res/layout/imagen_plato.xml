@@ -1,35 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
-    android:layout_width="100dp"
-    android:layout_height="140dp"
+    android:layout_width="match_parent"
+    android:layout_height="97dp"
+    android:background="@drawable/bordes_redondeados_login"
     android:orientation="vertical"
-    android:paddingBottom="10dp" >
+    android:paddingBottom="10dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp" >
 
     <TextView
         android:id="@+id/textViewNombrePlato"
-        android:layout_width="80dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="10dp"
-        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
         android:text="NombrePlato"
         android:textColor="@android:color/black"
         android:textSize="12dp" />
 
     <ImageView
         android:id="@+id/imageViewPlato"
-        android:layout_width="85dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginLeft="10dp" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="10dp"
-        android:src="@drawable/linea_azul_horizontal" />
+        android:layout_gravity="center"
+        android:src="@android:drawable/alert_light_frame" />
 
 </LinearLayout>
