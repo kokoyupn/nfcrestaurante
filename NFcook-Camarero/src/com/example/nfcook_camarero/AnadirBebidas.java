@@ -139,8 +139,8 @@ public class AnadirBebidas extends Activity {
 	  filaBebidas.addView(tvw); // Anadimos textView para dar espacio
 	  tablaBebidas.addView(filaBebidas);
 	  
-	  insertaBotonValidar();
 	  insertaSwitchAnadirEliminar();
+	  insertaBotonValidar();
 	  	  
 	}
 	
