@@ -40,7 +40,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	private LayoutInflater inflater;
     private ArrayList<PadreExpandableListAnadirPlato> padresExpandableList;
     private Context context;
-    ArrayList<PlatoView> platos;
+    private ArrayList<PlatoView> platos;
     
     private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
 	private static ExpandableListView expandableListEditarExtras;
@@ -130,7 +130,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 	  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
 	  				encabezadoDialog.setText("Añadir Plato");
 	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
-	  				tituloPlato.setText(platos.get(position).getNombrePlato());
+	  				tituloPlato.setText(padresExpandableList.get(groupPositioMarcar).getNombrePlato(position));
 	  				cargarExpandableListAnadirExtras(idPlatoPulsado);
 	  				ventanaEmergente.setView(vistaAviso);
 	  				ventanaEmergente.show();
