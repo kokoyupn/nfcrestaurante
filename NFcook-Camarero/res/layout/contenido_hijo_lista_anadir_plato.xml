@@ -9,8 +9,7 @@
         android:id="@+id/gridViewAnadirPlato"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnWidth="90dp"
-        android:horizontalSpacing="10dp"
+        android:columnWidth="100dp"
         android:numColumns="auto_fit" >
 
     </GridView>

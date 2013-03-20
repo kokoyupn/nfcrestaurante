@@ -51,7 +51,8 @@
             android:name=".Historico">
         </activity>  
          <activity
-            android:name=".AnadirPlatos">
+            android:name=".AnadirPlatos"
+            android:windowSoftInputMode="stateHidden">
         </activity> 
     </application>
 
