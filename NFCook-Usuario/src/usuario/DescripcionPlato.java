@@ -12,6 +12,7 @@ import adapters.MiExpandableListAdapterEditar;
 import adapters.PadreExpandableListEditar;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -52,7 +53,9 @@ public class DescripcionPlato extends Activity {
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
         setContentView(R.layout.descripcion_del_plato);
-        
+               
+        cargarUltimoIdentificadorUnicoHijoPedido();
+
         editTextUnidades = (EditText) findViewById(R.id.editTextunidades);
         textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
         TextView textViewNombre= (TextView) findViewById(R.id.nombrePlato);
@@ -162,7 +165,7 @@ public class DescripcionPlato extends Activity {
         textViewDescripcion.setText(descripcionPlato);
         
 	}
-	
+
 	public void onClickBotonMenos(View v){
 		if(cantidad != 1){
 			cantidad--;
@@ -208,6 +211,7 @@ public class DescripcionPlato extends Activity {
         		cantidad--;
     		}
     		dbPedido.close();
+    		setUltimoIdentificadorUnicoHijoPedido();
     		Toast.makeText(getApplicationContext(),"Todos sus platos han sido confirmados.", Toast.LENGTH_SHORT).show();
     		this.finish();
     	}else{
@@ -230,6 +234,20 @@ public class DescripcionPlato extends Activity {
     
 	public static void sumaIdentificadorUnicoHijoPedido(){
 		identificadorUnicoHijoPedido++;
+	}
+	
+	private void cargarUltimoIdentificadorUnicoHijoPedido() {
+		//SharedPreferences nos permite recuperar datos aunque la aplicacion se haya cerrado
+      	SharedPreferences ultimoId = getSharedPreferences("Identificador_Unico", 0);
+      	identificadorUnicoHijoPedido = ultimoId.getInt("identificadorUnicoHijoPedido", 0); // 0 es lo que devuelve si no hubiese nada con esa clave		
+	}
+	
+	public void setUltimoIdentificadorUnicoHijoPedido(){
+		//Almacenamos la posicion del restaurante de la lista
+		SharedPreferences preferencia = getSharedPreferences("Identificador_Unico", 0);
+		SharedPreferences.Editor editor = preferencia.edit();
+		editor.putInt("identificadorUnicoHijoPedido", identificadorUnicoHijoPedido);
+		editor.commit(); //Para que surja efecto el cambio
 	}
     
 }

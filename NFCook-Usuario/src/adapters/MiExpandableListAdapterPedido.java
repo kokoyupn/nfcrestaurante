@@ -151,7 +151,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	    		if(cPlato.moveToNext()){
 	    			// Miramos si efectivamente era una bebida
 	    			if(cPlato.getString(1).toLowerCase().equals("bebidas")){
-	    				ContenidoTabSuperiorCategoriaBebidas.eliminarBebidaDesdePedido(idPadre);	
+	    				ContenidoTabSuperiorCategoriaBebidas.eliminarBebidaDesdePedido(idPadre, fragmentLista.getActivity());	
 	    			}
 	    		}
 				

@@ -86,7 +86,7 @@ public class DescripcionPlatoEditar extends Activity {
         nombrePlato = cursor.getString(4);
         String extrasBusqueda = cursor.getString(0);
     	
-        if (extras != null){
+        if (!extrasBusqueda.equals("")){
             String[] tokens = extrasBusqueda.split("/");
             String[] extrasSeleccionados = extras.split(",");
 	        // Creamos los padres de la lista, serán las distintas categorías de extras
