@@ -6,8 +6,11 @@ import java.util.Iterator;
 import usuario.DescripcionPlatoEditar;
 
 
+import baseDatos.HandlerDB;
+
 import com.example.nfcook.R;
 
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import fragments.PedidoFragment;
 
 
@@ -131,6 +134,27 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 				}
 				String[] camposDelete = {idPadre,idHijo};
 				PedidoFragment.getDbPedido().delete("Pedido", "Id = ? AND IdHijo =?", camposDelete);
+				
+				/* Vemos si se trata de una bebida para actualizar la pantalla pedido
+				 * si fuera así.
+				 */
+				// Abrimos la base de datos de los platos
+				HandlerDB sql = new HandlerDB(v.getContext()); 
+				SQLiteDatabase db = sql.open();
+		     	
+				// Preparamos la consulta para el plato con ese id
+			    String[] camposSacarPlato = new String[]{"Id","Categoria"};
+			    String[] datosQueCondicionanPlato = new String[]{idPadre,PedidoFragment.getRestaurante()};
+			    Cursor cPlato = db.query("Restaurantes", camposSacarPlato, "Id=? AND Restaurante=?",datosQueCondicionanPlato,null, null,null);
+		    		
+			    // Solo nos sacará un elemento, porque los id's son únicos
+	    		if(cPlato.moveToNext()){
+	    			// Miramos si efectivamente era una bebida
+	    			if(cPlato.getString(1).toLowerCase().equals("bebidas")){
+	    				ContenidoTabSuperiorCategoriaBebidas.eliminarBebidaDesdePedido(idPadre);	
+	    			}
+	    		}
+				
 				expandePadres();
 			}
 		});

@@ -7,13 +7,12 @@ import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import fragments.CuentaFragment;
 import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
-
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -140,7 +139,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     }
     
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
-    @SuppressLint("NewApi")
 	private void cargarTabsSuperiores(){
     	Stack<String> tipos = new Stack<String>();
     	
@@ -176,11 +174,20 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     		// Creamos el tab
     		ActionBar.Tab tab = actionbar.newTab().setText(tipoTab);
     		// Creamos el fragment de cada tab y le metemos el restaurante al que pertenece
-    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
-    		((ContenidoTabsSuperioresFragment) tabFragment).setTipoTab(tipoTab);
-    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
-    		// Hacemos oyente al tab
-    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
+    		// Miramos si se trata de la categoría bebidas que tendrá un fragment distinto
+    		if(tipoTab.toLowerCase().equals("bebidas")){
+    			Fragment tabFragment = new ContenidoTabSuperiorCategoriaBebidas();
+	    		ContenidoTabSuperiorCategoriaBebidas.setTipoTab(tipoTab);
+	    		ContenidoTabSuperiorCategoriaBebidas.setRestaurante(restaurante);
+	    		// Hacemos oyente al tab
+	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
+    		}else{
+	    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
+	    		((ContenidoTabsSuperioresFragment) tabFragment).setTipoTab(tipoTab);
+	    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
+	    		// Hacemos oyente al tab
+	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
+    		}
     		// Añadimos dicha categoría como tab
     		actionbar.addTab(tab);
     	}

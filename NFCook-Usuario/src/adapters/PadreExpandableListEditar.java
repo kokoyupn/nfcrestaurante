@@ -18,12 +18,10 @@ import java.util.Iterator;
  */
 public class PadreExpandableListEditar {
 	private String categoriaExtra;
-	private String idPlato;
 	private boolean expandido;
 	private ArrayList<HijoExpandableListEditar> hijosExtras;
 	
 	public PadreExpandableListEditar(String idPlato, String categoriaExtra,ArrayList<HijoExpandableListEditar> hijosExtras) {
-		this.idPlato = idPlato;
 		this.categoriaExtra = categoriaExtra;
 		this.hijosExtras = hijosExtras;
 	}
