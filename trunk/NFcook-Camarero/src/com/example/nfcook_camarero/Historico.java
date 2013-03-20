@@ -54,7 +54,7 @@ import android.widget.Toast;
     	   ultimaMesaLeida=c.getString(0);
     	   precioMesa+=precioPedido;
     	   if (padreActual!=null){
-    		   padreActual.put(PRECIO,  String.valueOf(precioMesa) + " €"); 
+    		   padreActual.put(PRECIO,  String.valueOf(precioMesa) + " Û"); 
     		   listaHijos.add(hijo); 
     	   }
     	   padreActual = new HashMap<String, String>();  
@@ -71,7 +71,7 @@ import android.widget.Toast;
     	  
     	   if (hijoActual!=null){
     		   hijoActual.put(CAMARERO, "Camarero: "+ camareroAnterior);  
-    		   hijoActual.put(PRECIO, "Precio: " + precioPedido + " €");  
+    		   hijoActual.put(PRECIO, "Precio: " + precioPedido + " Û");  
     	   }
     	   if (nuevaMesa){
     		   nuevaMesa=false;
@@ -92,9 +92,9 @@ import android.widget.Toast;
      try{
     	 listaHijos.add(hijo); 
          hijoActual.put(CAMARERO, "Camarero: "+ camareroAnterior);
-         hijoActual.put(PRECIO, "Precio: " + precioPedido + " €");
+         hijoActual.put(PRECIO, "Precio: " + precioPedido + " Û");
          precioMesa+=precioPedido;
-         padreActual.put(PRECIO,  String.valueOf(precioMesa) + " €");
+         padreActual.put(PRECIO,  String.valueOf(precioMesa) + " Û");
      }
     catch (Exception e){};
      
