@@ -67,7 +67,7 @@ public class Mesa extends Activity {
 	private static ListView platos;
 	private ArrayList<ContenidoListMesa> elemLista;
 	private static MiListAdapterMesa adapter;
-	private TextView precioTotal;
+	private static TextView precioTotal;
 	private int indicePulsado;
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
@@ -130,6 +130,8 @@ public class Mesa extends Activity {
 	  				//onClickBotonCancelarAlertDialog(ventanaEmergente);
 	  				View vistaAviso = LayoutInflater.from(Mesa.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 	  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
+	  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
+	  				encabezadoDialog.setText("Editar Plato");
 	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
 	  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
 	  				tituloPlato.setText(adapter.getNombrePlato(posicion));
@@ -274,18 +276,10 @@ public class Mesa extends Activity {
 		aniadirBebida.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
-            		importarBaseDatatosMesa();
-            		String[] campos = new String[]{"IdCamarero","Personas"};
-        		    String[] numeroDeMesa = new String[]{numMesa};
-        		    
-        		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
-        		    c.moveToNext();
-        		    
         		    Intent intent = new Intent(actividad, AnadirBebidas.class);
             		intent.putExtra("numMesa", numMesa);
-            		intent.putExtra("idCamarero",c.getString(0));
-            		intent.putExtra("personasMesa", c.getString(1));
-            		sqlMesas.close();
+            		intent.putExtra("idCamarero",idCamarero);
+            		intent.putExtra("personasMesa", numPersonas);
             		startActivity(intent);
             		
             	}catch(Exception e){
@@ -353,7 +347,7 @@ public class Mesa extends Activity {
 	
 	protected void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,final int posicion) {
 		
-		ventanaEmergente.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+		ventanaEmergente.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
 				importarBaseDatatosMesa();
@@ -439,6 +433,9 @@ public class Mesa extends Activity {
 						// Añadimos la información del hijo a la lista de hijos
 						variedadExtrasListaHijos.add(extrasDeUnaCategoria);
 						PadreExpandableListEditar padreCategoriaExtra = new PadreExpandableListEditar(adapter.getIdPlato(posicion),categoriaExtraPadre, variedadExtrasListaHijos);
+						if(i==0){//Expandimos el primer padre por estetica
+							padreCategoriaExtra.setExpandido(true);
+						}
 						// Añadimos la información del padre a la lista de padres
 						categoriasExtras.add(padreCategoriaExtra);
 					}catch(Exception e){
@@ -456,16 +453,9 @@ public class Mesa extends Activity {
 	}
 
 	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
-		HandlerGenerico sqlMesas = null;
-		SQLiteDatabase dbMesas = null;
-		try{
-			sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-			dbMesas= sqlMesas.open();
-		}catch(SQLiteException e){
-		 	Toast.makeText(context,"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
-		}
 		adapter.addPlato(platoNuevo);
 		platos.setAdapter(adapter);
+		precioTotal.setText(adapter.getPrecio()+" €");
 	}
 
 	public static void actualizaExpandableList() {

@@ -17,16 +17,13 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
@@ -174,8 +171,6 @@ public class AnadirPlatos extends Activity{
 				Toast.makeText(getApplicationContext(),"NO EXISTE LA BASE DE DATOS",Toast.LENGTH_SHORT).show();
 			}
 		 
-		 
-		 
 			buscador = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewBuscadorPlatos); 
 			
 		    Cursor c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
@@ -195,10 +190,12 @@ public class AnadirPlatos extends Activity{
 					   //sacará ventana emergente
 					   AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(AnadirPlatos.this);
 					   ventanaEmergente.setNegativeButton("Cancelar", null);
-					   onClickBotonAceptarAlertDialog(ventanaEmergente, position, nombrePlato);
+					   onClickBotonAceptarAlertDialog(ventanaEmergente, nombrePlato);
 					   View vistaAviso = LayoutInflater.from(AnadirPlatos.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 					   expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
 					   actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+					   TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
+					   encabezadoDialog.setText("Añadir Plato");
 					   TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
 					   tituloPlato.setText(nombrePlato);
 					   cargarExpandableListAnadirExtras(nombrePlato);
@@ -243,6 +240,9 @@ public class AnadirPlatos extends Activity{
   					 // Añadimos la información del hijo a la lista de hijos
   					 variedadExtrasListaHijos.add(extrasDeUnaCategoria);
   					 PadreExpandableListEditar padreCategoriaExtra = new PadreExpandableListEditar(idPlatoPulsado, categoriaExtraPadre, variedadExtrasListaHijos);
+  					 if(i==0){//Expandimos el primer padre por estetica
+						padreCategoriaExtra.setExpandido(true);
+  					 }
   					 // Añadimos la información del padre a la lista de padres
   					 categoriasExtras.add(padreCategoriaExtra);
   				 }catch(Exception e){
@@ -279,7 +279,7 @@ public class AnadirPlatos extends Activity{
 		expandableListEditarExtras.expandGroup(groupPositionMarcar);
 	}
 	
-	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion, final String nombrePlato) {
+	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente, final String nombrePlato) {
 		
 		
 		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
@@ -347,6 +347,7 @@ public class AnadirPlatos extends Activity{
 		        	Mesa.actualizaListPlatos(platoNuevo);
 		    	}else{
 		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
+					Toast.makeText(getApplicationContext(),"¡Plato mal configurado!", Toast.LENGTH_SHORT).show();
 		    	}				
 			}
 			
