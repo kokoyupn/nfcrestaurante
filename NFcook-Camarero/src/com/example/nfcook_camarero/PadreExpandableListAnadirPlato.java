@@ -29,9 +29,17 @@ public class PadreExpandableListAnadirPlato {
     public String toString(){
     	return titulo;
     }
-    public String getIdPlato(Integer position)
-    {	
+    
+    public String getIdPlato(int position){	
     	return hijo.getIdPlato(position);
     }
+
+	public String getNombrePlato(int position) {
+		return hijo.getNombrePlato(position);
+	}
+
+	public double getPrecioPlato(int position) {
+		return  hijo.getPrecioPlato(position);
+	}
 	
 }

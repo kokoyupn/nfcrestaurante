@@ -119,20 +119,16 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			gridViewAnadir.setOnItemClickListener(new OnItemClickListener() {
 	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 	            	//sacará ventana emergente       	
-	            	
-	            	//String idPlatoPulsado = platos.get(groupPositioMarcar).getIdPlato(position);  
 	            	String idPlatoPulsado = padresExpandableList.get(groupPositioMarcar).getIdPlato(position);
-	      
-	            	//String idPlatoPulsado = platos.get(position).getIdPlato();
-	            	Toast.makeText(context,idPlatoPulsado,Toast.LENGTH_SHORT).show();
 	            	
 	            	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(context);
 	  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
-	  				onClickBotonAceptarAlertDialog(ventanaEmergente, position);
+	  				onClickBotonAceptarAlertDialog(ventanaEmergente, groupPositioMarcar, position);
 	  				View vistaAviso = LayoutInflater.from(context).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 	  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
 	  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
-
+	  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
+	  				encabezadoDialog.setText("Añadir Plato");
 	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
 	  				tituloPlato.setText(platos.get(position).getNombrePlato());
 	  				cargarExpandableListAnadirExtras(idPlatoPulsado);
@@ -243,6 +239,9 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 						// Añadimos la información del hijo a la lista de hijos
 						variedadExtrasListaHijos.add(extrasDeUnaCategoria);
 						PadreExpandableListEditar padreCategoriaExtra = new PadreExpandableListEditar(idPlatoPulsado, categoriaExtraPadre, variedadExtrasListaHijos);
+						if(i==0){//Expandimos el primer padre por estetica
+							padreCategoriaExtra.setExpandido(true);
+						}
 						// Añadimos la información del padre a la lista de padres
 						categoriasExtras.add(padreCategoriaExtra);
 					}catch(Exception e){
@@ -259,7 +258,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
   		}
 	}
 	
-	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int posicion) {
+	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente,final int groupPositionMarcar, final int position) {
 		
 		
 		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
@@ -298,22 +297,27 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
                     
 		        	ContentValues plato = new ContentValues();
 		        	int idUnico = InicialCamarero.getIdUnico();
+		        	String idPlato = padresExpandableList.get(groupPositionMarcar).getIdPlato(position);
+		        	String nombrePlato = padresExpandableList.get(groupPositionMarcar).getNombrePlato(position);
+		        	double precioPlato = padresExpandableList.get(groupPositionMarcar).getPrecioPlato(position);
+		        	
 		        	plato.put("NumMesa",AnadirPlatos.getNumMesa());
 		        	plato.put("IdCamarero",AnadirPlatos.getIdCamarero());
-		        	plato.put("IdPlato", platos.get(posicion).getIdPlato());
+		        	plato.put("IdPlato", idPlato);
 		        	plato.put("Observaciones", observaciones);
 		        	plato.put("Extras", nuevosExtrasMarcados);
 		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
-		        	plato.put("Nombre", platos.get(posicion).getNombrePlato());
-		        	plato.put("Precio",platos.get(posicion).getPrecio());
+		        	plato.put("Nombre", nombrePlato);
+		        	plato.put("Precio", precioPlato);
 		        	plato.put("Personas",AnadirPlatos.getNumPersonas());
 		        	plato.put("IdUnico", idUnico);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
-		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(platos.get(posicion).getNombrePlato(),nuevosExtrasMarcados,observaciones,platos.get(posicion).getPrecio(),idUnico,platos.get(posicion).getIdPlato());
+		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(nombrePlato, nuevosExtrasMarcados, observaciones, precioPlato, idUnico, idPlato);
 		        	Mesa.actualizaListPlatos(platoNuevo);
 		    	}else{
 		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
+					Toast.makeText(context,"¡Plato mal configurado!", Toast.LENGTH_SHORT).show();
 		    	}				
 			}
 			

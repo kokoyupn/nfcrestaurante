@@ -9,12 +9,6 @@ public class HijoExpandableListAnadirPlato {
 	private ArrayList<String> nombrePl;
 	private ArrayList<Double> precio;
 	
-	
-	
-	public String getIdPlato(Integer position){
-		return idHijos.get(position);
-	}
-	
 	public HijoExpandableListAnadirPlato(ArrayList<String> idHijos, ArrayList<String> numImag, ArrayList<String> nombrePl, ArrayList<Double> precio) {
 		this.idHijos = idHijos;
 		this.numImag = numImag;
@@ -36,6 +30,18 @@ public class HijoExpandableListAnadirPlato {
 	
 	public ArrayList<Double> getPrecio() {
 		return precio;
+	}
+	
+	public String getIdPlato(Integer position){
+		return idHijos.get(position);
+	}
+
+	public String getNombrePlato(int position) {
+		return nombrePl.get(position);
+	}
+
+	public double getPrecioPlato(int position) {
+		return precio.get(position);
 	}
 	
 }
