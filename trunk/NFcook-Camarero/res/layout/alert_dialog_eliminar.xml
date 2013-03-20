@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
 <TextView
-    android:id="@+id/textViewTituloAnadirMesa"
+    android:id="@+id/textViewTituloEliminarMesa"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -15,7 +15,7 @@
     android:gravity="center"
     android:paddingBottom="10dp"
     android:paddingTop="10dp"
-    android:text="Añadir Mesa"
+    android:text="Eliminar Mesa"
     android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
     android:textColor="#FFFFFF"
     android:textSize="30sp"
@@ -23,10 +23,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
 
         <TextView
-            android:id="@+id/textViewNumMesa"
+            android:id="@+id/textViewElimMesa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -34,7 +35,7 @@
             android:textColor="#000000" />
 
         <EditText
-            android:id="@+id/editTextNumMesa"
+            android:id="@+id/editTextElimMesa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -42,34 +43,9 @@
             android:ems="10"
             android:maxLines="1"
             android:textColor="#000000" >
-              <requestFocus />
+
+            <requestFocus />
         </EditText>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" >
-
-        <TextView
-            android:id="@+id/textViewNumPersonas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:textColor="#000000" />
-
-        <EditText
-            android:id="@+id/editTextNumPersonas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:maxLines="1" />
-
 
     </LinearLayout>
 

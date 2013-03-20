@@ -492,16 +492,24 @@ public class InicialCamarero extends Activity{
      
 
 	public void onClickEliminarMesa(View v) {
-			 //Creamos el AlertDialog con la vista por defecto
-             AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
-             alert.setMessage("Introduce el número de la mesa que desea borrar: "); //mensaje
-             final EditText input = new EditText(InicialCamarero.this); //creamos un Edit Text
-             alert.setView(input); //añadimos el edit text a la vista del AlertDialog
+		//cargamos el xml creado para este alertDialog
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View textEntryView = factory.inflate(R.layout.alert_dialog_eliminar, null);
+			//Obtenemos los campos
+			final EditText mesaBorrar = (EditText) textEntryView.findViewById(R.id.editTextElimMesa);
+			final TextView elimMesa = (TextView) textEntryView.findViewById(R.id.textViewElimMesa);
+			//Damos valor a los campos		
+			mesaBorrar.setText("", TextView.BufferType.EDITABLE);
+			elimMesa.setText("Nº de mesa a borrar:");
+			//Construimos el AlertDialog y le metemos la vista que hemos personalizado
+			AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
+			alert.setView(textEntryView);
+		
              //añadimos los botones
              alert.setNegativeButton("Cancelar", null);
              alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { 
                	public void onClick(DialogInterface dialog, int whichButton) {
-                 		String value =input.getText().toString();
+                 		String value = mesaBorrar.getText().toString();
                  		gridviewCam = (GridView) findViewById(R.id.gridViewInicial);
                  
                      	//Creo una mesa aux para buscarla en la base de datos para ver si existe
