@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="com.example.nfcook_camarero.AnadirBebidas" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/com/example/nfcook_camarero/AnadirBebidas.java" binary="false" label="anadirBebidas" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="126" y="0"/>    
+    <execution id="2">      
+      <position height="859" width="151" x="5" y="98"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="796" width="151" x="5" y="140"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="714" width="7" x="80" y="201"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="407"/>    
+    </execution>  
+  </object>  
+  <object id="39" language="java" name="android.database.sqlite.SQLiteDatabase" project="NFcook-Camarero" 
+    file="/Users/Alex/Desktop/UNIVERSIDAD/android-sdk-macosx/platforms/android-16/android.jar" binary="true" 
+    label="&lt;static&gt;" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="232"/>    
+    </execution>  
+  </object>  
+  <object id="40" language="java" name="java.util.ArrayList" project="NFcook-Camarero" 
+    file="/Users/Alex/Desktop/UNIVERSIDAD/android-sdk-macosx/platforms/android-16/android.jar" binary="true" 
+    label="textViewsBebidas" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="274"/>    
+    </execution>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="316"/>    
+    </execution>  
+  </object>  
+  <object id="41" language="java" name="android.widget.TextView" project="NFcook-Camarero" 
+    file="/Users/Alex/Desktop/UNIVERSIDAD/android-sdk-macosx/platforms/android-16/android.jar" binary="true" label="t" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="358"/>    
+    </execution>  
+  </object>  
+  <object id="42" language="java" name="android.content.ContentValues" project="NFcook-Camarero" 
+    file="/Users/Alex/Desktop/UNIVERSIDAD/android-sdk-macosx/platforms/android-16/android.jar" binary="true" 
+    label="nuevaBebida" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="18">      
+      <position height="21" width="0" x="0" y="455"/>    
+    </execution>    
+    <execution id="20">      
+      <position height="21" width="0" x="0" y="497"/>    
+    </execution>    
+    <execution id="22">      
+      <position height="21" width="0" x="0" y="539"/>    
+    </execution>    
+    <execution id="24">      
+      <position height="21" width="0" x="0" y="581"/>    
+    </execution>    
+    <execution id="26">      
+      <position height="21" width="0" x="0" y="623"/>    
+    </execution>    
+    <execution id="28">      
+      <position height="21" width="0" x="0" y="665"/>    
+    </execution>    
+    <execution id="30">      
+      <position height="21" width="0" x="0" y="707"/>    
+    </execution>    
+    <execution id="32">      
+      <position height="21" width="0" x="0" y="749"/>    
+    </execution>    
+    <execution id="34">      
+      <position height="21" width="0" x="0" y="789"/>    
+    </execution>    
+    <execution id="36">      
+      <position height="21" width="0" x="0" y="831"/>    
+    </execution>  
+  </object>  
+  <object id="43" language="java" name="android.database.sqlite.SQLiteDatabase" project="NFcook-Camarero" 
+    file="/Users/Alex/Desktop/UNIVERSIDAD/android-sdk-macosx/platforms/android-16/android.jar" binary="true" 
+    label="dbPedido" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="38">      
+      <position height="21" width="0" x="0" y="873"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="onClickBotonBebida(android.view.View):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="insertaBebidasEnBaseDeDatos():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" 
+    operation="openDatabase(java.lang.String,android.database.sqlite.SQLiteDatabase.CursorFactory,int):android.database.sqlite.SQLiteDatabase">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="size():int">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="get(int):E">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="getText():java.lang.CharSequence">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="fechaYHora():java.lang.String[]">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="ContentValues()">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>  
+  <message id="19" operation="put(java.lang.String,java.lang.Integer):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="20"/>  
+  </message>  
+  <message id="21" operation="put(java.lang.String,java.lang.Integer):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="22"/>  
+  </message>  
+  <message id="23" operation="put(java.lang.String,java.lang.String):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="24"/>  
+  </message>  
+  <message id="25" operation="put(java.lang.String,java.lang.String):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="26"/>  
+  </message>  
+  <message id="27" operation="put(java.lang.String,java.lang.String):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="28"/>  
+  </message>  
+  <message id="29" operation="put(java.lang.String,java.lang.String):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="30"/>  
+  </message>  
+  <message id="31" operation="put(java.lang.String,java.lang.String):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="32"/>  
+  </message>  
+  <message id="33" operation="put(java.lang.String,java.lang.String):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="34"/>  
+  </message>  
+  <message id="35" operation="put(java.lang.String,java.lang.Integer):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="36"/>  
+  </message>  
+  <message id="37" operation="insert(java.lang.String,java.lang.String,android.content.ContentValues):long">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="38"/>  
+  </message>
+</sequence-diagram>

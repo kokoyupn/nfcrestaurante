@@ -6,6 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+
+import com.example.nfcook_camarero.R;
+
+import adapters.ContenidoListMesa;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -19,18 +23,19 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 public class AnadirBebidas extends Activity {
-	private int numMesa, idCamarero, personasMesa;  
+	private static String numMesa, idCamarero, personasMesa;  
 	private SQLiteDatabase dbRestaurante, dbPedido;
-	String rutaPedido = "/data/data/com.example.nfcook_camarero/databases/Mesas.db";
-	String rutaBaseFoster = "/data/data/com.example.nfcook_camarero/databases/MiBase.db";
+	private HandlerGenerico sql;
 	boolean eliminarBebidas, anadirBebidas;
 	ArrayList<ImageButton> botonesBebidas;
 	ArrayList<TextView> textViewsBebidas;
+	private Switch switchAE;
 
 	
 	@Override
@@ -42,7 +47,14 @@ public class AnadirBebidas extends Activity {
 		
 		setContentView(R.layout.bebidaslayout);
 		// Declaraciones -------------------------------------
-		eliminarBebidas = anadirBebidas = false;
+		eliminarBebidas = false;
+		anadirBebidas = true;
+  		
+		Bundle bundle = getIntent().getExtras();
+		numMesa = bundle.getString("NumMesa");
+		personasMesa = bundle.getString("Personas");
+		idCamarero = bundle.getString("IdCamarero");
+		
   		int bebidasPorFila = 0;
 
 		// Layouts
@@ -60,8 +72,8 @@ public class AnadirBebidas extends Activity {
   		// Fin Declaraciones ---------------------------------
   		
 		try{
-			dbRestaurante = SQLiteDatabase.openDatabase(rutaBaseFoster, null, SQLiteDatabase.CREATE_IF_NECESSARY);
-
+			sql = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","MiBase.db"); 
+			dbRestaurante = sql.open();
 		}catch(Exception e){
 			System.out.println("Error al abrir la base de datos de Foster en anadir Bebidas");
 		}
@@ -101,7 +113,7 @@ public class AnadirBebidas extends Activity {
 			
 			ImageButton botonBebidaNueva = (ImageButton)getLayoutInflater().inflate(R.layout.botonbebidas,filaBebidas,false);
 			botonBebidaNueva.setTag(nombrePrecioId);
-			botonBebidaNueva.setImageResource(Integer.parseInt(fotoBebida)); // metemos la imagen en el boton
+			botonBebidaNueva.setImageResource(getResources().getIdentifier(fotoBebida,"drawable",this.getPackageName())); // metemos la imagen en el boton
 			botonBebidaNueva.setLayoutParams(parametrosBotonImagen); // le damos el ancho y alto de parametros
 
 			botonBebidaNueva.setOnClickListener(new View.OnClickListener() {
@@ -120,78 +132,63 @@ public class AnadirBebidas extends Activity {
 	  tablaBebidas.addView(filaBebidas); // anadimos la fila de botones a la tabla
 	  tablaBebidas.addView(filaTextViews); // anadimos la fila de text views a la tabla
 	  
-	  // Insertamos los dos botones para anadir y eliminar bebidas y validar
-	  Button botonEliminar = insertaBotonEliminar();
-	  Button botonAnadir = insertaBotonAnadir();
-	  Button botonValidar = insertaBotonValidar();
-	  
 	  // Metemos una fila para la separacion de los botones anadir y eliminar
   	  filaBebidas = (TableRow)getLayoutInflater().inflate(R.layout.filabebidas, tablaBebidas, false);
 	  TextView tvw = new TextView(getApplicationContext());
 	  tvw.setTextSize(20);
-	  filaBebidas.addView(tvw); // Anadimos tableView para dar espacio
+	  filaBebidas.addView(tvw); // Anadimos textView para dar espacio
 	  tablaBebidas.addView(filaBebidas);
 	  
-  	  filaBebidas = (TableRow)getLayoutInflater().inflate(R.layout.filabebidas, tablaBebidas, false);
-
-  	  filaBebidas.addView(botonAnadir); // Anadimos boton Anadir
-  	  filaBebidas.addView(botonEliminar); // Anadimos boton Eliminar
-	  tablaBebidas.addView(filaBebidas); // Anadimos la fila a la tabla
-	  	  
-  	  filaBebidas = (TableRow)getLayoutInflater().inflate(R.layout.filabebidas, tablaBebidas, false);
-  	  filaBebidas.addView(botonValidar); // Anadimos boton Validar
-	  tablaBebidas.addView(filaBebidas); 
+	  insertaBotonValidar();
+	  insertaSwitchAnadirEliminar();
 	  	  
 	}
 	
-	// Boton Eliminar
-	public Button insertaBotonEliminar(){
-		 Button botonEliminar = new Button(getApplicationContext());
-		 botonEliminar.setTextColor(Color.BLACK);
-		 botonEliminar.setText("Eliminar");
-		 botonEliminar.setTextSize(20);
-		 botonEliminar.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				eliminarBebidas = true;
-				anadirBebidas = false;
+	public Switch insertaSwitchAnadirEliminar(){
+		switchAE = (Switch) findViewById(R.id.switchAnadirEliminarBebidas);
+		switchAE.setChecked(true);
+		switchAE.setTextColor(Color.BLACK);
+		switchAE.setTextSize(20);
+		switchAE.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (switchAE.isChecked()){
+					anadirBebidas = true;
+					eliminarBebidas = false;
+				}else{
+					anadirBebidas = false;
+					eliminarBebidas = true;
+				}
 			}
-		 });
-		 return botonEliminar;
-	}
-	
-	// Boton Anadir
-	public Button insertaBotonAnadir(){
-		 Button botonAnadir = new Button(getApplicationContext());
-		 botonAnadir.setTextColor(Color.BLACK);
-		 botonAnadir.setText("Anadir");
-		 botonAnadir.setTextSize(20);
-		 botonAnadir.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				anadirBebidas = true;
-				eliminarBebidas = false;
-			}
-		 });
-		 return botonAnadir;
+		});
+		return switchAE;
 	}
 	
 	// Boton Validar
 	public Button insertaBotonValidar(){
-		 Button botonValidar = new Button(getApplicationContext());
-		 botonValidar.setTextColor(Color.BLACK);
-		 botonValidar.setText("Validar");
-		 botonValidar.setTextSize(20);
+		 Button botonValidar = (Button) findViewById(R.id.botonValidarBebidas);
 		 botonValidar.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// actualizamos la base de datos con las bebidas nuevas
-				insertaBebidasEnBaseDeDatos();
+				onClickBotonValidar(view);
 			}
 		 });
 		 return botonValidar;
 	}
+		
+	public void onClickBotonValidar(View view){
+		// actualizamos la base de datos con las bebidas nuevas
+		insertaBebidasEnBaseDeDatos();
+		dbPedido.close();
+		dbRestaurante.close();
+		//volvemos a la pantalla anterior
+		this.finish();
+	}
 	
 	public void insertaBebidasEnBaseDeDatos(){
 		try{
-			dbPedido = SQLiteDatabase.openDatabase(rutaPedido, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+			sql = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Mesas.db"); 
+			dbPedido = sql.open();
+			
 			for(int i=0; i<textViewsBebidas.size(); i++){
 				TextView t = textViewsBebidas.get(i);
 				int bebidas = Integer.parseInt((String)t.getText());
@@ -200,23 +197,30 @@ public class AnadirBebidas extends Activity {
 					String[] nombrePrecioId = (String[]) botonesBebidas.get(i).getTag();
 					String[] fechaHora = fechaYHora(); 
 					String nombreBebida = nombrePrecioId[0];
-					String precioBebida = nombrePrecioId[1];
+					String pb = nombrePrecioId[1];
+					double precioBebida = Double.parseDouble(pb);
 					String idBebida = nombrePrecioId[2];
+					int idUnico = InicialCamarero.getIdUnico();
 					
 					ContentValues nuevaBebida = new ContentValues();
 	            	nuevaBebida.put("NumMesa", numMesa);
-	            	nuevaBebida.put("idCamarero", idCamarero);
-	            	nuevaBebida.put("idPlato", idBebida);
+	            	nuevaBebida.put("IdCamarero", idCamarero);
+	            	nuevaBebida.put("IdPlato", idBebida);
 	            	nuevaBebida.put("Observaciones", "");
 	            	nuevaBebida.put("Extras", "");
 	            	nuevaBebida.put("FechaHora", fechaHora[0] + " " + fechaHora[1]); //[0]=fecha [1]=hora
 	            	nuevaBebida.put("Nombre", nombreBebida);
 	            	nuevaBebida.put("Precio", precioBebida);
 	            	nuevaBebida.put("Personas", personasMesa);
+	            	nuevaBebida.put("IdUnico", idUnico);
 	            	
-					for(int bebida=0; bebida<bebidas; bebida++)
+	            	
+					for(int bebida=0; bebida<bebidas; bebida++){
 						// vamos anadiendo una a una la bebida 
 	       				dbPedido.insert("Mesas", null, nuevaBebida);
+						ContenidoListMesa platoNuevo = new ContenidoListMesa(nombreBebida,"", "", precioBebida,idUnico,idBebida);
+			        	Mesa.actualizaListPlatos(platoNuevo);
+					}
 				}
 			}
 	 	}catch(Exception e){
@@ -266,13 +270,6 @@ public class AnadirBebidas extends Activity {
 			cantidad--;
 			textViewsBebidas.get(indiceBotones).setText(Integer.toString(cantidad));
 		}		
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
 	}
 
 }
