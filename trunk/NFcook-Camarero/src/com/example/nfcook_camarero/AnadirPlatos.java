@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -40,6 +41,7 @@ public class AnadirPlatos extends Activity{
 	private static ExpandableListView expandableListAnadirPlato;
 	private HandlerGenerico sqlMiBase, sqlBuscador;
 	private AutoCompleteTextView buscador;
+	private boolean noSeleccionadoAutoCompleteTextView;
 	private SQLiteDatabase dbMiBase, dbBuscador;
 	
 	private static String numMesa;
@@ -55,6 +57,7 @@ public class AnadirPlatos extends Activity{
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		noSeleccionadoAutoCompleteTextView = false;
         super.onCreate(savedInstanceState);  
         
       //Quitamos barra de titulo de la aplicacion
@@ -171,8 +174,7 @@ public class AnadirPlatos extends Activity{
 				Toast.makeText(getApplicationContext(),"NO EXISTE LA BASE DE DATOS",Toast.LENGTH_SHORT).show();
 			}
 		 
-			buscador = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewBuscadorPlatos); 
-			
+			buscador = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewBuscadorPlatos);
 		    Cursor c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
 		      " FROM Restaurantes" + 
 		      " WHERE Restaurante ='"+ "foster" +"' and nombre LIKE '%" +""+ "%' ", null);

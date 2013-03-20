@@ -9,6 +9,9 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 
+
+
+import adapters.MiListAdapterMesa;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -30,6 +33,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -46,6 +50,9 @@ public class InicialCamarero extends Activity{
     private String numeroMesaAEditar;
     private double precio;
     private static int idUnico = 0;
+    private static MiListAdapterMesa adapter;
+    private static ListView platos;
+    private static TextView precioTotal;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
     
@@ -67,6 +74,7 @@ public class InicialCamarero extends Activity{
         Bundle bundle = getIntent().getExtras();
         idCamarero = bundle.getString("usuario");
 
+        
 	   //Para importar la base de Assets
         try{
 			sqlMesas = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db" );
@@ -126,7 +134,59 @@ public class InicialCamarero extends Activity{
 				    public void onClick(DialogInterface dialog, int item) {
 				    	//------------------- Cobrar Mesa ------------------------------------
 				    	if (item == 0){
-				    		Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
+				    		//Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
+				    		//Boton Cobrar--------------------------------------------------------------------
+				    		
+		                	try{
+		                		HandlerGenerico sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
+		                		SQLiteDatabase dbHistorico= sqlHistorico.open();
+		            			
+		                		String[] numeroDeMesa = new String[]{numeroMesaAEditar};
+		            		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
+		                		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
+		                		
+		                		
+		                		while(filasPedido.moveToNext()){
+		                			//Añades los platos a la base de datos del historico y borras de la lista de platos
+		                			ContentValues nuevo = new ContentValues();
+		                			int plato=0;
+		                			
+		                			for (int i=0;i<filasPedido.getColumnCount();i++){
+		                				for (int j=0;j<filasHistorico.getColumnCount();j++){
+		                					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
+		                						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
+		                						
+		                						if(filasPedido.getColumnName(i).equals("IdUnico")){	
+		    	            						
+		    	            						plato = Integer.parseInt(filasPedido.getString(i));
+		    	            						adapter.deleteId(plato);
+		    	            					}
+		    	            					
+		    	            				}
+		                				}
+		                			}
+		                			dbHistorico.insert("Historico", null, nuevo);
+		    	            	}
+		                		
+		                		//Carga el adapter sin los platos borrados
+		                		//platos.setAdapter(adapter); 
+		                		
+		                		//Recalculamos el precio(será cero ya que no quedan platos en la lista)
+		                		//precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
+		                		
+		                		//Borra de la base de datos los platos de esta mesa
+		                		dbMesas.delete("Mesas", "NumMesa=numMesa", null);
+		                		
+		                		//Se borra la mesa y se vuelve a la pantalla anterior.
+		                		eliminarDeArray(numeroMesaAEditar);
+		                		//finish();
+		                			
+		                		
+		                	}catch(Exception e){
+		                		Toast.makeText(getApplicationContext(), "Error funcionalidad de boton cobrar", Toast.LENGTH_SHORT).show();
+		                	}
+				    		//Boton Cobrar--------------------------------------------------------------------
+				    		
 				    	//------------------ Sincronizar -----------------------------------
 				    	}else if (item == 1){
 				    		Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
@@ -381,7 +441,7 @@ public class InicialCamarero extends Activity{
 	                		}
 	                       	
 	                    	//rellenamos la base de datos con lo que nos ha venido del chip que esta en datos
-	                    	for(int j = 0; j < datos.size(); j++ ){
+	                    	/*for(int j = 0; j < datos.size(); j++ ){
 	                    		//concatenamos los extras para guardarlos en string separados por comas
 		                    	String extr = "";
 		                    	for (int i = 0; i < datos.get(j).getExtras().size(); i++ ){
@@ -419,6 +479,7 @@ public class InicialCamarero extends Activity{
 		                	   	dbMesas.insert("Mesas", null, registro);
 		                	   
 	                    	}//fin de relleno de la base de datos con lo que nos viene del chip
+	                    	*/
 	                    }//fin de existe mesa
 	        		}//fin de ha introducido la mesa y numero de personas
 			}//cierra onClick de aceptar
