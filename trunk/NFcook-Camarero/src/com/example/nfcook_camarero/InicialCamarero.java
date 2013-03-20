@@ -136,46 +136,53 @@ public class InicialCamarero extends Activity{
 				    	if (item == 0){
 				    		//Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
 				    		//Boton Cobrar--------------------------------------------------------------------
-				    		
-		                	try{
-		                		HandlerGenerico sqlHistorico = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
-		                		SQLiteDatabase dbHistorico= sqlHistorico.open();
-		            			
-		                		String[] numeroDeMesa = new String[]{numeroMesaAEditar};
-		            		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
-		                		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
-		                		
-		                		
-		                		while(filasPedido.moveToNext()){
-		                			//Añades los platos a la base de datos del historico y borras de la lista de platos
-		                			ContentValues nuevo = new ContentValues();
-		                			
-		                			for (int i=0;i<filasPedido.getColumnCount();i++){
-		                				for (int j=0;j<filasHistorico.getColumnCount();j++){
-		                					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
-		                						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));				
-		    	            				}
-		                				}
-		                			}
-		                			dbHistorico.insert("Historico", null, nuevo);
-		    	            	}
-		                		
-		                		//Borra de la base de datos los platos de esta mesa
-		                		String[] args = new String[]{numeroMesaAEditar};
-		                     	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
-		                		
-		                		
-		                		eliminarDeArray(numeroMesaAEditar);
-		                		//refrescamos  
-		                        
-		                     	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
-		                     	gridviewCam.setAdapter(adapterCam);
-
-		                			
-		                		
-		                	}catch(Exception e){
-		                		Toast.makeText(getApplicationContext(), "Error al cobrar", Toast.LENGTH_SHORT).show();
-		                	}
+				    		AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
+				             alert.setMessage("¿Seguro que quieres cobrar y cerrar esta mesa? "); //mensaje            
+				             alert.setNegativeButton("Cancelar", null);
+				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
+				               	public void onClick(DialogInterface dialog, int whichButton) {
+				                	try{
+				                		HandlerGenerico sqlHistorico = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
+				                		SQLiteDatabase dbHistorico= sqlHistorico.open();
+				            			
+				                		String[] numeroDeMesa = new String[]{numeroMesaAEditar};
+				            		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
+				                		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
+				                		
+				                		
+				                		while(filasPedido.moveToNext()){
+				                			//Añades los platos a la base de datos del historico y borras de la lista de platos
+				                			ContentValues nuevo = new ContentValues();
+				                			
+				                			for (int i=0;i<filasPedido.getColumnCount();i++){
+				                				for (int j=0;j<filasHistorico.getColumnCount();j++){
+				                					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
+				                						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));				
+				    	            				}
+				                				}
+				                			}
+				                			dbHistorico.insert("Historico", null, nuevo);
+				    	            	}
+				                		
+				                		//Borra de la base de datos los platos de esta mesa
+				                		String[] args = new String[]{numeroMesaAEditar};
+				                     	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
+				                		
+				                		
+				                		eliminarDeArray(numeroMesaAEditar);
+				                		//refrescamos  
+				                        
+				                     	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
+				                     	gridviewCam.setAdapter(adapterCam);
+		
+				                			
+				                		
+				                	}catch(Exception e){
+				                		Toast.makeText(getApplicationContext(), "Error al cobrar", Toast.LENGTH_SHORT).show();
+				                	}
+				               	}
+				             });//fin onclick aceptar
+				             alert.show();
 				    		//Boton Cobrar--------------------------------------------------------------------
 				    		
 				    	//------------------ Sincronizar -----------------------------------
