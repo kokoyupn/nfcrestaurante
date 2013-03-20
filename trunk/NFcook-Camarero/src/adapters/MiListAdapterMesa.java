@@ -162,6 +162,11 @@ public class MiListAdapterMesa extends BaseAdapter {
 		contenido.add(platoNuevo);
 	}
 
+	public View getViewOnScreen(int itemId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

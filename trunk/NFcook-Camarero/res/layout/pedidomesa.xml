@@ -14,19 +14,23 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="5dp" >
+            android:layout_marginBottom="2dp"
+            android:background="#BFE4F2" >
 
             <TextView
                 android:id="@+id/numeroDeMesa"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="10dp" >
-            </TextView>
-        </LinearLayout>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:paddingBottom="10dp"
+		        android:paddingTop="10dp"
+		        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+		        android:textSize="30sp">
+			</TextView>
+		</LinearLayout>
 
         <ListView
             android:id="@+id/listaPlatos"
@@ -65,20 +69,11 @@
         android:layout_marginTop="5dp" >
 
         <Button
-            android:id="@+id/botonCobrar"
-            android:layout_width="47dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/pagar" />
-
-        <Button
             android:id="@+id/aniadirPlato"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="fill_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/iconomas" />
 
         <ImageView
@@ -94,7 +89,7 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="fill_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="40dp"
             android:background="@drawable/iconomas" />
 
         <ImageView

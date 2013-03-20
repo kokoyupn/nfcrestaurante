@@ -1,31 +1,32 @@
 package com.example.nfcook_camarero;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-
+import adapters.ContenidoListMesa;
+import adapters.HijoExpandableListEditar;
+import adapters.MiExpandableListAdapterEditar;
 import adapters.MiListAdapterMesa;
-import android.os.Bundle;
+import adapters.PadreExpandableListEditar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -35,11 +36,6 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import adapters.HijoExpandableListEditar;
-import adapters.MiExpandableListAdapterEditar;
-import adapters.PadreExpandableListEditar;
-
-import adapters.ContenidoListMesa;
 
 /**
  * Añade los componentes de cada pedido a la mesa
@@ -72,6 +68,9 @@ public class Mesa extends Activity {
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
 	
+	private GestureDetector d;
+	private View.OnTouchListener t;
+	
 	
 	
 	private AutoCompleteTextView actwObservaciones;
@@ -82,6 +81,7 @@ public class Mesa extends Activity {
 	private static Context context;
 	
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,120 +139,61 @@ public class Mesa extends Activity {
 	  				cargarExpandableListExtras(posicion);
 	  				ventanaEmergente.setView(vistaAviso);
 	  				ventanaEmergente.show();
+	  				
+	  				//Para deselccionar alguno que se haya intentado borrar y no se haya borrado
+	  				try{
+	  					if(Detector.getSeleccionado())
+	  						platos.setAdapter(adapter);
+	  				}catch(Exception e){
+	  					System.out.println("No creado el Detector");
+	  				}
 	  	    	}
 	  	    });
 	  	    
+	  	  
+	  	    //PRUEBA--------------------------------------------------------------------------------
+	  	 d = new GestureDetector(new Detector());
+	  	 System.out.println("aaaaa");
+	        t = new View.OnTouchListener() {
+	            public boolean onTouch(View v, MotionEvent event) {
+	            	switch (event.getAction() ) { 
+	            		case MotionEvent.ACTION_DOWN:
+	            	
+		            	try{
+		  					if(Detector.getSeleccionado())
+		  						platos.setAdapter(adapter);
+		  				}catch(Exception e){
+		  					System.out.println("No creado el Detector");
+		  				}
+	            	}
+	                return d.onTouchEvent(event);
+	            }
+	        };
+	        // prevent the view to be touched
+	        platos.setOnTouchListener(t);
+	        
+	        //PRUEBA--------------------------------------------------------------------
 	  	    
 	  	    platos.setOnItemLongClickListener(new OnItemLongClickListener(){
 	  	    	public boolean onItemLongClick(AdapterView<?> l, View v, int position, long id) {
-	  	    		indicePulsado=position;
-	  	    		
-					DragShadowBuilder myShadow = new DragShadowBuilder(v);
-					
-					/*/Prueba
-					View borrando;
-					LayoutInflater inflater = (LayoutInflater) actividad.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				    borrando = inflater.inflate(com.example.nfcook_camarero.R.layout.hijo_mesa_borrado, null);
-				    v.setBackgroundColor(Color.BLACK);
-				    //Prueba*/
-							
-					
-					//ClipData info = ClipData.newPlainText("posicion", Integer.toString(position));
-					v.startDrag(null,myShadow,v,0);
+	  	    		try{
+	  					if(Detector.getSeleccionado())
+	  						platos.setAdapter(adapter);
+	  				}catch(Exception e){
+	  					System.out.println("No creado el Detector");
+	  				}
 					
 					return true;					
 				}});
 	      
-	  	   platos.setOnDragListener(new OnDragListener() {
-		    	public boolean onDrag(View view, DragEvent event) {
-		    		
-		    		//Las acciones se realizan al soltar el elemento de la lista arrastrado.
-		    		if(event.getAction()==DragEvent.ACTION_DRAG_ENDED){
-		    			
-		    			ContenidoListMesa platoSeleccionado = (ContenidoListMesa) adapter.getItem(indicePulsado);
-	    				String identificador = Integer.toString(platoSeleccionado.getId());
-	    				try{
-	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
-	    				}catch(Exception e){
-	    					System.out.println("Error borrar de la base pedido en ondrag");
-	    				}
-	    				
-	    				adapter.deletePosicion(indicePulsado);
-	    				platos.setAdapter(adapter);
-	    				
-	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-	            		precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
-		    		
-		    		}
-		    	    return true;
-		    	}
-			});
+	  	    
+	  	   
 	  	}catch(Exception e){
 			System.out.println("Error lectura base de datos de Pedido");
 		}
 		
+
 		
-		//Boton Cobrar--------------------------------------------------------------------
-		Button cobrar = (Button)findViewById(R.id.botonCobrar);
-		cobrar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	try{
-            		sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
-        			dbHistorico= sqlHistorico.open();
-        			
-            		String[] numeroDeMesa = new String[]{numMesa};
-        		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
-            		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
-            		System.out.println("LLEGA");
-            		
-            		while(filasPedido.moveToNext()){
-            			//Añades los platos a la base de datos del historico y borras de la lista de platos
-            			ContentValues nuevo = new ContentValues();
-            			int plato=0;
-            			
-            			for (int i=0;i<filasPedido.getColumnCount();i++){
-            				for (int j=0;j<filasPedido.getColumnCount();j++){
-            					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
-            						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
-            						
-	            					if(filasPedido.getColumnName(i).equals("IdUnico")){	
-	            						plato = Integer.parseInt(filasPedido.getString(i));
-	            						adapter.deleteId(plato);
-	            					}
-	            				}
-            				}
-            			}
-            			/*FIXME No borrar por si las bases de historico y pedido tienen las mismas columnas
-            			for (int i=0;i<filasPedido.getColumnCount();i++){
-            				nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
-            				if(filasPedido.getColumnName(i).equals("IdUnico")){	
-        						plato = Integer.parseInt(filasPedido.getString(i));
-        						adapter.deleteId(plato);
-        					}
-            			}*/
-            			dbHistorico.insert("Historico", null, nuevo);
-	            	}
-            		
-            		//Carga el adapter sin los platos borrados
-            		platos.setAdapter(adapter); 
-            		
-            		//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-            		precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
-            		
-            		//Borra de la base de datos los platos de esta mesa
-            		dbMesas.delete("Mesas", "NumMesa=numMesa", null);
-            		
-            		//Se borra la mesa y se vuelve a la pantalla anterior.
-            		InicialCamarero.eliminarDeArray(numMesa);
-            		finish();
-            			
-            		
-            	}catch(Exception e){
-            		System.out.println("Error funcionalidad de boton cobrar");
-            	}
-            }
-        });
-		//Boton Cobrar--------------------------------------------------------------------
 		
 		//Boton AñadirPlato---------------------------------------------------------------
 		Button aniadirPlato = (Button)findViewById(R.id.aniadirPlato);
@@ -469,6 +410,22 @@ public class Mesa extends Activity {
 
 	public static void expandeGrupoLista(int groupPositionMarcar) {
 		expandableListEditarExtras.expandGroup(groupPositionMarcar);
+	}
+	
+	public static MiListAdapterMesa getAdapter(){
+		return adapter;
+	}
+	
+	public static ListView getPlatos(){
+		return platos;
+	}
+
+	public static TextView getPrecioTotal() {
+		return precioTotal;
+	}
+
+	public static Context getContext() {
+		return context;
 	}
 	
 }
