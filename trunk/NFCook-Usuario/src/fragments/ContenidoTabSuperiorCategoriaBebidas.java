@@ -8,8 +8,10 @@ import com.example.nfcook.R;
 
 import adapters.MiGridViewBebidasAdapter;
 import adapters.PadreGridViewBebidas;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -69,11 +71,11 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 		 */
 		if(bebidas == null){
 			// Cargamos las bebidas que haya en la base de datos
-			cargarBebidas();
+			cargarBebidas(getActivity());
 			total = 0;
 			
 			// Precargamos la pantalla bebida si hubiera ya seleccionado bebidas en pedido
-			hayBebidasEnPedido();
+			hayBebidasEnPedido(getActivity());
 		}
 		
 		// Aplicamos el adapater que hemos creado sobre el gridView
@@ -83,23 +85,23 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	}
     
 	// Importamos la base de datos de los restaurantes
-    public static void importarBaseDatos() {
+    public static void importarBaseDatos(Activity activity) {
         try{
-     	   sql = new HandlerDB(vistaTabCategoriaBebida.getContext()); 
+     	   sql = new HandlerDB(activity); 
      	   db = sql.open();
          }catch(SQLiteException e){
-         	Toast.makeText(vistaTabCategoriaBebida.getContext(),"ERROR AL ABRIR LA BD DE PLATOS EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
+         	Toast.makeText(activity,"ERROR AL ABRIR LA BD DE PLATOS EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
          }
 	}
 
-	public static void cargarBebidas(){
+	public static void cargarBebidas(Activity activity){
 		try{
 			// Creamos el arrayList de bebidas
 			bebidas = new ArrayList<PadreGridViewBebidas>();
 			PadreGridViewBebidas bebida;
 			
 			// Importamos la base de datos
-			importarBaseDatos();
+			importarBaseDatos(activity);
 			
     		String[] camposSacar = new String[]{"Id","Nombre","Foto","Precio"};
 	    	String[] datosQueCondicionan = new String[]{restaurante,tipoTab};
@@ -114,7 +116,7 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
     	    // Cerramos la base de datos de los platos
     	 	sql.close();
 	    }catch(SQLiteException e){
-	        Toast.makeText(vistaTabCategoriaBebida.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();	
+	        Toast.makeText(activity,"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();	
 	    }   
     }
 	
@@ -143,15 +145,17 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	    	plato.put("Restaurante", restaurante);
 	    	plato.put("Id", bebida.getIdPlato());
 	    	plato.put("Plato", bebida.getNombre());
-	    	plato.put("Observaciones", "Sin observaciones");
-	    	plato.put("Extras", "Sin guarnición");
+	    	//plato.put("Observaciones", "Sin observaciones");
+	    	//plato.put("Extras", "Sin guarnición");
+	    	plato.put("Observaciones", "");
+	    	plato.put("Extras", "");
 	    	plato.put("PrecioPlato", bebida.getPrecioUnidad());
 	    	plato.put("IdHijo", DescripcionPlato.getIdentificadorUnicoHijoPedido() + "");
 	    	dbPedido.insert("Pedido", null, plato);
 	    	
 	    	// Aumentamos el identificador único de pedido
 	    	DescripcionPlato.sumaIdentificadorUnicoHijoPedido();
-	    	
+	    		    	
 	    	// Cerramos la base de datos de pedido
 			sql.close();
 			
@@ -218,22 +222,21 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	 * Este método se llamará en el momento en que se produzca la sincronización, mientras
 	 * tanto las undiades de bebidas que hemos seleccionado permanecerán intactas.
 	 */
-	public static void reiniciarPantallaBebidas(){
+	public static void reiniciarPantallaBebidas(Activity activity){
 		bebidas = null;
 		total = 0;
 					
 		// Cargamos las bebidas que haya en la base de datos
-		cargarBebidas();
+		cargarBebidas(activity);
 	}
 	
-	public boolean hayBebidasEnPedido(){
-		boolean hayBebidas = false;
+	public static void hayBebidasEnPedido(Activity activity){
 		boolean encontrado;
 		int numBebidas = bebidas.size();
 		int i;
 		try{
 			// Abrimos la base de datos de pedido
-			sqlPedido = new HandlerDB(vistaTabCategoriaBebida.getContext(),"Pedido.db"); 
+			sqlPedido = new HandlerDB(activity,"Pedido.db"); 
 		 	dbPedido = sqlPedido.open();
 		 	
 		 	// Cargamos los id de todos los platos que hay por si hubiera alguna bebida
@@ -242,7 +245,7 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 			Cursor cP = dbPedido.query("Pedido", camposSacarPedido, "Restaurante=?", datosQueCondicionanPedido,null, null,null);
 	
 			// Abrimos la base de datos de los platos
-	    	sql = new HandlerDB(vistaTabCategoriaBebida.getContext()); 
+	    	sql = new HandlerDB(activity); 
 	     	db = sql.open();
 	     	
 			// Miramos para cada plato si es bebida
@@ -276,12 +279,20 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 		    sqlPedido.close();
 		    
 	    }catch(SQLiteException e){
-	         	Toast.makeText(vistaTabCategoriaBebida.getContext(),"ERROR AL INTENTAR CARGAR BEBIDAS DE LA BD CUENTA EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
+	         	Toast.makeText(activity,"ERROR AL INTENTAR CARGAR BEBIDAS DE LA BD CUENTA EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
 	    }
-		return hayBebidas;
 	}
 	
-	public static void eliminarBebidaDesdePedido(String idPlato){
+	public static void eliminarBebidaDesdePedido(String idPlato, Activity activity){
+		if(bebidas == null){
+			// Cargamos las bebidas que haya en la base de datos
+			cargarBebidas(activity);
+			total = 0;
+			
+			// Precargamos la pantalla bebida si hubiera ya seleccionado bebidas en pedido
+			hayBebidasEnPedido(activity);
+		}
+		
 		boolean encontrado = false;
 		int numBebidas = bebidas.size();
 		int i = 0;
@@ -301,4 +312,5 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 		// Actualizamos el total gastado en bebidas
 		restarTotal(i);
 	}
+	
 }

@@ -2,7 +2,10 @@ package adapters;
 
 import java.util.ArrayList;
 
+import usuario.DescripcionPlato;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -77,6 +80,7 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 			public void onClick(View arg0) {
 				ContenidoTabSuperiorCategoriaBebidas.anyadirBebida(pos);
 				ContenidoTabSuperiorCategoriaBebidas.actualizaGridView();
+				setUltimoIdentificadorUnicoHijoPedido(DescripcionPlato.getIdentificadorUnicoHijoPedido());
 			}});
 		
 		// Hacemos oyente a la imagen de añadir bebida
@@ -89,4 +93,13 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 		
 		return convertView;
 	}
+	
+	public void setUltimoIdentificadorUnicoHijoPedido(int identificadorUnicoHijoPedido){
+		//Almacenamos la posicion del restaurante de la lista
+		SharedPreferences preferencia = context.getSharedPreferences("Identificador_Unico", 0);
+		SharedPreferences.Editor editor = preferencia.edit();
+		editor.putInt("identificadorUnicoHijoPedido", identificadorUnicoHijoPedido);
+		editor.commit(); //Para que surja efecto el cambio
+	}
+	
 }

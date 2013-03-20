@@ -96,7 +96,7 @@ public class SincronizarPedido extends Activity implements DialogInterface.OnDis
 		sqlPedido.close();
 		
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
-		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
+		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity)this);
 	}
 	
 	

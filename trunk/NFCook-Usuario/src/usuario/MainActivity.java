@@ -160,7 +160,7 @@ public class MainActivity extends Activity{
 			Cursor cursorPedido = dbPedido.query("Pedido", camposPedido, null, null,null, null,null);
 			if(!cursorPedido.moveToFirst()){
 				String[] camposCuenta = new String[]{"Id"};//Campos que quieres recuperar
-				Cursor cursorCuenta = dbCuenta.query("Pedido", camposCuenta, null, null,null, null,null);
+				Cursor cursorCuenta = dbCuenta.query("Cuenta", camposCuenta, null, null,null, null,null);
 				if(!cursorCuenta.moveToFirst()){
 					return true;
 				}else{
@@ -210,7 +210,14 @@ public class MainActivity extends Activity{
 					dbCuenta.delete("Cuenta", null, null);
 					sqlPedido.close();
 					sqlCuenta.close();
-		        }catch(SQLiteException e){
+	
+					//Almacenamos la posicion del restaurante de la lista
+					SharedPreferences preferencia = getSharedPreferences("Identificador_Unico", 0);
+					SharedPreferences.Editor editor = preferencia.edit();
+					editor.putInt("identificadorUnicoHijoPedido", 0); //Reseteamos el identificador unico de los pedidos
+					editor.commit(); //Para que surja efecto el cambio
+		        
+				}catch(SQLiteException e){
 		         	Toast.makeText(getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
 		        }	
 			}
