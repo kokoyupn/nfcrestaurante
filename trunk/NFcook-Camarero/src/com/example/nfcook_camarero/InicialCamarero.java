@@ -138,7 +138,7 @@ public class InicialCamarero extends Activity{
 				    		//Boton Cobrar--------------------------------------------------------------------
 				    		
 		                	try{
-		                		HandlerGenerico sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
+		                		HandlerGenerico sqlHistorico = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
 		                		SQLiteDatabase dbHistorico= sqlHistorico.open();
 		            			
 		                		String[] numeroDeMesa = new String[]{numeroMesaAEditar};
@@ -149,41 +149,32 @@ public class InicialCamarero extends Activity{
 		                		while(filasPedido.moveToNext()){
 		                			//Añades los platos a la base de datos del historico y borras de la lista de platos
 		                			ContentValues nuevo = new ContentValues();
-		                			int plato=0;
 		                			
 		                			for (int i=0;i<filasPedido.getColumnCount();i++){
 		                				for (int j=0;j<filasHistorico.getColumnCount();j++){
 		                					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
-		                						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));
-		                						
-		                						if(filasPedido.getColumnName(i).equals("IdUnico")){	
-		    	            						
-		    	            						plato = Integer.parseInt(filasPedido.getString(i));
-		    	            						adapter.deleteId(plato);
-		    	            					}
-		    	            					
+		                						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));				
 		    	            				}
 		                				}
 		                			}
 		                			dbHistorico.insert("Historico", null, nuevo);
 		    	            	}
 		                		
-		                		//Carga el adapter sin los platos borrados
-		                		//platos.setAdapter(adapter); 
-		                		
-		                		//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-		                		//precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
-		                		
 		                		//Borra de la base de datos los platos de esta mesa
-		                		dbMesas.delete("Mesas", "NumMesa=numMesa", null);
+		                		String[] args = new String[]{numeroMesaAEditar};
+		                     	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
 		                		
-		                		//Se borra la mesa y se vuelve a la pantalla anterior.
+		                		
 		                		eliminarDeArray(numeroMesaAEditar);
-		                		//finish();
+		                		//refrescamos  
+		                        
+		                     	adapterCam = new InicialCamareroAdapter(InicialCamarero.this, mesas);
+		                     	gridviewCam.setAdapter(adapterCam);
+
 		                			
 		                		
 		                	}catch(Exception e){
-		                		Toast.makeText(getApplicationContext(), "Error funcionalidad de boton cobrar", Toast.LENGTH_SHORT).show();
+		                		Toast.makeText(getApplicationContext(), "Error al cobrar", Toast.LENGTH_SHORT).show();
 		                	}
 				    		//Boton Cobrar--------------------------------------------------------------------
 				    		
