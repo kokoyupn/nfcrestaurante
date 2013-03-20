@@ -36,7 +36,7 @@ public class PedidoFragment extends Fragment{
 	private static ExpandableListView expandableListPedido;
 	private static View vistaConExpandaleList;
 	
-	private String restaurante;
+	private static String restaurante;
 	
 	private float total;
 	
@@ -188,8 +188,12 @@ public class PedidoFragment extends Fragment{
 		return dbPedido;
 	}
 	
-	public void setRestaurante(String restaurante){
-		this.restaurante = restaurante;
+	public static void setRestaurante(String res){
+		restaurante = res;
+	}
+	
+	public static String getRestaurante(){
+		return restaurante;
 	}
 	
 }

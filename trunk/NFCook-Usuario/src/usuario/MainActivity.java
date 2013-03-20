@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -121,14 +120,12 @@ public class MainActivity extends Activity{
 			//Crea el timer para que el mensaje solo aparezca durante 3 segundos
 			final Timer t = new Timer();
 			t.schedule(new TimerTask() {
-	         public void run() {
-	            ventanaEmergente.dismiss(); 
-	             t.cancel(); 
-	         }
-			}, 2000);
-			
-		}
-		else {
+				public void run() {
+					ventanaEmergente.dismiss(); 
+					t.cancel(); 
+				}
+			}, 3500);		
+		}else {
 			String nombreRestaurante;
 			int i = 0;
 			
@@ -147,6 +144,9 @@ public class MainActivity extends Activity{
 	    	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
 	    	startActivity(intent);
 		}
+		/*
+		Intent intent = new Intent(this,Calculadora.class);
+    	startActivity(intent);*/
     }
 	
 	private boolean baseDeDatosPedidoyCuentaVacias() {
@@ -230,8 +230,6 @@ public class MainActivity extends Activity{
 			ventanaEmergente.show();
 		}
 		
-	}
-	
-	
+	}	
 }
 

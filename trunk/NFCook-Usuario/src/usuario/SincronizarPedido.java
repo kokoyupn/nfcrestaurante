@@ -4,6 +4,7 @@ import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import fragments.PedidoFragment;
 
 import android.app.Activity;
@@ -93,7 +94,9 @@ public class SincronizarPedido extends Activity implements DialogInterface.OnDis
          	Toast.makeText(getApplicationContext(),"ERROR AL BORRAR BASE DE DATOS PEDIDO",Toast.LENGTH_SHORT).show();
 		}
 		sqlPedido.close();
-		sqlPedido.close();
+		
+		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
+		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
 	}
 	
 	

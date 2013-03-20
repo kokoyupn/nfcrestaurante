@@ -223,7 +223,14 @@ public class DescripcionPlato extends Activity {
 	public static void expandeGrupoLista(int groupPositionMarcar) {
 		expandableListExtras.expandGroup(groupPositionMarcar);
 	}
+	
+	public static int getIdentificadorUnicoHijoPedido(){
+		return identificadorUnicoHijoPedido;
+	}
     
+	public static void sumaIdentificadorUnicoHijoPedido(){
+		identificadorUnicoHijoPedido++;
+	}
     
 }
  
