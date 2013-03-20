@@ -10,8 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class Detector extends SimpleOnGestureListener {
-    private ListView list;
-    private static int itemId;
+    private static int itemId,pos;
     private HandlerGenerico sqlMesas;
     private SQLiteDatabase dbMesas;
     private static boolean seleccionado;
@@ -23,10 +22,14 @@ public class Detector extends SimpleOnGestureListener {
 	    	System.out.println("Entra");
 	        seleccionado=false;
 	        
-	        if (e2.getX() - e1.getX() > 10){
+	        if (e2.getX() - e1.getX() > 40){
 	        	itemId = Mesa.getPlatos().pointToPosition((int) e1.getX(), (int) e1.getY());
 	        	System.out.println("Entra if y posicion:"+itemId);
-	        	View v = Mesa.getPlatos().getChildAt(itemId);
+	        	
+	        	//Si la lista expandible no cabe en la pantalla
+	        	pos=itemId-Mesa.getPlatos().getFirstVisiblePosition();
+	        	View v= Mesa.getPlatos().getChildAt(pos);
+	        	
 	        	v.setBackgroundColor(Color.GRAY);
 	            Button delete = (Button) v.findViewById(R.id.boton_borrar);
 	            delete.setVisibility(1);
@@ -88,13 +91,15 @@ public class Detector extends SimpleOnGestureListener {
 		return seleccionado;
 	}
 
-	public static int getitemId() {
-		return itemId;
-	}
+	
 
 	public static void setSeleccionado(boolean b) {
 		seleccionado = b;
 		
+	}
+
+	public static int getPos() {
+		return pos;
 	}
 
 

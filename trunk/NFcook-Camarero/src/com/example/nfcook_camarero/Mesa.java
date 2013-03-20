@@ -153,7 +153,8 @@ public class Mesa extends Activity {
 	            	
 		            	try{
 		  					if(Detector.getSeleccionado())
-		  						seleccionado = Mesa.getPlatos().getChildAt(Detector.getitemId());
+		  						//seleccionado = Mesa.getPlatos().getChildAt(Detector.getitemId());
+		  						seleccionado = Mesa.getPlatos().getChildAt(Detector.getPos());
 		  						seleccionado.setBackgroundColor(Color.WHITE);
 		  						Button delete = (Button) seleccionado.findViewById(R.id.boton_borrar);
 		  		        		delete.setVisibility(android.view.View.INVISIBLE);
