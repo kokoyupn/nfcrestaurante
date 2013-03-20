@@ -51,7 +51,7 @@ public class Detector extends SimpleOnGestureListener {
 	    				Mesa.getPlatos().setAdapter(Mesa.getAdapter());
 	    				
 	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-	            		Mesa.getPrecioTotal().setText(Double.toString(Mesa.getAdapter().getPrecio())+" €");
+	            		Mesa.getPrecioTotal().setText(Double.toString( Math.rint( Mesa.getAdapter().getPrecio()*100/100 )) +" €");
 	                }
 	            });
 	            //if (showDeleteButton(e1))
@@ -86,6 +86,15 @@ public class Detector extends SimpleOnGestureListener {
 
 	public static boolean getSeleccionado() {
 		return seleccionado;
+	}
+
+	public static int getitemId() {
+		return itemId;
+	}
+
+	public static void setSeleccionado(boolean b) {
+		seleccionado = b;
+		
 	}
 
 

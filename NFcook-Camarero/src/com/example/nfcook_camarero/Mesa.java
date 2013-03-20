@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.GestureDetector;
@@ -68,8 +69,9 @@ public class Mesa extends Activity {
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
 	
-	private GestureDetector d;
-	private View.OnTouchListener t;
+	private GestureDetector detector;
+	private View.OnTouchListener tocuhListener;
+	private View seleccionado;
 	
 	
 	
@@ -115,7 +117,7 @@ public class Mesa extends Activity {
 	  	    adapter = new MiListAdapterMesa(this, elemLista);
 	  	     
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
-	  	    precioTotal.setText(Double.toString(adapter.getPrecio())+" €");
+	  	    precioTotal.setText(Double.toString( Math.rint(adapter.getPrecio()*100/100) )+" €");
 	  	     
 	  	    platos.setAdapter(adapter);
 	  	    
@@ -123,7 +125,6 @@ public class Mesa extends Activity {
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-	  	    		
 	  	    		AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
 	  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
 	  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
@@ -139,56 +140,37 @@ public class Mesa extends Activity {
 	  				cargarExpandableListExtras(posicion);
 	  				ventanaEmergente.setView(vistaAviso);
 	  				ventanaEmergente.show();
-	  				
-	  				//Para deselccionar alguno que se haya intentado borrar y no se haya borrado
-	  				try{
-	  					if(Detector.getSeleccionado())
-	  						platos.setAdapter(adapter);
-	  				}catch(Exception e){
-	  					System.out.println("No creado el Detector");
-	  				}
-	  	    	}
+	  			}
 	  	    });
 	  	    
 	  	  
-	  	    //PRUEBA--------------------------------------------------------------------------------
-	  	 d = new GestureDetector(new Detector());
-	  	 System.out.println("aaaaa");
-	        t = new View.OnTouchListener() {
+	  	    detector = new GestureDetector(context,new Detector());
+	  	    System.out.println("aaaaa");
+	  	    tocuhListener = new View.OnTouchListener() {
 	            public boolean onTouch(View v, MotionEvent event) {
 	            	switch (event.getAction() ) { 
 	            		case MotionEvent.ACTION_DOWN:
 	            	
 		            	try{
 		  					if(Detector.getSeleccionado())
-		  						platos.setAdapter(adapter);
+		  						seleccionado = Mesa.getPlatos().getChildAt(Detector.getitemId());
+		  						seleccionado.setBackgroundColor(Color.WHITE);
+		  						Button delete = (Button) seleccionado.findViewById(R.id.boton_borrar);
+		  		        		delete.setVisibility(android.view.View.INVISIBLE);
+		  			            Detector.setSeleccionado(false);
 		  				}catch(Exception e){
 		  					System.out.println("No creado el Detector");
 		  				}
 	            	}
-	                return d.onTouchEvent(event);
+	                return detector.onTouchEvent(event);
 	            }
 	        };
 	        // prevent the view to be touched
-	        platos.setOnTouchListener(t);
+	        platos.setOnTouchListener(tocuhListener);
 	        
-	        //PRUEBA--------------------------------------------------------------------
-	  	    
-	  	    platos.setOnItemLongClickListener(new OnItemLongClickListener(){
-	  	    	public boolean onItemLongClick(AdapterView<?> l, View v, int position, long id) {
-	  	    		try{
-	  					if(Detector.getSeleccionado())
-	  						platos.setAdapter(adapter);
-	  				}catch(Exception e){
-	  					System.out.println("No creado el Detector");
-	  				}
-					
-					return true;					
-				}});
-	      
-	  	    
+	        
 	  	   
-	  	}catch(Exception e){
+	    }catch(Exception e){
 			System.out.println("Error lectura base de datos de Pedido");
 		}
 		
@@ -401,7 +383,7 @@ public class Mesa extends Activity {
 	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
 		adapter.addPlato(platoNuevo);
 		platos.setAdapter(adapter);
-		precioTotal.setText(adapter.getPrecio()+" €");
+		precioTotal.setText( Math.rint(adapter.getPrecio()*100/100) +" €");
 	}
 
 	public static void actualizaExpandableList() {
