@@ -73,7 +73,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	public static void setPulsadoTabSuperior(boolean pulsado){
 		pulsadoTabSuperior = pulsado;
 	}
-	Context contexto;
+	
+	public static void setTabInferiorPulsado(String tab){
+		tabInferiorPulsado = tab;
+	}	
 		
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -275,7 +278,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	                		startActivity(intent);
 	        			}else if(tabs.getCurrentTabTag().equals("tabPedidoSincronizar")){
 	        				Fragment fragmentPedido = new PedidoFragment();
-	        				((PedidoFragment) fragmentPedido).setRestaurante(restaurante);
+	        				PedidoFragment.setRestaurante(restaurante);
 	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        		        m.commit();
@@ -377,7 +380,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			pulsadoTabSuperior = false;
 			tabInferiorPulsado = "tabPedidoSincronizar";
 			Fragment fragmentPedido = new PedidoFragment();
-			((PedidoFragment) fragmentPedido).setRestaurante(restaurante);
+			PedidoFragment.setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        m.addToBackStack("Pedido");

@@ -1,24 +1,16 @@
 package fragments;
 
-import usuario.InicializarRestaurante;
-import usuario.SincronizarPedido;
-
 import com.example.nfcook.R;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,9 +19,7 @@ public class PantallaInicialRestaurante extends Fragment{
 	private View vista;
 	private ImageView logo;
 	private String restaurante;
-	
-	public int bottomFrameLayout;
-	
+
 	@SuppressLint("DefaultLocale")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,9 +57,7 @@ public class PantallaInicialRestaurante extends Fragment{
 			
 			public void onClick(View v) {
 				FrameLayout frameLayoutBienvenida = (FrameLayout) vista.findViewById(R.id.FrameLayoutBienvenida);
-				
-				bottomFrameLayout = frameLayoutBienvenida.getBottom();
-				
+
 				ImageView ayuda = (ImageView) vista.findViewById(R.id.imageViewAyuda);
 				ayuda.setVisibility(ImageView.INVISIBLE);
 						
@@ -79,7 +67,6 @@ public class PantallaInicialRestaurante extends Fragment{
 				
 				ImageView imagenInfoAyuda = (ImageView) vista.findViewById(R.id.imageViewInformacionAyuda);
 				imagenInfoAyuda.setVisibility(ImageView.VISIBLE);
-				
 				
 			}
 		});
@@ -91,14 +78,12 @@ public class PantallaInicialRestaurante extends Fragment{
 		informacionAyuda.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-
 				// Cargamos en el fragment la pantalla de bienvenida del restaurante
 				Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
 				((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
 				FragmentTransaction m = getFragmentManager().beginTransaction();
 				m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
-				m.commit();
-				
+				m.commit();	
 			}
 		});
 	}
