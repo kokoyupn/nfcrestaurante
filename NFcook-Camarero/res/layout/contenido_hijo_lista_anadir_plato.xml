@@ -9,8 +9,12 @@
         android:id="@+id/gridViewAnadirPlato"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/azul4"
         android:columnWidth="100dp"
-        android:numColumns="auto_fit" >
+        android:horizontalSpacing="7dp"
+        android:numColumns="auto_fit"
+        android:padding="5dp"
+        android:verticalSpacing="4dp" >
 
     </GridView>
 
