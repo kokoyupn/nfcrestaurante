@@ -48,9 +48,26 @@ public class HijoExpandableListEditar {
 		}
 		if(posicion == marcados.length){
 			return null;
-		}else{
+		} else{
 			return nombresExtras.get(posicion);
 		}
+	}
+	
+	/**
+	 * Devuelve en forma de String los extras marcados con 1 o 0 segun esten marcados o no
+	 * @return
+	 */
+	public String getExtrasBinarios(){
+		String extrasBinarios = "";
+		int posicion = 0;
+		while(posicion < marcados.length){
+			if (marcados[posicion])
+				extrasBinarios += "1"; 
+			else 
+				extrasBinarios += "0";
+			posicion++;
+		}
+		return extrasBinarios;
 	}
 	
 

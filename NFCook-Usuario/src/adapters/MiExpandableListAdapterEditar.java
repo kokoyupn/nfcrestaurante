@@ -230,7 +230,20 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 			}
 		}
 		return extras;
-		
+	}
+	
+	/**
+	 * Devuelve en forma de String los extras marcados con 1 o 0 segun esten marcados o no
+	 * @return
+	 */
+	public String getExtrasBinarios(){
+		Iterator<PadreExpandableListEditar> it = padresExpandableList.iterator();
+		String extrasBinarios = "";
+		while(it.hasNext()){
+			PadreExpandableListEditar unPadre = it.next();
+			extrasBinarios += unPadre.getExtrasBinarios();		
+		}
+		return extrasBinarios;
 	}
 	
 	public void expandeTodosLosPadres(){

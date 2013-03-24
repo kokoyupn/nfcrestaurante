@@ -60,4 +60,18 @@ public class PadreExpandableListEditar {
 		return extras;
 	}
 	
+	/**
+	 * Devuelve en forma de String los extras marcados con 1 o 0 segun esten marcados o no
+	 * @return
+	 */
+	public String getExtrasBinarios(){
+		Iterator<HijoExpandableListEditar> it = hijosExtras.iterator();
+		String extrasBinarios = "";
+		while(it.hasNext()){
+			HijoExpandableListEditar unHijo = it.next();
+			extrasBinarios += unHijo.getExtrasBinarios();
+		}
+		return extrasBinarios;
+	}
+	
 }
