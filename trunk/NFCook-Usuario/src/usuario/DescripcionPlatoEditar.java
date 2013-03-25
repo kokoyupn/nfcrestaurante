@@ -141,7 +141,7 @@ public class DescripcionPlatoEditar extends Activity {
         
         // Cargamos la imagen del plato
         imgeViewPlato.setImageResource(getResources().getIdentifier(nombreImagen,"drawable",this.getPackageName()));	
-      
+       
         // Damos el texto a los textviews
     	textViewNombrePlato.setText(nombrePlato);
     	textViewDescripcion.setText(descripcion);
@@ -150,10 +150,13 @@ public class DescripcionPlatoEditar extends Activity {
 	public void onClickConfirmarEditar(View v){
 		importarBaseDatatosPedido();
 		String nuevosExtrasMarcados = null;
+		String nuevosExtrasBinarios = null;
 		if(adapterExpandableListPedidoEditar != null){ // El plato tiene extras
 			nuevosExtrasMarcados = adapterExpandableListPedidoEditar.getExtrasMarcados();
 		}
     	
+		nuevosExtrasBinarios = adapterExpandableListPedidoEditar.getExtrasBinarios();
+		
     	String observacionesNuevas;
     	if(!actwObservaciones.getText().toString().equals("")){
     		observacionesNuevas = actwObservaciones.getText().toString();
@@ -164,6 +167,7 @@ public class DescripcionPlatoEditar extends Activity {
     	platoEditado.put("Id", idPlato);
     	platoEditado.put("Plato", nombrePlato);
     	platoEditado.put("Extras", nuevosExtrasMarcados);
+    	platoEditado.put("ExtrasBinarios", nuevosExtrasBinarios);    	
     	platoEditado.put("Observaciones", observacionesNuevas);
         String[] camposUpdate = {idPlato,idHijo};
         dbPedido.update("Pedido", platoEditado, "Id =? AND IdHijo=?", camposUpdate);

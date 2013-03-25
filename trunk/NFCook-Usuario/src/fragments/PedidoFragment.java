@@ -107,12 +107,11 @@ public class PedidoFragment extends Fragment{
 
 	private static void importarBaseDatatos() {
 		 try{
-	     	   sqlPedido=new HandlerDB(vistaConExpandaleList.getContext(),"Pedido.db"); 
-	     	   dbPedido = sqlPedido.open();
-	         }catch(SQLiteException e){
-	         	Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show();
-	      		
-	         }
+			 sqlPedido=new HandlerDB(vistaConExpandaleList.getContext(),"Pedido.db"); 
+	     	 dbPedido = sqlPedido.open();
+	     }catch(SQLiteException e){
+	    	 Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show(); 		
+	     }
 	}
 	
 	private boolean baseDeDatosPedidoyCuentaVacias() {
@@ -148,7 +147,9 @@ public class PedidoFragment extends Fragment{
 			        intent.putExtra("Restaurante", restaurante);
 					startActivity(intent);
 			        
-					new Handler().postDelayed(new Runnable(){
+					/**TODO De momento que vaya a pedido para no tener
+					 * 		problemas*/
+					/*new Handler().postDelayed(new Runnable(){
 	                    
 	                    public void run() {
 	    					Fragment fragmentCuenta = new CuentaFragment();
@@ -157,7 +158,9 @@ public class PedidoFragment extends Fragment{
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        		        m.commit();
 	                    }
-	                }, 4400); //tiempo para retrasar la accion
+	                }, 4400); //tiempo para retrasar la accion*/
+				} else {
+					Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
 				}
 			}
 		});

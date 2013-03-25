@@ -185,6 +185,7 @@ public class DescripcionPlato extends Activity {
     	boolean bienEditado = true;
     	String observaciones = null;
     	String nuevosExtrasMarcados = null;
+    	String extrasBinarios = null;
     	if(!actwObservaciones.getText().toString().equals("")){
         	observaciones = actwObservaciones.getText().toString();
     	}
@@ -194,7 +195,11 @@ public class DescripcionPlato extends Activity {
     			bienEditado = false;
     		}
     	}
+    	   	
     	if(bienEditado){
+    		if(adapterExpandableListExtras!=null)
+    			extrasBinarios = adapterExpandableListExtras.getExtrasBinarios();
+    		
     		sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
          	dbPedido=sqlPedido.open();
     		while(cantidad>0){
@@ -204,6 +209,7 @@ public class DescripcionPlato extends Activity {
             	plato.put("Plato", nombrePlato);
             	plato.put("Observaciones", observaciones);
             	plato.put("Extras", nuevosExtrasMarcados);
+            	plato.put("ExtrasBinarios", extrasBinarios);
             	plato.put("PrecioPlato",precioPlato);
             	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
             	identificadorUnicoHijoPedido++;
