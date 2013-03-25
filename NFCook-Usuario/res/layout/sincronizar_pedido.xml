@@ -32,7 +32,6 @@
             android:layout_height="match_parent"
             android:layout_margin="50dp"
             android:layout_weight="0.88"
-            android:onClick="onClickNFCVolver"
             android:src="@drawable/sinc_nfc" />
 
     </LinearLayout>
