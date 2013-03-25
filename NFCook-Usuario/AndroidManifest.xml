@@ -52,15 +52,19 @@
             android:name="usuario.DescripcionPlato"
             android:label="@string/descripcion_plato"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-           >
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="usuario.SincronizarPedido"
-            android:label="@string/sincronizar_pedido"
+            android:name="usuario.SincronizarPedidoNFC"
+            android:label="@string/sincronizar_pedido_NFC"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-           >
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="usuario.SincronizarPedidoBeamNFC"
+            android:label="@string/sincronizar_pedido_Beam_NFC"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
