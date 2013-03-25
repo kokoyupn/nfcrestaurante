@@ -38,4 +38,13 @@
         android:src="@drawable/informacion_ayuda" 
         android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/buttonMapas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:layout_margin="20dp"
+        android:text="Mapas"
+        android:textSize="20sp" />
+
 </FrameLayout>
