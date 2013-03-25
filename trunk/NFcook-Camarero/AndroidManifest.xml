@@ -10,10 +10,12 @@
     <application
         android:icon="@drawable/ic_nfcook"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,37 +24,45 @@
         </activity>
         
         <activity
-            android:name=".InicialCamarero">
+            android:name=".InicialCamarero"
+            android:screenOrientation="portrait">
 
         </activity>
  
          <activity
-            android:name=".InfoPlato">
+            android:name=".InfoPlato"
+            android:screenOrientation="portrait">
 
         </activity>
          
          <activity
-            android:name=".InicialCamareroAdapter">
+            android:name=".InicialCamareroAdapter"
+            android:screenOrientation="portrait">
 
         </activity>
        <activity
-            android:name=".Mesa">
+            android:name=".Mesa"
+            android:screenOrientation="portrait">
 
         </activity>
          <activity
-            android:name=".MesaView">
+            android:name=".MesaView"
+            android:screenOrientation="portrait">
 
         </activity>
          <activity
-            android:name=".AnadirBebidas">
+            android:name=".AnadirBebidas"
+            android:screenOrientation="portrait">
 
         </activity>      
         <activity
-            android:name=".Historico">
+            android:name=".Historico"
+            android:screenOrientation="portrait">
         </activity>  
          <activity
             android:name=".AnadirPlatos"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
         </activity> 
     </application>
 
