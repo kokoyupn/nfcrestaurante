@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:orientation="vertical" >
 
@@ -25,7 +25,6 @@
                 android:text="Pedido"
                 android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
                 android:textSize="30sp" />
-
         </FrameLayout>
 
         <FrameLayout
@@ -38,38 +37,64 @@
                 android:layout_height="wrap_content"
                 android:childDivider="?android:attr/listDivider"
                 android:divider="?android:attr/listDividerAlertDialog" >
-	
-	        </ExpandableListView>
-
+            </ExpandableListView>
         </FrameLayout>
-
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/imageButtonNFCSincronizar"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/FrameLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="5dp"
-        android:drawablePadding="10dp"
-        android:minHeight="46dip"
-        android:minWidth="46dip"
-        android:src="@drawable/nfcicono" />
-    
-    <ImageView
-        android:id="@+id/imageViewMonedas"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="75dp"
-        android:src="@drawable/total" />
+        android:layout_gravity="bottom" >
 
-    <TextView
-        android:id="@+id/textViewTotalPedido"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="10dp"
-        android:textSize="16dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:paddingLeft="20dp" >
+
+            <ImageView
+                android:id="@+id/imageButtonBeamSincronizar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/beam_icono" />
+
+            <ImageView
+                android:id="@+id/imageButtonNFCSincronizar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/nfc_icono" />
+
+            <ImageView
+                android:id="@+id/imageButtonQRSincronizar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/qr_icono" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageViewMonedas"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom|right"
+        	android:layout_marginRight="75dp"
+            android:src="@drawable/total" />
+
+        <TextView
+            android:id="@+id/textViewTotalPedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="10dp"
+            android:textSize="16dp" />
+    </FrameLayout>
 
 </FrameLayout>
