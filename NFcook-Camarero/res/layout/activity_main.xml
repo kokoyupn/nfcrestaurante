@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="210dp"
         android:orientation="vertical"
         android:paddingLeft="10dp"
@@ -92,8 +92,17 @@
                     android:background="@color/blanco"
                     android:onClick="onClickBotonEntrar"
                     android:src="@drawable/boton_entrar" />
+
             </LinearLayout>
         </FrameLayout>
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClickBotonInvisible"
+            android:src="@drawable/boton_invisible" />
+
     </LinearLayout>
 
 </FrameLayout>

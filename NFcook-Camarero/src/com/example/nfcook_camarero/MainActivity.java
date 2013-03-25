@@ -54,7 +54,18 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
-    
+ 
+    /**
+     * Metodo para el boton invisible que usamos para probar la aplicacion mas rapido
+     * @param boton
+     */
+	  public void onClickBotonInvisible(View boton)
+	  {
+		  //Iniciamos la nueva actividad
+	   	  Intent intent = new Intent(this, InicialCamarero.class);
+       	  intent.putExtra("usuario", "admin");
+       	  startActivity(intent); 
+	  }  
  /**
   * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
   * esta en la base de datos de camareros 
