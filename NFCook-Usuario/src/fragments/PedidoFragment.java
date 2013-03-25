@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import usuario.SincronizarPedido;
+import usuario.SincronizarPedidoBeamNFC;
+import usuario.SincronizarPedidoNFC;
+import usuario.SincronizarPedidoNFC.SincronizarPedidoBackgroundAsyncTask;
 import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
@@ -16,13 +18,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import baseDatos.HandlerDB;
@@ -43,13 +49,53 @@ public class PedidoFragment extends Fragment{
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
 	
+		public class SincronizarPedidoNFCBackgroundAsyncTask extends AsyncTask<Void, Void, Void> {
+	  
+			  /**
+			   * Se ejecuta antes de doInBackground.
+			   */
+			  @Override
+			  protected void onPreExecute() { 
+		      }
+			
+			  /**
+			   * Ejecuta en segundo plano
+			   * Lanza la actividad sincronizar pedido
+			   */
+			  @Override
+			  protected Void doInBackground(Void... params) {	
+				  Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+			      intent.putExtra("Restaurante", restaurante);
+			      startActivity(intent);
+				  return null;
+			  }
+			  
+			  /**
+			   * Se ejecuta cuando termina doInBackground,
+			   * Abre cuentaFragment
+			   * FIXME No se actualiza cuenta hasta que pulsas de nuevo a ella pero si que hace la 
+			   * transicion bien.
+			   */
+			  @Override
+			  protected void onPostExecute(Void result) {
+				  Fragment fragmentCuenta = new CuentaFragment();
+	              ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+	              FragmentTransaction m = getFragmentManager().beginTransaction();
+	              m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+	              m.commit();
+			  }
+		
+			}
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
         importarBaseDatatos();
         crearExpandableList();
         actualizarPrecioPedido();
-		ponerOnClickSincronizarPedido();
+        ponerOnClickSincronizarPedidoNFC();
+        ponerOnClickSincronizarPedidoBeam();
+        ponerOnClickSincronizarPedidoQR();
         return vistaConExpandaleList;
 	}
   	
@@ -134,34 +180,51 @@ public class PedidoFragment extends Fragment{
         }
 	}
 	
-	private void ponerOnClickSincronizarPedido() {
-		ImageButton botonNFC = (ImageButton) vistaConExpandaleList.findViewById(R.id.imageButtonNFCSincronizar);
+	private void ponerOnClickSincronizarPedidoNFC() {
+		ImageView botonNFC = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonNFCSincronizar);
 		
 		//OnClick boton borrar de cada hijo.
 		botonNFC.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-			
 				if(!baseDeDatosPedidoyCuentaVacias()){
-					Intent intent = new Intent(getActivity(),SincronizarPedido.class);
-			        intent.putExtra("Restaurante", restaurante);
-					startActivity(intent);
-			        
-					/**TODO De momento que vaya a pedido para no tener
-					 * 		problemas*/
-					/*new Handler().postDelayed(new Runnable(){
-	                    
-	                    public void run() {
-	    					Fragment fragmentCuenta = new CuentaFragment();
-	                    	((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-	        		        m.commit();
-	                    }
-	                }, 4400); //tiempo para retrasar la accion*/
-				} else {
-					Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
-				}
+					new SincronizarPedidoNFCBackgroundAsyncTask().execute();
+				} 
+				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+	}
+	
+	private void ponerOnClickSincronizarPedidoBeam() {
+		ImageView botonBeamNFC = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonBeamSincronizar);
+		
+		//OnClick boton borrar de cada hijo.
+		botonBeamNFC.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				if(!baseDeDatosPedidoyCuentaVacias()){
+					Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
+				    intent.putExtra("Restaurante", restaurante);
+				    startActivity(intent);
+				} 
+				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+	}
+	
+	private void ponerOnClickSincronizarPedidoQR() {
+		ImageView botonQR = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonQRSincronizar);
+		
+		//OnClick boton borrar de cada hijo.
+		botonQR.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				if(!baseDeDatosPedidoyCuentaVacias()){
+					
+				} 
+				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
 			}
 		});
 		
