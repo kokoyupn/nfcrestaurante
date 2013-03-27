@@ -13,6 +13,7 @@ import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
+import fragments.PromocionesFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -345,26 +346,14 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        m.commit();
 		}else if(tabId.equals("tabPromociones")){
-			/*
-			 * TODO Hacer su layout y su funcionalidad
-			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún.
-			 */
-			//Creación y configuración de la ventana emergente
-			ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this).create();
-			View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.aviso_seccion_no_disponible, null);
-			ventanaEmergente.setView(vistaAviso);
-			ventanaEmergente.show();
-			
-			//Crea el timer para que el mensaje solo aparezca durante 3 segundos
-			final Timer t = new Timer();
-			t.schedule(new TimerTask() {
-	         public void run() {
-	            ventanaEmergente.dismiss(); 
-	             t.cancel(); 
-	         }
-			}, 2000);
-			
-			
+			pulsadoTabSuperior = false;
+			tabInferiorPulsado = "tabPromociones";
+			Fragment fragmentPedido = new PromocionesFragment();
+			((PromocionesFragment) fragmentPedido).setRestaurante(restaurante);
+	        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
+	        m.addToBackStack("Promociones");
+	        m.commit();
 			/*
 			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
 			 */
