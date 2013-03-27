@@ -10,16 +10,21 @@ import java.util.Map;
 import java.util.Set;
 
 import usuario.DescripcionPlato;
+import adapters.MiCursorAdapterBuscadorPlatos;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -40,9 +45,10 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 		private ExpandableListView exp;
 		public ListView listaCategoriaUnica;
 		private boolean esListaExpandible;
-		
+				
 		private HandlerDB sql;
 		private SQLiteDatabase db;
+		private AutoCompleteTextView buscador;
 		
 		private String tipoTab, restaurante;
 		
@@ -56,6 +62,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	    	if(!cargado){
 	    		vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_tabs_fragment, container, false);
 	    		vistaConListView = inflater.inflate(R.layout.list_tabs_fragment, container, false);
+	    		
 	    		importarBaseDatatos(vistaConExpandaleList);
 	    		crearExpandableListOlistView(vistaConExpandaleList, vistaConListView);
 	    		cargado = true;
@@ -67,10 +74,13 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	    	 * xml con una lista simple por si el padre solo tiene un hijo (Ejem bebidas...)
 	    	 * Es simplemente una cuestión estética
 	    	 */
-	    	if (!esListaExpandible)
+	    	if (!esListaExpandible){
+	    		cargarBarraDeBusqueda(vistaConListView);
 	    		return vistaConListView;
-	    	else
+	    	}else{
+	    		cargarBarraDeBusqueda(vistaConExpandaleList);
 	    		return vistaConExpandaleList;
+	    	}
 	    }
 	    
 	    public void setTipoTab(String tipoTab){
@@ -89,6 +99,30 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	         	Toast.makeText(v.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
 	         }
 		}
+	    
+	    public void cargarBarraDeBusqueda(View vista){
+			buscador = (AutoCompleteTextView) vista.findViewById(R.id.autoCompleteTextViewBuscadorPlatos);
+		    Cursor c =  db.rawQuery("SELECT Id AS _id, nombre AS item" + 
+		      " FROM Restaurantes" + 
+		      " WHERE Restaurante ='"+ restaurante+"' and nombre LIKE '%" +""+ "%' ", null);
+			
+			buscador.setAdapter(new MiCursorAdapterBuscadorPlatos(getActivity(), c, CursorAdapter.NO_SELECTION, restaurante));
+			buscador.setThreshold(2);
+			
+			buscador.setOnItemClickListener(new OnItemClickListener() {
+		
+				   public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
+					   //Es lo que vamos a mostrar en la barra de busqueda una vez pinchada una sugerencia.
+					   Cursor c = (Cursor) arg0.getAdapter().getItem(position);
+					   buscador.setText("");
+					   Intent intent = new Intent(getActivity(),DescripcionPlato.class);
+					   intent.putExtra("nombreRestaurante", restaurante);
+					   intent.putExtra("nombrePlato", c.getString(1));
+					   startActivity(intent);
+				    }
+				      
+				 });
+	    }
 
 		public void crearExpandableListOlistView(View vistaConExpandaleList, View vistaConListView){
 			try{	    	
