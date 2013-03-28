@@ -14,9 +14,12 @@ import java.util.Iterator;
 import adapters.MiListAdapterMesa;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -41,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 public class InicialCamarero extends Activity{
 	private GridView gridviewCam;
 	private InicialCamareroAdapter adapterCam;
@@ -48,6 +52,7 @@ public class InicialCamarero extends Activity{
     private String idCamarero;
     private String nombre;
     private String numeroMesaAEditar;
+    private String nuneroPersonas;
     private double precio;
     private static int idUnico = 0;
     
@@ -56,7 +61,10 @@ public class InicialCamarero extends Activity{
     private HandlerGenerico sqlMesas, sqlMiBase;
 	private SQLiteDatabase dbMesas, dbMiBase;
 	
-    @Override
+    /*NFC*/
+	Context ctx;
+	Intent intent;
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -117,18 +125,20 @@ public class InicialCamarero extends Activity{
         		startActivity(intent);
                 }
         });
-        
+        //Contexto para iniciar la actividad en el boton de sincronizar
+        ctx=this;
      //establecimiento del oyente de dejar pulsada una mesa   
         gridviewCam.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-				//Guardamos el número de la mesa pulsada
+				//Guardamos el número de la mesa pulsada y el numero de personas
 				numeroMesaAEditar = mesas.get(position).getNumMesa();
+				nuneroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				final CharSequence[] items = {"Cobrar","Sincronizar", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
 
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(InicialCamarero.this);
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
-				    public void onClick(DialogInterface dialog, int item) {
+					public void onClick(DialogInterface dialog, int item) {
 				    	//------------------- Cobrar Mesa ------------------------------------
 				    	if (item == 0){
 				    		//Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
@@ -184,7 +194,15 @@ public class InicialCamarero extends Activity{
 				    		
 				    	//------------------ Sincronizar -----------------------------------
 				    	}else if (item == 1){
-				    		Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
+				    		//NFC
+				    		//Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
+				    		//Iniciamos la nueva actividad
+				    		
+				    		intent = new Intent(ctx,LecturaNfc.class);
+				    		intent.putExtra("NumMesa", numeroMesaAEditar);
+			        		intent.putExtra("IdCamarero",idCamarero);
+			        		intent.putExtra("Personas", nuneroPersonas);
+			        		startActivity(intent); 
 				    	//----------------- onClickListener de editar número de mesa --------------------------------
 				    	}else if(item == 2){
 				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);

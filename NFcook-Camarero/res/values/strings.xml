@@ -18,7 +18,11 @@
     <string name="tituloCantidad">Cantidad:</string>
     <string name="descripcion_plato">Descripcion plato:</string>
     <string name="ventana_mesa">Pedido Mesa</string>
-       
+    <string name="error_detected">Tag no detectada!</string>
+    <string name="ok_writing">Se ha leido el mensaje de la tarjeta</string>
+    <string name="error_reading">Error durante lectura. Seguro que la tarjeta está cerca?</string>
+    <string name="ok_detection">Tag detectada </string>
+    
     <string-array name="cantidades">
         <item>1</item>
         <item>2</item>
