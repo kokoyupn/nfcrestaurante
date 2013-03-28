@@ -7,50 +7,36 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.Iterator;
-
-import adapters.ContenidoListMesa;
-import adapters.MiListAdapterMesa;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.nfc.FormatException;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class LecturaNfc extends Activity{
+public class LecturaNfc extends Activity implements DialogInterface.OnDismissListener{
 
 	//Variables usadas para el nfc
 	NfcAdapter adapter;
@@ -59,6 +45,9 @@ public class LecturaNfc extends Activity{
 	Tag mytag;
 	Context ctx;
 	String[][] mTechLists;
+	boolean leidoBienEnTag;
+	boolean esMFC;
+	ProgressDialog	progressDialogSinc;
 	
 	//Variables usadas para añadir la lista de platos a la base de datos mesas
 	HandlerGenerico sqlMesas,sqlrestaurante;
@@ -67,8 +56,63 @@ public class LecturaNfc extends Activity{
 	String numPersonas; 
 	SQLiteDatabase dbMesas,dbMiBase;
 	ArrayList<Byte> mensaje;
-	/**Creamos la actividad, al pulsar el boton de lectura se comprueba si el dispositivo ha detectado la tag si es asi comienza la lectura
-	 * una vez que leemos de la tarjeta lo que hacemos es añadirlo a la base de datos Mesas. 
+	
+	
+	/**
+	 * Clase interna necesaria para ejecutar en segundo plano tareas (decodificacion de pedido, lectura NFC y 
+	 * añadir a la base de datos Mesas) mientras se muestra un progress dialog. 
+	 * Cuando finalicen las tareas, éste se cerrará y esto provocará la ejecución del método onDismiss que 
+	 * cerrará  esta ventana.
+	 */
+	 public class SincronizarPedidoBackgroundAsyncTask extends AsyncTask<Void, Void, Void> {
+  
+	  /**
+	   * Se ejecuta antes de doInBackground.
+	    */
+	  @Override
+	  protected void onPreExecute() {
+		 progressDialogSinc.show(); //Mostramos el diálogo antes de comenzar
+       }
+	
+	  /**
+	   * Ejecuta en segundo plano.
+	   * Si la tag es Mifare Cassic lee y decodifica el pedido, y añade los platos a su mesa correspondiente.
+	   */
+	  @Override
+	  protected Void doInBackground(Void... params) {	  		  
+		  SystemClock.sleep(2000);
+		  // si es Mifare Classic
+		  if (esMFC) {
+				try {   
+					read(mytag);//Se ha detectado la tag procedemos a leerla
+					//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
+					decodificar(mensaje);
+								
+					}
+				 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
+					Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
+					e.printStackTrace();
+				} catch (FormatException e) {
+					Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
+					e.printStackTrace();
+				}
+			 }
+		
+		  return null;
+	  }
+
+	  /**
+	   * Se ejecuta cuando termina doInBackground.
+	     */
+	  @Override
+	  protected void onPostExecute(Void result) {
+		   progressDialogSinc.dismiss();
+	  }
+
+	}
+	 
+	/**Creamos la actividad, en esta lo que vamos a hacer es detectar una tarjeta Nfc en el momento en que se detecte leeremos su contenido y mostraremos un progress Dialog 
+	 * hasta que se finalize la lectura, mas tarde se decodificaran estos platos y se añadiran a la base de datos mesas.
 	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,9 +133,44 @@ public class LecturaNfc extends Activity{
 		mTechLists = new String[][] { new String[] { MifareClassic.class.getName() } };
 		writeTagFilters = new IntentFilter[] { tagDetected }; 
 				
-		
+		// creamos el progresDialog que se mostrara
+  		crearProgressDialogSinc(); 
+	}
+	
+	/**
+	 * Crea un progressDialog con el formato que se quiera.
+	 */
+	private void crearProgressDialogSinc() {
+		progressDialogSinc = new ProgressDialog(this);
+  		progressDialogSinc.setIndeterminate(true);
+  		progressDialogSinc.setMessage("Espere unos segundos...");
+  		progressDialogSinc.setTitle("Sincronizando pedido");
+  		progressDialogSinc.setCancelable(false);
+  	    // listener para que ejecute el codigo de onDismiss cuando el dialog se cierre
+  		progressDialogSinc.setOnDismissListener(this);
+	}
+	
+	
+	/**
+	 * Cierra la actividad y muestra un mensaje en funcion de que haya sucedido. Se ejecuta cuando se cierra el progressDialog.
+	 * 
+	 */
+	public void onDismiss(DialogInterface dialog) {
+		if (!esMFC) {
+			Toast.makeText(this, "Pedido no sincronizado. La tag no es Mifare Classic.", Toast.LENGTH_LONG ).show();		
+		}
+		else {
+			if (leidoBienEnTag) {
+			 Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
+			}
+			else {
+				Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
+			}
+		}
+		finish();	
 	}
 
+	
 	//@SuppressLint("NewApi")
 	/**
 	 * Metodo que se encarga de leer bloques de la tarjeta nfc
@@ -147,9 +226,7 @@ public class LecturaNfc extends Activity{
 				
 			
 		}
-		final TextView message = (TextView)findViewById(R.id.textView1);
-		message.setText(texto);//Mostramos pantalla el mensaje
-				 
+		leidoBienEnTag = true; 				 
 		// Cerramos la conexion
 		mfc.close();
 		
@@ -175,22 +252,18 @@ public class LecturaNfc extends Activity{
 		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
 			Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
-			try {   
-				read(mytag);//Se ha detectado la tag procedemos a leerla
-				//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
-				decodificar(mensaje);
-				Toast.makeText(ctx, ctx.getString(R.string.ok_writing), Toast.LENGTH_LONG ).show();
-					
+			// compruebo que la tarjeta sea mifare classic
+			String[] tecnologiasTag = mytag.getTechList();
+			esMFC = false;
+			for (int i = 0; i < tecnologiasTag.length; i++)
+				esMFC |= tecnologiasTag[i].equals("android.nfc.tech.MifareClassic");
+		   }
+			if(mytag == null){
+					Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
+			}else {
+					// ejecuta el progressDialog, codifica, escribe en tag e intercambia datos de pedido a cuenta en segundo plano
+					new SincronizarPedidoBackgroundAsyncTask().execute();
 				}
-			 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
-				Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
-				e.printStackTrace();
-			} catch (FormatException e) {
-				Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
-				e.printStackTrace();
-			}
-		}
-	
 	}
 
 	public void onPause(){
@@ -204,6 +277,9 @@ public class LecturaNfc extends Activity{
 		super.onResume();
 		adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters,null);
 		
+		if (!adapter.isEnabled())
+	        Toast.makeText(getApplicationContext(), "Por favor activa NFC", Toast.LENGTH_LONG).show();
+	
 	}
 	
 	
@@ -231,8 +307,7 @@ public class LecturaNfc extends Activity{
 				
 				for (int i = 0; i < numExtras; i++ )
 					extras += decToBin(itPlatos.next());
-				
-				
+							
 				// comentario
 				int numComentario =  decodificaByte(itPlatos.next());
 				String comentario = "";
@@ -345,13 +420,14 @@ public class LecturaNfc extends Activity{
                 while (auxExtras.hasMoreElements())
             	  { elemento= (String) auxExtras.nextElement();
             	    if (extras.charAt(numExtras)=='1')
-            		   extrasFinal +=elemento+",";
+            		   extrasFinal +=elemento+", ";
             	    numExtras++;    	  
             	  }
                 //Le quito la ultima coma al extra final para que quede estetico
-                extrasFinal=extrasFinal.substring(0,extrasFinal.length()-1);
+                if (extrasFinal!= "")
+                	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-1);
     		}catch(SQLiteException e){
-    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MiBase(Restaurante)",Toast.LENGTH_SHORT).show();
+    		 	System.out.println("Error lectura base de datos de MIBASE");
     		}
     		
           
@@ -378,7 +454,7 @@ public class LecturaNfc extends Activity{
 	        	System.out.println("Añadido");
         	
       		}catch(Exception e){
-    			System.out.println("Error lectura base de datos de Mesas");
+    			//System.out.println("Error lectura base de datos de Mesas");
     		}
    
 	}
@@ -392,7 +468,7 @@ public class LecturaNfc extends Activity{
         return true;
     }
     
-    @SuppressLint("InlinedApi")
+   
 	public boolean onOptionsItemSelected(MenuItem item) {
          Intent intent;
             switch (item.getItemId()) {
@@ -410,6 +486,12 @@ public class LecturaNfc extends Activity{
                 return super.onOptionsItemSelected(item);
         }
         }
+
+
+
+	
+
+	
     
   
 }
