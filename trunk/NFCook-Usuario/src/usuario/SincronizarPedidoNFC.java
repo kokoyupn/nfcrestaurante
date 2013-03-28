@@ -1,32 +1,28 @@
 package usuario;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
-
 import baseDatos.HandlerDB;
-
 import com.example.nfcook.R;
-
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
-import fragments.PedidoFragment;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.nfc.FormatException;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -37,38 +33,57 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	private String restaurante;
 	private HandlerDB sqlCuenta, sqlPedido;
 	private SQLiteDatabase dbCuenta, dbPedido;
+	private NfcAdapter adapter;
+	private PendingIntent pendingIntent;
+	private IntentFilter writeTagFilters[];
+	private Tag mytag;
+	private ArrayList<Byte> pedidoCodificadoEnBytes;
+	private boolean escritoBienEnTag;
+	private boolean esMFC;
 	
 		/**
-		 * Clase interna creada para ejecutar en segundo plano las tareas de apertura de bases de datos,
-		 * codificacion de pedido, escritura NFC, transferir de pedido a cuenta y cierre bases de datos
+		 * Clase interna necesaria para ejecutar en segundo plano tareas (codificacion de pedido, escritura NFC y 
+		 * transferencia de pedido a cuenta) mientras se muestra un progress dialog. 
+		 * Cuando finalicen las tareas, éste se cerrará y esto provocará la ejecución del método onDismiss que 
+		 * preparará los datos a enviar al Fragment que lanzó la actividad SincronizarPedidoNFC y cerrará a ésta.
 		 */
 		 public class SincronizarPedidoBackgroundAsyncTask extends AsyncTask<Void, Void, Void> {
 	  
 		  /**
 		   * Se ejecuta antes de doInBackground.
-		   * Abre las bases de datos y muestra el progresDialog ya creado	
+		   * Abre las bases de datos y muestra el progresDialog ya creado.	
 		   */
 		  @Override
 		  protected void onPreExecute() {
-			  abrirBasesDeDato();
+			  abrirBasesDeDatos();
 			  progressDialogSinc.show(); //Mostramos el diálogo antes de comenzar
 	       }
 		
 		  /**
-		   * Ejecuta en segundo plano
-		   * Codifica el pedido, envia a NFC y transfiere los platos de pedido a cuenta
+		   * Ejecuta en segundo plano.
+		   * Si la tag es Mifare Cassic codifica el pedido, envia a NFC y transfiere los platos de pedido a cuenta.
 		   */
 		  @Override
 		  protected Void doInBackground(Void... params) {	  		  
 			  SystemClock.sleep(2000);
-			  codificarPedido();
-			  enviarPedidoACuenta();
+			  // si es Mifare Classic
+			  if (esMFC) {
+				  codificarPedido();
+				  try {
+					escribirEnTagNFC();
+				  } catch (IOException e) {
+					e.printStackTrace();
+				  } catch (FormatException e) {
+					e.printStackTrace();
+				  }
+				  if (escritoBienEnTag) enviarPedidoACuenta();
+			  }
 			  return null;
 		  }
-		  
+
 		  /**
-		   * Se ejecuta cuando termina doInBackground,
-		   * Cierra las bases de datos y tambien el progressDialog
+		   * Se ejecuta cuando termina doInBackground.
+		   * Cierra las bases de datos y tambien el progressDialog.
 		   */
 		  @Override
 		  protected void onPostExecute(Void result) {
@@ -90,26 +105,45 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
         //El numero de la mesa se obtiene de la pantalla anterior
   		Bundle bundle = getIntent().getExtras();
   		restaurante = bundle.getString("Restaurante");
-  			
-  		// creamos el progresDialog que se mostrara
-  		crearProgressDialogSinc();
   		
-  		// ejecuta el progressDialog, codifica e intercambia datos de pedido a cuenta en segundo plano
-  		new SincronizarPedidoBackgroundAsyncTask().execute();
-  		          
+  		// preparamos para NFC
+  		adapter = NfcAdapter.getDefaultAdapter(this);
+		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+		IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
+		writeTagFilters = new IntentFilter[] { tagDetected }; 
+  		
+  		// creamos el progresDialog que se mostrara
+  		crearProgressDialogSinc();          
 	}
-	
+
 	/**
-	 * Cierra la actividad y muestra un mensaje.
-	 * Se ejecuta cuando se cierra el progressDialog
+	 * Cierra la actividad y muestra un mensaje. Se ejecuta cuando se cierra el progressDialog.
+	 * Con el primer parametro de setResult te enviamos al Fragment del que fue lanzado informacion 
+	 * para saber como actuar dependiendo de si ha escrito bien o ha habido algun problema.
+	 * El segundo parametro null es un Intent y lo podemos usar si queremos enviarle otra cosa como 
+	 * por ejemplo un string o un dato que necesite.
 	 */
 	public void onDismiss(DialogInterface dialog) {
-		Toast.makeText(this, "Pedido sincronizado correctamente. Puedes verlo en cuenta.", Toast.LENGTH_LONG ).show();		
-        finish();	
+		if (!esMFC) {
+			setResult(RESULT_CANCELED, null);
+			Toast.makeText(this, "Pedido no sincronizado. La tag no es Mifare Classic.", Toast.LENGTH_LONG ).show();		
+		}
+		else {
+			if (escritoBienEnTag) {
+				setResult(RESULT_OK, null);
+				Toast.makeText(this, "Pedido sincronizado correctamente. Puedes verlo en cuenta.", Toast.LENGTH_LONG ).show();		
+			}
+			else {
+				setResult(RESULT_CANCELED, null);
+				Toast.makeText(this, "Pedido no sincronizado. No cabe en la tarjeta. Llama a camaero o usa otro metodo de transmision.", Toast.LENGTH_LONG ).show();		 
+			}
+		}
+		finish();	
 	}
 	
 	/**
-	 * Crea un progressDialog con el formato que se quiera
+	 * Crea un progressDialog con el formato que se quiera.
 	 */
 	private void crearProgressDialogSinc() {
 		progressDialogSinc = new ProgressDialog(this);
@@ -117,19 +151,19 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
   		progressDialogSinc.setMessage("Espere unos segundos...");
   		progressDialogSinc.setTitle("Sincronizando pedido");
   		progressDialogSinc.setCancelable(false);
-  	    // listener para que ejecute el codigo de onDismiss
+  	    // listener para que ejecute el codigo de onDismiss cuando el dialog se cierre
   		progressDialogSinc.setOnDismissListener(this);
 	}
 	
 
 /************************************ BASES DE DATOS  ****************************************/		
 	
-	/*FIXME puede que reviente si entra en el catch y hace el Toast pro estar dentro de async.
+	/*FIXME puede que reviente si entra en el catch y hace el Toast poo estar dentro de asynctask.
 	 * Poner Log.i() */
 	/**
 	 * Abre las bases de datos Cuenta y Pedido.
 	 */
-	private void abrirBasesDeDato() {
+	private void abrirBasesDeDatos() {
 		sqlCuenta = null;
 		sqlPedido = null;
 		dbCuenta = null;
@@ -201,59 +235,62 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	 * Codifica el pedido para ser transferido por NFC
 	 */
 	private void codificarPedido(){
-		String pedidoStr = damePedidoStr();
-		ArrayList<Byte> al = codificarPlatos(pedidoStr);
-		System.out.println(al);
+		pedidoCodificadoEnBytes = codificarPlatos(damePedidoStr());
 	}
 
-	/** Obtiene de la base de datos el pedido a sincronizar con la siguiente forma:
+	/** 
+	 * Prepara el pedido en un string para que sea facil su tratamiento a la hora de escribir en la tag.
+	 * Obtiene de la base de datos el pedido a sincronizar con la siguiente forma:
 	 * "id_plato@id_plato+extras@5*Obs@id_plato+extras*Obs@";	
-	 * "1@2@3@4+10010@5*Con tomate@1+01001*Con azucar@2+10010*Sin macarrones@";		
+	 * "1@2@3@4+10010@5*Con tomate@1+01001*Con azucar@2+10010*Sin macarrones@";	
+	 * 
 	 * @return
 	 */
 	private String damePedidoStr() {
-		String pedidoStr = "";
+		String listaPlatosStr = "";
 		String[] campos = new String[]{"Id","ExtrasBinarios","Observaciones","Restaurante"};//Campos que quieres recuperar
 		String[] datosRestaurante = new String[]{restaurante};	
 		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
     	
     	while(cursorPedido.moveToNext()){
     		
+    		// le quito fh o v para introducir solo el id numerico en la tag
     		String idplato = ""; 
     		if (restaurante.equals("Foster")) idplato = cursorPedido.getString(0).substring(2);
     		else if (restaurante.equals("Vips")) idplato = cursorPedido.getString(0).substring(1);
     		 
+        	// compruebo si hay extras y envio +Extras si hay y si no ""
     		String extrasBinarios = cursorPedido.getString(1);
-    		String observaciones = cursorPedido.getString(2);
-        	
     		if (extrasBinarios == null) extrasBinarios = "";
     		else extrasBinarios = "+" + extrasBinarios;
     		
+    		// compruebo si hay observaciones y envio *Observaciones si hay y si no ""
+    		String observaciones = cursorPedido.getString(2);
     		if (observaciones == null) observaciones = "";
     		else observaciones = "*" + observaciones;
     		
-        	pedidoStr += idplato + extrasBinarios + observaciones +"@";     	
+    		listaPlatosStr += idplato + extrasBinarios + observaciones +"@";     	
     	}
-    	Log.i("PEDIDO: ", pedidoStr);
     	
-    	/*FIXME revienta por dentro si haces un Toast en un thread, en un async, etc.*/
-    	//Toast.makeText(getApplicationContext(),"PEDIDO: " + pedidoStr,Toast.LENGTH_LONG).show();
+    	// para indicar que ha finalizado el pedido escribo un 255 
+    	listaPlatosStr += "255";
     	
-    	return pedidoStr;
+    	return listaPlatosStr;
 	}
 	
 	/**
 	 * Codifica el pedido (listaDePlatos) y lo devuelve con un formato de ArrayList<Byte>.
 	 * Para ello va separando mediante StringTokenizer los platos, obteniendo su id, 
 	 * extras y observaciones.
-	 * @param listaPlatos
+	 * @param listaPlatosStr
 	 * @return
 	 */
-	private ArrayList<Byte> codificarPlatos(String listaPlatos) {
-		ArrayList <Byte> codificado = new ArrayList <Byte>();
+	private ArrayList<Byte> codificarPlatos(String listaPlatosStr) {
+		// variable donde ira el pedido con la codificacion final
+		ArrayList <Byte> pedidoCodificado = new ArrayList <Byte>();
 		
 		// separamos por platos
-		StringTokenizer stPlatos = new StringTokenizer(listaPlatos,"@");
+		StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr,"@");
 		
 		while(stPlatos.hasMoreElements()){
 			
@@ -262,28 +299,28 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 					
 			// id
 			String id =  stTodoSeparado.nextToken();
-			codificado.addAll(codificaIdPlato(id));
+			pedidoCodificado.addAll(codificaIdPlato(id));
 					
 			// extras
 			if (plato.contains("+"))  {
 				String extras =  stTodoSeparado.nextToken();
 				ArrayList <Byte> alExtras = codificaExtras(extras);
 				// tamaño de los extras que habra que leer
-				codificado.add((byte) alExtras.size());
-				codificado.addAll(alExtras);	
-			} else codificado.add((byte) 0);
+				pedidoCodificado.add((byte) alExtras.size());
+				pedidoCodificado.addAll(alExtras);	
+			} else pedidoCodificado.add((byte) 0);
 					
 			// comentarios
 			if (plato.contains("*"))  {
 				String comentario =  stTodoSeparado.nextToken();
 				ArrayList <Byte> alComentario = codificaComentario(comentario);
 				// tamaño de comentarios que habra que leer
-				codificado.add((byte) alComentario.size());
-				codificado.addAll(alComentario);
-			} else codificado.add((byte) 0);
+				pedidoCodificado.add((byte) alComentario.size());
+				pedidoCodificado.addAll(alComentario);
+			} else pedidoCodificado.add((byte) 0);
 					
 		}
-		return codificado;	
+		return pedidoCodificado;	
 	}
 	
 	/**
@@ -315,9 +352,9 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	/**
 	 * Codifica el parametro de entrada extras y lo devuelve en formato de un arrayList<Byte>. 
 	 * Primero miramos el numero de extras que vienen y hacemos mod 8 ya que en un byte meteremos
-	 * 8 extras distintos por lo cual si si tenemos 22 extras nos sobren 2 huecos para llegar a 24
-	 * entonces meteremos 0's para rellenarlo.
-	 * Luego vamos generando 1 byte cada 8 extras.
+	 * 8 extras distintos por lo cual si tenemos 22 extras usaremos 4 bytes. El ultimo byte quedaria incompleto 
+	 * porque quedaban 6 extras y nos falan 2 mas. Entonces meteremos 0's para rellenar el byte incompleto.
+	 * Una vez completado, vamos generando 1 byte cada 8 extras.
 	 * @param extras
 	 * @return
 	 */
@@ -327,9 +364,8 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 		int relleno = 0;
 		int  numMod8 = extras.length() % 8;
 		if (numMod8 != 0){
-			// significa que quedan hueco por rellenar
+			// significa que quedan huecos y rellenamos con 0's para completar el byte
 			relleno = 8-numMod8;
-			// rellenaremos con 0's los extras que nos falten por rellenar
 			for (int p = 0; p<relleno; p++)
 				extras = extras + "0";
 		}
@@ -370,6 +406,138 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 
 /************************************ ESCRITURA NFC  ****************************************/	
 	
+	/**
+	 * Metodo encargado de escribir en el tag. Escribira en el tag el texto introducido por 
+	 * el usuario. Los bloques que queden sin escribir seran reescritos con 0's eliminando
+	 * el texto que hubiese anteriormente
+	 * @param text
+	 * @param tag
+	 * @throws IOException
+	 * @throws FormatException
+	 */
+	private void escribirEnTagNFC() throws IOException, FormatException {	
+		
+		// Obtenemos instancia de MifareClassic para el tag.
+		MifareClassic mfc = MifareClassic.get(mytag);
+										
+		// Habilitamos operaciones de I/O
+		mfc.connect();
+
+		boolean sectorValido = false;				
+		// para avanzar los bloques (en el 0 no se puede escribir)
+		int numBloque = 0;
+		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
+		int recorrerString = 0;	
+		// para saber si se ha escrito o no
+		escritoBienEnTag = false;
+		
+		// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
+		// se escribe mandando bloques de 16 bytes
+		int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
+		if (numMod16 != 0){
+			int huecos = 16-numMod16;
+			for (int i = 0; i < huecos; i++)
+				pedidoCodificadoEnBytes.add((byte) 0);
+		}
+		
+		if (cabePedidoEnTag(pedidoCodificadoEnBytes,mfc)){
+			// recorro todos los bloques escribiendo el pedido. Cuando acabe escribo 0's en los que sobren
+			while (numBloque < mfc.getBlockCount()) {			
+				// comprobamos si el bloque puede ser escrito o es un bloque prohibido
+				if (sePuedeEscribirEnBloque(numBloque)) {
+					// cada sector tiene 4 bloques
+					int numSector = numBloque / 4;
+					// autentifico con la key A para escritura
+					sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
+					if (sectorValido) {
+						// si es menor significa que queda por escribir cosas
+						if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
+							// recorremos con un for para obtener bloques de 16 bytes
+							byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
+							for (int i=0; i<MifareClassic.BLOCK_SIZE; i++)
+								datosAlBloque[i] = pedidoCodificadoEnBytes.get(i+recorrerString);
+							// avanzo para el siguiente bloque
+							recorrerString += MifareClassic.BLOCK_SIZE;
+							// escribimos en el bloque
+							mfc.writeBlock(numBloque, datosAlBloque);
+						} else {
+							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
+							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
+							mfc.writeBlock(numBloque, ceros);
+						}
+					}
+				} 
+				numBloque++;	      
+			}
+			
+			escritoBienEnTag = true;
+		} 
+		
+		// Cerramos la conexion
+		mfc.close();
+	}
+
+	/**
+	 * Devuelve un booleano informando de si el pedido cabe o no cabe en la tarjeta
+	 * @param pedidoCodificadoEnBytes
+	 * @param mfc
+	 * @return
+	 */
+	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, MifareClassic mfc) {
+		int bytesTag = mfc.getBlockCount() * 16;
+		int bytesProhibidosTag = (mfc.getSectorCount() + 1) * 16;
+		int bytesLibresTag = bytesTag - bytesProhibidosTag;
+		
+		return (pedidoCodificadoEnBytes.size() < bytesLibresTag);
+	}
+
+	/** 
+	 * Comprueba si se puede escribir o no en los bloques de las tag
+	 * @param numBloque
+	 * @return
+	 */
+	private boolean sePuedeEscribirEnBloque(int numBloque) {
+		return (numBloque+1) % 4 != 0 && numBloque != 0 ; 
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent){
+		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
+			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
+			Toast.makeText(this, this.getString(R.string.tag_detectada), Toast.LENGTH_SHORT).show();
+			
+			// compruebo que la tarjeta sea mifare classic
+			String[] tecnologiasTag = mytag.getTechList();
+			esMFC = false;
+			for (int i = 0; i < tecnologiasTag.length; i++)
+				esMFC |= tecnologiasTag[i].equals("android.nfc.tech.MifareClassic"); 
+			
+		}
+		if(mytag == null){
+			Toast.makeText(this, this.getString(R.string.tag_no_detectada), Toast.LENGTH_LONG ).show();
+		}else {
+			// ejecuta el progressDialog, codifica, escribe en tag e intercambia datos de pedido a cuenta en segundo plano
+			new SincronizarPedidoBackgroundAsyncTask().execute();
+		}
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		adapter.disableForegroundDispatch(this);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters,null);
+		
+		if (!adapter.isEnabled()){
+	        Toast.makeText(getApplicationContext(), "Por favor activa NFC y pulsa en el boton back para regresar a NFCook", Toast.LENGTH_LONG).show();
+	        startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+	    }
+		
+	}	
 	
 	
 	
@@ -424,5 +592,52 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 		this.dbPedido = dbPedido;
 	}
 
+	public NfcAdapter getAdapter() {
+		return adapter;
+	}
+
+	public void setAdapter(NfcAdapter adapter) {
+		this.adapter = adapter;
+	}
+
+	public PendingIntent getPendingIntent() {
+		return pendingIntent;
+	}
+
+	public void setPendingIntent(PendingIntent pendingIntent) {
+		this.pendingIntent = pendingIntent;
+	}
+
+	public IntentFilter[] getWriteTagFilters() {
+		return writeTagFilters;
+	}
+
+	public void setWriteTagFilters(IntentFilter[] writeTagFilters) {
+		this.writeTagFilters = writeTagFilters;
+	}
+
+	public Tag getMytag() {
+		return mytag;
+	}
+
+	public void setMytag(Tag mytag) {
+		this.mytag = mytag;
+	}
+
+	public ArrayList<Byte> getPedidoCodificadoEnBytes() {
+		return pedidoCodificadoEnBytes;
+	}
+
+	public void setPedidoCodificadoEnBytes(ArrayList<Byte> pedidoCodificadoEnBytes) {
+		this.pedidoCodificadoEnBytes = pedidoCodificadoEnBytes;
+	}
+
+	public boolean isEscritoBienEnTag() {
+		return escritoBienEnTag;
+	}
+
+	public void setEscritoBienEnTag(boolean escritoBienEnTag) {
+		this.escritoBienEnTag = escritoBienEnTag;
+	}
 }
  

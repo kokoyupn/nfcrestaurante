@@ -8,26 +8,21 @@ import java.util.Set;
 
 import usuario.SincronizarPedidoBeamNFC;
 import usuario.SincronizarPedidoNFC;
-import usuario.SincronizarPedidoNFC.SincronizarPedidoBackgroundAsyncTask;
 import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,44 +43,6 @@ public class PedidoFragment extends Fragment{
 	
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
-	
-		public class SincronizarPedidoNFCBackgroundAsyncTask extends AsyncTask<Void, Void, Void> {
-	  
-			  /**
-			   * Se ejecuta antes de doInBackground.
-			   */
-			  @Override
-			  protected void onPreExecute() { 
-		      }
-			
-			  /**
-			   * Ejecuta en segundo plano
-			   * Lanza la actividad sincronizar pedido
-			   */
-			  @Override
-			  protected Void doInBackground(Void... params) {	
-				  Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
-			      intent.putExtra("Restaurante", restaurante);
-			      startActivity(intent);
-				  return null;
-			  }
-			  
-			  /**
-			   * Se ejecuta cuando termina doInBackground,
-			   * Abre cuentaFragment
-			   * FIXME No se actualiza cuenta hasta que pulsas de nuevo a ella pero si que hace la 
-			   * transicion bien.
-			   */
-			  @Override
-			  protected void onPostExecute(Void result) {
-				  Fragment fragmentCuenta = new CuentaFragment();
-	              ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-	              FragmentTransaction m = getFragmentManager().beginTransaction();
-	              m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-	              m.commit();
-			  }
-		
-			}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -188,13 +145,32 @@ public class PedidoFragment extends Fragment{
 			
 			public void onClick(View v) {
 				if(!baseDeDatosPedidoyCuentaVacias()){
-					new SincronizarPedidoNFCBackgroundAsyncTask().execute();
+					//new SincronizarPedidoNFCBackgroundAsyncTask().execute();
+					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+				    intent.putExtra("Restaurante", restaurante);
+				    startActivityForResult(intent, 0);
 				} 
 				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
 			}
 		});
-		
 	}
+	
+	/**
+	 * Entra cuando regresa de una actividad lanzada con startActivityForResult, es decir, 
+	 * con NFC y QR (Beam no).
+	 */
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// compruebo si se escribio en la tag (resul_ok) para ir a Cuenta. Si no se queda en Pedido
+		if (Activity.RESULT_OK == resultCode){
+			Fragment fragmentCuenta = new CuentaFragment();
+	        ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+	        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+	        m.commit();	
+		} 	
+	}
+	
 	
 	private void ponerOnClickSincronizarPedidoBeam() {
 		ImageView botonBeamNFC = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonBeamSincronizar);
