@@ -52,14 +52,15 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LecturaNfc extends Activity{
 
+	//Variables usadas para el nfc
 	NfcAdapter adapter;
 	PendingIntent pendingIntent;
 	IntentFilter writeTagFilters[];
 	Tag mytag;
 	Context ctx;
 	String[][] mTechLists;
-	/*Variables usadas para añadir la lista de platos a la base de datos mesas
-	 * */
+	
+	//Variables usadas para añadir la lista de platos a la base de datos mesas
 	HandlerGenerico sqlMesas,sqlrestaurante;
 	String numMesa;
 	String idCamarero;
@@ -67,7 +68,7 @@ public class LecturaNfc extends Activity{
 	SQLiteDatabase dbMesas,dbMiBase;
 	ArrayList<Byte> mensaje;
 	/**Creamos la actividad, al pulsar el boton de lectura se comprueba si el dispositivo ha detectado la tag si es asi comienza la lectura
-	 * 
+	 * una vez que leemos de la tarjeta lo que hacemos es añadirlo a la base de datos Mesas. 
 	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,7 +79,7 @@ public class LecturaNfc extends Activity{
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
-		//añadirPlatos();
+		
 		ctx=this;
 		
 		adapter = NfcAdapter.getDefaultAdapter(this);
@@ -93,7 +94,7 @@ public class LecturaNfc extends Activity{
 
 	//@SuppressLint("NewApi")
 	/**
-	 * Metodo que se encarga de leer bloques de la tag y lo introduce en un textview que mostraremos por pantalla
+	 * Metodo que se encarga de leer bloques de la tarjeta nfc
 	 * @param tag
 	 * @throws IOException
 	 * @throws FormatException
@@ -149,9 +150,6 @@ public class LecturaNfc extends Activity{
 		final TextView message = (TextView)findViewById(R.id.textView1);
 		message.setText(texto);//Mostramos pantalla el mensaje
 				 
-		
-	//	System.out.println(mensaje);
-		
 		// Cerramos la conexion
 		mfc.close();
 		
@@ -169,7 +167,7 @@ public class LecturaNfc extends Activity{
 	}
 
 	/**Con este método detectamos la presencia de la tarjeta tag y establecemos la conexión
-	 * 
+	 * luego procedemos a añadir los platos a la base de datos mesas decodificandolos.
 	 */
 	@SuppressLint("NewApi")
 	@Override
@@ -179,7 +177,8 @@ public class LecturaNfc extends Activity{
 			Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
 			try {   
 				read(mytag);//Se ha detectado la tag procedemos a leerla
-				
+				//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
+				decodificar(mensaje);
 				Toast.makeText(ctx, ctx.getString(R.string.ok_writing), Toast.LENGTH_LONG ).show();
 					
 				}
@@ -208,6 +207,182 @@ public class LecturaNfc extends Activity{
 	}
 	
 	
+
+	/**Decodificamos el contenido leido de la tag separando cada plato y añadiendolo a las mesas.
+	 * */
+	private void decodificar(ArrayList<Byte> mensaje) {
+		
+	//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
+		Iterator<Byte> itPlatos = mensaje.iterator();
+		
+		boolean parar=false;
+		
+		while(itPlatos.hasNext() && !parar){
+			
+			// id
+			int id = decodificaByte(itPlatos.next());
+			//El mensaje termina con un -1 en la tag
+			parar= id==255;
+			
+			if(!parar){//Si no ha acabado el mensaje
+				// extras
+				int numExtras =  decodificaByte(itPlatos.next());
+				String extras = "";
+				
+				for (int i = 0; i < numExtras; i++ )
+					extras += decToBin(itPlatos.next());
+				
+				
+				// comentario
+				int numComentario =  decodificaByte(itPlatos.next());
+				String comentario = "";
+				
+				for (int i = 0; i < numComentario; i++)
+					comentario += (char)decodificaByte(itPlatos.next());
+				//Añadimos el plato
+				añadirPlatos("Foster","fh"+id,extras,comentario);
+			}		
+		}
+		
+		
+	}
+	
+	/**Metodo que se encargar de convertir un byte dado por parametro a un tipo int
+	 *  
+	 * @param idByte
+	 * @return
+	 */
+		 
+	public static int decodificaByte(byte idByte){
+		int id = (int)idByte;
+		if (id < 0) return id + 256;
+		else return id;
+	}
+	
+	/** Convierte un numero decimal en su equivalente en binario
+	 *  
+	 * @param decimal
+	 * @return
+	 */
+	public static String decToBin(int decimal){
+		
+		int base = 2;
+		int result = 0;
+		int multiplier = 1;
+		
+		if (decimal < 0)
+			decimal = 256 + decimal;
+		
+		while (decimal>0){
+			int residue = decimal%base;
+			decimal = decimal/base;
+			result = result +residue*multiplier;
+			multiplier = multiplier * 10;
+		}
+		// rellenamos con ceros a la izquierda para que tenga siempre 8 bytes
+		String resultStr = "";
+		String numBytes = ""+result;
+		int veces = 8 - numBytes.length();
+		
+		for (int i = 0; i < veces; i++)
+			resultStr += "0";
+	
+		resultStr += result;
+			
+		return resultStr;
+		
+	}
+
+
+	public void añadirPlatos(String restaurante,String id,String extras,String observaciones)
+	{
+          
+    		//Sacamos la fecha a la que el camarero ha introducido la mesa
+        	Calendar cal = new GregorianCalendar();
+            Date date = cal.getTime();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String formatteDate = df.format(date);
+            //Sacamos la hora a la que el camarero ha introducido la mesa
+            Date dt = new Date();
+            SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+            String formatteHour = dtf.format(dt.getTime());
+            Cursor cursor = null;
+            String extrasFinal="";
+            
+          try{
+    			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+    			dbMiBase = sqlrestaurante.open();
+    			
+    			
+        		//Campos que quiero recuperar de la base de datos
+    			String[] campos = new String[]{"Nombre","Precio","Extras"};
+    			//Datos que tengo para consultarla
+          		String[] datos = new String[]{restaurante,id};
+          		
+          		cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
+          		cursor.moveToFirst();       
+                dbMiBase.close();
+                // Voy a comprobar los extras que se han escogido comparando el codigo binario que leemos de la tarjeta y los extras de la base de datos.
+                //Obtengo los extras de la base de datos
+                String extrasBaseDatos= cursor.getString(2);
+                //Separo los distintos tipos de extras
+                StringTokenizer auxExtras= new StringTokenizer(extrasBaseDatos,"/");
+                StringTokenizer auxExtras2 = null;
+                String elemento = "";
+                
+                int numExtras=0;
+                //Recorrro cada uno de los elementos que se me han generado en el sring tokenizer que son de la forma Guarnicion:PatatasAsada,Ensalada
+                while (auxExtras.hasMoreElements())
+                	{auxExtras2= new StringTokenizer((String) auxExtras.nextElement(),":");
+                	 //Elimino el Guarnicion:/Salsa:/Guarnicion:
+                	 auxExtras2.nextElement();
+                     extrasFinal +=auxExtras2.nextElement()+",";
+                	}
+                //Extras final tiene todos los extras de ese plato separados por comas
+                auxExtras= new StringTokenizer(extrasFinal,",");
+                extrasFinal="";
+                //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
+                while (auxExtras.hasMoreElements())
+            	  { elemento= (String) auxExtras.nextElement();
+            	    if (extras.charAt(numExtras)=='1')
+            		   extrasFinal +=elemento+",";
+            	    numExtras++;    	  
+            	  }
+                //Le quito la ultima coma al extra final para que quede estetico
+                extrasFinal=extrasFinal.substring(0,extrasFinal.length()-1);
+    		}catch(SQLiteException e){
+    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MiBase(Restaurante)",Toast.LENGTH_SHORT).show();
+    		}
+    		
+          
+      		
+      		try{
+       			//Abro base de datos para introducir los platos en esa mesa
+       			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+       			dbMesas= sqlMesas.open();
+       			//Meto el plato en la base de datos Mesas
+	       		ContentValues plato = new ContentValues();
+	        	int idUnico = InicialCamarero.getIdUnico();
+	        	plato.put("NumMesa", numMesa);
+	        	plato.put("IdCamarero", idCamarero);
+	        	plato.put("IdPlato", id);
+	        	plato.put("Observaciones", observaciones);
+	        	plato.put("Extras",extrasFinal);
+	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
+	        	plato.put("Nombre", cursor.getString(0));
+	        	plato.put("Precio",cursor.getDouble(1));
+	        	plato.put("Personas",numPersonas);
+	        	plato.put("IdUnico", idUnico);
+	        	dbMesas.insert("Mesas", null, plato);
+	        	dbMesas.close();
+	        	System.out.println("Añadido");
+        	
+      		}catch(Exception e){
+    			System.out.println("Error lectura base de datos de Mesas");
+    		}
+   
+	}
+
  
 	/*Menu que usaremos para activar el NFC y el sbeam*/
     public boolean onCreateOptionsMenu(Menu menu) {
