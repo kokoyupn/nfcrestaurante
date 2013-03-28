@@ -39,7 +39,7 @@
             android:layout_marginLeft="20dp" >
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/imageBeam"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/camarero" />

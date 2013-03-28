@@ -39,6 +39,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +58,8 @@ public class InicialCamarero extends Activity{
     private static int idUnico = 0;
     
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
-    
+    //Ventana emergente para la sincronizacion
+    private AlertDialog ventanaEmergenteSincronizacion;
     private HandlerGenerico sqlMesas, sqlMiBase;
 	private SQLiteDatabase dbMesas, dbMiBase;
 	
@@ -134,8 +136,8 @@ public class InicialCamarero extends Activity{
 				numeroMesaAEditar = mesas.get(position).getNumMesa();
 				nuneroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
-				final CharSequence[] items = {"Cobrar","Sincronizar", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
-
+				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
+				final CharSequence[] items = {"Cobrar","Sincronizacion","Editar nº mesa", "Editar nº personas","Eliminar mesa"};
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(InicialCamarero.this);
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -194,15 +196,19 @@ public class InicialCamarero extends Activity{
 				    		
 				    	//------------------ Sincronizar -----------------------------------
 				    	}else if (item == 1){
-				    		//NFC
-				    		//Toast.makeText(getApplicationContext(), "Disponible Próximamente", Toast.LENGTH_SHORT).show();
-				    		//Iniciamos la nueva actividad
+				    		//Sincronizacion
+				    		View vistaAviso = LayoutInflater.from(InicialCamarero.this).inflate(R.layout.alert_sincronizacion, null);
+				    		ventanaEmergenteSincronizacion = new AlertDialog.Builder(InicialCamarero.this).create();
+				    		ventanaEmergenteSincronizacion.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancelar",new DialogInterface.OnClickListener() {
+				    			
+				    			public void onClick(DialogInterface dialog, int which) {
+				    				ventanaEmergenteSincronizacion.dismiss();
+				    			}
+				    		});
+				    		ventanaEmergenteSincronizacion.setView(vistaAviso);
+				    		ventanaEmergenteSincronizacion.show();
 				    		
-				    		intent = new Intent(ctx,LecturaNfc.class);
-				    		intent.putExtra("NumMesa", numeroMesaAEditar);
-			        		intent.putExtra("IdCamarero",idCamarero);
-			        		intent.putExtra("Personas", nuneroPersonas);
-			        		startActivity(intent); 
+				    		
 				    	//----------------- onClickListener de editar número de mesa --------------------------------
 				    	}else if(item == 2){
 				    		LayoutInflater factory = LayoutInflater.from(InicialCamarero.this);
@@ -662,6 +668,40 @@ public class InicialCamarero extends Activity{
     	return idUnico;
     }
 	
-	
+	//Metodos usados en el alert dialog de sincronizar
+    public void onClickNfcsincronizacion(View v)
+    {
+    	intent = new Intent(ctx,Sincronizacion_LecturaNfc.class);
+		intent.putExtra("NumMesa", numeroMesaAEditar);
+		intent.putExtra("IdCamarero",idCamarero);
+		intent.putExtra("Personas", nuneroPersonas);
+		ventanaEmergenteSincronizacion.dismiss();
+		
+		startActivity(intent);
+		
+    }
+    public void onClickBeamsincronizacion(View v)
+    {
+
+    	intent = new Intent(ctx,Sincronizacion_BeamNfc.class);
+		intent.putExtra("NumMesa", numeroMesaAEditar);
+		intent.putExtra("IdCamarero",idCamarero);
+		intent.putExtra("Personas", nuneroPersonas);
+		ventanaEmergenteSincronizacion.dismiss();
+		
+		startActivity(intent);
+    }
+    public void onClickQRsincronizacion(View v)
+    {
+
+    	intent = new Intent(ctx,Sincronizacion_QR.class);
+		intent.putExtra("NumMesa", numeroMesaAEditar);
+		intent.putExtra("IdCamarero",idCamarero);
+		intent.putExtra("Personas", nuneroPersonas);
+		ventanaEmergenteSincronizacion.dismiss();
+		
+		startActivity(intent);
+    }
+    
 }
 

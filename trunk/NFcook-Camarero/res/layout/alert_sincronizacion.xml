@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="onClickNfcsincronizacion" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#9be92c"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewAviso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Sincronización"
+                android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+
+            <ImageView
+                android:id="@+id/imageNFC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickNfcsincronizacion"
+                android:src="@drawable/nfc_icono" />
+
+            <ImageView
+                android:id="@+id/imageBeam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickBeamsincronizacion"
+                android:src="@drawable/beam_icono" />
+
+            <ImageView
+                android:id="@+id/imageQR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickQRsincronizacion"
+                android:src="@drawable/qr_icono" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
