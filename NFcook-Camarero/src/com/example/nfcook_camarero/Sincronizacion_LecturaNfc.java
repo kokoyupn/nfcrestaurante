@@ -36,7 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class LecturaNfc extends Activity implements DialogInterface.OnDismissListener{
+public class Sincronizacion_LecturaNfc extends Activity implements DialogInterface.OnDismissListener{
 
 	//Variables usadas para el nfc
 	NfcAdapter adapter;
@@ -116,7 +116,7 @@ public class LecturaNfc extends Activity implements DialogInterface.OnDismissLis
 	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.lectura_nfc);
+		setContentView(R.layout.sincronizacion_lecturanfc);
 
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();

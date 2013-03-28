@@ -130,8 +130,8 @@ public void  onClickBotonEntrar(View boton)
  */
 
 private void abrir_ventanaEmergente(String text, int foto) {
-	 	View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.aviso_camarero, null);
-	    ImageView img= (ImageView) vistaAviso.findViewById(R.id.imageAvisoCamarero);
+	 	View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog_login_camarero, null);
+	    ImageView img= (ImageView) vistaAviso.findViewById(R.id.imageNFC);
 		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewAvisoCamarero);
 		texto.setText(text);
 		img.setImageResource(foto);

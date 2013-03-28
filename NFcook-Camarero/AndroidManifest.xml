@@ -62,7 +62,15 @@
             android:screenOrientation="portrait">
         </activity>  
          <activity
-            android:name=".LecturaNfc"
+            android:name=".Sincronizacion_LecturaNfc"
+            android:screenOrientation="portrait">
+        </activity>
+ 		<activity
+            android:name=".Sincronizacion_BeamNfc"
+            android:screenOrientation="portrait">
+        </activity>   
+         <activity
+            android:name=".Sincronizacion_QR"
             android:screenOrientation="portrait">
         </activity>  
          <activity

@@ -34,7 +34,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/imageAvisoCamarero"
+                android:id="@+id/imageNFC"
                 android:layout_width="59dp"
                 android:layout_height="59dp"
                 android:layout_margin="10dp"
