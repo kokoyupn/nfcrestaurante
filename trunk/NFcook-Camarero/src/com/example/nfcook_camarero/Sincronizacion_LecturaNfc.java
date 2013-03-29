@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.media.AudioManager;
 import android.nfc.FormatException;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -57,6 +58,9 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	SQLiteDatabase dbMesas,dbMiBase;
 	ArrayList<Byte> mensaje;
 	
+	//Variables para el sonido
+	SonidoManager sonidoManager;
+	int sonido;
 	
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas (decodificacion de pedido, lectura NFC y 
@@ -87,7 +91,8 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 					read(mytag);//Se ha detectado la tag procedemos a leerla
 					//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
 					decodificar(mensaje);
-								
+					//Sonido de confirmacion
+					sonidoManager.play(sonido);
 					}
 				 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
 					Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
@@ -132,7 +137,13 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
 		mTechLists = new String[][] { new String[] { MifareClassic.class.getName() } };
 		writeTagFilters = new IntentFilter[] { tagDetected }; 
-				
+			
+		//Creamos la instacia del manager de sonido
+		sonidoManager = new SonidoManager(getApplicationContext());
+		// Pone el volumen al volumen del movil actual
+        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        //Cargamos el sonido
+        sonido=sonidoManager.load(R.raw.confirm);
 		// creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
 	}
