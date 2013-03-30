@@ -189,7 +189,8 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	 */
 	private void enviarPedidoACuenta(){
 		
-		String[] campos = new String[]{"Id","Plato","Observaciones","Extras","PrecioPlato","Restaurante"};//Campos que quieres recuperar
+		//Campos que quieres recuperar
+		String[] campos = new String[]{"Id","Plato","Observaciones","Extras","PrecioPlato","Restaurante","IdHijo"};
 		String[] datosRestaurante = new String[]{restaurante};	
 		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
     	
@@ -201,6 +202,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
         	platoCuenta.put("Extras", cursorPedido.getString(3));
         	platoCuenta.put("PrecioPlato",cursorPedido.getDouble(4));
         	platoCuenta.put("Restaurante",cursorPedido.getString(5));
+        	platoCuenta.put("IdHijo", cursorPedido.getString(6));
     		dbCuenta.insert("Cuenta", null, platoCuenta);
     	}
 		
