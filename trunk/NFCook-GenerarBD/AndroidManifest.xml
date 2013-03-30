@@ -35,6 +35,11 @@
             android:label="@string/inicial" >
 
         </activity>
+        <activity
+            android:name="generar_bd.BaseDatosCuenta"
+            android:label="@string/inicial" >
+
+        </activity>
     </application>
 
 </manifest>
