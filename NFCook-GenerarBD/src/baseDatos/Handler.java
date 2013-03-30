@@ -123,19 +123,23 @@ public class Handler extends SQLiteOpenHelper {
 	 * Poner el if con el nombre de vuestra base de datos
 	 */
 	public void onCreate(SQLiteDatabase db) {//Se llama con el getReadableDatabase y 
-			//getWritable si no existe la base aun, y se crea
-	if(DB_NAME=="MiBase.db"){
-	String query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
-	"TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER)";
-		db.execSQL(query);
-	}
-	else if(DB_NAME=="Login.db"){
-		String query="CREATE TABLE Camareros(Nombre TEXT,Contraseña TEXT)";
-					db.execSQL(query);
-	}else if(DB_NAME=="Mesas.db"){
-		String query="CREATE TABLE Mesas(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
-		"Observaciones TEXT,Extras TEXT, FechaHora TEXT, Nombre TEXT, Precio INTEGER, Personas INTEGER, IdUnico INTEGER)";
-		db.execSQL(query);
+											//getWritable si no existe la base aun, y se crea
+		if(DB_NAME=="MiBase.db"){
+		String query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
+		"TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER)";
+			db.execSQL(query);
+		}
+		else if(DB_NAME=="Login.db"){
+			String query="CREATE TABLE Camareros(Nombre TEXT,Contraseña TEXT)";
+						db.execSQL(query);
+		}else if(DB_NAME=="Mesas.db"){
+			String query="CREATE TABLE Mesas(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
+			"Observaciones TEXT,Extras TEXT, FechaHora TEXT, Nombre TEXT, Precio INTEGER, Personas INTEGER, IdUnico INTEGER)";
+			db.execSQL(query);
+		}else if(DB_NAME=="Cuenta.db"){
+			String query="CREATE TABLE Cuenta(Restaurante TEXT,Id TEXT, IdHijo TEXT, Plato TEXT," +
+			"Observaciones TEXT,Extras TEXT, PrecioPlato INTEGER)";
+			db.execSQL(query);
 		}
 	}
 	
