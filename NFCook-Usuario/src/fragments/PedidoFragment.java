@@ -13,9 +13,11 @@ import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,8 +43,9 @@ public class PedidoFragment extends Fragment{
 	private static View vistaConExpandaleList;
 	
 	private static String restaurante;
-	
 	private float total;
+	private AlertDialog ventanaEmergenteElegirSincronizacion;
+	private View vistaVentanaEmergenteElegirSincronizacion;
 	
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
@@ -58,6 +61,8 @@ public class PedidoFragment extends Fragment{
         importarBaseDatatos();
         crearExpandableList();
         actualizarPrecioPedido();
+        crearVentanaEmergenteElegirSincronizacion();
+        ponerOnClickSincronizar();
         ponerOnClickSincronizarPedidoNFC();
         ponerOnClickSincronizarPedidoBeam();
         ponerOnClickSincronizarPedidoQR();
@@ -151,40 +156,83 @@ public class PedidoFragment extends Fragment{
         }
 	}
 	
+	/**
+	 * Crea una ventana emergente que muestra los tipos de sincronizacion de pedido
+	 * disponibles.
+	 */
+	private void crearVentanaEmergenteElegirSincronizacion(){
+		vistaVentanaEmergenteElegirSincronizacion = LayoutInflater.from(vistaConExpandaleList.getContext()).inflate(R.layout.ventana_emergente_elegir_sincronizacion, null);
+		ventanaEmergenteElegirSincronizacion = new AlertDialog.Builder(vistaConExpandaleList.getContext()).create();
+		ventanaEmergenteElegirSincronizacion.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancelar", 
+				new DialogInterface.OnClickListener() {
+			
+					public void onClick(DialogInterface dialog, int which) {
+						ventanaEmergenteElegirSincronizacion.dismiss();
+					}
+		});
+		ventanaEmergenteElegirSincronizacion.setView(vistaVentanaEmergenteElegirSincronizacion);
+	}
+	
+	/**
+	 * Crea el onClick la la imagen botonSincronizar.
+	 * Compruena si las bases de datos estan vacias para permitir o no sincronizar.
+	 * Si se puede abre una ventana emergente para elegir el metodo de sincronizacion.
+	 */
+	private void ponerOnClickSincronizar() {
+		ImageView botonSincronizar = (ImageView) vistaConExpandaleList.findViewById(R.id.imageSincronizar);
+		
+		//OnClick boton borrar de cada hijo.
+		botonSincronizar.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				if(!baseDeDatosPedidoyCuentaVacias()){
+		    		ventanaEmergenteElegirSincronizacion.show();
+				} 
+				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+	}
+	
+	/**
+	 * Crea el onClick la la imagen botonNFC.
+	 * Si el adapter es null significa que el dispositivo no tiene NFC, entonces no puede
+	 * sincronizar con este metodo y lanza un mensaje. Si no es null, se abre la ventana
+	 * para sincronizar por NFC.
+	 */
 	private void ponerOnClickSincronizarPedidoNFC() {
-		ImageView botonNFC = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonNFCSincronizar);
+		ImageView botonNFC = (ImageView) vistaVentanaEmergenteElegirSincronizacion.findViewById(R.id.imageNFCSincronizar);
 		
 		//OnClick boton borrar de cada hijo.
 		botonNFC.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				if(!baseDeDatosPedidoyCuentaVacias()){
-					if (adapter != null) {
-						Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
-					    intent.putExtra("Restaurante", restaurante);
-					    startActivityForResult(intent, 0);
-					} else {
-						/**
-						 * TODO para poder usar sin tarjetas. ELIMINAR
-						 */
-						Toast.makeText(vistaConExpandaleList.getContext(),"No tienes NFC. Esto opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
-						enviarPedidoACuenta();
-						Fragment fragmentCuenta = new CuentaFragment();
-				        ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-				        FragmentTransaction m = getFragmentManager().beginTransaction();
-				        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-				        m.commit();	
-				        //Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
-					}
-				} 
-				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
-			}
+				// cierro la ventana emergente
+				ventanaEmergenteElegirSincronizacion.dismiss();
+				if (adapter != null) {
+					// abro la ventana para sincronizar con NFC
+					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+					intent.putExtra("Restaurante", restaurante);
+					startActivityForResult(intent, 0);
+				} else {
+					/**
+					 * TODO para poder usar sin tarjetas. ELIMINAR
+					 */
+					Toast.makeText(vistaConExpandaleList.getContext(),"No tienes NFC. Esto opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
+					enviarPedidoACuenta();
+					Fragment fragmentCuenta = new CuentaFragment();
+				    ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+				    FragmentTransaction m = getFragmentManager().beginTransaction();
+				    m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+				    m.commit();	
+				    //Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
+				}
+			} 
 		});
 	}
 	
 	/**
-	 * Entra cuando regresa de una actividad lanzada con startActivityForResult, es decir, 
-	 * con NFC y QR (Beam no).
+	 * Entra cuando regresa de una actividad lanzada con startActivityForResult (onClick de NFC).
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -198,24 +246,6 @@ public class PedidoFragment extends Fragment{
 		} 	
 	}
 	
-	
-	private void ponerOnClickSincronizarPedidoBeam() {
-		ImageView botonBeamNFC = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonBeamSincronizar);
-		
-		//OnClick boton borrar de cada hijo.
-		botonBeamNFC.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				if(!baseDeDatosPedidoyCuentaVacias()){
-					Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
-					intent.putExtra("Restaurante", restaurante);
-					startActivity(intent);
-				} 
-				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
-			}
-		});
-		
-	}
 	
 	/**
 	 * TODO para poder usar sin tarjetas. ELIMINAR
@@ -273,17 +303,40 @@ public class PedidoFragment extends Fragment{
 		sqlPedido.close();	
 	}	
 	
+	/**
+	 * Crea el onClick la imagen botonBeam
+	 */
+	private void ponerOnClickSincronizarPedidoBeam() {
+		ImageView botonBeam = (ImageView) vistaVentanaEmergenteElegirSincronizacion.findViewById(R.id.imageBeamSincronizar);
+		
+		//OnClick boton borrar de cada hijo.
+		botonBeam.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				// cierro la ventana emergente
+				ventanaEmergenteElegirSincronizacion.dismiss();
+				//abro la ventana para sincronizar con Beam
+				Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
+				intent.putExtra("Restaurante", restaurante);
+				startActivity(intent);
+			}
+		});
+		
+	}
+	
+	/**
+	 * Crea el onClick la imagen botonQR
+	 */
 	private void ponerOnClickSincronizarPedidoQR() {
-		ImageView botonQR = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonQRSincronizar);
+		ImageView botonQR = (ImageView) vistaVentanaEmergenteElegirSincronizacion.findViewById(R.id.imageQRSincronizar);
 		
 		//OnClick boton borrar de cada hijo.
 		botonQR.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				if(!baseDeDatosPedidoyCuentaVacias()){
-					
-				} 
-				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
+				// cierro la ventana emergente
+				ventanaEmergenteElegirSincronizacion.dismiss();
+				// abro ventana para sincronizar con QR
 			}
 		});
 		

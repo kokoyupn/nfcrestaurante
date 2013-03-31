@@ -158,9 +158,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 
 /************************************ BASES DE DATOS  ****************************************/		
 	
-	/*FIXME puede que reviente si entra en el catch y hace el Toast poo estar dentro de asynctask.
-	 * Poner Log.i() */
-	/**
+	/*
 	 * Abre las bases de datos Cuenta y Pedido.
 	 */
 	private void abrirBasesDeDatos() {
@@ -173,13 +171,13 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 			sqlPedido = new HandlerDB(getApplicationContext(), "Pedido.db");
 			dbPedido = sqlPedido.open();
 		}catch(SQLiteException e){
-         	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)",Toast.LENGTH_SHORT).show();
+         	System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)");
 		}
 		try{
 			sqlCuenta = new HandlerDB(getApplicationContext(), "Cuenta.db");
 			dbCuenta = sqlCuenta.open();
 		}catch(SQLiteException e){
-         	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC",Toast.LENGTH_SHORT).show();
+			System.out.println("NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)");
 		}	
 	}
 	
@@ -461,7 +459,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 							// avanzo para el siguiente bloque
 							recorrerString += MifareClassic.BLOCK_SIZE;
 							// escribimos en el bloque
-							mfc.writeBlock(numBloque, datosAlBloque);
+							mfc.writeBlock(numBloque, datosAlBloque); 
 						} else {
 							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
 							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
