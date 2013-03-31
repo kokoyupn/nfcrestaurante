@@ -47,45 +47,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:paddingLeft="20dp" >
-
-            <ImageView
-                android:id="@+id/imageButtonBeamSincronizar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/beam_icono" />
-
-            <ImageView
-                android:id="@+id/imageButtonNFCSincronizar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/nfc_icono" />
-
-            <ImageView
-                android:id="@+id/imageButtonQRSincronizar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/qr_icono" />
-
-        </LinearLayout>
-
         <ImageView
             android:id="@+id/imageViewMonedas"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="bottom|right"
         	android:layout_marginRight="75dp"
+        	android:layout_marginBottom="15dp"
             android:src="@drawable/total" />
 
         <TextView
@@ -94,7 +62,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
             android:textSize="16dp" />
+
+        <ImageView
+            android:id="@+id/imageSincronizar"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/sincronizar_icono" />
+
     </FrameLayout>
 
 </FrameLayout>

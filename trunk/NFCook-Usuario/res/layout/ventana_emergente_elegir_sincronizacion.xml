@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/azulmarino" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+                
+                <TextView
+	                android:id="@+id/textViewAviso"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center"
+	                android:text="Sincronización"
+	                android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
+	                android:textColor="#FFFFFF"
+	                android:textSize="30sp"
+	                android:textStyle="bold" />
+
+	            <TextView
+	                android:id="@+id/textView1"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center"
+	                android:text="(Seleciona una opción)"
+	                android:textColor="#FFFFFF"
+	                android:textStyle="bold"
+	                android:textAppearance="?android:attr/textAppearanceSmall" />
+                
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+              
+                <ImageView
+                    android:id="@+id/imageNFCSincronizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/nfc_icono" />
+
+                 <TextView
+	             	android:id="@+id/textViewSincronizarNFC"
+	               	android:layout_width="90dp"
+	             	android:layout_height="wrap_content"
+	            	android:layout_gravity="center"
+	              	android:gravity="center"
+	               	android:text="Escribe tu pedido en la tarjeta NFC"
+	              	android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/imageBeamSincronizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/beam_icono" />
+
+                <TextView
+                    android:id="@+id/textViewSincronizarBeam"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Choca tu dispositivo con el del camarero para enviar tu pedido"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/imageQRSincronizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/qr_icono" />
+
+                <TextView
+                    android:id="@+id/textViewSincronizarQR"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Crea un código QR de tu pedido"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+            
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
