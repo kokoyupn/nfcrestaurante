@@ -23,22 +23,22 @@
         <activity
             android:name="generar_bd.BaseDatosRestaurantes"
             android:label="@string/inicial" >
-
         </activity>
           <activity
             android:name="generar_bd.BaseDatosLogin"
             android:label="@string/inicial" >
-
         </activity>
         <activity
             android:name="generar_bd.BaseDatosMesas"
             android:label="@string/inicial" >
-
         </activity>
         <activity
             android:name="generar_bd.BaseDatosCuenta"
             android:label="@string/inicial" >
-
+        </activity>
+        <activity
+            android:name="generar_bd.BaseDatosPedido"
+            android:label="@string/inicial" >
         </activity>
     </application>
 
