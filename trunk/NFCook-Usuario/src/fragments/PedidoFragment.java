@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import usuario.InicializarRestaurante;
 import usuario.SincronizarPedidoBeamNFC;
 import usuario.SincronizarPedidoNFC;
 import adapters.HijoExpandableListPedido;
@@ -14,10 +15,12 @@ import adapters.PadreExpandableListPedido;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +47,11 @@ public class PedidoFragment extends Fragment{
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
 	
+	/**
+	 * TODO variable para poder usar sin tarjetas. ELIMINAR
+	 */
+	NfcAdapter adapter;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
@@ -53,6 +61,12 @@ public class PedidoFragment extends Fragment{
         ponerOnClickSincronizarPedidoNFC();
         ponerOnClickSincronizarPedidoBeam();
         ponerOnClickSincronizarPedidoQR();
+        
+        /**
+    	 * TOFIX variable para poder usar sin tarjetas. ELIMINAR
+    	 */
+        adapter = NfcAdapter.getDefaultAdapter(vistaConExpandaleList.getContext());
+        
         return vistaConExpandaleList;
 	}
   	
@@ -145,10 +159,23 @@ public class PedidoFragment extends Fragment{
 			
 			public void onClick(View v) {
 				if(!baseDeDatosPedidoyCuentaVacias()){
-					//new SincronizarPedidoNFCBackgroundAsyncTask().execute();
-					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
-				    intent.putExtra("Restaurante", restaurante);
-				    startActivityForResult(intent, 0);
+					if (adapter != null) {
+						Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+					    intent.putExtra("Restaurante", restaurante);
+					    startActivityForResult(intent, 0);
+					} else {
+						/**
+						 * TODO para poder usar sin tarjetas. ELIMINAR
+						 */
+						Toast.makeText(vistaConExpandaleList.getContext(),"No tienes NFC. Esto opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
+						enviarPedidoACuenta();
+						Fragment fragmentCuenta = new CuentaFragment();
+				        ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+				        FragmentTransaction m = getFragmentManager().beginTransaction();
+				        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+				        m.commit();	
+				        //Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
+					}
 				} 
 				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
 			}
@@ -181,14 +208,70 @@ public class PedidoFragment extends Fragment{
 			public void onClick(View v) {
 				if(!baseDeDatosPedidoyCuentaVacias()){
 					Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
-				    intent.putExtra("Restaurante", restaurante);
-				    startActivity(intent);
+					intent.putExtra("Restaurante", restaurante);
+					startActivity(intent);
 				} 
 				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
 			}
 		});
 		
 	}
+	
+	/**
+	 * TODO para poder usar sin tarjetas. ELIMINAR
+	 */
+	private void enviarPedidoACuenta(){
+		HandlerDB sqlCuenta = null;
+		sqlPedido = null;
+		SQLiteDatabase dbCuenta = null;
+		dbPedido = null;
+		
+		try{
+			sqlPedido = new HandlerDB(getActivity(), "Pedido.db");
+			dbPedido = sqlPedido.open();
+		}catch(SQLiteException e){
+         	Toast.makeText(getActivity(),"NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)",Toast.LENGTH_SHORT).show();
+		}
+		try{
+			sqlCuenta = new HandlerDB(getActivity(), "Cuenta.db");
+			dbCuenta = sqlCuenta.open();
+		}catch(SQLiteException e){
+         	Toast.makeText(getActivity(),"NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC",Toast.LENGTH_SHORT).show();
+		}	
+		//Campos que quieres recuperar
+		String[] campos = new String[]{"Id","Plato","Observaciones","Extras","PrecioPlato","Restaurante","IdHijo"};
+		String[] datosRestaurante = new String[]{restaurante};	
+		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
+    	
+    	while(cursorPedido.moveToNext()){
+    		ContentValues platoCuenta = new ContentValues();
+        	platoCuenta.put("Id", cursorPedido.getString(0));
+        	platoCuenta.put("Plato", cursorPedido.getString(1));
+        	platoCuenta.put("Observaciones", cursorPedido.getString(2));
+        	platoCuenta.put("Extras", cursorPedido.getString(3));
+        	platoCuenta.put("PrecioPlato",cursorPedido.getDouble(4));
+        	platoCuenta.put("Restaurante",cursorPedido.getString(5));
+        	platoCuenta.put("IdHijo", cursorPedido.getString(6));
+    		dbCuenta.insert("Cuenta", null, platoCuenta);
+    	}
+		
+		try{
+			dbPedido.delete("Pedido", "Restaurante=?", datosRestaurante);	
+		}catch(SQLiteException e){
+         	Toast.makeText(getActivity(),"ERROR AL BORRAR BASE DE DATOS PEDIDO",Toast.LENGTH_SHORT).show();
+		}
+		
+		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
+		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity) vistaConExpandaleList.getContext());
+		
+		/*
+		 * FIXME Quitar cuando estén los fragments de bebida y calculadora
+		 */
+		InicializarRestaurante.setTabInferiorPulsado("tabCuenta");
+		
+		sqlCuenta.close();
+		sqlPedido.close();	
+	}	
 	
 	private void ponerOnClickSincronizarPedidoQR() {
 		ImageView botonQR = (ImageView) vistaConExpandaleList.findViewById(R.id.imageButtonQRSincronizar);
