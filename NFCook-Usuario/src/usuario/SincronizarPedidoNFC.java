@@ -534,10 +534,14 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 		super.onResume();
 		adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters,null);
 		
-		if (!adapter.isEnabled()){
+		/*
+		 * TODO descomentar cuando se sepa si funciona con la gente q no tenga NFC
+		 */ 
+		
+		/*if (!adapter.isEnabled()){
 	        Toast.makeText(getApplicationContext(), "Por favor activa NFC y pulsa en el boton back para regresar a NFCook", Toast.LENGTH_LONG).show();
 	        startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-	    }
+	    }*/
 		
 	}	
 	
