@@ -28,10 +28,26 @@
 
         </LinearLayout>
 
-        <Spinner
-            android:id="@+id/spinnerPromociones"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/spinnerPromociones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginRight="60dp" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/anyadir_persona" />
+
+        </FrameLayout>
 
         <GridView
             android:id="@+id/gridViewCalculadora"
@@ -94,6 +110,15 @@
             </android.support.v4.view.ViewPager>
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/boton_ayuda" />
 
     </FrameLayout>
 

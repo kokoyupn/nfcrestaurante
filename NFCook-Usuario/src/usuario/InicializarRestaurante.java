@@ -464,13 +464,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	public boolean hayAlgunPedidoSincronizado(){
 		try{
 			// Importamos la base de datos de cuenta
-			/*
-			 * FIXME Hay que poner la bd de cuenta
-			 */
-			HandlerDB sqlCuenta = new HandlerDB(getApplicationContext(),"Pedido.db"); 
+			HandlerDB sqlCuenta = new HandlerDB(getApplicationContext(),"Cuenta.db"); 
 			SQLiteDatabase dbCuenta = sqlCuenta.open();
 			String[] camposCuenta = new String[]{"Id"};//Campos que quieres recuperar
-			Cursor cursorCuenta = dbCuenta.query("Pedido", camposCuenta, null, null,null, null,null);
+			Cursor cursorCuenta = dbCuenta.query("Cuenta", camposCuenta, null, null,null, null,null);
 			// Miramos a ver si tiene al menos algún elemento
 			if(cursorCuenta.moveToFirst()){
 				return true;

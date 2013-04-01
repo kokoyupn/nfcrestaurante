@@ -83,7 +83,7 @@ public class Calculadora extends Activity{
     	 * lo que vamos a hacer ahora nos vale.
     	 */
     	// Metemos las promociones que haya en el restaurante
-    	promociones.add("Seleccione la promoción que desee...");
+    	promociones.add("Seleccione promoción...");
     	
     	// Como ahora no hay promociones lo deshabilitamos
     	/*
@@ -117,16 +117,13 @@ public class Calculadora extends Activity{
         // Sacamos la imformación de los platos que haya en cuenta.db
         try{
 			// Abrimos la base de datos de cuenta
-        	/*
-        	 * FIXME Hay que poner la base de datos de cuenta no la de pedido
-        	 */
-        	HandlerDB sqlCuenta = new HandlerDB(this.getApplicationContext(),"Pedido.db"); 
+        	HandlerDB sqlCuenta = new HandlerDB(this.getApplicationContext(),"Cuenta.db"); 
         	SQLiteDatabase dbCuenta = sqlCuenta.open();
         	
         	// Sacamos el id de todos los platos de cuenta
         	String[] camposSacar = new String[]{"Id","Restaurante", "IdHijo"};
 	    	//String[] datosQueCondicionan = new String[]{restaurante};
-    		Cursor cP = dbCuenta.query("Pedido", camposSacar, null, null, null, null,null);
+    		Cursor cP = dbCuenta.query("Cuenta", camposSacar, null, null, null, null,null);
 	    	
 	    	// Importamos la base de datos de los platos
         	HandlerDB sqlPlatos = new HandlerDB(this.getApplicationContext()); 
