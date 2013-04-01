@@ -107,7 +107,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		// Inicializamos el control de los tabs
 		tabInferiorPulsado = tabs.getCurrentTabTag();
 		pulsadoTabSuperior = false;
-		
     }
     
     /* Metodo encargado de implementar el botón back.

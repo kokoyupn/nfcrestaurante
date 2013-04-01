@@ -43,8 +43,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|bottom"
-        android:layout_margin="20dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="20dp"
         android:text="Mapas"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/buttonListaMapas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:layout_margin="20dp"
+        android:text="Lista Mapas" />
+
+>>>>>>> .r137
 </FrameLayout>
