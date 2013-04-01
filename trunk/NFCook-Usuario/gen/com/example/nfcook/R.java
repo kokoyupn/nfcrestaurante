@@ -9,254 +9,400 @@ package com.example.nfcook;
 
 public final class R {
     public static final class array {
-        public static final int cantidades=0x7f060000;
+        public static final int cantidades=0x7f070000;
     }
     public static final class attr {
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cameraBearing=0x7f010001;
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cameraTargetLat=0x7f010002;
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cameraTargetLng=0x7f010003;
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cameraTilt=0x7f010004;
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cameraZoom=0x7f010005;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>0</td><td></td></tr>
+<tr><td><code>normal</code></td><td>1</td><td></td></tr>
+<tr><td><code>satellite</code></td><td>2</td><td></td></tr>
+<tr><td><code>terrain</code></td><td>3</td><td></td></tr>
+<tr><td><code>hybrid</code></td><td>4</td><td></td></tr>
+</table>
+         */
+        public static final int mapType=0x7f010000;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int uiCompass=0x7f010006;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int uiRotateGestures=0x7f010007;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int uiScrollGestures=0x7f010008;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int uiTiltGestures=0x7f010009;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int uiZoomControls=0x7f01000a;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int uiZoomGestures=0x7f01000b;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int useViewLifecycle=0x7f01000c;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int zOrderOnTop=0x7f01000d;
     }
     public static final class color {
-        public static final int amarillo=0x7f080004;
-        public static final int azul=0x7f080002;
-        public static final int azul2=0x7f080008;
-        public static final int azul3=0x7f080009;
-        public static final int azul4=0x7f08000a;
-        public static final int blanco=0x7f080000;
-        public static final int naranja2=0x7f080005;
-        public static final int naranja3=0x7f080006;
-        public static final int naranja4=0x7f080007;
-        public static final int negro=0x7f080001;
-        public static final int verde=0x7f080003;
-        public static final int verde2=0x7f08000b;
-        public static final int verde3=0x7f08000c;
-        public static final int verde4=0x7f08000d;
+        public static final int amarillo=0x7f090004;
+        public static final int azul=0x7f090002;
+        public static final int azul2=0x7f090008;
+        public static final int azul3=0x7f090009;
+        public static final int azul4=0x7f09000a;
+        public static final int azulmarino=0x7f09000e;
+        public static final int blanco=0x7f090000;
+        public static final int naranja2=0x7f090005;
+        public static final int naranja3=0x7f090006;
+        public static final int naranja4=0x7f090007;
+        public static final int negro=0x7f090001;
+        public static final int verde=0x7f090003;
+        public static final int verde2=0x7f09000b;
+        public static final int verde3=0x7f09000c;
+        public static final int verde4=0x7f09000d;
     }
     public static final class dimen {
-        public static final int tam=0x7f040000;
+        public static final int tam=0x7f060000;
     }
     public static final class drawable {
         public static final int agua_fontbella=0x7f020000;
-        public static final int bordes_redondeados_lista_seleccion_restaurantes=0x7f020001;
-        public static final int boton_ayuda=0x7f020002;
-        public static final int calculadora=0x7f020003;
-        public static final int cerveza_mahou=0x7f020004;
-        public static final int cerveza_san_miguel=0x7f020005;
-        public static final int cocacola=0x7f020006;
-        public static final int cocacola_light=0x7f020007;
-        public static final int cocacola_zero=0x7f020008;
-        public static final int construccion=0x7f020009;
-        public static final int exclmacion_continuar_pedido=0x7f02000a;
-        public static final int fanta_limon=0x7f02000b;
-        public static final int fanta_naranja=0x7f02000c;
-        public static final int fh1=0x7f02000d;
-        public static final int fh11=0x7f02000e;
-        public static final int fh18=0x7f02000f;
-        public static final int fh19=0x7f020010;
-        public static final int fh2=0x7f020011;
-        public static final int fh22=0x7f020012;
-        public static final int fh23=0x7f020013;
-        public static final int fh26=0x7f020014;
-        public static final int fh27=0x7f020015;
-        public static final int fh3=0x7f020016;
-        public static final int fh30=0x7f020017;
-        public static final int fh31=0x7f020018;
-        public static final int fh33=0x7f020019;
-        public static final int fh34=0x7f02001a;
-        public static final int fh39=0x7f02001b;
-        public static final int fh4=0x7f02001c;
-        public static final int fh40=0x7f02001d;
-        public static final int fh41=0x7f02001e;
-        public static final int fh42=0x7f02001f;
-        public static final int fh43=0x7f020020;
-        public static final int fh44=0x7f020021;
-        public static final int fh5=0x7f020022;
-        public static final int fh6=0x7f020023;
-        public static final int fh9=0x7f020024;
-        public static final int fnd=0x7f020025;
-        public static final int fnd_fh=0x7f020026;
-        public static final int foster=0x7f020027;
-        public static final int foster3=0x7f020028;
-        public static final int fridays=0x7f020029;
-        public static final int fridays3=0x7f02002a;
-        public static final int ginos=0x7f02002b;
-        public static final int ginos3=0x7f02002c;
-        public static final int ham_bed2=0x7f02002d;
-        public static final int ic_action_search=0x7f02002e;
-        public static final int ic_nfcook=0x7f02002f;
-        public static final int icono_plato=0x7f020030;
-        public static final int iconoborrarplato=0x7f020031;
-        public static final int iconoeditarplato=0x7f020032;
-        public static final int iconomas=0x7f020033;
-        public static final int iconomenos=0x7f020034;
-        public static final int informacion_ayuda=0x7f020035;
-        public static final int inicio=0x7f020036;
-        public static final int linea_azul_horizontal=0x7f020037;
-        public static final int linea_azul_vertical=0x7f020038;
-        public static final int logo=0x7f020039;
-        public static final int logo_foster=0x7f02003a;
-        public static final int logo_foster_inicio=0x7f02003b;
-        public static final int logo_foster_pantalla_inicial=0x7f02003c;
-        public static final int logo_vips=0x7f02003d;
-        public static final int logo_vips_inicio=0x7f02003e;
-        public static final int logo_vips_pantalla_inicial=0x7f02003f;
-        public static final int nestea=0x7f020040;
-        public static final int nfcicono=0x7f020041;
-        public static final int ofertas=0x7f020042;
-        public static final int pagar=0x7f020043;
-        public static final int pedido=0x7f020044;
-        public static final int persona=0x7f020045;
-        public static final int sinc_nfc=0x7f020046;
-        public static final int sprite=0x7f020047;
-        public static final int total=0x7f020048;
-        public static final int v1=0x7f020049;
-        public static final int v10=0x7f02004a;
-        public static final int v11=0x7f02004b;
-        public static final int v12=0x7f02004c;
-        public static final int v13=0x7f02004d;
-        public static final int v14=0x7f02004e;
-        public static final int v15=0x7f02004f;
-        public static final int v16=0x7f020050;
-        public static final int v17=0x7f020051;
-        public static final int v18=0x7f020052;
-        public static final int v19=0x7f020053;
-        public static final int v2=0x7f020054;
-        public static final int v20=0x7f020055;
-        public static final int v21=0x7f020056;
-        public static final int v22=0x7f020057;
-        public static final int v23=0x7f020058;
-        public static final int v24=0x7f020059;
-        public static final int v25=0x7f02005a;
-        public static final int v26=0x7f02005b;
-        public static final int v27=0x7f02005c;
-        public static final int v28=0x7f02005d;
-        public static final int v29=0x7f02005e;
-        public static final int v3=0x7f02005f;
-        public static final int v30=0x7f020060;
-        public static final int v31=0x7f020061;
-        public static final int v32=0x7f020062;
-        public static final int v33=0x7f020063;
-        public static final int v34=0x7f020064;
-        public static final int v35=0x7f020065;
-        public static final int v36=0x7f020066;
-        public static final int v37=0x7f020067;
-        public static final int v38=0x7f020068;
-        public static final int v39=0x7f020069;
-        public static final int v4=0x7f02006a;
-        public static final int v40=0x7f02006b;
-        public static final int v41=0x7f02006c;
-        public static final int v42=0x7f02006d;
-        public static final int v43=0x7f02006e;
-        public static final int v44=0x7f02006f;
-        public static final int v45=0x7f020070;
-        public static final int v46=0x7f020071;
-        public static final int v47=0x7f020072;
-        public static final int v48=0x7f020073;
-        public static final int v49=0x7f020074;
-        public static final int v5=0x7f020075;
-        public static final int v50=0x7f020076;
-        public static final int v51=0x7f020077;
-        public static final int v52=0x7f020078;
-        public static final int v53=0x7f020079;
-        public static final int v54=0x7f02007a;
-        public static final int v55=0x7f02007b;
-        public static final int v56=0x7f02007c;
-        public static final int v57=0x7f02007d;
-        public static final int v58=0x7f02007e;
-        public static final int v59=0x7f02007f;
-        public static final int v6=0x7f020080;
-        public static final int v60=0x7f020081;
-        public static final int v61=0x7f020082;
-        public static final int v62=0x7f020083;
-        public static final int v63=0x7f020084;
-        public static final int v64=0x7f020085;
-        public static final int v65=0x7f020086;
-        public static final int v66=0x7f020087;
-        public static final int v67=0x7f020088;
-        public static final int v68=0x7f020089;
-        public static final int v69=0x7f02008a;
-        public static final int v7=0x7f02008b;
-        public static final int v70=0x7f02008c;
-        public static final int v71=0x7f02008d;
-        public static final int v72=0x7f02008e;
-        public static final int v73=0x7f02008f;
-        public static final int v8=0x7f020090;
-        public static final int v9=0x7f020091;
-        public static final int vips=0x7f020092;
-        public static final int vips3=0x7f020093;
+        public static final int beam_icono=0x7f020001;
+        public static final int bordes_redondeados_lista_seleccion_restaurantes=0x7f020002;
+        public static final int boton_ayuda=0x7f020003;
+        public static final int buscarplato=0x7f020004;
+        public static final int calculadora=0x7f020005;
+        public static final int cerveza_mahou=0x7f020006;
+        public static final int cerveza_san_miguel=0x7f020007;
+        public static final int cocacola=0x7f020008;
+        public static final int cocacola_light=0x7f020009;
+        public static final int cocacola_zero=0x7f02000a;
+        public static final int construccion=0x7f02000b;
+        public static final int exclmacion_continuar_pedido=0x7f02000c;
+        public static final int fanta_limon=0x7f02000d;
+        public static final int fanta_naranja=0x7f02000e;
+        public static final int fh1=0x7f02000f;
+        public static final int fh11=0x7f020010;
+        public static final int fh18=0x7f020011;
+        public static final int fh19=0x7f020012;
+        public static final int fh2=0x7f020013;
+        public static final int fh22=0x7f020014;
+        public static final int fh23=0x7f020015;
+        public static final int fh26=0x7f020016;
+        public static final int fh27=0x7f020017;
+        public static final int fh3=0x7f020018;
+        public static final int fh30=0x7f020019;
+        public static final int fh31=0x7f02001a;
+        public static final int fh33=0x7f02001b;
+        public static final int fh34=0x7f02001c;
+        public static final int fh39=0x7f02001d;
+        public static final int fh4=0x7f02001e;
+        public static final int fh40=0x7f02001f;
+        public static final int fh41=0x7f020020;
+        public static final int fh42=0x7f020021;
+        public static final int fh43=0x7f020022;
+        public static final int fh44=0x7f020023;
+        public static final int fh5=0x7f020024;
+        public static final int fh6=0x7f020025;
+        public static final int fh9=0x7f020026;
+        public static final int fnd=0x7f020027;
+        public static final int fnd_fh=0x7f020028;
+        public static final int foster=0x7f020029;
+        public static final int foster3=0x7f02002a;
+        public static final int foster_mapa=0x7f02002b;
+        public static final int fridays=0x7f02002c;
+        public static final int fridays3=0x7f02002d;
+        public static final int ginos=0x7f02002e;
+        public static final int ginos3=0x7f02002f;
+        public static final int ham_bed2=0x7f020030;
+        public static final int ic_action_search=0x7f020031;
+        public static final int ic_nfcook=0x7f020032;
+        public static final int icono_plato=0x7f020033;
+        public static final int iconoborrarplato=0x7f020034;
+        public static final int iconoeditarplato=0x7f020035;
+        public static final int iconomas=0x7f020036;
+        public static final int iconomenos=0x7f020037;
+        public static final int informacion_ayuda=0x7f020038;
+        public static final int inicio=0x7f020039;
+        public static final int linea_azul_horizontal=0x7f02003a;
+        public static final int linea_azul_vertical=0x7f02003b;
+        public static final int logo=0x7f02003c;
+        public static final int logo_foster=0x7f02003d;
+        public static final int logo_foster_inicio=0x7f02003e;
+        public static final int logo_foster_pantalla_inicial=0x7f02003f;
+        public static final int logo_vips=0x7f020040;
+        public static final int logo_vips_inicio=0x7f020041;
+        public static final int logo_vips_pantalla_inicial=0x7f020042;
+        public static final int nestea=0x7f020043;
+        public static final int nfc_icono=0x7f020044;
+        public static final int nfcicono=0x7f020045;
+        public static final int ofertas=0x7f020046;
+        public static final int pagar=0x7f020047;
+        public static final int pedido=0x7f020048;
+        public static final int persona=0x7f020049;
+        public static final int qr_icono=0x7f02004a;
+        public static final int sinc_beam_nfc=0x7f02004b;
+        public static final int sinc_nfc=0x7f02004c;
+        public static final int sincronizar_icono=0x7f02004d;
+        public static final int sprite=0x7f02004e;
+        public static final int total=0x7f02004f;
+        public static final int v1=0x7f020050;
+        public static final int v10=0x7f020051;
+        public static final int v11=0x7f020052;
+        public static final int v12=0x7f020053;
+        public static final int v13=0x7f020054;
+        public static final int v14=0x7f020055;
+        public static final int v15=0x7f020056;
+        public static final int v16=0x7f020057;
+        public static final int v17=0x7f020058;
+        public static final int v18=0x7f020059;
+        public static final int v19=0x7f02005a;
+        public static final int v2=0x7f02005b;
+        public static final int v20=0x7f02005c;
+        public static final int v21=0x7f02005d;
+        public static final int v22=0x7f02005e;
+        public static final int v23=0x7f02005f;
+        public static final int v24=0x7f020060;
+        public static final int v25=0x7f020061;
+        public static final int v26=0x7f020062;
+        public static final int v27=0x7f020063;
+        public static final int v28=0x7f020064;
+        public static final int v29=0x7f020065;
+        public static final int v3=0x7f020066;
+        public static final int v30=0x7f020067;
+        public static final int v31=0x7f020068;
+        public static final int v32=0x7f020069;
+        public static final int v33=0x7f02006a;
+        public static final int v34=0x7f02006b;
+        public static final int v35=0x7f02006c;
+        public static final int v36=0x7f02006d;
+        public static final int v37=0x7f02006e;
+        public static final int v38=0x7f02006f;
+        public static final int v39=0x7f020070;
+        public static final int v4=0x7f020071;
+        public static final int v40=0x7f020072;
+        public static final int v41=0x7f020073;
+        public static final int v42=0x7f020074;
+        public static final int v43=0x7f020075;
+        public static final int v44=0x7f020076;
+        public static final int v45=0x7f020077;
+        public static final int v46=0x7f020078;
+        public static final int v47=0x7f020079;
+        public static final int v48=0x7f02007a;
+        public static final int v49=0x7f02007b;
+        public static final int v5=0x7f02007c;
+        public static final int v50=0x7f02007d;
+        public static final int v51=0x7f02007e;
+        public static final int v52=0x7f02007f;
+        public static final int v53=0x7f020080;
+        public static final int v54=0x7f020081;
+        public static final int v55=0x7f020082;
+        public static final int v56=0x7f020083;
+        public static final int v57=0x7f020084;
+        public static final int v58=0x7f020085;
+        public static final int v59=0x7f020086;
+        public static final int v6=0x7f020087;
+        public static final int v60=0x7f020088;
+        public static final int v61=0x7f020089;
+        public static final int v62=0x7f02008a;
+        public static final int v63=0x7f02008b;
+        public static final int v64=0x7f02008c;
+        public static final int v65=0x7f02008d;
+        public static final int v66=0x7f02008e;
+        public static final int v67=0x7f02008f;
+        public static final int v68=0x7f020090;
+        public static final int v69=0x7f020091;
+        public static final int v7=0x7f020092;
+        public static final int v70=0x7f020093;
+        public static final int v71=0x7f020094;
+        public static final int v72=0x7f020095;
+        public static final int v73=0x7f020096;
+        public static final int v8=0x7f020097;
+        public static final int v9=0x7f020098;
+        public static final int vips=0x7f020099;
+        public static final int vips3=0x7f02009a;
     }
     public static final class id {
-        public static final int AutoCompleteTextViewOpciones=0x7f0a0015;
-        public static final int FrameLayout=0x7f0a0000;
-        public static final int FrameLayout2=0x7f0a0021;
-        public static final int FrameLayoutBienvenida=0x7f0a0011;
-        public static final int FrameLayoutPestanas=0x7f0a0007;
-        public static final int ImageViewLogoInicioRestaurante=0x7f0a002b;
-        public static final int LinearLayout1=0x7f0a0024;
-        public static final int LinearLayout2=0x7f0a0030;
-        public static final int botonOpcion=0x7f0a0017;
-        public static final int botonOpcionEditar=0x7f0a0016;
-        public static final int buttonMapas=0x7f0a002e;
-        public static final int buttonPedidoBorrar=0x7f0a0029;
-        public static final int buttonPedidoEditar=0x7f0a0028;
-        public static final int descripcionPlato=0x7f0a001b;
-        public static final int editTextunidades=0x7f0a001e;
-        public static final int expandableExtras=0x7f0a0020;
-        public static final int expandableListPedido=0x7f0a003f;
-        public static final int expandableListViewPlatos=0x7f0a0022;
-        public static final int gridViewBebidas=0x7f0a0044;
-        public static final int imageButtonNFCSincronizar=0x7f0a0040;
-        public static final int imageView3=0x7f0a003a;
-        public static final int imageViewAnyadirBebida=0x7f0a0036;
-        public static final int imageViewAyuda=0x7f0a002c;
-        public static final int imageViewBebida=0x7f0a0032;
-        public static final int imageViewConstruccion=0x7f0a0006;
-        public static final int imageViewEliminarBebida=0x7f0a0035;
-        public static final int imageViewExclamacion=0x7f0a0004;
-        public static final int imageViewIconoPlato=0x7f0a0037;
-        public static final int imageViewInformacionAyuda=0x7f0a002d;
-        public static final int imageViewLogoListaSeleccionRestaurantes=0x7f0a002f;
-        public static final int imageViewLogoRestaurante=0x7f0a0001;
-        public static final int imageViewMas=0x7f0a001c;
-        public static final int imageViewMenos=0x7f0a001d;
-        public static final int imageViewMonedas=0x7f0a0013;
-        public static final int imageViewMonedasBebidas=0x7f0a0046;
-        public static final int imageViewSincronizarPedido=0x7f0a0043;
-        public static final int imageViewTabInferior=0x7f0a0047;
-        public static final int imagenPlato=0x7f0a001a;
-        public static final int linearLayout1=0x7f0a0008;
-        public static final int listViewCuenta=0x7f0a0012;
-        public static final int listaLogosRestarurtantes=0x7f0a0002;
-        public static final int menu_settings=0x7f0a0049;
-        public static final int nombrePlato=0x7f0a0019;
-        public static final int radioGroup1=0x7f0a0023;
-        public static final int tab1=0x7f0a0009;
-        public static final int tab2=0x7f0a000a;
-        public static final int tab3=0x7f0a000b;
-        public static final int tab4=0x7f0a000c;
-        public static final int tab5=0x7f0a000d;
-        public static final int textViewAviso=0x7f0a0003;
-        public static final int textViewBienvenidaRestaurante=0x7f0a002a;
-        public static final int textViewBienvenidarestaurante=0x7f0a000e;
-        public static final int textViewCuenta=0x7f0a000f;
-        public static final int textViewInformacionAviso=0x7f0a0005;
-        public static final int textViewNombreBebida=0x7f0a0031;
-        public static final int textViewNombrePlatoCuenta=0x7f0a0038;
-        public static final int textViewOpciones=0x7f0a0018;
-        public static final int textViewPadre=0x7f0a003b;
-        public static final int textViewPedidoExtras=0x7f0a0025;
-        public static final int textViewPedidoObservaciones=0x7f0a0027;
-        public static final int textViewPlatoPadre=0x7f0a003c;
-        public static final int textViewPrecio=0x7f0a001f;
-        public static final int textViewPrecioBebida=0x7f0a0034;
-        public static final int textViewPrecioPedidoHijo=0x7f0a0026;
-        public static final int textViewPrecioPlatoCuenta=0x7f0a0010;
-        public static final int textViewPrecioTotalPadre=0x7f0a003d;
-        public static final int textViewTabInferior=0x7f0a0048;
-        public static final int textViewTituloPedido=0x7f0a003e;
-        public static final int textViewTituloSincronizarPedido=0x7f0a0042;
-        public static final int textViewTotalCuenta=0x7f0a0014;
-        public static final int textViewTotalPagarBebidas=0x7f0a0045;
-        public static final int textViewTotalPedido=0x7f0a0041;
-        public static final int textViewUnidadesBebida=0x7f0a0033;
-        public static final int textViewUnidadesCuenta=0x7f0a0039;
+        public static final int AutoCompleteTextViewOpciones=0x7f04001a;
+        public static final int FrameLayout=0x7f040005;
+        public static final int FrameLayoutBienvenida=0x7f040016;
+        public static final int FrameLayoutPestanas=0x7f04000c;
+        public static final int ImageViewLogoInicioRestaurante=0x7f040030;
+        public static final int LinearLayout1=0x7f040026;
+        public static final int LinearLayout2=0x7f04003b;
+        public static final int autoCompleteTextViewBuscadorPlatos=0x7f040027;
+        public static final int botonOpcion=0x7f04001c;
+        public static final int botonOpcionEditar=0x7f04001b;
+        public static final int buttonListaMapa=0x7f040039;
+        public static final int buttonListaMapas=0x7f040034;
+        public static final int buttonMapas=0x7f040033;
+        public static final int buttonPedidoBorrar=0x7f04002e;
+        public static final int buttonPedidoEditar=0x7f04002d;
+        public static final int descripcionPlato=0x7f040020;
+        public static final int editTextunidades=0x7f040023;
+        public static final int expandableExtras=0x7f040025;
+        public static final int expandableListPedido=0x7f04004a;
+        public static final int expandableListViewPlatos=0x7f040028;
+        public static final int gridViewBebidas=0x7f040050;
+        public static final int hybrid=0x7f040004;
+        public static final int imageBeamSincronizar=0x7f040059;
+        public static final int imageNFCSincronizar=0x7f040057;
+        public static final int imageQRSincronizar=0x7f04005b;
+        public static final int imageSincronizar=0x7f04004c;
+        public static final int imageView3=0x7f040045;
+        public static final int imageViewAnyadirBebida=0x7f040041;
+        public static final int imageViewAyuda=0x7f040031;
+        public static final int imageViewBebida=0x7f04003d;
+        public static final int imageViewConstruccion=0x7f04000b;
+        public static final int imageViewEliminarBebida=0x7f040040;
+        public static final int imageViewExclamacion=0x7f040009;
+        public static final int imageViewIconoPlato=0x7f040042;
+        public static final int imageViewInformacionAyuda=0x7f040032;
+        public static final int imageViewLogoListaSeleccionRestaurantes=0x7f040037;
+        public static final int imageViewLogoRestaurante=0x7f040006;
+        public static final int imageViewMas=0x7f040021;
+        public static final int imageViewMenos=0x7f040022;
+        public static final int imageViewMonedas=0x7f040018;
+        public static final int imageViewMonedasBebidas=0x7f040052;
+        public static final int imageViewSincronizarPedido=0x7f04004f;
+        public static final int imageViewTabInferior=0x7f040053;
+        public static final int imagenPlato=0x7f04001f;
+        public static final int linearLayout1=0x7f04000d;
+        public static final int listViewCuenta=0x7f040017;
+        public static final int listViewMapas=0x7f040038;
+        public static final int listaLogosRestarurtantes=0x7f040007;
+        public static final int map=0x7f04003a;
+        public static final int menu_settings=0x7f04005d;
+        public static final int nombrePlato=0x7f04001e;
+        public static final int none=0x7f040000;
+        public static final int normal=0x7f040001;
+        public static final int radioGroup1=0x7f040029;
+        public static final int satellite=0x7f040002;
+        public static final int tab1=0x7f04000e;
+        public static final int tab2=0x7f04000f;
+        public static final int tab3=0x7f040010;
+        public static final int tab4=0x7f040011;
+        public static final int tab5=0x7f040012;
+        public static final int terrain=0x7f040003;
+        public static final int textView1=0x7f040056;
+        public static final int textViewAviso=0x7f040008;
+        public static final int textViewBienvenidaRestaurante=0x7f04002f;
+        public static final int textViewBienvenidarestaurante=0x7f040013;
+        public static final int textViewCuenta=0x7f040014;
+        public static final int textViewInformacionAviso=0x7f04000a;
+        public static final int textViewListaMapaDistancia=0x7f040036;
+        public static final int textViewListaMapaNombre=0x7f040035;
+        public static final int textViewNombreBebida=0x7f04003c;
+        public static final int textViewNombrePlatoCuenta=0x7f040043;
+        public static final int textViewObjetoBusqueda=0x7f040055;
+        public static final int textViewOpciones=0x7f04001d;
+        public static final int textViewPadre=0x7f040046;
+        public static final int textViewPedidoExtras=0x7f04002a;
+        public static final int textViewPedidoObservaciones=0x7f04002c;
+        public static final int textViewPlatoPadre=0x7f040047;
+        public static final int textViewPrecio=0x7f040024;
+        public static final int textViewPrecioBebida=0x7f04003f;
+        public static final int textViewPrecioPedidoHijo=0x7f04002b;
+        public static final int textViewPrecioPlatoCuenta=0x7f040015;
+        public static final int textViewPrecioTotalPadre=0x7f040048;
+        public static final int textViewSincronizarBeam=0x7f04005a;
+        public static final int textViewSincronizarNFC=0x7f040058;
+        public static final int textViewSincronizarQR=0x7f04005c;
+        public static final int textViewTabInferior=0x7f040054;
+        public static final int textViewTituloPedido=0x7f040049;
+        public static final int textViewTituloSincronizarPedido=0x7f04004e;
+        public static final int textViewTotalCuenta=0x7f040019;
+        public static final int textViewTotalPagarBebidas=0x7f040051;
+        public static final int textViewTotalPedido=0x7f04004b;
+        public static final int textViewUnidadesBebida=0x7f04003e;
+        public static final int textViewUnidadesCuenta=0x7f040044;
+        public static final int webViewPromociones=0x7f04004d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -272,42 +418,363 @@ public final class R {
         public static final int hijo_lista_extras_descripcion_plato_y_editar=0x7f03000a;
         public static final int hijo_lista_pedido=0x7f03000b;
         public static final int inicio_restaurante=0x7f03000c;
-        public static final int interior_list_view_seleccion_restaurantes=0x7f03000d;
-        public static final int list_tabs_fragment=0x7f03000e;
-        public static final int padre_grid_bebidas=0x7f03000f;
-        public static final int padre_lista_cuenta=0x7f030010;
-        public static final int padre_lista_expandible_rg=0x7f030011;
-        public static final int padre_lista_pedido=0x7f030012;
-        public static final int pedido=0x7f030013;
-        public static final int sincronizar_pedido=0x7f030014;
-        public static final int tab_superior_categoria_bebidas=0x7f030015;
-        public static final int tabs_inferiores=0x7f030016;
+        public static final int interior_list_view_mapas=0x7f03000d;
+        public static final int interior_list_view_seleccion_restaurantes=0x7f03000e;
+        public static final int list_tabs_fragment=0x7f03000f;
+        public static final int lista_mapas=0x7f030010;
+        public static final int mapas=0x7f030011;
+        public static final int padre_grid_bebidas=0x7f030012;
+        public static final int padre_lista_cuenta=0x7f030013;
+        public static final int padre_lista_expandible_rg=0x7f030014;
+        public static final int padre_lista_pedido=0x7f030015;
+        public static final int pedido=0x7f030016;
+        public static final int promociones=0x7f030017;
+        public static final int sincronizar_pedido_beam_nfc=0x7f030018;
+        public static final int sincronizar_pedido_nfc=0x7f030019;
+        public static final int tab_superior_categoria_bebidas=0x7f03001a;
+        public static final int tabs_inferiores=0x7f03001b;
+        public static final int textview_buscador_platos=0x7f03001c;
+        public static final int ventana_emergente_elegir_sincronizacion=0x7f03001d;
     }
     public static final class menu {
-        public static final int activity_main=0x7f090000;
+        public static final int activity_main=0x7f0a0000;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
-        public static final int bebidas=0x7f050006;
-        public static final int cuenta=0x7f050008;
-        public static final int descripcion=0x7f05000d;
-        public static final int descripcion_plato=0x7f050010;
-        public static final int descripcion_plato_editar=0x7f050011;
-        public static final int entrantes=0x7f050004;
-        public static final int inicial=0x7f05000b;
-        public static final int menu_settings=0x7f050001;
-        public static final int pedido=0x7f050009;
-        public static final int pestanas=0x7f05000e;
-        public static final int postres=0x7f050005;
-        public static final int precio=0x7f05000c;
-        public static final int principales=0x7f050003;
-        public static final int reparto=0x7f05000a;
-        public static final int sincronizar_pedido=0x7f050012;
-        public static final int sugerencias=0x7f050007;
-        public static final int title_activity_main=0x7f050002;
-        public static final int tituloCantidad=0x7f05000f;
+        public static final int app_name=0x7f050011;
+        /**   Title for notification shown when GooglePlayServices is unavailable [CHAR LIMIT=70] 
+         */
+        public static final int auth_client_availability_notification_title=0x7f05000e;
+        /**   Title for notification shown when GooglePlayServices is unavailable [CHAR LIMIT=42] 
+         */
+        public static final int auth_client_play_services_err_notification_msg=0x7f05000f;
+        /**   Requested by string saying which app requested the notification. [CHAR LIMIT=42] 
+         */
+        public static final int auth_client_requested_by_msg=0x7f050010;
+        public static final int bebidas=0x7f050017;
+        /**  Button in confirmation dialog to enable Google Play services.  Clicking it
+        will direct user to application settings of Google Play services where they
+        can enable it [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_enable_button=0x7f050006;
+        /**  Message in confirmation dialog informing user they need to enable
+        Google Play services in application settings [CHAR LIMIT=NONE] 
+         */
+        public static final int common_google_play_services_enable_text=0x7f050005;
+        /**  Title of confirmation dialog informing user they need to enable
+        Google Play services in application settings [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_enable_title=0x7f050004;
+        /**  Button in confirmation dialog for installing Google Play services [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_install_button=0x7f050003;
+        /**  (For phones) Message in confirmation dialog informing user that
+        they need to install Google Play services (from Play Store) [CHAR LIMIT=NONE] 
+         */
+        public static final int common_google_play_services_install_text_phone=0x7f050001;
+        /**  (For tablets) Message in confirmation dialog informing user that
+        they need to install Google Play services (from Play Store) [CHAR LIMIT=NONE] 
+         */
+        public static final int common_google_play_services_install_text_tablet=0x7f050002;
+        /**  Title of confirmation dialog informing user that they need to install
+        Google Play services (from Play Store) [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_install_title=0x7f050000;
+        /**  Message in confirmation dialog informing user there is an unknown issue in Google Play
+        services [CHAR LIMIT=NONE] 
+         */
+        public static final int common_google_play_services_unknown_issue=0x7f050009;
+        /**  Message in confirmation dialog informing user that Google Play services is not supported on their device [CHAR LIMIT=NONE] 
+         */
+        public static final int common_google_play_services_unsupported_text=0x7f05000b;
+        /**  Title of confirmation dialog informing user that Google Play services is not supported on their device [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_unsupported_title=0x7f05000a;
+        /**  Button in confirmation dialog for updating Google Play services [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_update_button=0x7f05000c;
+        /**  Message in confirmation dialog informing user that they need to update
+        Google Play services (from Play Store) [CHAR LIMIT=NONE] 
+         */
+        public static final int common_google_play_services_update_text=0x7f050008;
+        /**  Title of confirmation dialog informing user that they need to update
+        Google Play services (from Play Store) [CHAR LIMIT=40] 
+         */
+        public static final int common_google_play_services_update_title=0x7f050007;
+        /**  Long form sign-in button text. This is the placeholder text, used if we can't
+        find the service-side assets. [CHAR LIMIT=25] 
+         */
+        public static final int common_signin_button_text_long=0x7f05000d;
+        public static final int cuenta=0x7f050019;
+        public static final int descripcion=0x7f05001e;
+        public static final int descripcion_plato=0x7f050021;
+        public static final int descripcion_plato_editar=0x7f050022;
+        public static final int entrantes=0x7f050015;
+        public static final int error_escritura=0x7f050027;
+        public static final int escritura_ok=0x7f050026;
+        public static final int inicial=0x7f05001c;
+        public static final int mapas=0x7f050029;
+        public static final int menu_settings=0x7f050012;
+        public static final int pedido=0x7f05001a;
+        public static final int pestanas=0x7f05001f;
+        public static final int postres=0x7f050016;
+        public static final int precio=0x7f05001d;
+        public static final int principales=0x7f050014;
+        public static final int reparto=0x7f05001b;
+        public static final int sincronizar_pedido_Beam_NFC=0x7f050024;
+        public static final int sincronizar_pedido_NFC=0x7f050023;
+        public static final int sugerencias=0x7f050018;
+        public static final int tag_detectada=0x7f050028;
+        public static final int tag_no_detectada=0x7f050025;
+        public static final int title_activity_main=0x7f050013;
+        public static final int tituloCantidad=0x7f050020;
     }
     public static final class style {
-        public static final int AppTheme=0x7f070000;
+        public static final int AppTheme=0x7f080000;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a MapAttrs.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #MapAttrs_cameraBearing com.example.nfcook:cameraBearing}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLat com.example.nfcook:cameraTargetLat}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLng com.example.nfcook:cameraTargetLng}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTilt com.example.nfcook:cameraTilt}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraZoom com.example.nfcook:cameraZoom}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_mapType com.example.nfcook:mapType}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiCompass com.example.nfcook:uiCompass}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiRotateGestures com.example.nfcook:uiRotateGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiScrollGestures com.example.nfcook:uiScrollGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiTiltGestures com.example.nfcook:uiTiltGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomControls com.example.nfcook:uiZoomControls}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomGestures com.example.nfcook:uiZoomGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_useViewLifecycle com.example.nfcook:useViewLifecycle}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_zOrderOnTop com.example.nfcook:zOrderOnTop}</code></td><td></td></tr>
+           </table>
+           @see #MapAttrs_cameraBearing
+           @see #MapAttrs_cameraTargetLat
+           @see #MapAttrs_cameraTargetLng
+           @see #MapAttrs_cameraTilt
+           @see #MapAttrs_cameraZoom
+           @see #MapAttrs_mapType
+           @see #MapAttrs_uiCompass
+           @see #MapAttrs_uiRotateGestures
+           @see #MapAttrs_uiScrollGestures
+           @see #MapAttrs_uiTiltGestures
+           @see #MapAttrs_uiZoomControls
+           @see #MapAttrs_uiZoomGestures
+           @see #MapAttrs_useViewLifecycle
+           @see #MapAttrs_zOrderOnTop
+         */
+        public static final int[] MapAttrs = {
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
+            0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b,
+            0x7f01000c, 0x7f01000d
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#cameraBearing}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:cameraBearing
+        */
+        public static final int MapAttrs_cameraBearing = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#cameraTargetLat}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:cameraTargetLat
+        */
+        public static final int MapAttrs_cameraTargetLat = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#cameraTargetLng}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:cameraTargetLng
+        */
+        public static final int MapAttrs_cameraTargetLng = 3;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#cameraTilt}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:cameraTilt
+        */
+        public static final int MapAttrs_cameraTilt = 4;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#cameraZoom}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:cameraZoom
+        */
+        public static final int MapAttrs_cameraZoom = 5;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#mapType}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>0</td><td></td></tr>
+<tr><td><code>normal</code></td><td>1</td><td></td></tr>
+<tr><td><code>satellite</code></td><td>2</td><td></td></tr>
+<tr><td><code>terrain</code></td><td>3</td><td></td></tr>
+<tr><td><code>hybrid</code></td><td>4</td><td></td></tr>
+</table>
+          @attr name android:mapType
+        */
+        public static final int MapAttrs_mapType = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#uiCompass}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:uiCompass
+        */
+        public static final int MapAttrs_uiCompass = 6;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#uiRotateGestures}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:uiRotateGestures
+        */
+        public static final int MapAttrs_uiRotateGestures = 7;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#uiScrollGestures}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:uiScrollGestures
+        */
+        public static final int MapAttrs_uiScrollGestures = 8;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#uiTiltGestures}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:uiTiltGestures
+        */
+        public static final int MapAttrs_uiTiltGestures = 9;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#uiZoomControls}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:uiZoomControls
+        */
+        public static final int MapAttrs_uiZoomControls = 10;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#uiZoomGestures}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:uiZoomGestures
+        */
+        public static final int MapAttrs_uiZoomGestures = 11;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#useViewLifecycle}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:useViewLifecycle
+        */
+        public static final int MapAttrs_useViewLifecycle = 12;
+        /**
+          <p>This symbol is the offset where the {@link com.example.nfcook.R.attr#zOrderOnTop}
+          attribute's value can be found in the {@link #MapAttrs} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:zOrderOnTop
+        */
+        public static final int MapAttrs_zOrderOnTop = 13;
+    };
 }

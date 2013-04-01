@@ -2,34 +2,39 @@
     package="com.example.nfcook"
     android:versionCode="1"
     android:versionName="1.0" >
-    
-    <permission
-      				android:name="com.google.nfcook.permission.MAPS_RECEIVE"
-      				android:protectionLevel="signature"/>
- 
-	<uses-permission 
-		    		android:name="com.google.nfcook.permission.MAPS_RECEIVE"/>
-	
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
-	<uses-feature android:glEsVersion="0x00020000"
-              android:required="true"/>
+    <permission
+        android:name="com.example.nfcook.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="com.example.nfcook.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <uses-permission android:name="android.permission.NFC" />
 	
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="11" />
+        android:targetSdkVersion="15" /> 
 
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
+    
     <application
-        >
-        <meta-data  android:name="com.google.nfcook.API_KEY"
-               	    android:value="AIzaSyCK7hm5RH-_dTFnVJVUatAL-xkcZip1NWk"/>
         android:icon="@drawable/ic_nfcook"
         android:label="@string/app_name"
-       	android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme"
        >
+       <uses-library android:name="com.google.android.maps"/>
+       <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBbvBjE6C7sk8VJsU79Ss8IO1qRiAqeWpk" />
         <activity
             android:name="usuario.MainActivity"
             android:label="@string/title_activity_main"
@@ -70,15 +75,36 @@
             android:name="usuario.DescripcionPlato"
             android:label="@string/descripcion_plato"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-           >
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="usuario.SincronizarPedido"
-            android:label="@string/sincronizar_pedido"
+            android:name="usuario.SincronizarPedidoNFC"
+            android:label="@string/sincronizar_pedido_NFC"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-           >
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="usuario.SincronizarPedidoBeamNFC"
+            android:label="@string/sincronizar_pedido_Beam_NFC"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
+        </activity>
+         <activity
+            android:name="usuario.Mapas"
+            android:label="@string/mapas"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+         <activity
+            android:name="usuario.ListaMapas"
+            android:label="@string/mapas"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

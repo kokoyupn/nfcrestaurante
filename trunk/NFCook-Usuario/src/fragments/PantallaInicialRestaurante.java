@@ -1,18 +1,26 @@
 package fragments;
 
+import usuario.InicializarRestaurante;
+import usuario.ListaMapas;
+import usuario.Mapas;
+
 import com.example.nfcook.R;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PantallaInicialRestaurante extends Fragment{
 	
@@ -39,12 +47,38 @@ public class PantallaInicialRestaurante extends Fragment{
 		bienvenida.setText("Bienvenido a \n" + restauranteAux);
 		
 		//listener de las imagenes
+		ponerOnclickMapas();
+		ponerOnclickListaMapas();
 		ponerOnClickAyuda();
 		ponerOnClickInformacionAyuda();
 		
 		return vista;
     }
 	
+	private void ponerOnclickMapas() {
+		
+		Button botonMapas = (Button) vista.findViewById(R.id.buttonMapas);
+		botonMapas.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), Mapas.class);
+		    	startActivity(intent);
+			}
+		});
+	}
+	
+	private void ponerOnclickListaMapas() {
+		
+		Button botonMapas = (Button) vista.findViewById(R.id.buttonListaMapas);
+		botonMapas.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), ListaMapas.class);
+		    	startActivity(intent);
+			}
+		});
+	}
+
 	public void setRestaurante(String restaurante){
 		this.restaurante = restaurante;
 	}

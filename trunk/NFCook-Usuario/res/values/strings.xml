@@ -49,4 +49,5 @@
         <item>20</item>
         <item>mas</item>
     </string-array>
+    <string name="mapas">Mapas</string>
 </resources>
