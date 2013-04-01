@@ -39,7 +39,7 @@
                 android:layout_height="59dp"
                 android:layout_margin="10dp"
                 android:src="@drawable/construccion" />
-
+
             <TextView
                 android:id="@+id/textViewInformacionAviso"
                 android:layout_width="wrap_content"

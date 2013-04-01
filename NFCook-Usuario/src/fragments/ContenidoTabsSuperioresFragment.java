@@ -11,7 +11,6 @@ import java.util.Set;
 
 import usuario.DescripcionPlato;
 import adapters.MiCursorAdapterBuscadorPlatos;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;

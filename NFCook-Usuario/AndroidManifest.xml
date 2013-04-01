@@ -73,9 +73,12 @@
         </activity>
         <activity
             android:name="usuario.DescripcionPlato"
-            android:label="@string/descripcion_plato"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
+            android:label="@string/descripcion_plato"  >
+        </activity>
+         <activity
+            android:name="usuario.Calculadora"
+            android:label="@string/calculadora"
+            android:screenOrientation="portrait"  >
         </activity>
         <activity
             android:name="usuario.SincronizarPedidoNFC"
