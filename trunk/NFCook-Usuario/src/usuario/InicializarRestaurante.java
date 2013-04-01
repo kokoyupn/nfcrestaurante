@@ -13,13 +13,13 @@ import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
-import fragments.PromocionesFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,10 +27,13 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -39,11 +42,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Esta clase es la encargada de cargar toda la información del restaurarnte que hemos seleccionado.
+ * Esta clase es la encargada de cargar toda la información del restaurante que hemos seleccionado.
  * 
  * Carga los tabs superiores con las distintas categorías que ofreza el restaurante.
  * Carga el logo y el texto de bienvenida del restaurante.
  * Carga los tabs inferiores, que serán comunes para todos los restaurantes.
+ * 
  * @author Abel
  *
  */
@@ -65,11 +69,15 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private View tabInferiorContentView;
 	
 	// Información de que tab está seleccionado
+	/*
+	 * FIXME Se han quedado sin uso por el momento, pero se dejan hasta que se solucione
+	 * el problema del tab de arriba marcado, por si hicieran falta para solventar ese
+	 * problema
+	 */
 	private static String tabInferiorPulsado;
 	private static boolean pulsadoTabSuperior;
 	
-	//Ventana emergente
-	public AlertDialog ventanaEmergente;
+	private int numComensales;
 	
 	public static void setPulsadoTabSuperior(boolean pulsado){
 		pulsadoTabSuperior = pulsado;
@@ -289,10 +297,17 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        		        m.commit();
 	        			}else if(tabs.getCurrentTabTag().equals("tabCalculadora")){
-	        				/*
-	        				 * TODO Hacer su layout y su funcionalidad
-	        				 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún
-	        				 */
+	        				// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
+	        				if(hayAlgunPedidoSincronizado()){
+	        					lanzarVentanaEmergenteParaIndicarNumeroComensales();
+	        				}else{
+	        					if(pulsadoTabSuperior){
+	        					    actionbar.selectTab(actionbar.getSelectedTab());
+	        					}else{
+	        					    tabs.setCurrentTabByTag(tabInferiorPulsado);
+	        					}
+	        					lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido();
+	        				}
 	        			}
             		}
             		return false;
@@ -347,23 +362,13 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		}else if(tabId.equals("tabPromociones")){
 			pulsadoTabSuperior = false;
 			tabInferiorPulsado = "tabPromociones";
-			Fragment fragmentPedido = new PromocionesFragment();
-			((PromocionesFragment) fragmentPedido).setRestaurante(restaurante);
-	        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
-	        m.addToBackStack("Promociones");
-	        m.commit();
-			/*
-			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
-			 */
-			/**********************************************************************************************/
-			if(pulsadoTabSuperior){
-				tabs.setCurrentTab(0);
-				actionbar.selectTab(actionbar.getSelectedTab());
-			}else{
-				tabs.setCurrentTabByTag(tabInferiorPulsado);
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			if(restaurante.equals("Foster")){
+				intent.setData(Uri.parse("http://www.elchequegorron.es/"));
+			}else if(restaurante.equals("vips")){
+				intent.setData(Uri.parse("http://www.vips.es/promociones"));
 			}
-			/**********************************************************************************************/
+    		startActivity(intent);
 		}else if(tabId.equals("tabPedidoSincronizar")){
 			pulsadoTabSuperior = false;
 			tabInferiorPulsado = "tabPedidoSincronizar";
@@ -383,37 +388,19 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.addToBackStack("Cuenta");
 	        m.commit();
 		}else if(tabId.equals("tabCalculadora")){
-			/*
-			 * TODO Hacer su layout y su funcionalidad
-			 * Actualmente se muestra un aviso de que la sección no se encuentra disponible aún.
-			 */
-			//Creación y configuración de la ventana emergente
-			ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this).create();
-			View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.aviso_seccion_no_disponible, null);
-			ventanaEmergente.setView(vistaAviso);
-			ventanaEmergente.show();
-			
-			//Crea el timer para que el mensaje solo aparezca durante 3 segundos
-			final Timer t = new Timer();
-			t.schedule(new TimerTask() {
-	         public void run() {
-	            ventanaEmergente.dismiss(); 
-	             t.cancel(); 
-	         }
-			}, 2000);
-			
-			
-			/*
-			 * FIXME Chapuza para que no vuelva a entrar en el selected al desmarcarse y vuelva a mostrar el aviso
-			 */
-			/**********************************************************************************************/
-			if(pulsadoTabSuperior){
-				tabs.setCurrentTab(0);
-				actionbar.selectTab(actionbar.getSelectedTab());
+			// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
+			if(hayAlgunPedidoSincronizado()){
+				pulsadoTabSuperior = false;
+				tabInferiorPulsado = "tabCalculadora";
+				lanzarVentanaEmergenteParaIndicarNumeroComensales();
 			}else{
-				tabs.setCurrentTabByTag(tabInferiorPulsado);
+				if(pulsadoTabSuperior){
+				    actionbar.selectTab(actionbar.getSelectedTab());
+				}else{
+				    tabs.setCurrentTabByTag(tabInferiorPulsado);
+				}
+				lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido();
 			}
-			/**********************************************************************************************/
 		}
 	}
 
@@ -421,4 +408,106 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	public View createTabContent(String tag) {
         return tabInferiorContentView;
 	}
+	
+	// Metodo encargado de lanzar la ventana emergente para indicar el número de comesales
+	public void lanzarVentanaEmergenteParaIndicarNumeroComensales(){
+		numComensales = 0;
+		
+        // Creamos y lanzamos la ventana emergente para conocer el nº de comensales
+		AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this); 
+        // Creamos su vista
+        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.ventana_emergente_seleccionar_numero_comensales, null);
+        final EditText editTextNumeroPersonas = (EditText) vistaVentanaEmergente.findViewById(R.id.editTextNumComensalesCalculadora);
+        // Hacemos oyente al campo que recoge el número de comensales
+        editTextNumeroPersonas.addTextChangedListener(new TextWatcher() {
+			
+			public void afterTextChanged(Editable s) {
+	        	// Intentamos hacer la conversion a entero
+				try{
+					String a = editTextNumeroPersonas.getText().toString();
+	          	  	numComensales = Integer.parseInt(a);
+				}catch(Exception e){
+					numComensales = 0;
+		         	Toast.makeText(getApplicationContext(),"Introduce un número de comensales válido.",Toast.LENGTH_SHORT).show();
+				}
+	        }
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				  
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				  
+			}
+		});
+        
+        ventanaEmergente.setNegativeButton("Cancelar", null);
+        // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
+        ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
+          	public void onClick(DialogInterface dialog, int whichButton) {
+          		if(numComensales > 0){
+	    	      	Intent intent = new Intent(getApplicationContext(),Calculadora.class);
+	    	      	intent.putExtra("numeroComensales", numComensales);
+	    	    	startActivity(intent);
+          		}else{
+		         	Toast.makeText(getApplicationContext(),"Introduce un número de comensales válido.",Toast.LENGTH_SHORT).show();
+          		}
+          	}
+        });
+        
+        // Aplicamos la vista y la mostramos
+		ventanaEmergente.setView(vistaVentanaEmergente);
+		ventanaEmergente.show();
+	}
+	
+	// Metodo encargado de decirnos si se ha sincronizado algún pedido o no
+	public boolean hayAlgunPedidoSincronizado(){
+		try{
+			// Importamos la base de datos de cuenta
+			/*
+			 * FIXME Hay que poner la bd de cuenta
+			 */
+			HandlerDB sqlCuenta = new HandlerDB(getApplicationContext(),"Pedido.db"); 
+			SQLiteDatabase dbCuenta = sqlCuenta.open();
+			String[] camposCuenta = new String[]{"Id"};//Campos que quieres recuperar
+			Cursor cursorCuenta = dbCuenta.query("Pedido", camposCuenta, null, null,null, null,null);
+			// Miramos a ver si tiene al menos algún elemento
+			if(cursorCuenta.moveToFirst()){
+				return true;
+			}else{
+				return false;
+			}
+	    }catch(SQLiteException e){
+	     	Toast.makeText(getApplicationContext(),"NO EXISTE LA BASE DE DATOS DE CUENTA",Toast.LENGTH_SHORT).show();
+	     	return false;
+	    }
+	}
+	
+	// Metodo encargado de lanzar la ventana emergente para indicar el número de comesales
+	public void lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido(){
+        // Creamos y lanzamos la ventana emergente para conocer el nº de comensales
+		final AlertDialog ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this).create(); 
+        // Creamos su vista
+        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.aviso_seccion_no_disponible, null);
+        
+        // Sacamos los campos y les damos valor
+        ImageView imageViewCalculadora = (ImageView) vistaVentanaEmergente.findViewById(R.id.imageViewConstruccion);  
+        imageViewCalculadora.setImageResource(getResources().getIdentifier("calculadora","drawable",this.getPackageName()));
+        TextView textViewMensaje = (TextView) vistaVentanaEmergente.findViewById(R.id.textViewInformacionAviso);  
+        textViewMensaje.setText("Debe haber realizado mínimo algún pedido para poder disfrutar de esta utilidad.");
+        
+        // Aplicamos la vista y la mostramos
+		ventanaEmergente.setView(vistaVentanaEmergente);
+		ventanaEmergente.show();
+		
+		//Crea el timer para que el mensaje solo aparezca durante 3,5 segundos
+		final Timer t = new Timer();
+		t.schedule(new TimerTask() {
+			public void run() {
+				ventanaEmergente.dismiss(); 
+				t.cancel(); 
+			}
+		}, 3500);	
+	}
+	
 }

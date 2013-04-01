@@ -144,14 +144,11 @@ public class MainActivity extends Activity{
 	    	intent.putExtra("logoRestaurante",logosRestaurantes.get(posicion));
 	    	startActivity(intent);
 		}
-		/*
-		Intent intent = new Intent(this,Calculadora.class);
-    	startActivity(intent);*/
     }
 	
 	private boolean baseDeDatosPedidoyCuentaVacias() {
 		try{
-			HandlerDB sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
+			HandlerDB sqlPedido = new HandlerDB(getApplicationContext(),"Pedido.db"); 
 			SQLiteDatabase dbPedido = sqlPedido.open();
 			HandlerDB sqlCuenta=new HandlerDB(getApplicationContext(),"Cuenta.db"); 
 			SQLiteDatabase dbCuenta = sqlCuenta.open();
@@ -182,6 +179,7 @@ public class MainActivity extends Activity{
 		editor.putInt("PosicionRestaurante", posicion);
 		editor.commit(); //Para que surja efecto el cambio
 	}
+	
 	public int getUltimoRestaurante(){
 		//SharedPreferences nos permite recuperar datos aunque la aplicacion se haya cerrado
 		SharedPreferences ultimoRestaurante = getSharedPreferences("Nombre_Restaurante", 0);
@@ -202,9 +200,9 @@ public class MainActivity extends Activity{
 			
 			public void onClick(DialogInterface dialog, int which) {
 				try{
-					HandlerDB sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
+					HandlerDB sqlPedido = new HandlerDB(getApplicationContext(),"Pedido.db"); 
 					SQLiteDatabase dbPedido = sqlPedido.open();
-					HandlerDB sqlCuenta=new HandlerDB(getApplicationContext(),"Cuenta.db"); 
+					HandlerDB sqlCuenta = new HandlerDB(getApplicationContext(),"Cuenta.db"); 
 					SQLiteDatabase dbCuenta = sqlCuenta.open();
 					dbPedido.delete("Pedido", null, null);
 					dbCuenta.delete("Cuenta", null, null);
