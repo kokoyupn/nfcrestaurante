@@ -16,7 +16,8 @@
         android:layout_marginTop="6dp"
         android:ems="10"
         android:text="Abelino"
-        android:textColor="@color/blanco" >
+        android:textColor="@color/blanco"
+        android:textSize="15sp" >
 
         <requestFocus />
     </EditText>
@@ -27,8 +28,8 @@
 
         <ImageView
             android:id="@+id/imageViewPersonaCalculadora"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginLeft="6dp"
             android:src="@drawable/persona" />
 
@@ -36,17 +37,25 @@
             android:id="@+id/textViewTotalPagarPersonaCalculadora"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginRight="5dp"
             android:text="25.8 E"
             android:textColor="@color/blanco" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/icono_eliminar" />
 
     </FrameLayout>
 
     <ListView
         android:id="@+id/listViewPlatosPersona"
         android:layout_width="match_parent"
-        android:layout_height="89dp"
+        android:layout_height="85dp"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
