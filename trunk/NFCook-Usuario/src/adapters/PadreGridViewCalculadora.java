@@ -36,6 +36,14 @@ public class PadreGridViewCalculadora {
 		return Math.rint(total*100)/100;
 	}
 	
+	/*
+	 * Metodo encargado de devolver el número de personas con las que tiene compartido
+	 * un determinado plato un usuario.
+	 */
+	public int dameNumeroPersonasCompartidoPlato(int posPlato){
+		return platos.get(posPlato).getNumPersonasRepartido();
+	}
+	
 	public InformacionPlatoCantidad getPlato(int pos) {
 		String nombrePlato = platos.get(pos).getNombrePlato();
 		int porcion = platos.get(pos).getNumPersonasRepartido();
@@ -47,6 +55,10 @@ public class PadreGridViewCalculadora {
 		}
 		InformacionPlatoCantidad info = new InformacionPlatoCantidad(nombrePlato, por, precioPlato, precioPagar);
 		return info;
+	}
+	
+	public String dameIdPlatoEnPedido(int posPlato){
+		return platos.get(posPlato).getIdPlatoEnPedido();
 	}
 	
 	public int getNumPlatos() {

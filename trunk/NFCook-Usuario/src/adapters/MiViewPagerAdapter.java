@@ -43,8 +43,8 @@ import android.widget.TextView;
  */
 public class MiViewPagerAdapter extends PagerAdapter{
 	 private Activity activity;
-	 private ArrayList<InfomacionPlatoPantallaReparto> platos;
-	 private int numPersonas;
+	 private static ArrayList<InfomacionPlatoPantallaReparto> platos;
+	 private static int numPersonas;
 	 /*
 	 * Matriz de booleanos que nos ayuda a saber las personas a las que ha sido
 	 * asignado un determinado plato. De esta forma si intentamos hacer el reparto
@@ -52,41 +52,79 @@ public class MiViewPagerAdapter extends PagerAdapter{
 	 * que sea, se cargan las personas que ya hubieramos seleccionado y le ahorramos
 	 * ese trabajo al usuario de tener que volver a marcar todo.
 	 */
-	 private static boolean[][] marcados; 
+	 private static ArrayList<ArrayList<Boolean>> personasMarcadoPlato;
 	 /*
 	 * Matriz de booleanos que nos ayuda a saber los platos que se le han asignado a
 	 * una persona. Nos ayuda a no introducir a un usuario dos veces un mismo plato.
 	 */
-	 private static boolean[][] platosSeleccionados;
+	 private static ArrayList<ArrayList<Boolean>> personasAsignadasPlato;
 	 
-	 public MiViewPagerAdapter(Activity act, ArrayList<InfomacionPlatoPantallaReparto> platos, int numPersonas) {
+	 public MiViewPagerAdapter(Activity act, ArrayList<InfomacionPlatoPantallaReparto> plat, int numPers) {
 		activity = act;
-		this.platos = platos;
-		this.numPersonas = numPersonas;
+		platos = plat;
+		numPersonas = numPers;
 		int numPlatos = platos.size();
 		
 		// Inicializamos las matrices de booleanos a false ambas
-		marcados = new boolean [numPlatos][numPersonas];
+		personasMarcadoPlato = new ArrayList<ArrayList<Boolean>>(); 
+		ArrayList<Boolean> personas;
 		for (int i=0; i<numPlatos;i++){
+			// Creamos el array list de las personas
+			personas = new ArrayList<Boolean>();
 			for (int j=0; j<numPersonas;j++){
-				marcados[i][j] = false;
+				personas.add(false);
 			}
+			personasMarcadoPlato.add(personas);
 		}
 		
-		platosSeleccionados = new boolean [numPlatos][numPersonas];
+		personasAsignadasPlato = new ArrayList<ArrayList<Boolean>>();
 		for (int i=0; i<numPlatos;i++){
+			// Creamos el array list de las personas
+			personas = new ArrayList<Boolean>();
 			for (int j=0; j<numPersonas;j++){
-				platosSeleccionados[i][j] = false;
+				personas.add(false);
 			}
+			personasAsignadasPlato.add(personas);
 		}
+	 }
+	 
+	 public static void nuevaPersonaAnyadida(){
+		// Inicializamos los platos seleccionados de la nueva persona a false
+		int numPlatos = platos.size();
+		for (int i=0; i<numPlatos; i++){
+			personasMarcadoPlato.get(i).add(false);
+		}
+		
+		// Inicializamos los platos que ya tiene asignados una persona a false
+		for (int i=0; i<numPlatos; i++){
+			personasAsignadasPlato.get(i).add(false);
+		}
+		
+		// Aumentamos el número de personas
+		numPersonas++;
+	 }
+	 
+	 public static void personaEliminada(int posPersona){
+		// Eliminamos a la persona de las matrices
+		int numPlatos = platos.size();
+		for (int i=0; i<numPlatos; i++){
+			personasMarcadoPlato.get(i).remove(posPersona);
+		}
+
+		for (int i=0; i<numPlatos; i++){
+			personasAsignadasPlato.get(i).remove(posPersona);
+		}
+		
+		// Disminuimos el número de personas
+		numPersonas--;
 	 }
 	 
 	 public static void marcaCheckBox(int posPlato, int posPersona){
-		 marcados[posPlato][posPersona] = true;
+		 personasMarcadoPlato.get(posPlato).set(posPersona, true);
 	 }
 	 
 	 public static void desmarcaCheckBox(int posPlato, int posPersona){
-		 marcados[posPlato][posPersona] = false;
+		 personasMarcadoPlato.get(posPlato).set(posPersona, false);
 	 }
 
 	 @Override
@@ -117,7 +155,7 @@ public class MiViewPagerAdapter extends PagerAdapter{
 				imageViewPlato.setImageResource(platos.get(pos).getFotoPlato());
 				
 				GridView gridViewRepartoPlato = (GridView) vistaVentanaEmergente.findViewById(R.id.gridViewRepartirPlatoCalculadora);
-				MiGridViewRepartirPlatoCalculadoraAdapter miGridViewRepartirPlatocalculadoraAdapter = new MiGridViewRepartirPlatoCalculadoraAdapter(activity, MiGridViewCalculadoraAdapter.getPersonas(), marcados, pos);
+				MiGridViewRepartirPlatoCalculadoraAdapter miGridViewRepartirPlatocalculadoraAdapter = new MiGridViewRepartirPlatoCalculadoraAdapter(activity, MiGridViewCalculadoraAdapter.getPersonas(), personasMarcadoPlato, pos);
 				gridViewRepartoPlato.setAdapter(miGridViewRepartirPlatocalculadoraAdapter);
 				
 				// Implementamos la funcionalidad de los dos botones
@@ -127,19 +165,19 @@ public class MiViewPagerAdapter extends PagerAdapter{
 			        	// Contamos cuantas personas han compartido ese plato
 			        	int total = 0;
 			        	for(int i=0; i<numPersonas; i++){
-			        		if(marcados[pos][i]){
+			        		if(personasMarcadoPlato.get(pos).get(i)){
 			        			// Aumentamos el número de personas que han tomado ese plato
 			        			total++;
 			        			// Aumentamos en una unidad las personas para luego calcular el precio
 			        			// Miramos que no estuviese ya esa persona
-			        			if(!platosSeleccionados[pos][i]){
+			        			if(!personasAsignadasPlato.get(pos).get(i)){
 			        				platos.get(pos).anyadePersonaAlReparto();
 			        			}
 			        		}else{
 			        			// Miramos si habia sido asignada esa persona
-			        			if(platosSeleccionados[pos][i]){
+			        			if(personasAsignadasPlato.get(pos).get(i)){
 			        				platos.get(pos).quitaPersonaAlReparto();
-			        				platosSeleccionados[pos][i] = false;
+			        				personasAsignadasPlato.get(pos).set(i, false);
 			        				// Le quitamos el plato al comensal para que lo vea reflejado en su total a pagar
 			        				MiGridViewCalculadoraAdapter.quitarPlatoPersona(i, platos.get(pos).getIdPlatoEnPedido());
 			        			}
@@ -154,11 +192,11 @@ public class MiViewPagerAdapter extends PagerAdapter{
 			        		 * que ha de pagar.
 			        		 */
 			        		for(int i=0; i<numPersonas; i++){
-				        		if (marcados[pos][i]){
+				        		if (personasMarcadoPlato.get(pos).get(i)){
 				        			// Miramos si no había seleccionado antes el plato esa persona
-				        			if(!platosSeleccionados[pos][i]){
+				        			if(!personasAsignadasPlato.get(pos).get(i)){
 				        				MiGridViewCalculadoraAdapter.anyadirPlatoPersona(i, platos.get(pos).getIdPlatoEnPedido(), platos.get(pos).getNombrePlato(), platos.get(pos).getPrecioPlato(),total);
-				        				platosSeleccionados[pos][i] = true;
+				        				personasAsignadasPlato.get(pos).set(i, true);
 				        			}else{
 				        				// Reajustamos el precio del plato por si se hubiera metido alguien mas a ese plato
 				        				MiGridViewCalculadoraAdapter.reajustarPrecioPlato(i, platos.get(pos).getIdPlatoEnPedido(), total);

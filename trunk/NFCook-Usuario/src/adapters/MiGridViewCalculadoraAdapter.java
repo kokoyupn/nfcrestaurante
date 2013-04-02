@@ -2,18 +2,23 @@ package adapters;
 
 import java.util.ArrayList;
 
+import usuario.Calculadora;
+
 import com.example.nfcook.R;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +45,9 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 	private LayoutInflater l_Inflater;
 	private Context context;
 	private ArrayList<InformacionPlatoCantidad> platos;
-	MiListPlatosPersonaCalculadora miListAdaper;
-	ListView listaPlatosPersona;
+	
+	// Atributo para evitar conflictos en los edittext de los nombres de usuario
+	private int edit = -1;
 	
 	public MiGridViewCalculadoraAdapter(Context context, ArrayList<PadreGridViewCalculadora> pers) {
 		personas = pers;
@@ -87,7 +93,7 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 		// Obtenemos todos los campos de texto para darles valor
 		final EditText editTextNombrePersona = (EditText) convertView.findViewById(R.id.editTextNombrePersonaCalculadora);
 		TextView textViewTotal = (TextView) convertView.findViewById(R.id.textViewTotalPagarPersonaCalculadora);
-		listaPlatosPersona = (ListView) convertView.findViewById(R.id.listViewPlatosPersona);
+		final ListView listaPlatosPersona = (ListView) convertView.findViewById(R.id.listViewPlatosPersona);
 		
 		/*
 		 *  Hacemos oyente al campo de texto del nombre de la persona, por si lo cambia
@@ -97,25 +103,38 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 		editTextNombrePersona.addTextChangedListener(new TextWatcher() {
 			
 			public void afterTextChanged(Editable s) {
-	        	// Comprobamos que el nombre no mide más de 13 caracteres
-	        	if(editTextNombrePersona.getText().toString().length() <= 13){
-	        		personas.get(pos).setNombre(editTextNombrePersona.getText().toString());
-	        	}else{
-	        		// Si tiene más de 13 caracteres el nombre de la persona le avisamo y no dejamos escribir más
-	        		Toast.makeText(context,"El nombre de la persona no puede tener más de 13 caracteres.",Toast.LENGTH_SHORT).show();
-	        		String nombre = editTextNombrePersona.getText().toString().substring(0, 13);
-	        		editTextNombrePersona.setText(nombre);
-	        	}
+	        	
 	        }
 	          
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				  
 			}
 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				  
+				// Actualizamos el nombre
+				/*
+				 * FIXME Problemas con el nombre del primer usuario que se pone el último
+				 */
+				if(pos == edit){
+					if(!personas.get(personas.size()-1).getNombre().equals(editTextNombrePersona.getText().toString())){
+						personas.get(pos).setNombre(editTextNombrePersona.getText().toString());
+					}
+				}
 			}
 		});
+		
+		editTextNombrePersona.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			//Se invoca cada vez que pinchamos sobre el o salimos de el
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(hasFocus){ // entramos de el
+					edit = pos;
+				}
+			}
+		});
+		
+		//Limitamos a 11 el máximo caracteres para el nombre de la persona
+		InputFilter[] filterArray = new InputFilter[1];
+		filterArray[0] = new InputFilter.LengthFilter(11);
+		editTextNombrePersona.setFilters(filterArray);
 		
 		// Damos valor a los campos que aparecerán por pantalla
 		editTextNombrePersona.setText(personas.get(position).getNombre());
@@ -135,7 +154,7 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 	            return false;
 	        }
 	    });
-		
+				
 		/*
 		 * Metodo encargado de implementar el oyente de la lista de platos de cada persona
 		 * para mostrarle un mensaje informativo de lo que paga del total del plato.
@@ -148,10 +167,62 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
     	});
 		
 		// Aplicamos el adapter sobre la lista		
-		miListAdaper = new MiListPlatosPersonaCalculadora(context, platos);
+		final MiListPlatosPersonaCalculadora miListAdaper = new MiListPlatosPersonaCalculadora(context, platos);
 		listaPlatosPersona.setAdapter(miListAdaper);
+
+		// Implementamos el oyente de eliminar un usuario de la pantalla calculadora
+		final ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewEliminarPersonaCalculadora);
+		imageView.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(context,personas.get(pos).getNombre() + ", se ha eliminado con éxito",Toast.LENGTH_SHORT).show();
+				// Actualizamos la información de los comensales que compartían plato con él
+				actualizaInfoPersonasCompartianPlatos(pos);
+				// Eliminamos a la persona
+				personas.remove(pos);
+				// Aplicamos el adapeter del gridview personas para que se vea actualizada la información
+				Calculadora.actualizaGridViewPersonas();
+				// Eliminamos la persona
+				Calculadora.eliminaPersona(pos);
+				MiViewPagerAdapter.personaEliminada(pos);
+				
+				/*
+				 * FIXME Problema nombre primer usuario le pone el del último
+				 */
+				edit = -1;
+			}
+		});
 		
 		return convertView;
+	}
+	
+	/*
+	 * Metodo encargado de sacar los id´s únicos en pedido de cada uno de los platos
+	 * que tiene un usuario que vamos a eliminar para actualizar la información de 
+	 * aquellos usuarios que compartían esos platos con él.
+	 */
+	public void actualizaInfoPersonasCompartianPlatos(int posPersona){
+		int numPlatosPersona = personas.get(posPersona).getNumPlatos();
+		int numPersonas = personas.size();
+		String idPlatoEnPedido;
+		// Recorremos todos los platos del usuario para ver el id de cada uno
+		for(int i=0; i<numPlatosPersona; i++){
+			// Sacamos el idUnicoPedido de cada uno de los platos
+			idPlatoEnPedido = personas.get(posPersona).dameIdPlatoEnPedido(i);
+			// Recorremos el resto de usuarios
+			for(int j=0; j<numPersonas; j++){
+				// Recorremos los platos de cada uno de ellas menos de él mismo
+				if(j != posPersona){
+					int numPlatos = personas.get(j).getNumPlatos();
+					for(int k=0; k<numPlatos; k++){
+						// Si esa persona comparte el plato con él
+						if(idPlatoEnPedido.equals(personas.get(j).dameIdPlatoEnPedido(k))){
+							// Reajustamos el precio total de esa persona
+							reajustarPrecioPlato(j, idPlatoEnPedido, personas.get(j).dameNumeroPersonasCompartidoPlato(k) - 1);
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

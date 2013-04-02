@@ -1,8 +1,6 @@
 package fragments;
 
 import com.example.nfcook.R;
-
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;

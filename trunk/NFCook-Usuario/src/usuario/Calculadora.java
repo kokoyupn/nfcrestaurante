@@ -10,12 +10,17 @@ import adapters.MiGridViewCalculadoraAdapter;
 import adapters.MiViewPagerAdapter;
 import adapters.PadreGridViewCalculadora;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -50,11 +55,13 @@ import android.widget.Toast;
 public class Calculadora extends Activity{
 	private static GridView gridViewPersonas;
 	private static MiGridViewCalculadoraAdapter adapterGridViewCalculadora;
-    private ArrayList<PadreGridViewCalculadora> personas;
+    private static ArrayList<PadreGridViewCalculadora> personas;
     
     private ArrayList<InfomacionPlatoPantallaReparto> platos;
     
-    private int numPersonas;
+    private static int numPersonas;
+    
+    private int numPersonaActual;
 
 	public void onCreate(Bundle savedInstanceState) {   
         //Quitamos barra de titulo de la aplicacion
@@ -68,6 +75,9 @@ public class Calculadora extends Activity{
         // Recogemos el número de comensales que vendrá de la ventana emergente anterior
         Bundle bundle = getIntent().getExtras();
 		numPersonas = bundle.getInt("numeroComensales");
+		
+		// Incializamos el numero de persona a 0
+		numPersonaActual = 1;
         
         // creamos el arraylist de las imagenes
     	platos = new ArrayList<InfomacionPlatoPantallaReparto>();
@@ -95,16 +105,36 @@ public class Calculadora extends Activity{
     	ArrayAdapter<String> adapterSpinnerPromociones = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, promociones);
     	adapterSpinnerPromociones.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	spinnerPromociones.setAdapter(adapterSpinnerPromociones);
+    	
+    	/********************************AÑADIR PERSONA********************************/
+    	ImageView imageViewAnyadirPersona = (ImageView) findViewById(R.id.imageViewAnyadirComensalCalculadora);
+    	// Implementamos el oyente
+    	imageViewAnyadirPersona.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// Aumentamos el numero de personas
+				numPersonas++;
+				// Creamos y añadimos la persona
+				PadreGridViewCalculadora persona = new PadreGridViewCalculadora(numPersonaActual);
+				numPersonaActual++;
+	        	personas.add(persona);
+	        	// Aplicamos el adapter para que aparezca la persona
+	        	actualizaGridViewPersonas();
+	        	// Actualizamos el adapter del viewpager
+	        	MiViewPagerAdapter.nuevaPersonaAnyadida();
+		        Toast.makeText(getApplicationContext(),"Nuevo comensal creado con éxito.",Toast.LENGTH_SHORT).show();
+			}
+		});
 
-        /*************************************PERSONAS*********************************/
+        /********************************CARGAR PERSONA********************************/
         // Creamos la lista personas
         personas = new ArrayList<PadreGridViewCalculadora>();
         gridViewPersonas = (GridView) findViewById(R.id.gridViewCalculadora);
         
         // Creamos las personas
         PadreGridViewCalculadora persona;
-        for(int i=1; i<=numPersonas; i++){
-        	persona = new PadreGridViewCalculadora(i);
+        for(int i=0; i<numPersonas; i++){
+        	persona = new PadreGridViewCalculadora(i+1);
+        	numPersonaActual++;
         	personas.add(persona);
         }
         
@@ -236,8 +266,35 @@ public class Calculadora extends Activity{
 	    }
 	}
 	
+	public static void eliminaPersona(int posPersona){
+		numPersonas--;	
+	}
+	
 	public static void actualizaGridViewPersonas(){
 		// Actualizamos el adapter
 		gridViewPersonas.setAdapter(adapterGridViewCalculadora);
 	}
+	
+	@Override
+    public void onBackPressed() {
+        // Creamos y lanzamos la ventana emergente para conocer el nº de comensales
+		AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Calculadora.this); 
+        // Creamos su vista, aprovechando un layout existente
+        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.aviso_continuar_pedido, null); 
+        // Sacamos el campo texto informativo y le damos valor
+        TextView textViewInformacion = (TextView) vistaVentanaEmergente.findViewById(R.id.textViewInformacionAviso);
+        textViewInformacion.setText("Está seguro que desea cerrar la calculadora?. Se perderá toda la configuración realizada.");
+        ventanaEmergente.setNegativeButton("Cancelar", null);
+        // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
+        ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
+          	public void onClick(DialogInterface dialog, int whichButton) {
+          		finish();
+          	}
+        });
+        // Aplicamos la vista y la mostramos
+		ventanaEmergente.setView(vistaVentanaEmergente);
+		ventanaEmergente.show();
+
+        return;
+    } 
 }

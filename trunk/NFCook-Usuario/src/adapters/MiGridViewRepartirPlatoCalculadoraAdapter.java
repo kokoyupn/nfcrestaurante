@@ -3,7 +3,6 @@ package adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,22 +12,29 @@ import android.widget.CheckBox;
 
 import com.example.nfcook.R;
 
+/**
+ * Clase encargada de implementar el adapter de la ventana emergente que sale cuando
+ * pinchamos sobre la imágen de un plato para proceder a repartirlo.
+ * 
+ * En concreto, se trata de un gridview de checkbox con el nombre de cada de los comensales.
+ * Los checkbox que marquemos serán los comensales a los que se les asignará dicho plato
+ * y se le cargará a su cuenta.
+ * 
+ * @author Abel
+ *
+ */
 public class MiGridViewRepartirPlatoCalculadoraAdapter extends BaseAdapter{
 
 	private ArrayList<PadreGridViewCalculadora> personas;
 	private LayoutInflater l_Inflater;
-	private boolean[][] marcados; 
+	private ArrayList<ArrayList<Boolean>> personasMarcadoPlato; 
 	private int posPlato;
-	//private Context context;
-	//private ArrayList<String> platos;
 	
-	public MiGridViewRepartirPlatoCalculadoraAdapter(Context context, ArrayList<PadreGridViewCalculadora> personas, boolean[][] marcados, int posPlato) {
+	public MiGridViewRepartirPlatoCalculadoraAdapter(Context context, ArrayList<PadreGridViewCalculadora> personas, ArrayList<ArrayList<Boolean>> personasMarcadoPlato, int posPlato) {
 		this.personas = personas;
 		this.l_Inflater = LayoutInflater.from(context);
-		this.marcados = marcados;
+		this.personasMarcadoPlato = personasMarcadoPlato;
 		this.posPlato = posPlato;
-		
-		//this.context = context;
 	}
 
 	public int getCount() {
@@ -53,7 +59,6 @@ public class MiGridViewRepartirPlatoCalculadoraAdapter extends BaseAdapter{
 		final CheckBox checkBoxNombrePersona = (CheckBox) convertView.findViewById(R.id.checkBoxPersonaRepartoCalculadora);
 		checkBoxNombrePersona.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				Log.i("ONCLICK CHECKBOX","BIENNNNN");
 				if(checkBoxNombrePersona.isChecked()){
 					MiViewPagerAdapter.marcaCheckBox(posPlato,pos);
 				}else{
@@ -63,7 +68,7 @@ public class MiGridViewRepartirPlatoCalculadoraAdapter extends BaseAdapter{
 		});
 		
 		// Damos valor
-		if(marcados[posPlato][pos]){
+		if(personasMarcadoPlato.get(posPlato).get(pos)){
 			checkBoxNombrePersona.setChecked(true);
 		}else{
 			checkBoxNombrePersona.setChecked(false);
