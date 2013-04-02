@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -440,6 +441,11 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 				  
 			}
 		});
+        
+        //Limitamos a 99 el máximo de comensales
+		InputFilter[] filterArray = new InputFilter[1];
+		filterArray[0] = new InputFilter.LengthFilter(2);
+		editTextNumeroPersonas.setFilters(filterArray);
         
         ventanaEmergente.setNegativeButton("Cancelar", null);
         // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
