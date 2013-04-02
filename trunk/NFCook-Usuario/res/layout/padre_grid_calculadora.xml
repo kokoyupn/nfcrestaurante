@@ -7,61 +7,63 @@
     android:background="@drawable/bordes_redondeados_usuarios_calculadora"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editTextNombrePersonaCalculadora"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="6dp"
-        android:ems="10"
-        android:text="Abelino"
-        android:textColor="@color/blanco"
-        android:textSize="15sp" >
-
-        <requestFocus />
-    </EditText>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/imageViewPersonaCalculadora"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="6dp"
-            android:src="@drawable/persona" />
-
-        <TextView
-            android:id="@+id/textViewTotalPagarPersonaCalculadora"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginRight="5dp"
-            android:text="25.8 E"
-            android:textColor="@color/blanco" />
-
-        <ImageView
-            android:id="@+id/imageView1"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="5dp"
+            android:layout_gravity="top"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/persona" />
+
+        <ImageView
+            android:id="@+id/imageViewEliminarPersonaCalculadora"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/icono_eliminar" />
+
+        <EditText
+            android:id="@+id/editTextNombrePersonaCalculadora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="3dp"
+            android:ems="10"
+            android:text="Abelino"
+            android:textColor="@color/blanco"
+            android:textSize="15sp" />
 
     </FrameLayout>
 
     <ListView
         android:id="@+id/listViewPlatosPersona"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/bordes_redondeados_lista_platos_persona_calculadora" >
+        android:layout_height="97dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp"
+        android:background="#eeeeee" >
 
     </ListView>
+
+    <TextView
+        android:id="@+id/textViewTotalPagarPersonaCalculadora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="5dp"
+        android:text="25.8 E"
+        android:textColor="@color/blanco" />
 
 </LinearLayout>
