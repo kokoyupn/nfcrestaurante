@@ -40,7 +40,7 @@
                 android:layout_marginRight="60dp" />
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/imageViewAnyadirComensalCalculadora"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="right|center_vertical"
