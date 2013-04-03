@@ -24,8 +24,8 @@
     <string name="sincronizar_pedido_Beam_NFC">Sincronizar pedido:</string>
     
     <string name="tag_no_detectada">Tag no detectada</string>
-    <string name="escritura_ok">Escritura completada. Salimos del metodo write</string>
-    <string name="error_escritura">Error durante escritura. Seguro que la tarjeta está cerca?</string>
+    <string name="escritura_ok">Escritura completada</string>
+    <string name="error_escritura">Error durante escritura. Has levantado el dispositivo antes de tiempo.</string>
     <string name="tag_detectada">Tag detectada</string>
        
     <string-array name="cantidades">
