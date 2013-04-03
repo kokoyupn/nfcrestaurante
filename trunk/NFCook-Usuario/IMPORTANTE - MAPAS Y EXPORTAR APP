@@ -1,0 +1,17 @@
+Para que funcione el uso de los mapas de Google, es necesario enlazar una librería externa
+que todos tenéis en vuestro ordenador.
+Para ello, sólo hay que seguir estos pasos:
+
+- Click derecho en la carpeta del proyecto en el Project Explorer
+- Import "Existing Projects into Workspace"
+- Buscáis esta ruta: <carpeta-sdk-android>/extras/google/google_play_services/libproject/google-play-services_lib
+  En mi caso particular, la carpeta sdk-android está en C:\Archivos de Programa (x86)\Android
+- Le dais a OK.
+- Click derecho en la carpeta del proyecto en el Project Explorer->Properties
+- En resource->android abajo del todo pone "Library", le damos a Add..., Ok y listo.
+
+-----------------------------------------------------------------------------------------------------------------
+
+Para exportar un proyecto (.apk) hay que hacerlo firmándolo con el
+archivo nfcook_apikey.keystore que se encuentra en la raíz del proyecto.
+No vale inventarse una key.
