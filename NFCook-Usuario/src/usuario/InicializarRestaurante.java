@@ -32,7 +32,6 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,24 +68,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	// Vista de los tabs inferiores
 	private View tabInferiorContentView;
 	
-	// Información de que tab está seleccionado
-	/*
-	 * FIXME Se han quedado sin uso por el momento, pero se dejan hasta que se solucione
-	 * el problema del tab de arriba marcado, por si hicieran falta para solventar ese
-	 * problema
-	 */
-	private static String tabInferiorPulsado;
-	private static boolean pulsadoTabSuperior;
-	
 	private int numComensales;
-	
-	public static void setPulsadoTabSuperior(boolean pulsado){
-		pulsadoTabSuperior = pulsado;
-	}
-	
-	public static void setTabInferiorPulsado(String tab){
-		tabInferiorPulsado = tab;
-	}	
 		
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,16 +88,15 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		inicializarActionBarConTab();
 		cargarTabsSuperiores();
 		
+		// Descamarcamos el tab superior activado para evitar confusiones
+		desmarcarTabSuperiorActivo();
+		
 		// Cerramos la base de datos
 		sql.close();
 		
 		// Inicializamos y cargamos Tabs inferiores
 		inicializarTabsInferiores();
 		cargarTabsInferiores();
-		
-		// Inicializamos el control de los tabs
-		tabInferiorPulsado = tabs.getCurrentTabTag();
-		pulsadoTabSuperior = false;
     }
     
     /* Metodo encargado de implementar el botón back.
@@ -212,6 +193,22 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	actionbar.setDisplayShowTitleEnabled(false);
     	actionbar.setDisplayUseLogoEnabled(false);
 	}
+	
+	/*
+	 *  Metodo encargado de desmarcar el tab superior activado para evitarle líos
+	 *  al usuario.
+	 */
+	public void desmarcarTabSuperiorActivo(){
+		/*
+		 * La única forma de descmarcar el tab activo superior del action bar, es llamando
+		 * al siguiente metodo con null que sabemos que va a rebentar y hacemos un try
+		 * catch para controlarlo y que funcione tal y como queremos.
+		 */
+		try{
+            actionbar.selectTab(null);
+         }catch (Exception e){
+         }
+	}
     
     // Metodo encargado de inicializar los tabs inferiores
     private void inicializarTabsInferiores(){
@@ -257,64 +254,21 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabCalculadora"));
         tabs.addTab(spec);
         
-        int numeroTabs = tabs.getTabWidget().getChildCount();
-        for(int i=0; i<numeroTabs; i++){
-            tabs.getTabWidget().getChildAt(i).setOnTouchListener(new View.OnTouchListener() {
-            	/* Implementamos la acción de cada tab cuando se pinche en él
-            	 * Es distinto del onTabChange, puesto que auío entra si pulsamos 
-            	 * sobre un tab ya seleccionado.
-            	 */
-            	public boolean onTouch(View v, MotionEvent event){
-            		// Cuando pulsamos el tab
-            		if(event.getAction()==MotionEvent.ACTION_UP){
-            			if(tabs.getCurrentTabTag().equals("tabInicio")){
-	                		/*
-	            			 * TODO Completar funcionalidad de la pantalla de bienvenida
-	            			 */
-	        				// Cargamos en el fragment de la pantalla de bienvenida del restaurante
-	        				Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
-	        				((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
-	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
-	        		        m.commit();
-            			}else if(tabs.getCurrentTabTag().equals("tabPromociones")){
-							Intent intent = new Intent(Intent.ACTION_VIEW);
-							if(restaurante.equals("Foster")){
-								intent.setData(Uri.parse("http://www.elchequegorron.es/"));
-							}else if(restaurante.equals("vips")){
-								intent.setData(Uri.parse("http://www.vips.es/promociones"));
-							}
-	                		startActivity(intent);
-	        			}else if(tabs.getCurrentTabTag().equals("tabPedidoSincronizar")){
-	        				Fragment fragmentPedido = new PedidoFragment();
-	        				PedidoFragment.setRestaurante(restaurante);
-	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        		        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
-	        		        m.commit();
-	        			}else if(tabs.getCurrentTabTag().equals("tabCuenta")){
-	        				Fragment fragmentCuenta = new CuentaFragment();
-	        				((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-	        		        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        		        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-	        		        m.commit();
-	        			}else if(tabs.getCurrentTabTag().equals("tabCalculadora")){
-	        				// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
-	        				if(hayAlgunPedidoSincronizado()){
-	        					lanzarVentanaEmergenteParaIndicarNumeroComensales();
-	        				}else{
-	        					if(pulsadoTabSuperior){
-	        					    actionbar.selectTab(actionbar.getSelectedTab());
-	        					}else{
-	        					    tabs.setCurrentTabByTag(tabInferiorPulsado);
-	        					}
-	        					lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido();
-	        				}
-	        			}
-            		}
-            		return false;
-                }
-            });
-        }
+        /*
+         * Creamos un tab falso para que cada vez que pulsemos en cualquiera de los tabs
+         * inferiores, redirigimos como tab pulsado al falso, de esta forma conseguimos
+         * que cada vez que pulsemos en cada tab inferior entre en el método onchanged.
+         */
+        // Creamos el tab6 --> tabFalso
+        spec = tabs.newTabSpec("tabFalso");
+        spec.setContent(R.id.tab5);
+        spec.setIndicator(prepararTabView(getApplicationContext(),"tabFalso"));
+        tabs.addTab(spec);
+        
+        // Seleccionamos momentaneamente el tab falso para ocultarlo
+        tabs.setCurrentTabByTag("tabFalso");
+        // Lo ocultamos, consiguiendo que esté pero no lo veamos, justo lo que queremos
+        tabs.getCurrentTabView().setVisibility(View.GONE);
     }
     
     // Metodo encargado de preparar las vistas de cada tab inferior
@@ -349,8 +303,11 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
 		if(tabs.getCurrentTabTag().equals("tabInicio")){
-			pulsadoTabSuperior = false;
-			tabInferiorPulsado = "tabInicio";
+			// Descamarcamos el tab superior activado para evitar confusiones
+			desmarcarTabSuperiorActivo();
+			// Marcamos el tab falso
+            tabs.setCurrentTabByTag("tabFalso");
+
     		/*
 			 * TODO Completar funcionalidad de la pantalla de bienvenida
 			 */
@@ -361,8 +318,11 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        m.commit();
 		}else if(tabId.equals("tabPromociones")){
-			pulsadoTabSuperior = false;
-			tabInferiorPulsado = "tabPromociones";
+			// Descamarcamos el tab superior activado para evitar confusiones
+			desmarcarTabSuperiorActivo();
+			// Marcamos el tab falso
+            tabs.setCurrentTabByTag("tabFalso");
+
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			if(restaurante.equals("Foster")){
 				intent.setData(Uri.parse("http://www.elchequegorron.es/"));
@@ -371,8 +331,11 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			}
     		startActivity(intent);
 		}else if(tabId.equals("tabPedidoSincronizar")){
-			pulsadoTabSuperior = false;
-			tabInferiorPulsado = "tabPedidoSincronizar";
+			// Descamarcamos el tab superior activado para evitar confusiones
+			desmarcarTabSuperiorActivo();
+			// Marcamos el tab falso
+            tabs.setCurrentTabByTag("tabFalso");
+
 			Fragment fragmentPedido = new PedidoFragment();
 			PedidoFragment.setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
@@ -380,8 +343,11 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.addToBackStack("Pedido");
 	        m.commit();
 		}else if(tabId.equals("tabCuenta")){
-			pulsadoTabSuperior = false;
-			tabInferiorPulsado = "tabCuenta";
+			// Descamarcamos el tab superior activado para evitar confusiones
+			desmarcarTabSuperiorActivo();
+			// Marcamos el tab falso
+            tabs.setCurrentTabByTag("tabFalso");
+            
 			Fragment fragmentCuenta = new CuentaFragment();
 			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
@@ -390,16 +356,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.commit();
 		}else if(tabId.equals("tabCalculadora")){
 			// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
-			if(hayAlgunPedidoSincronizado()){
-				pulsadoTabSuperior = false;
-				tabInferiorPulsado = "tabCalculadora";
+			if(hayAlgunPedidoSincronizado()){				
 				lanzarVentanaEmergenteParaIndicarNumeroComensales();
 			}else{
-				if(pulsadoTabSuperior){
-				    actionbar.selectTab(actionbar.getSelectedTab());
-				}else{
-				    tabs.setCurrentTabByTag(tabInferiorPulsado);
-				}
 				lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido();
 			}
 		}
@@ -452,6 +411,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
           	public void onClick(DialogInterface dialog, int whichButton) {
           		if(numComensales > 0){
+          		// Marcamos el tab falso
+    	            tabs.setCurrentTabByTag("tabFalso");
+    				// Descamarcamos el tab superior activado para evitar confusiones
+    				desmarcarTabSuperiorActivo();
 	    	      	Intent intent = new Intent(getApplicationContext(),Calculadora.class);
 	    	      	intent.putExtra("numeroComensales", numComensales);
 	    	    	startActivity(intent);

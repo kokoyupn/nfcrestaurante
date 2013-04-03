@@ -213,10 +213,6 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
 		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity)this);
 		
-		/*
-		 * FIXME Quitar cuando estén los fragments de bebida y calculadora
-		 */
-		InicializarRestaurante.setTabInferiorPulsado("tabCuenta");
 	}	
 	
 
