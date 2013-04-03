@@ -272,7 +272,7 @@ public class Calculadora extends Activity{
 	
 	public static void actualizaGridViewPersonas(){
 		// Actualizamos el adapter
-		gridViewPersonas.setAdapter(adapterGridViewCalculadora);
+		adapterGridViewCalculadora.notifyDataSetChanged();
 	}
 	
 	@Override

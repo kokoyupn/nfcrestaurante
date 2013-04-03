@@ -93,7 +93,7 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 		
 		return convertView;
 	}
-	
+		
 	public void setUltimoIdentificadorUnicoHijoPedido(int identificadorUnicoHijoPedido){
 		//Almacenamos la posicion del restaurante de la lista
 		SharedPreferences preferencia = context.getSharedPreferences("Identificador_Unico", 0);

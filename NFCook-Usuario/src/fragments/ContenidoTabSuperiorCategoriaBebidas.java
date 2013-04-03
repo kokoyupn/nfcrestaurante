@@ -200,8 +200,8 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 		TextView textViewBebidas = (TextView) vistaTabCategoriaBebida.findViewById(R.id.textViewTotalPagarBebidas);
 		textViewBebidas.setText(getTotal() + " €");
 		
-		// Actualizamos el adapter
-		gridViewBebidas.setAdapter(adapterGridViewBebidas);
+		// Actualizamos el adapter		
+		adapterGridViewBebidas.notifyDataSetChanged();
 	}
 	
 	public static void sumarTotal(int pos){
