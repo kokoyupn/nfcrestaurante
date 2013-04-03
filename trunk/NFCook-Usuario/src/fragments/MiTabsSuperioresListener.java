@@ -1,7 +1,5 @@
 package fragments;
 
-import usuario.InicializarRestaurante;
-
 import com.example.nfcook.R;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -19,12 +17,10 @@ public class MiTabsSuperioresListener  implements TabListener{
 	
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		ft.replace(R.id.FrameLayoutPestanas, fragment, nombreTab);
-		InicializarRestaurante.setPulsadoTabSuperior(true);
 	}
  
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {       
 		ft.replace(R.id.FrameLayoutPestanas, fragment, nombreTab);
-		InicializarRestaurante.setPulsadoTabSuperior(true);
 	}
  
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {

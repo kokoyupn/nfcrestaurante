@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import usuario.InicializarRestaurante;
 import usuario.SincronizarPedidoBeamNFC;
 import usuario.SincronizarPedidoNFC;
 import adapters.HijoExpandableListPedido;
@@ -293,11 +291,6 @@ public class PedidoFragment extends Fragment{
 		
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
 		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity) vistaConExpandaleList.getContext());
-		
-		/*
-		 * FIXME Quitar cuando estén los fragments de bebida y calculadora
-		 */
-		InicializarRestaurante.setTabInferiorPulsado("tabCuenta");
 		
 		sqlCuenta.close();
 		sqlPedido.close();	
