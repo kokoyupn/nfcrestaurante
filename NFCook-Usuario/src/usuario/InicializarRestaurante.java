@@ -355,6 +355,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.addToBackStack("Cuenta");
 	        m.commit();
 		}else if(tabId.equals("tabCalculadora")){
+			// Marcamos el tab falso
+            tabs.setCurrentTabByTag("tabFalso");
 			// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
 			if(hayAlgunPedidoSincronizado()){				
 				lanzarVentanaEmergenteParaIndicarNumeroComensales();
@@ -411,10 +413,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
           	public void onClick(DialogInterface dialog, int whichButton) {
           		if(numComensales > 0){
-          		// Marcamos el tab falso
-    	            tabs.setCurrentTabByTag("tabFalso");
     				// Descamarcamos el tab superior activado para evitar confusiones
     				desmarcarTabSuperiorActivo();
+    				
 	    	      	Intent intent = new Intent(getApplicationContext(),Calculadora.class);
 	    	      	intent.putExtra("numeroComensales", numComensales);
 	    	    	startActivity(intent);
