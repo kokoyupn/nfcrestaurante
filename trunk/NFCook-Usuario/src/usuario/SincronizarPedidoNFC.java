@@ -40,6 +40,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	private ArrayList<Byte> pedidoCodificadoEnBytes;
 	private boolean escritoBienEnTag;
 	private boolean esMFC;
+	private boolean cabeEnTag;
 	
 		/**
 		 * Clase interna necesaria para ejecutar en segundo plano tareas (codificacion de pedido, escritura NFC y 
@@ -72,9 +73,11 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 				  try {
 					escribirEnTagNFC();
 				  } catch (IOException e) {
+					  escritoBienEnTag = false;
 					e.printStackTrace();
 				  } catch (FormatException e) {
-					e.printStackTrace();
+					  escritoBienEnTag = false;
+					  e.printStackTrace();
 				  }
 				  if (escritoBienEnTag) enviarPedidoACuenta();
 			  }
@@ -136,7 +139,14 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 			}
 			else {
 				setResult(RESULT_CANCELED, null);
-				Toast.makeText(this, "Pedido no sincronizado. No cabe en la tarjeta. Llama a camaero o usa otro metodo de transmision.", Toast.LENGTH_LONG ).show();		 
+				
+				if (!escritoBienEnTag)
+					Toast.makeText(this, "Pedido no sincronizado." + this.getString(R.string.error_escritura), Toast.LENGTH_LONG ).show();	 
+				else {
+					if (!cabeEnTag)
+						Toast.makeText(this, "Pedido no sincronizado. No cabe en la tarjeta. Llama a camaero o usa otro metodo de transmision.", Toast.LENGTH_LONG ).show();		 
+				}
+				
 			}
 		}
 		finish();	
@@ -411,7 +421,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private void escribirEnTagNFC() throws IOException, FormatException {	
+private void escribirEnTagNFC() throws IOException, FormatException {	
 		
 		// Obtenemos instancia de MifareClassic para el tag.
 		MifareClassic mfc = MifareClassic.get(mytag);
@@ -437,6 +447,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 		}
 		
 		if (cabePedidoEnTag(pedidoCodificadoEnBytes,mfc)){
+			cabeEnTag = true;
 			// recorro todos los bloques escribiendo el pedido. Cuando acabe escribo 0's en los que sobren
 			while (numBloque < mfc.getBlockCount()) {			
 				// comprobamos si el bloque puede ser escrito o es un bloque prohibido
@@ -462,10 +473,9 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 							mfc.writeBlock(numBloque, ceros);
 						}
 					}
-				} 
+				} else cabeEnTag = false;
 				numBloque++;	      
-			}
-			
+			}			
 			escritoBienEnTag = true;
 		} 
 		

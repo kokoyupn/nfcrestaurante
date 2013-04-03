@@ -208,15 +208,29 @@ public class PedidoFragment extends Fragment{
 				// cierro la ventana emergente
 				ventanaEmergenteElegirSincronizacion.dismiss();
 				if (adapter != null) {
-					// abro la ventana para sincronizar con NFC
-					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
-					intent.putExtra("Restaurante", restaurante);
-					startActivityForResult(intent, 0);
+					/**
+					 * TODO para poder usar sin tarjetas. ELIMINAR
+					 */
+					if (!adapter.isEnabled()){
+						Toast.makeText(vistaConExpandaleList.getContext(),"NFC desactivado. Esta opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
+						enviarPedidoACuenta();
+						Fragment fragmentCuenta = new CuentaFragment();
+					    ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+					    FragmentTransaction m = getFragmentManager().beginTransaction();
+					    m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+					    m.commit();	
+					    //Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
+					} else {
+						// abro la ventana para sincronizar con NFC
+						Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+						intent.putExtra("Restaurante", restaurante);
+						startActivityForResult(intent, 0);
+					}
 				} else {
 					/**
 					 * TODO para poder usar sin tarjetas. ELIMINAR
 					 */
-					Toast.makeText(vistaConExpandaleList.getContext(),"No tienes NFC. Esto opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
+					Toast.makeText(vistaConExpandaleList.getContext(),"No tienes NFC. Esta opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
 					enviarPedidoACuenta();
 					Fragment fragmentCuenta = new CuentaFragment();
 				    ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
