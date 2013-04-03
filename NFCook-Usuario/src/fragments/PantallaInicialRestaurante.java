@@ -1,6 +1,8 @@
 package fragments;
 
 import usuario.InicializarRestaurante;
+import usuario.ListaMapas;
+import usuario.Mapas;
 
 import com.example.nfcook.R;
 
@@ -44,16 +46,14 @@ public class PantallaInicialRestaurante extends Fragment{
 			restauranteAux = "Foster's Hollywood";
 		bienvenida.setText("Bienvenido a \n" + restauranteAux);
 		
-		/*
 		//listener de las imagenes
 		ponerOnclickMapas();
-		ponerOnclickListaMapas();*/
+		ponerOnclickListaMapas();
 		ponerOnClickAyuda();
 		ponerOnClickInformacionAyuda();
 		
 		return vista;
     }
-	/*
 	private void ponerOnclickMapas() {
 		
 		Button botonMapas = (Button) vista.findViewById(R.id.buttonMapas);
@@ -77,7 +77,6 @@ public class PantallaInicialRestaurante extends Fragment{
 			}
 		});
 	}
-*/
 	public void setRestaurante(String restaurante){
 		this.restaurante = restaurante;
 	}
