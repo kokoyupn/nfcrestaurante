@@ -2,9 +2,6 @@ package tpv;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -100,13 +97,24 @@ public class Restaurante {
 		return mesasRestaurante.values().iterator();
 	}
 
+	public void actualizarNumeroPersonasMesa(String idMesa, int numeroPersonas) {
+		mesasRestaurante.get(idMesa).setNumeroPersonas(numeroPersonas);
+	}
+
+	public void actualizaEstadoMesaAbierta(String idMesa) {
+		mesasRestaurante.get(idMesa).abrirMesa();		
+	}
+
 	public Iterator<Producto> getIteratorProductos(){
 		return productosRestaurante.values().iterator();
 	}
-	/*
-	public static void main(String[] args) {
-		Restaurante unRestaurante =  new Restaurante();
+
+	public void actualizaEstadoMesaCerrada(String idMesa) {
+		mesasRestaurante.get(idMesa).cerrarMesa();				
 	}
-	*/
+
+	public boolean mesaVacia(String idMesa) {
+		return mesasRestaurante.get(idMesa).mesaVacia();
+	}
 	
 }

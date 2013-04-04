@@ -15,6 +15,7 @@ public class Mesa {
 	
 	
 	public Mesa(String idMesa, int numeroPersonas) {
+		productosEnMesa = new ArrayList<Producto>();
 		this.idMesa = idMesa;
 		this.numeroPersonas = numeroPersonas;
 		estado = estadoMesa.CERRADA;
@@ -44,20 +45,26 @@ public class Mesa {
 	public double getDineroTotalEnMesa() {
 		return dineroTotalEnMesa;
 	}
+	
+	public void setNumeroPersonas(int numeroPersonas){
+		this.numeroPersonas = numeroPersonas;
+	}
 
 	public void añadirProducto(Producto producto) {
 		productosEnMesa.add(producto);
 		dineroTotalEnMesa+=producto.getPrecio();
 	}
-	
-	public void abrirMesa(){
+
+	public void abrirMesa() {
 		estado = estadoMesa.ABIERTA;
 	}
 	
-	public void cerrarMesa(){
+	public void cerrarMesa() {
 		estado = estadoMesa.CERRADA;
 	}
-	
-	
+
+	public boolean mesaVacia() {
+		return productosEnMesa.size() == 0;
+	}	
 
 }
