@@ -51,40 +51,18 @@ public class InterfazPlatos extends JFrame {
 	private Restaurante unRestaurante ;
 //	private HashMap<String,Mesa> mesasRestaurante;
 	private DefaultTableModel dtm;
-	private String idMesa = "22"; //nos vendra de VentanaMesa
+	private String idMesa; //nos vendra de VentanaMesa
 	private Producto productoATabla;
 	private JPopupMenu popup;
 	String categoriaExtraPadre ;
 	private HashMap<String,String> hashExtras; //la clave es el tipo de extra
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					InterfazPlatos frame = new InterfazPlatos();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 	
-	public InterfazPlatos(String idMesa, Restaurante unRestaurante) {
-		this.idMesa = idMesa;
-		this.unRestaurante = unRestaurante;
-		InterfazPlatos frame = new InterfazPlatos();
-		frame.setVisible(true);
-	}
-	
-
 	/**
 	 * Create the frame.
 	 */
-	public InterfazPlatos() {
+	public InterfazPlatos(String idMesa, Restaurante unRestaurante) {
+		this.idMesa = idMesa;
+		this.unRestaurante = unRestaurante;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		contentPaneGlobal = new JPanel();
@@ -258,7 +236,7 @@ public class InterfazPlatos extends JFrame {
 					public void mousePressed(MouseEvent arg0) {
 						panelPlatos.removeAll();
 						String catPulsada = arg0.getComponent().getName();
-						Iterator<Producto> iteratorProductosHijos = unRestaurante.getIteratorProductos();
+						Iterator<Producto> iteratorProductosHijos = getRestaurante().getIteratorProductos();
 							//rellenamos de los platos
 							int j = 0;
 							int i = 0;
@@ -508,6 +486,10 @@ public class InterfazPlatos extends JFrame {
 		//nuevos ancho y alto: para que conserve la proporcion pasamos -1
 		ImageIcon imagen = new ImageIcon(imag.getImage().getScaledInstance(ancho, alto, java.awt.Image.SCALE_DEFAULT));
 		return imagen;		
+	}
+	
+	public Restaurante getRestaurante(){
+		return unRestaurante;
 	}
 	
 }

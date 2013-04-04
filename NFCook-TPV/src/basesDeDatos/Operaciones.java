@@ -7,7 +7,6 @@ package basesDeDatos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 public class Operaciones extends Conexion{
     /**
