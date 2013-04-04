@@ -21,6 +21,10 @@ public class Mesa {
 		dineroTotalEnMesa = 0;
 	}
 
+	public ArrayList<Producto> getProductosEnMesa() {
+		return productosEnMesa;
+	}
+	
 	public String getIdMesa() {
 		return idMesa;
 	}

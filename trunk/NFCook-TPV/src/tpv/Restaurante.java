@@ -15,7 +15,7 @@ import basesDeDatos.Operaciones;
 public class Restaurante {
 	
 	private HashMap<String,Mesa> mesasRestaurante;
-	private HashMap<String,Producto> productosRestaurante;//La clave es el id del producto
+	public static HashMap<String,Producto> productosRestaurante;//La clave es el id del producto
 	private final String nombreRestaurante = "'Foster'";
 	
 	public Restaurante(){
@@ -99,7 +99,10 @@ public class Restaurante {
 	public Iterator<Mesa> getIteratorMesas(){
 		return mesasRestaurante.values().iterator();
 	}
-	
+
+	public Iterator<Producto> getIteratorProductos(){
+		return productosRestaurante.values().iterator();
+	}
 	/*
 	public static void main(String[] args) {
 		Restaurante unRestaurante =  new Restaurante();
