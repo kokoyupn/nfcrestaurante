@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="usuario.DescripcionPlato" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/DescripcionPlato.java" binary="false" label="descripcionPlato" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="85" y="0"/>    
+    <execution id="2">      
+      <position height="195" width="120" x="5" y="105"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="132" width="120" x="5" y="147"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="63" width="7" x="62" y="195"/>    
+    </execution>  
+  </object>  
+  <object id="9" language="java" name="fragments.ContenidoTabsSuperioresFragment" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/fragments/ContenidoTabsSuperioresFragment.java" binary="false" 
+    label="contenidoTabsSuperioresFragment" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="277" y="0"/>    
+    <execution id="8">      
+      <position height="21" width="224" x="129" y="216"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="onClickConfirmar(android.view.View):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="finish():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>
+</sequence-diagram>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="adapters.MiExpandableListAdapterEditar" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/MiExpandableListAdapterEditar.java" binary="false" 
+    label="miExpandableListAdapterEditar" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="153" y="0"/>    
+    <execution id="2">      
+      <position height="422" width="201" x="5" y="101"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="359" width="201" x="5" y="143"/>    
+    </execution>  
+  </object>  
+  <object id="19" language="java" name="adapters.PadreExpandableListEditar" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreExpandableListEditar.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="6">      
+      <position height="21" width="0" x="0" y="172"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="218"/>    
+    </execution>  
+  </object>  
+  <object id="20" language="java" name="usuario.DescripcionPlatoEditar" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/DescripcionPlatoEditar.java" binary="false" label="&lt;static&gt;" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="265"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="413"/>    
+    </execution>  
+  </object>  
+  <object id="21" language="java" name="usuario.DescripcionPlato" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/DescripcionPlato.java" binary="false" label="&lt;static&gt;" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="310"/>    
+    </execution>    
+    <execution id="18">      
+      <position height="21" width="0" x="0" y="460"/>    
+    </execution>  
+  </object>  
+  <object id="22" language="java" name="adapters.PadreExpandableListEditar" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreExpandableListEditar.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="369"/>    
+    </execution>  
+  </object>  
+  <message id="3">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="getHijoAt(int):adapters.HijoExpandableListEditar">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="setCheck(int):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="actualizaExpandableList():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="actualizaExpandableList():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="isExpandido():boolean">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="expandeGrupoLista(int):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="expandeGrupoLista(int):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>
+</sequence-diagram>

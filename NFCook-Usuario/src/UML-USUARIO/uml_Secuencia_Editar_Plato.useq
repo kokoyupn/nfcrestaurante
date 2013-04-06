@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="adapters.MiExpandableListAdapterPedido" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/MiExpandableListAdapterPedido.java" binary="false" 
+    label="miExpandableListAdapterPedido" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="64" y="0"/>    
+    <execution id="2">      
+      <position height="527" width="207" x="5" y="127"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="464" width="207" x="5" y="169"/>    
+    </execution>  
+  </object>  
+  <object id="21" language="java" name="adapters.PadreExpandableListPedido" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreExpandableListPedido.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="6">      
+      <position height="21" width="0" x="0" y="214"/>    
+    </execution>  
+  </object>  
+  <object id="22" language="java" name="adapters.PadreExpandableListPedido" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreExpandableListPedido.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="262"/>    
+    </execution>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="305"/>    
+    </execution>  
+  </object>  
+  <object id="23" language="java" name="adapters.PadreExpandableListPedido" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreExpandableListPedido.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="357"/>    
+    </execution>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="404"/>    
+    </execution>  
+  </object>  
+  <object id="24" language="java" name="adapters.PadreExpandableListPedido" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreExpandableListPedido.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="450"/>    
+    </execution>    
+    <execution id="18">      
+      <position height="21" width="0" x="0" y="492"/>    
+    </execution>  
+  </object>  
+  <object id="25" language="java" name="usuario.DescripcionPlatoEditar" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/DescripcionPlatoEditar.java" binary="false" label="descripcionPlatoEditar" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="802" y="0"/>    
+    <execution id="20">      
+      <position height="84" width="153" x="590" y="528"/>    
+    </execution>    
+    <execution id="27">      
+      <position height="21" width="7" x="1037" y="570"/>    
+    </execution>  
+  </object>  
+  <message id="3">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="getIdPlato():java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="getHijoAt(int):adapters.HijoExpandableListPedido">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="getId():java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="getHijoAt(int):adapters.HijoExpandableListPedido">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="getExtras():java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="getHijoAt(int):adapters.HijoExpandableListPedido">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="getObservaciones():java.lang.String">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>  
+  <message id="19" operation="startActivity(android.content.Intent):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="20"/>  
+  </message>  
+  <message id="26" operation="onCreate(android.os.Bundle):void">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="27"/>  
+  </message>
+</sequence-diagram>
