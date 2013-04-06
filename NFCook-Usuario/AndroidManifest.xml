@@ -74,11 +74,13 @@
         </activity>
         <activity
             android:name="usuario.DescripcionPlatoEditar"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/descripcion_plato_editar"
             android:screenOrientation="portrait"  >
         </activity>
         <activity
             android:name="usuario.DescripcionPlato"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/descripcion_plato"  >
         </activity>
          <activity
@@ -89,13 +91,16 @@
         <activity
             android:name="usuario.SincronizarPedidoNFC"
             android:label="@string/sincronizar_pedido_NFC"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="usuario.SincronizarPedidoBeamNFC"
             android:label="@string/sincronizar_pedido_Beam_NFC"
-            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
+        </activity>
+         <activity
+            android:name="usuario.SincronizarPedidoQR"
+            android:label="@string/sincronizar_pedido_QR"
             android:screenOrientation="portrait">
         </activity>
          <activity
@@ -105,8 +110,7 @@
             android:screenOrientation="portrait">
              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
          <activity
