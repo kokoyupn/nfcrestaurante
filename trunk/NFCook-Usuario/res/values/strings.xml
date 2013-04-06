@@ -19,9 +19,10 @@
     <string name="descripcion_plato">Descripcion plato:</string>
     <string name="calculadora">Calculadora:</string>
     <string name="descripcion_plato_editar">Descripcion plato:</string>
-    <string name="sincronizar_pedido">Sincronizar pedido:</string>
+    <string name="sincronizar_pedido_QR">Sincronizar pedido:</string>
     <string name="sincronizar_pedido_NFC">Sincronizar pedido:</string>
     <string name="sincronizar_pedido_Beam_NFC">Sincronizar pedido:</string>
+    <string name="sincronizar_QR">Sincronizar pedido:</string>
     
     <string name="tag_no_detectada">Tag no detectada</string>
     <string name="escritura_ok">Escritura completada</string>

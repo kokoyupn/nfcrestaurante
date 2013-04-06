@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 import usuario.SincronizarPedidoBeamNFC;
 import usuario.SincronizarPedidoNFC;
+import usuario.SincronizarPedidoQR;
 import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
@@ -244,7 +245,7 @@ public class PedidoFragment extends Fragment{
 	}
 	
 	/**
-	 * Entra cuando regresa de una actividad lanzada con startActivityForResult (onClick de NFC).
+	 * Entra cuando regresa de una actividad lanzada con startActivityForResult (onClick de NFC y QR).
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -341,9 +342,13 @@ public class PedidoFragment extends Fragment{
 		botonQR.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				// abro ventana para sincronizar con QR
+				Intent intent = new Intent(getActivity(),SincronizarPedidoQR.class);
+				intent.putExtra("Restaurante", restaurante);
+				startActivityForResult(intent,0);
 				// cierro la ventana emergente
 				ventanaEmergenteElegirSincronizacion.dismiss();
-				// abro ventana para sincronizar con QR
+				
 			}
 		});
 		

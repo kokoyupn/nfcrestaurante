@@ -23,7 +23,6 @@ import android.nfc.tech.MifareClassic;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.view.Window;
 import android.widget.Toast;
 
 
@@ -99,10 +98,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        //Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+       
         setContentView(R.layout.sincronizar_pedido_nfc);
         
         //El numero de la mesa se obtiene de la pantalla anterior
@@ -168,7 +164,7 @@ public class SincronizarPedidoNFC extends Activity implements DialogInterface.On
 
 /************************************ BASES DE DATOS  ****************************************/		
 	
-	/*
+	/**
 	 * Abre las bases de datos Cuenta y Pedido.
 	 */
 	private void abrirBasesDeDatos() {
