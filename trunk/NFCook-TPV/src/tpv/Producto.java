@@ -2,6 +2,7 @@ package tpv;
 
 public class Producto {
 	private String id;
+	private int idUnico;
 	private String categoria;
 	private String tipo;
 	private String nombre;
@@ -21,6 +22,19 @@ public class Producto {
 		this.precio = precio;
 		this.observaciones = observaciones;
 	}
+	
+	public Producto(String id, String categoria, String tipo, String nombre,
+			String descripción, String foto, double precio, String observaciones, int idUnico) {
+		this.id = id;
+		this.categoria = categoria;
+		this.tipo = tipo;
+		this.nombre = nombre;
+		this.descripción = descripción;
+		this.foto = foto;
+		this.precio = precio;
+		this.observaciones = observaciones;
+		this.idUnico = idUnico;
+	}
 
 	public String getId() {
 		return id;
@@ -36,6 +50,14 @@ public class Producto {
 
 	public String getNombre() {
 		return nombre;
+	}
+
+	public void setIdUnico(int idUnico) {
+		this.idUnico = idUnico;
+	}
+	
+	public int getIdUnico(){
+		return idUnico;
 	}
 
 	public String getDescripción() {
@@ -58,6 +80,13 @@ public class Producto {
 		this.observaciones = observaciones;
 	}
 	
-	
+	public boolean equals(Object o){
+		if (o == null) return false;
+		if (!(o instanceof Producto))return false;
+		Producto p = (Producto) o;
+		if (this.idUnico ==p.getIdUnico()) 
+			return true;
+		return false;
+	}
 	
 }
