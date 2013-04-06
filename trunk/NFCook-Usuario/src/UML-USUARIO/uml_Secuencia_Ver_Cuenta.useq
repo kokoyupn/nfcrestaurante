@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="usuario.InicializarRestaurante" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/InicializarRestaurante.java" binary="false" label="inicializarRestaurante" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="62" y="0"/>    
+    <execution id="2">      
+      <position height="920" width="147" x="5" y="136"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="857" width="147" x="5" y="178"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="836"/>    
+    </execution>  
+  </object>  
+  <object id="17" language="java" name="fragments.CuentaFragment" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/fragments/CuentaFragment.java" binary="false" label="fragmentCuenta" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="6">      
+      <position height="554" width="0" x="0" y="223"/>    
+    </execution>    
+    <execution id="19">      
+      <position height="486" width="117" x="156" y="270"/>    
+    </execution>    
+    <execution id="39">      
+      <position height="21" width="0" x="0" y="714"/>    
+    </execution>  
+  </object>  
+  <object id="40" language="java" name="baseDatos.Handler" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/baseDatos/Handler.java" binary="false" label="sqlCuenta" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="21">      
+      <position height="21" width="0" x="0" y="301"/>    
+    </execution>    
+    <execution id="23">      
+      <position height="21" width="0" x="0" y="349"/>    
+    </execution>    
+    <execution id="35">      
+      <position height="21" width="0" x="0" y="598"/>    
+    </execution>  
+  </object>  
+  <object id="41" language="java" name="android.database.sqlite.SQLiteDatabase" project="NFCook-Usuario" 
+    file="C:/Users/Prado/AppData/Local/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="dbCuenta" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="25">      
+      <position height="21" width="0" x="0" y="397"/>    
+    </execution>  
+  </object>  
+  <object id="42" language="java" name="adapters.PadreListCuenta" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreListCuenta.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="27">      
+      <position height="21" width="0" x="0" y="440"/>    
+    </execution>  
+  </object>  
+  <object id="43" language="java" name="adapters.PadreListCuenta" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreListCuenta.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="29">      
+      <position height="21" width="0" x="0" y="476"/>    
+    </execution>  
+  </object>  
+  <object id="44" language="java" name="adapters.PadreListCuenta" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreListCuenta.java" binary="false" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="31">      
+      <position height="21" width="0" x="0" y="522"/>    
+    </execution>  
+  </object>  
+  <object id="45" language="java" name="adapters.PadreListCuenta" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/adapters/PadreListCuenta.java" binary="false" label="padre" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="33">      
+      <position height="21" width="0" x="0" y="561"/>    
+    </execution>  
+  </object>  
+  <object id="46" language="java" name="android.widget.TextView" project="NFCook-Usuario" 
+    file="C:/Users/Prado/AppData/Local/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="totalCuenta" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="37">      
+      <position height="21" width="0" x="0" y="657"/>    
+    </execution>  
+  </object>  
+  <object id="47" language="java" name="android.app.FragmentManager" project="NFCook-Usuario" 
+    file="C:/Users/Prado/AppData/Local/Android/android-sdk/platforms/android-16/android.jar" binary="true" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="867"/>    
+    </execution>  
+  </object>  
+  <object id="48" language="java" name="android.app.FragmentTransaction" project="NFCook-Usuario" 
+    file="C:/Users/Prado/AppData/Local/Android/android-sdk/platforms/android-16/android.jar" binary="true" label="m1" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="909"/>    
+    </execution>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="951"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="993"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="onTabChanged(java.lang.String):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="CuentaFragment()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="getFragmentManager():android.app.FragmentManager">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="beginTransaction():android.app.FragmentTransaction">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="replace(int,android.app.Fragment):android.app.FragmentTransaction">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="addToBackStack(java.lang.String):android.app.FragmentTransaction">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="commit():int">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="18" operation="cargarCuenta():void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="19"/>  
+  </message>  
+  <message id="20" operation="Handler(android.content.Context,java.lang.String)">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="21"/>  
+  </message>  
+  <message id="22" operation="open():android.database.sqlite.SQLiteDatabase">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="23"/>  
+  </message>  
+  <message id="24" 
+    operation="query(java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String,java.lang.String,java.lang.String):android.database.Cursor">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="25"/>  
+  </message>  
+  <message id="26" operation="getPlato():java.lang.String">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="27"/>  
+  </message>  
+  <message id="28" operation="actualizaPrecioTotal(double):void">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="29"/>  
+  </message>  
+  <message id="30" operation="actualizaCantidad():void">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="31"/>  
+  </message>  
+  <message id="32" operation="PadreListCuenta(java.lang.String,double)">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="33"/>  
+  </message>  
+  <message id="34" operation="close():void">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="35"/>  
+  </message>  
+  <message id="36" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="37"/>  
+  </message>  
+  <message id="38" operation="getTotal():double">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="39"/>  
+  </message>
+</sequence-diagram>

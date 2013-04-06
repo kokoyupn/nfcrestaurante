@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="usuario.DescripcionPlato" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/DescripcionPlato.java" binary="false" label="descripcionPlato" type="class" 
+    autoSize="false">    
+    <position height="99" width="145" x="0" y="0"/>    
+    <execution id="2">      
+      <position height="375" width="141" x="5" y="78"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="115" width="141" x="5" y="120"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="115" width="141" x="5" y="317"/>    
+    </execution>  
+  </object>  
+  <object id="15" language="java" name="android.widget.TextView" project="NFCook-Usuario" 
+    file="C:/Users/Prado/AppData/Local/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="editTextUnidades" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="151"/>    
+    </execution>    
+    <execution id="12">      
+      <position height="21" width="0" x="0" y="348"/>    
+    </execution>  
+  </object>  
+  <object id="16" language="java" name="android.widget.TextView" project="NFCook-Usuario" 
+    file="C:/Users/Prado/AppData/Local/Android/android-sdk/platforms/android-16/android.jar" binary="true" 
+    label="textViewPrecio" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="21" width="0" x="0" y="193"/>    
+    </execution>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="390"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="onClickBotonMas(android.view.View):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="onClickBotonMenos(android.view.View):void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="setText(java.lang.CharSequence):void">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>
+</sequence-diagram>

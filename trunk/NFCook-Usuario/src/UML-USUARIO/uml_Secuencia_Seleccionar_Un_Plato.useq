@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.1" icons="true">  
+  <object id="1" language="java" name="fragments.ContenidoTabsSuperioresFragment" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/fragments/ContenidoTabsSuperioresFragment.java" binary="false" 
+    label="contenidoTabsSuperioresFragment" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="119" y="0"/>    
+    <execution id="2">      
+      <position height="164" width="224" x="5" y="78"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="101" width="224" x="5" y="120"/>    
+    </execution>  
+  </object>  
+  <object id="7" language="java" name="usuario.DescripcionPlato" project="NFCook-Usuario" 
+    file="/NFCook-Usuario/src/usuario/DescripcionPlato.java" binary="false" label="descripcionPlato" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="422" y="0"/>    
+    <execution id="6">      
+      <position height="21" width="120" x="233" y="179"/>    
+    </execution>  
+  </object>  
+  <message id="3">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="startActivity(android.content.Intent):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>
+</sequence-diagram>
