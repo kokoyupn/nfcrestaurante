@@ -137,7 +137,7 @@ public class InicialCamarero extends Activity{
 				nuneroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
-				final CharSequence[] items = {"Cobrar","Sincronizacion","Editar nº mesa", "Editar nº personas","Eliminar mesa"};
+				final CharSequence[] items = {"Cobrar","Sincronizacion","Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(InicialCamarero.this);
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -330,6 +330,7 @@ public class InicialCamarero extends Activity{
 				    		});//cierra el oyente de aceptar
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
+				    	//---------Eliminar Mesa------
 				    	}else if (item == 4){
 							 AlertDialog.Builder alert = new AlertDialog.Builder(InicialCamarero.this);
 				             alert.setMessage("¿Seguro que quieres eliminar esta mesa? "); //mensaje            
@@ -356,7 +357,11 @@ public class InicialCamarero extends Activity{
 				               	}
 				             });//fin onclick aceptar
 				             alert.show();
-				    	} //fin else item 3
+				    	} //fin else item 4
+				    	else if (item == 5){
+				    		intent = new Intent(ctx,Borrar_tarjeta.class);
+				    		startActivity(intent);
+				    	}//fin else item5
 				    }
 				});
 			    ventEmergente.show();
