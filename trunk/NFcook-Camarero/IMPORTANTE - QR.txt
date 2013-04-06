@@ -1,0 +1,13 @@
+Para que funcione y compile QR es necesario enlazar una librería externa que esta subida en el repositorio.
+
+Para ello, sólo hay que seguir estos pasos:
+
+- Hacemos un checkout de la libreria ZXingLib del repositorio.
+- Click derecho en la carpeta del proyecto NFCook-Camarero en el Project Explorer
+- Una vez descargada, click derecho en la carpeta del proyecto en el Project Explorer->Properties
+- En resource->android abajo del todo pone "Library", le damos a Add..., Ok y listo.
+
+
+MUY IMPORTANTE
+
+CUANDO SE CAMBIEN LOS NOMBRES DE LOS PAQUETES AVISADME PORQUE TENGO QUE CAMBIAR CODIGO EN LA LIBRERIA Y EN QR

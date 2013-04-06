@@ -4,10 +4,13 @@
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="11" />
 	<uses-feature android:name="android.hardware.nfc" android:required="true" />
+	<uses-feature android:name="android.hardware.camera" />
 	
     <application
         android:icon="@drawable/ic_nfcook"
@@ -88,6 +91,23 @@
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
         </activity> 
+        <activity
+            android:clearTaskOnLaunch="true"
+            android:stateNotNeeded="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:name="com.google.zxing.client.android.CaptureActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+           <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter> 
+		    <intent-filter>
+		        <action android:name="com.example.nfcook_camarero.SCAN"/>
+		        <category android:name="android.intent.category.DEFAULT"/>
+		    </intent-filter>          
+		</activity>
     </application>
 
 </manifest>
