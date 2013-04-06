@@ -84,7 +84,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	   */
 	  @Override
 	  protected Void doInBackground(Void... params) {	  		  
-		  SystemClock.sleep(2000);
+		  SystemClock.sleep(1000);
 		  // si es Mifare Classic
 		  if (esMFC) {
 				try {   
@@ -191,7 +191,15 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	 */
 	private void read(Tag tag) throws IOException, FormatException {	
 		
-
+		/*Variables para borrar la tarjeta */
+		String aux = "";
+		aux += "255";
+		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
+		
+		ArrayList<Byte> al = new ArrayList<Byte>();
+		al.add((byte) Integer.parseInt(aux));
+		pedidoCodificadoEnBytes.addAll(al);
+		
 		mensaje = new ArrayList<Byte>();
 			
 		// Obtiene la instacia de la tarjeta nfc
@@ -201,7 +209,19 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		mfc.connect();
 		
 		boolean sectorValido = false;		
+
+		//----------Borrado de la tarjeta
+		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
+		int recorrerString = 0;	
 		
+		// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
+		// se escribe mandando bloques de 16 bytes
+		int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
+		if (numMod16 != 0){
+			int huecos = 16-numMod16;
+			for (int i = 0; i < huecos; i++)
+				pedidoCodificadoEnBytes.add((byte) 0);
+		}
 		
 		//Variable usada para saber por el bloque que vamos
 		int numBloque = 0;
@@ -228,6 +248,22 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 							{texto=texto+(char)textoByte[i];//Concatenamos el contenido del bloque en el string ya que de la tarjeta lo leemos en bytes
 							 		  mensaje.add(textoByte[i]);
 							}
+						
+						// si es menor significa que queda por escribir cosas
+						if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
+							// recorremos con un for para obtener bloques de 16 bytes
+							byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
+							for (int j=0; j<MifareClassic.BLOCK_SIZE; j++)
+								datosAlBloque[j] = pedidoCodificadoEnBytes.get(j+recorrerString);
+							// avanzo para el siguiente bloque
+							recorrerString += MifareClassic.BLOCK_SIZE;
+							// escribimos en el bloque
+							mfc.writeBlock(numBloque, datosAlBloque);
+						} else {
+							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
+							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
+							mfc.writeBlock(numBloque, ceros);
+						}
 			} 	
 				numBloque++;
 			}

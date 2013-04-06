@@ -20,7 +20,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -64,15 +63,26 @@
          <activity
             android:name=".Sincronizacion_LecturaNfc"
             android:screenOrientation="portrait">
-        </activity>
- 		<activity
-            android:name=".Sincronizacion_BeamNfc"
-            android:screenOrientation="portrait">
-        </activity>   
+         </activity>
+ 		
          <activity
             android:name=".Sincronizacion_QR"
             android:screenOrientation="portrait">
-        </activity>  
+        </activity>
+        <activity
+            android:name=".Borrar_tarjeta"
+            android:screenOrientation="portrait">
+        </activity>   
+        <activity
+            android:name=".Sincronizacion_BeamNfc"
+            android:screenOrientation="portrait"
+                 android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/com.example.nfcook_camarero" />
+            </intent-filter>
+        </activity>   
          <activity
             android:name=".AnadirPlatos"
             android:windowSoftInputMode="stateHidden"
