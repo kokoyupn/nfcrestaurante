@@ -77,12 +77,20 @@ public class PadreExpandableListPedido {
 	}
 
 	public boolean eliminaHijo(int posicionHijo) {
-		precio -=configuracionesPlato.get(posicionHijo).getPrecio();
-		configuracionesPlato.remove(posicionHijo);
+		precio -=configuracionesPlato.get(posicionHijo).getPrecioUnidad();
+		if(configuracionesPlato.get(posicionHijo).getNumeroDeConfiguraciones() == 1){
+			configuracionesPlato.remove(posicionHijo);
+		}else{
+			configuracionesPlato.get(posicionHijo).decrementaNumeroDeConfiguraciones();
+		}
 		if(configuracionesPlato.isEmpty()){
 			return true; //Si la lista de hijos es vacia avisamos para eliminar el padre el padre
 		}
 		return false;
+	}
+
+	public void addHijo(HijoExpandableListPedido nuevoHijo) {
+		configuracionesPlato.add(nuevoHijo);
 	}
 	
 }

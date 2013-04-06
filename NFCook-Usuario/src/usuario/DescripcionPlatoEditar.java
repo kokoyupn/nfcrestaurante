@@ -153,9 +153,8 @@ public class DescripcionPlatoEditar extends Activity {
 		String nuevosExtrasBinarios = null;
 		if(adapterExpandableListPedidoEditar != null){ // El plato tiene extras
 			nuevosExtrasMarcados = adapterExpandableListPedidoEditar.getExtrasMarcados();
+			nuevosExtrasBinarios = adapterExpandableListPedidoEditar.getExtrasBinarios();
 		}
-    	
-		nuevosExtrasBinarios = adapterExpandableListPedidoEditar.getExtrasBinarios();
 		
     	String observacionesNuevas;
     	if(!actwObservaciones.getText().toString().equals("")){
@@ -176,7 +175,7 @@ public class DescripcionPlatoEditar extends Activity {
 	}
     	
 	public static void actualizaExpandableList() {
-		expandableListPedidoEditar.setAdapter(adapterExpandableListPedidoEditar);
+		adapterExpandableListPedidoEditar.notifyDataSetChanged();
 	}
 
 	public static void expandeGrupoLista(int groupPositionMarcar) {

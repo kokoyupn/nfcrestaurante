@@ -217,15 +217,14 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 		String extras = "";
 		while(it.hasNext()){
 			PadreExpandableListEditar unPadre = it.next();
-			if(!extras.equals("")){
-				extras += ", " + unPadre.getExtrasMarcados();				
-			}
-			else{
-				String extrasMarcados = unPadre.getExtrasMarcados();
-				if(extrasMarcados == null){
-					return null;
+			String extrasMarcados = unPadre.getExtrasMarcados();
+			if(extrasMarcados == null){
+				return null;
+			}else{
+				if(!extras.equals("")){
+					extras += ", " + extrasMarcados;
 				}else{
-					extras += unPadre.getExtrasMarcados();	
+					extras += extrasMarcados;	
 				}
 			}
 		}

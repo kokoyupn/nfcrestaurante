@@ -106,7 +106,9 @@ public class PedidoFragment extends Fragment{
 		    		idPadre = cursor.getString(3);
 		    		precio +=cursor.getDouble(2); 
 		    		HijoExpandableListPedido unHijo = new HijoExpandableListPedido(cursor.getString(1), cursor.getString(0), cursor.getDouble(2), cursor.getString(4));
-		    		hijos.add(unHijo);
+		    		if(!HijoExpandableListPedido.existeHijoIgualEnArray(hijos, unHijo)){
+			    		hijos.add(unHijo);
+		    		}
 		    	}
 		    	PadreExpandableListPedido unPadre = new PadreExpandableListPedido(nombrePlato, hijos, precio, idPadre);
 		    	padres.add(unPadre);
@@ -365,7 +367,7 @@ public class PedidoFragment extends Fragment{
 	public static void actualizaExpandableList() {
 		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandaleList.findViewById(R.id.textViewTotalPedido);
 		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + "€");
-		expandableListPedido.setAdapter(adapterExpandableListPedido);
+		adapterExpandableListPedido.notifyDataSetChanged();
 	}
 
 	public static void expandeGrupoLista(int groupPositionMarcar) {
