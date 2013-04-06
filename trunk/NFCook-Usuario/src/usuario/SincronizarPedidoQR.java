@@ -261,9 +261,6 @@ public class SincronizarPedidoQR extends Activity {
     		listaPlatosStr += idplato + extrasBinarios + observaciones +"@";     	
     	}
     	
-    	// para indicar que ha finalizado el pedido escribo un 255 
-    	listaPlatosStr += "255";
-    	
     	return listaPlatosStr;
 	}
 
