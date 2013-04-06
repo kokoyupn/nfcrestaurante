@@ -227,7 +227,7 @@ public class DescripcionPlato extends Activity {
     }
 
     public static void actualizaExpandableList() {
-		expandableListExtras.setAdapter(adapterExpandableListExtras);
+    	adapterExpandableListExtras.notifyDataSetChanged();
 	}
 
 	public static void expandeGrupoLista(int groupPositionMarcar) {

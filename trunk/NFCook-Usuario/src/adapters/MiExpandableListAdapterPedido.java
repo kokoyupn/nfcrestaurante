@@ -3,6 +3,7 @@ package adapters;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import usuario.DescripcionPlato;
 import usuario.DescripcionPlatoEditar;
 
 
@@ -78,7 +79,8 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		
 		String extrasPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getExtras();
 		String observacionesPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getObservaciones();
-		String precioPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getPrecio() + "€";
+		String precioPlato = Math.rint(padresExpandableList.get(groupPosition).getHijoAt(childPosition).getPrecio()*100)/100 + "€";
+		int unidades = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getNumeroDeConfiguraciones();
 		
 		//Cargamos diferente el layout en función de los campos a mostrar.
 		
@@ -86,6 +88,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		TextView textViewPrecio = (TextView) convertView.findViewById(R.id.textViewPrecioPedidoHijo);			 
 		TextView textViewExtras = (TextView) convertView.findViewById(R.id.textViewPedidoExtras);
 		TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
+		TextView textViewUnidades = (TextView) convertView.findViewById(R.id.textViewUnidadesPedido);
 		
 		if(extrasPlato==null && observacionesPlato==null){
 			
@@ -108,6 +111,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		}
 		
 		textViewPrecio.setText(precioPlato);
+		textViewUnidades.setText("Uds: " + unidades);
 		
 		/*
 		 * Necesitamos que sean final para que por cada hijo mostrado de la lista guardemos en que posición
@@ -124,7 +128,8 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 			
 			public void onClick(View v) {
 				String idPadre = padresExpandableList.get(groupPositionMarcar).getIdPlato();
-				String idHijo = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getId();
+				String idHijo = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getPrimerIdUnicoParaModificar();
+				padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).eliminaPrimerIdUnico();
 				if(padresExpandableList.get(groupPositionMarcar).eliminaHijo(childPositionMarcar)){ //Eliminamos el hijo y si la condición es cierta (no tiene ningun hijo) eliminamos el padre
 					padresExpandableList.remove(groupPositionMarcar);
 					PedidoFragment.actualizaExpandableList();
@@ -168,7 +173,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		        posHijoEditado = childPositionMarcar;
 		        
 				String idPlato = idPlatoPadreEditado = padresExpandableList.get(groupPositionMarcar).getIdPlato();
-				String idPlatoHijo = idPlatoHijoEditado = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getId();
+				String idPlatoHijo = idPlatoHijoEditado = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getPrimerIdUnicoParaModificar();
 				String extras = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getExtras();
 				String observaciones = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getObservaciones();
 				
@@ -269,13 +274,35 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	 * @param dbPedido
 	 */
 	public void actualizaHijoEditado(SQLiteDatabase dbPedido) {
-		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones"};
+		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones", "PrecioPlato"};
     	String[] datos = new String[]{idPlatoPadreEditado, idPlatoHijoEditado};
+    	
     	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Id =? AND IdHijo =?", datos,null, null,null);
     	cursor.moveToFirst();
+    	
     	String extrasNuevos = cursor.getString(0);
     	String observacionesNuevas = cursor.getString(1);
-    	padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).setExtrasObs(extrasNuevos,observacionesNuevas);
+    	double precioPlato = cursor.getDouble(2);
+    	
+    	
+    	if(padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).getNumeroDeConfiguraciones() > 1){
+        	HijoExpandableListPedido nuevoHijo = new HijoExpandableListPedido(observacionesNuevas, extrasNuevos, precioPlato, idPlatoHijoEditado);
+
+    		if(!nuevoHijo.equals(padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado))){
+        		padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).decrementaNumeroDeConfiguraciones();
+        		padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).eliminaPrimerIdUnico();
+        		if(HijoExpandableListPedido.existeHijoIgualEnArray(padresExpandableList.get(posPadreEditado).getArrayChildren(), nuevoHijo)){
+        			padresExpandableList.get(posPadreEditado).eliminaHijo(posHijoEditado);
+        		}else{
+            		padresExpandableList.get(posPadreEditado).addHijo(nuevoHijo);
+        		}
+        	}
+    	}else{
+    		padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).setExtrasObs(extrasNuevos, observacionesNuevas);
+    		if(HijoExpandableListPedido.existeHijoIgualEnArray(padresExpandableList.get(posPadreEditado).getArrayChildren(), padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado))){
+    			padresExpandableList.get(posPadreEditado).eliminaHijo(posHijoEditado);
+    		}
+    	}
     	//Reseteamos la ediccion
     	idPlatoHijoEditado = null; 
         idPlatoPadreEditado = null;
