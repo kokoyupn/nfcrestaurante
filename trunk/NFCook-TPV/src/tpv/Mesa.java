@@ -8,6 +8,7 @@ public class Mesa {
 	public enum estadoMesa{CERRADA,ABIERTA};
 
 	
+	
 	private ArrayList<Producto> productosEnMesa;
 	private String idMesa;
 	private int numeroPersonas;
@@ -27,6 +28,9 @@ public class Mesa {
 	public ArrayList<Producto> getProductosEnMesa() {
 		return productosEnMesa;
 	}
+	public void setProductosEnMesa(ArrayList<Producto> productosEnMesa) {
+		this.productosEnMesa = productosEnMesa;
+	}
 	
 	public String getIdMesa() {
 		return idMesa;
@@ -43,6 +47,7 @@ public class Mesa {
 	public estadoMesa getEstado() {
 		return estado;
 	}
+	
 
 	public double getDineroTotalEnMesa() {
 		return dineroTotalEnMesa;
@@ -68,9 +73,13 @@ public class Mesa {
 	public boolean mesaVacia() {
 		return productosEnMesa.size() == 0;
 	}
-
-	public void setProductosEnMesa(ArrayList<Producto> productosEnMesa) {
-		this.productosEnMesa = productosEnMesa;
-	}	
+	
+	public double actualizarDineroTotal(){
+		dineroTotalEnMesa = 0;
+		for(int i = 0; i < productosEnMesa.size();i++){
+			dineroTotalEnMesa += productosEnMesa.get(i).getPrecio();
+		}
+		return dineroTotalEnMesa;
+	}
 
 }
