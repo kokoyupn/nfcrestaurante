@@ -107,6 +107,16 @@ public class InterfazPlatos extends JFrame {
 		esExtras = false;
 		esObs = false;
 
+///////////////GRUPO TOTAL PRECIO////////////////////	
+		
+		dinero = calculaDineroTotal();
+		total = new JLabel("Total: " + dinero + " euros");
+		total.setBounds(114,22,317,40);
+		contentPaneGlobal.add(total);
+		total.setFont(new Font(total.getFont().getName(), total.getFont().getStyle(), 30));
+
+
+		
 ////////////////////////////ELIMINAR PLATO/////////////////////
 		JButton eliminar = new JButton("Eliminar Plato");
 		panelBotones.add(eliminar);
@@ -244,6 +254,8 @@ public class InterfazPlatos extends JFrame {
 					if (res == 0){//aceptar
 						tablaAux.setValueAt(((TecladoNumerico)tecladoNum).getPrecio(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
 						productosEnMesa.get(tablaAux.getSelectedRow()).setPrecio(((TecladoNumerico)tecladoNum).getPrecio());
+						dinero = calculaDineroTotal();
+						total.setText("Total: " + dinero + " euros");
 					}
 				}else if (comlumnaPinchada == 2){ //Extras
 						//miro que no sea bebida
@@ -346,14 +358,6 @@ public class InterfazPlatos extends JFrame {
 	}
 	});
 	contentPaneGlobal.add(rehacer);
-///////////////GRUPO TOTAL PRECIO////////////////////	
-	
-	dinero = calculaDineroTotal();
-	total = new JLabel("Total: " + dinero + " euros");
-	total.setBounds(114,22,317,40);
-	contentPaneGlobal.add(total);
-	total.setFont(new Font(total.getFont().getName(), total.getFont().getStyle(), 30));
-	
 	
 ///////////////CATEGORIAS Y PLATOS////////////////////		
 		//rellenamos de las categorias
@@ -615,7 +619,7 @@ public class InterfazPlatos extends JFrame {
 	public double calculaDineroTotal(){
 		double dineroTotalEnMesa = 0;
 		for(int i = 0; i < productosEnMesa.size();i++){
-			dineroTotalEnMesa = Math.rint((dinero + productosEnMesa.get(i).getPrecio())*100)/100;
+			dineroTotalEnMesa = Math.rint((dineroTotalEnMesa + productosEnMesa.get(i).getPrecio())*100)/100;
 		}
 		return dineroTotalEnMesa;
 	}
