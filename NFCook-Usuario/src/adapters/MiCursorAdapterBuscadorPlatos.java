@@ -27,7 +27,6 @@ public class MiCursorAdapterBuscadorPlatos extends CursorAdapter{
 		super(context, c, flags);
 		this.context = context;
 		this.restaurante = restaurante;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class MiCursorAdapterBuscadorPlatos extends CursorAdapter{
      
      currentCursor = db.rawQuery("SELECT Id AS _id, Nombre AS item" +
        " FROM Restaurantes" + 
-       " WHERE Restaurante ='"+ restaurante+"' and Nombre LIKE '%" +args+ "%' ", null);
+       " WHERE Restaurante ='"+ restaurante+"' and ( Nombre LIKE '%" +args+ "%'  or Descripcion LIKE '%" +args+ "%' or Extras LIKE '%" +args+ "%' )", null);
   
      return currentCursor;
    }

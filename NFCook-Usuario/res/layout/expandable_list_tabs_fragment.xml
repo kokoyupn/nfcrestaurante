@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/buscarplato"
         android:ems="10"
-        android:hint="Buscador de platos"
-        android:textSize="12dp" />
+        android:hint=" Buscar plato..."
+        android:textSize="20dp" />
 
     <ExpandableListView
         android:id="@+id/expandableListViewPlatos"
