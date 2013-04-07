@@ -328,7 +328,7 @@ public class PedidoFragment extends Fragment{
 				//abro la ventana para sincronizar con Beam
 				Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
 				intent.putExtra("Restaurante", restaurante);
-				startActivity(intent);
+				startActivityForResult(intent, 0);
 			}
 		});
 		
