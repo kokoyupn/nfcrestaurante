@@ -37,7 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="33dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp" >
+
         </ListView>
     </LinearLayout>
 
@@ -68,27 +71,36 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp" >
 
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="5dp" >
+
         <Button
             android:id="@+id/aniadirPlato"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical"
-            android:layout_marginLeft="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="90dp"
             android:background="@drawable/iconomas" />
 
         <ImageView
             android:id="@+id/imagenComida"
             android:layout_width="57dp"
             android:layout_height="match_parent"
-            android:layout_gravity="fill_vertical"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/iconohambuguesa" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/iconocomida" />
 
         <Button
             android:id="@+id/aniadirBebida"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical"
+            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="40dp"
             android:background="@drawable/iconomas" />
 
@@ -96,8 +108,10 @@
             android:id="@+id/imagenBebida"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_gravity="fill_vertical"
-            android:src="@drawable/iconobebida" />
-    </LinearLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="80dp"
+            android:src="@drawable/iconobebida1" />
+
+    </FrameLayout>
 
 </FrameLayout>

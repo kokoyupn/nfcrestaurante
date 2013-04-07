@@ -10,6 +10,7 @@ import adapters.PadreExpandableListEditar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,13 +66,15 @@ public class Mesa extends Activity {
 	private ArrayList<ContenidoListMesa> elemLista;
 	private static MiListAdapterMesa adapter;
 	private static TextView precioTotal;
-	private int indicePulsado;
 	private ArrayList<MesaView> listaDeMesas;
 	private Activity actividad;
 	
-	private GestureDetector detector;
 	private View.OnTouchListener tocuhListener;
-	private View seleccionado;
+	private boolean moviendose;
+	private View vista;
+	private int inicial, itemId;
+	private boolean noBorrar=false;
+	private boolean noVolver=false;
 	
 	
 	
@@ -117,7 +120,7 @@ public class Mesa extends Activity {
 	  	    adapter = new MiListAdapterMesa(this, elemLista);
 	  	     
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
-	  	    precioTotal.setText(Double.toString( Math.rint(adapter.getPrecio()*100/100) )+" €");
+	  	    precioTotal.setText(Double.toString( Math.rint(adapter.getPrecio()*100)/100 )+" €");
 	  	     
 	  	    platos.setAdapter(adapter);
 	  	    
@@ -125,53 +128,128 @@ public class Mesa extends Activity {
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-	  	    		AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
-	  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
-	  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
-	  				//onClickBotonCancelarAlertDialog(ventanaEmergente);
-	  				View vistaAviso = LayoutInflater.from(Mesa.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
-	  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
-	  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
-	  				encabezadoDialog.setText("Editar Plato");
-	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
-	  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
-	  				tituloPlato.setText(adapter.getNombrePlato(posicion));
-	  				actwObservaciones.setText(adapter.getObservacionesPlato(posicion));
-	  				cargarExpandableListExtras(posicion);
-	  				ventanaEmergente.setView(vistaAviso);
-	  				ventanaEmergente.show();
-	  			}
+	  	    			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
+		  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
+		  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
+		  				//onClickBotonCancelarAlertDialog(ventanaEmergente);
+		  				View vistaAviso = LayoutInflater.from(Mesa.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
+		  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
+		  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
+		  				encabezadoDialog.setText("Editar Plato");
+		  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
+		  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+		  				tituloPlato.setText(adapter.getNombrePlato(posicion));
+		  				actwObservaciones.setText(adapter.getObservacionesPlato(posicion));
+		  				cargarExpandableListExtras(posicion);
+		  				ventanaEmergente.setView(vistaAviso);
+		  				ventanaEmergente.show();
+	  	    	}
 	  	    });
 	  	    
-	  	  
-	  	    detector = new GestureDetector(context,new Detector());
-	  	    System.out.println("aaaaa");
+	  	    //Esta linea llama al evento onTouch de abajo
 	  	    tocuhListener = new View.OnTouchListener() {
-	            public boolean onTouch(View v, MotionEvent event) {
-	            	switch (event.getAction() ) { 
+	  	    	
+	  	    	public boolean onTouch(View v, MotionEvent event) {
+	            	switch (event.getAction() ) {
 	            		case MotionEvent.ACTION_DOWN:
-	            	
-		            	try{
-		  					if(Detector.getSeleccionado())
-		  						//seleccionado = Mesa.getPlatos().getChildAt(Detector.getitemId());
-		  						seleccionado = Mesa.getPlatos().getChildAt(Detector.getPos());
-		  						seleccionado.setBackgroundColor(Color.WHITE);
-		  						Button delete = (Button) seleccionado.findViewById(R.id.boton_borrar);
-		  		        		delete.setVisibility(android.view.View.INVISIBLE);
-		  			            Detector.setSeleccionado(false);
-		  				}catch(Exception e){
-		  					System.out.println("No creado el Detector");
-		  				}
+	            			noVolver=false;
+	            			
+	            			itemId = platos.pointToPosition((int) event.getX(), (int) event.getY());
+	        	        	int pos=itemId-platos.getFirstVisiblePosition();
+	        	        	vista= platos.getChildAt(pos);
+	        	        	
+	        	        	int[] coord=new int[2];//Vista
+        		        	vista.getLocationOnScreen(coord);
+        		        	inicial=coord[0];
+        		        	
+        		        	break;
+	        	        	
+	            		case MotionEvent.ACTION_UP:
+	            			if(!noBorrar){
+		            			if(moviendose){
+			            			 if (event.getX()>inicial && event.getX() - inicial > 100){
+			            				//Calculas para ver si donde levantas el dedo es la misma vista de donde empezaste
+		            		        	int altoVista=vista.getHeight();
+		            		        	int[] coordenadas=new int[2];//Vista
+		            		        	vista.getLocationOnScreen(coordenadas);//Guarda X e Y
+		            		        	int finVista=coordenadas[1]+altoVista;
+		            		        	
+		            		        	//Entras si sigues con el dedo en la misma vista
+		            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
+		            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
+		            	    				String identificador = Integer.toString(platoSeleccionado.getId());
+		            	    				try{
+		            	    					sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+		            	    					dbMesas= sqlMesas.open();
+		            	    					
+		            	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
+		            	    				}catch(Exception e){
+		            	    					System.out.println("Error borrar de la base pedido en ondrag");
+		            	    				}
+		            	    				
+		            	    				//Borras la posicion del adapter
+		            	    				adapter.deletePosicion(itemId);
+		            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
+		            	    				//siguiente vista la coloca con el margen de donde estuviera el raton al levantar
+		            	    				vista.setTranslationX(0);
+		            	    				//Notificas que has borrado un elemento del adapter y que repinte la lista
+		            	    				adapter.notifyDataSetChanged();
+		            	    				
+		            	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
+		            	    				precioTotal.setText(Double.toString( Math.rint( adapter.getPrecio()*100 )/100) +" €");
+		            	            		
+		            	            		}
+			            		     }else{
+			            		    	 //Si no se ha borrado, se devuelve a su sitio
+			            				 vista.setTranslationX(0);
+			            			 }
+		            			}
+		            			if(noVolver)
+		            				//Si has activado el scroll piedes la seleccion de la vista
+		            				noVolver=false;
+	            			}
+	                        break;
+	                        
+	            		case MotionEvent.ACTION_MOVE:
+	            			try{
+	            				int altoV=vista.getHeight();
+            		        	int[] coordena=new int[2];//Vista
+            		        	vista.getLocationOnScreen(coordena);//Guarda X e Y
+            		        	int finVis=coordena[1]+altoV;
+            		        	
+            		        	//Desplazas la vista si no te sales de ella verticalmente, si es la primera vez y si no has activado el scroll
+		            			if(!moviendose && !(event.getRawY()<coordena[1]) && !(event.getRawY()>finVis) && !noVolver){
+		            				moviendose=true;
+		            				noBorrar=false;
+			            			
+		        	        		vista.setTranslationX(event.getX());		        	        		
+			        	        
+		        	        	//Si te sales de la vista, devuelves false para que lo procese el metodo(el que 
+		        	        	//activa el scroll) y pierdes el poder desplazar la vista(y la devuelves a su sitio)
+		            			}else if( event.getRawY()<coordena[1] || event.getRawY()>finVis ){	 
+		            				vista.setTranslationX(0);
+		            				noBorrar=true;
+		            				noVolver=true;
+		            				return false;
+		            			
+		            			//Si no has perdido la vista, la mueves horizontalmente
+		            			}else if(!noVolver){
+		            				noBorrar=false;
+		            				vista.setTranslationX(event.getX());
+		            			}
+	            			
+	            			}catch(Exception e){
+	            				System.out.println("catch MOVE");	
+	            			}
+	            			break;
 	            	}
-	                return detector.onTouchEvent(event);
+	            	return true;
 	            }
 	        };
-	        // prevent the view to be touched
+	        
 	        platos.setOnTouchListener(tocuhListener);
-	        
-	        
-	  	   
-	    }catch(Exception e){
+	    
+		}catch(Exception e){
 			System.out.println("Error lectura base de datos de Pedido");
 		}
 		
@@ -384,7 +462,7 @@ public class Mesa extends Activity {
 	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
 		adapter.addPlato(platoNuevo);
 		platos.setAdapter(adapter);
-		precioTotal.setText( Math.rint(adapter.getPrecio()*100/100) +" €");
+		precioTotal.setText( Math.rint(adapter.getPrecio()*100)/100 +" €");
 	}
 
 	public static void actualizaExpandableList() {
