@@ -472,7 +472,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
             	  }
                 //Le quito la ultima coma al extra final para que quede estetico
                 if (extrasFinal!= "")
-                	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-1);
+                	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-2);
     		}catch(SQLiteException e){
     		 	System.out.println("Error lectura base de datos de MIBASE");
     		}
