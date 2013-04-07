@@ -2,9 +2,11 @@ package tpv;
 
 import java.util.ArrayList;
 
-enum estadoMesa{CERRADA,ABIERTA};
 
 public class Mesa {
+
+	public enum estadoMesa{CERRADA,ABIERTA};
+
 	
 	private ArrayList<Producto> productosEnMesa;
 	private String idMesa;
@@ -65,6 +67,10 @@ public class Mesa {
 
 	public boolean mesaVacia() {
 		return productosEnMesa.size() == 0;
+	}
+
+	public void setProductosEnMesa(ArrayList<Producto> productosEnMesa) {
+		this.productosEnMesa = productosEnMesa;
 	}	
 
 }

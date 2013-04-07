@@ -7,6 +7,8 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
+import tpv.Mesa.estadoMesa;
+
 import basesDeDatos.Operaciones;
 
 public class Restaurante {
@@ -115,6 +117,10 @@ public class Restaurante {
 
 	public boolean mesaVacia(String idMesa) {
 		return mesasRestaurante.get(idMesa).mesaVacia();
+	}
+
+	public estadoMesa dameEstadoMesa(String idMesa) {
+		return mesasRestaurante.get(idMesa).getEstado();
 	}
 	
 }

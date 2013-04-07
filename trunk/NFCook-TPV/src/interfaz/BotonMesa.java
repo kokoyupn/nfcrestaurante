@@ -28,8 +28,6 @@ import javax.swing.Timer;
 
 import tpv.Restaurante;
 
-enum estadoMesa{CERRADA,ABIERTA};
-
 class BotonMesa extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
@@ -41,7 +39,7 @@ class BotonMesa extends JPanel {
 	private String idMesa;
 	private int numeroPersonas;
 	private Restaurante miRestaurante;
-	private estadoMesa estado;
+	private tpv.Mesa.estadoMesa estado;
 	
 	private Timer timerPopupMenu;
 	
@@ -56,7 +54,7 @@ class BotonMesa extends JPanel {
 		this.miRestaurante = miRestaurante;
 		this.idMesa = idMesa;
 		this.numeroPersonas = numeroPersonas;
-		estado = estadoMesa.CERRADA;
+		estado = miRestaurante.dameEstadoMesa(idMesa);
 		//Creamos el manejador de eventos de raton para el boton de la mesa.
 		EventosRatonBotones manejadorEventosRaton = new EventosRatonBotones();
 		
@@ -143,7 +141,7 @@ class BotonMesa extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				activarTodosLosBotones();
-				if(estado != estadoMesa.CERRADA){
+				if(estado != tpv.Mesa.estadoMesa.CERRADA){
 					JPanel teclado = new TecladoParaNumeroPersonas();
 					JFrame marco = new JFrame();
 					int resultado = JOptionPane.showOptionDialog(marco, teclado, getIdMesa(), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Cancelar","OK"}, "Cancelar");
@@ -166,7 +164,7 @@ class BotonMesa extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				activarTodosLosBotones();
-				if(estado != estadoMesa.CERRADA ){
+				if(estado != tpv.Mesa.estadoMesa.CERRADA ){
 					if(!mesaVacia()){
 						JLabel mensaje = new JLabel("Esta mesa contiene platos, imposible cerrarla.");
 						JFrame marco = new JFrame();
@@ -203,9 +201,9 @@ class BotonMesa extends JPanel {
 		// Creamos el label que contiene la imagen de la mesa.
 		jLabelIconoMesa = new JLabel();
 		// En función de su estado cargamos una u otra.
-		if(estado == estadoMesa.CERRADA){
+		if(estado == tpv.Mesa.estadoMesa.CERRADA){
 			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaejemplo.jpg"));
-		}else if(estado == estadoMesa.ABIERTA){
+		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
 			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaEjemploAbierta.jpg"));
 		}
 		
@@ -239,7 +237,7 @@ class BotonMesa extends JPanel {
 	 */
 	protected void actualizarEstadoMesaCerrada() {
 		miRestaurante.actualizaEstadoMesaCerrada(idMesa);
-		estado = estadoMesa.CERRADA;
+		estado = tpv.Mesa.estadoMesa.CERRADA;
 		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaejemplo.jpg"));
 	}
 	
@@ -248,7 +246,7 @@ class BotonMesa extends JPanel {
 	 */
 	protected void actualizarEstadoMesaAbierta() {
 		miRestaurante.actualizaEstadoMesaAbierta(idMesa);
-		estado = estadoMesa.ABIERTA;
+		estado = tpv.Mesa.estadoMesa.ABIERTA;
 		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaEjemploAbierta.jpg"));
 	}
 
@@ -358,7 +356,7 @@ class BotonMesa extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			// Solo abrimos la mesa si no esta JPopupMenu abierto, la mesa tiene cualquier estado que no sea cerrada y además no hemos salido justo en ese momento del JPopupMenu de otra mesa.
-			if(!mesasRecienActivadas && !menuMesaAbierto && estado!= estadoMesa.CERRADA){
+			if(!mesasRecienActivadas && !menuMesaAbierto && estado!= tpv.Mesa.estadoMesa.CERRADA){
 				InterfazPlatos platosMesa = new InterfazPlatos(idMesa, miRestaurante);
 				platosMesa.setVisible(true);
 			}
