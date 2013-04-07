@@ -2,10 +2,23 @@ package com.example.nfcook_camarero;
 
 
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.media.AudioManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -25,17 +38,24 @@ import android.widget.Toast;
 import android.provider.Settings;
 
 
-public class Sincronizacion_BeamNfc extends Activity  implements CreateNdefMessageCallback,OnNdefPushCompleteCallback {
+public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompleteCallback {
 
     NfcAdapter mNfcAdapter;
     TextView mInfoText;
     private static final int MESSAGE_SENT = 1;
     Context context;
 	 
-	String numMesa;
-	String idCamarero;
-	String numPersonas;
-	 
+	//Variables usadas en la manipulacion e bases de datos	
+	HandlerGenerico sqlMesas,sqlrestaurante;
+	SQLiteDatabase dbMesas,dbMiBase;
+	
+	
+	//Variables para el sonido
+	SonidoManager sonidoManager;
+	int sonido;
+		
+	/**Metodo que se encarga de cerrar la ventana
+	 * */
 	public void cerrarVentana()
 	    {
 	    	this.finish();
@@ -45,12 +65,15 @@ public class Sincronizacion_BeamNfc extends Activity  implements CreateNdefMessa
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_beam_nfc);
 		
-		//El numero de la mesa se obtiene de la pantalla anterior
-		Bundle bundle = getIntent().getExtras();
-		numMesa = bundle.getString("NumMesa");
-		numPersonas = bundle.getString("Personas");
-		idCamarero = bundle.getString("IdCamarero");
 		context=this;
+		
+		//Creamos la instacia del manager de sonido
+		sonidoManager = new SonidoManager(getApplicationContext());
+		// Pone el volumen al volumen del movil actual
+        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        //Cargamos el sonido
+        sonido=sonidoManager.load(R.raw.confirm);
+        
 		 // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
@@ -58,8 +81,8 @@ public class Sincronizacion_BeamNfc extends Activity  implements CreateNdefMessa
             mInfoText.setText("NFC no esta activo en el dispositivo.");
         } else {
       	  // Register callback to set NDEF message
-            mNfcAdapter.setNdefPushMessageCallback(this, this);
-            
+            //mNfcAdapter.setNdefPushMessageCallback(this, this);
+        	
         	// Register callback to listen for message-sent success
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
@@ -96,8 +119,8 @@ public class Sincronizacion_BeamNfc extends Activity  implements CreateNdefMessa
 		
 	}
 	 @Override
-	    public void onResume() {
-	        super.onResume();
+	   public void onResume() {
+	        super.onResume();//esto
 	        // Check to see that the Activity started due to an Android Beam
 	        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 	            processIntent(getIntent());
@@ -106,41 +129,156 @@ public class Sincronizacion_BeamNfc extends Activity  implements CreateNdefMessa
 
 	    @Override
 	    public void onNewIntent(Intent intent) {
-	        // onResume gets called after this to handle the intent
-	        //setIntent(intent);
+	        setIntent(intent);
+	    	
 	    }
+	   
 	    /**
-	     * Parses the NDEF Message from the intent and prints to the TextView
+	     *Metodo encargado de procesar el mensaje que se le envia de un dispositivo al otro
 	     */
 	    public void processIntent(Intent intent) {
 	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
 	                NfcAdapter.EXTRA_NDEF_MESSAGES);
 	        // only one message sent during the beam
 	        NdefMessage msg = (NdefMessage) rawMsgs[0];
-	        // record 0 contains the MIME type, record 1 is the AAR, if present
-	        //mInfoText.setText(new String(msg.getRecords()[0].getPayload()));
-	        Toast.makeText(getApplicationContext(),"RECIBIDO"+new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
+	        
+	        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente", Toast.LENGTH_LONG).show();
+
+	        //--------Metodos para añadir a la base de datos mesas
+	        decodificar(new String(msg.getRecords()[0].getPayload()));
+	        //Sonido para confirmar el pedido sincronizado
+	        sonidoManager.play(sonido);
 	        cerrarVentana();     
 	        
 	    }
-
-	    /**
-	     * Implementation for the CreateNdefMessageCallback interface
-	     */
-	  
+	/**
+	 * Metodo que dado una lista de platos se encarga de añadir a la base de datos de mesas los platos que ha elegido el usuario
+	 * @param listaPlatosStr: lista de platos que tenemos que añadir a la base de datos
+	 */
+	public void decodificar (String listaPlatosStr)
+	{
+		boolean parar=false;
+		// separamos por platos
+				StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr,"@");
+				
+				while(stPlatos.hasMoreElements()){
+					//Para cada plato lo decodificamos y lo añadimos a la base de datos
+					String plato = stPlatos.nextToken();
+					StringTokenizer stTodoSeparado =  new StringTokenizer(plato,"+,*");
+					
+					String extras,comentario;
+					extras=comentario="";
+					// id
+					int id =  Integer.parseInt(stTodoSeparado.nextToken());
+					parar= id==255;
+					if(!parar){//Si no ha acabado el mensaje		
+						// extras
+						if (plato.contains("+"))  {
+							extras =  stTodoSeparado.nextToken();
+								
+						}
+						// comentarios
+						if (plato.contains("*"))  {
+							comentario =  stTodoSeparado.nextToken();
+						}
+						añadirPlatos("Foster","fh"+id,extras,comentario);
+					}			
+				}
+				
+	}
 	
-		@SuppressLint("NewApi")
-		public NdefMessage createNdefMessage(NfcEvent event) {
-	        Time time = new Time();
-	        time.setToNow();
-	        String text = ("El Pedido que has echo");
-	        NdefMessage msg = new NdefMessage(NdefRecord.createMime(
-	                "application/com.example.nfcook_camarero", text.getBytes())
-	                );
-	        return msg;
-	    }
+
+	public void añadirPlatos(String restaurante,String id,String extras,String observaciones)
+	{
 		
-	/*Menu que usaremos para activar el NFC y el sbeam*/
+    		//Sacamos la fecha a la que el camarero ha introducido la mesa
+        	Calendar cal = new GregorianCalendar();
+            Date date = cal.getTime();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String formatteDate = df.format(date);
+            //Sacamos la hora a la que el camarero ha introducido la mesa
+            Date dt = new Date();
+            SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+            String formatteHour = dtf.format(dt.getTime());
+            Cursor cursor = null;
+            String extrasFinal="";
+            
+          try{
+    			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+    			dbMiBase = sqlrestaurante.open();
+    			    			
+        		//Campos que quiero recuperar de la base de datos
+    			String[] campos = new String[]{"Nombre","Precio","Extras"};
+    			//Datos que tengo para consultarla
+          		String[] datos = new String[]{restaurante,id};
+          		
+          		cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
+          		cursor.moveToFirst();       
+                dbMiBase.close();
+                // Voy a comprobar los extras que se han escogido comparando el codigo binario que leemos de la tarjeta y los extras de la base de datos.
+                //Obtengo los extras de la base de datos
+                String extrasBaseDatos= cursor.getString(2);
+                //Separo los distintos tipos de extras
+                StringTokenizer auxExtras= new StringTokenizer(extrasBaseDatos,"/");
+                StringTokenizer auxExtras2 = null;
+                String elemento = "";
+                
+                int numExtras=0;
+                //Recorrro cada uno de los elementos que se me han generado en el sring tokenizer que son de la forma Guarnicion:PatatasAsada,Ensalada
+                while (auxExtras.hasMoreElements())
+                	{auxExtras2= new StringTokenizer((String) auxExtras.nextElement(),":");
+                	 //Elimino el Guarnicion:/Salsa:/Guarnicion:
+                	 auxExtras2.nextElement();
+                     extrasFinal +=auxExtras2.nextElement()+",";
+                	}
+                //Extras final tiene todos los extras de ese plato separados por comas
+                auxExtras= new StringTokenizer(extrasFinal,",");
+                extrasFinal="";
+                //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
+                while (auxExtras.hasMoreElements())
+            	  { elemento= (String) auxExtras.nextElement();
+            	    if (extras.charAt(numExtras)=='1')
+            		   extrasFinal +=elemento+", ";
+            	    numExtras++;    	  
+            	  }
+                //Le quito la ultima coma al extra final para que quede estetico
+                if (extrasFinal!= "")
+                	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-2);
+              
+    		}catch(SQLiteException e){
+    		 	System.out.println("Error lectura base de datos de MIBASE");
+    		}
+    		
+         
+      		
+      		try{
+       			//Abro base de datos para introducir los platos en esa mesa
+       			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+       			dbMesas= sqlMesas.open();
+       			//Meto el plato en la base de datos Mesas
+	       		ContentValues plato = new ContentValues();
+	        	
+	        	plato.put("NumMesa",InicialCamarero.dameMesa());
+	        	plato.put("IdCamarero",InicialCamarero.dameCamarero()); 
+	        	plato.put("IdPlato", id);
+	        	plato.put("Observaciones", observaciones);
+	        	plato.put("Extras",extrasFinal);
+	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
+	        	plato.put("Nombre", cursor.getString(0));
+	        	plato.put("Precio",cursor.getDouble(1));
+	        	plato.put("Personas",InicialCamarero.dameNumPersonas());
+	        	plato.put("IdUnico", InicialCamarero.getIdUnico());
+	        	dbMesas.insert("Mesas", null, plato);
+	        	dbMesas.close();
+	              	
+      		}catch(Exception e){
+    		
+    		}
+   
+	}
+
+		
+	/*Menu que usaremos para activar el NFC y el beam*/
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_nfc, menu);

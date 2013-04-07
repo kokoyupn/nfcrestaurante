@@ -50,10 +50,10 @@ public class InicialCamarero extends Activity{
 	private GridView gridviewCam;
 	private InicialCamareroAdapter adapterCam;
     private static ArrayList<MesaView> mesas;
-    private String idCamarero;
+    private static String idCamarero;
     private String nombre;
-    private String numeroMesaAEditar;
-    private String nuneroPersonas;
+    private static String numeroMesaAEditar;
+    private static String numeroPersonas;
     private double precio;
     private static int idUnico = 0;
     
@@ -134,7 +134,7 @@ public class InicialCamarero extends Activity{
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 				//Guardamos el número de la mesa pulsada y el numero de personas
 				numeroMesaAEditar = mesas.get(position).getNumMesa();
-				nuneroPersonas = mesas.get(position).getNumPersonas();
+				numeroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
 				final CharSequence[] items = {"Cobrar","Sincronizacion","Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
@@ -679,7 +679,7 @@ public class InicialCamarero extends Activity{
     	intent = new Intent(ctx,Sincronizacion_LecturaNfc.class);
 		intent.putExtra("NumMesa", numeroMesaAEditar);
 		intent.putExtra("IdCamarero",idCamarero);
-		intent.putExtra("Personas", nuneroPersonas);
+		intent.putExtra("Personas", numeroPersonas);
 		ventanaEmergenteSincronizacion.dismiss();
 		
 		startActivity(intent);
@@ -689,9 +689,6 @@ public class InicialCamarero extends Activity{
     {
 
     	intent = new Intent(ctx,Sincronizacion_BeamNfc.class);
-		intent.putExtra("NumMesa", numeroMesaAEditar);
-		intent.putExtra("IdCamarero",idCamarero);
-		intent.putExtra("Personas", nuneroPersonas);
 		ventanaEmergenteSincronizacion.dismiss();
 		
 		startActivity(intent);
@@ -702,11 +699,23 @@ public class InicialCamarero extends Activity{
     	intent = new Intent(ctx,Sincronizacion_QR.class);
 		intent.putExtra("NumMesa", numeroMesaAEditar);
 		intent.putExtra("IdCamarero",idCamarero);
-		intent.putExtra("Personas", nuneroPersonas);
+		intent.putExtra("Personas", numeroPersonas);
 		ventanaEmergenteSincronizacion.dismiss();
 		
 		startActivity(intent);
     }
-    
+    //---Metodos estaticos para poder acceder a estos datos desde otra actividades
+    public static String dameMesa()
+    {
+    	return numeroMesaAEditar;
+    }
+    public static String dameCamarero()
+    {
+    	return idCamarero;
+    }
+    public static String dameNumPersonas()
+    {
+    	return numeroPersonas;
+    }
 }
 
