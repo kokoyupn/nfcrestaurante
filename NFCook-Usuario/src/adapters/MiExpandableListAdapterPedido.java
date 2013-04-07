@@ -130,6 +130,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 				String idPadre = padresExpandableList.get(groupPositionMarcar).getIdPlato();
 				String idHijo = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getPrimerIdUnicoParaModificar();
 				padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).eliminaPrimerIdUnico();
+				padresExpandableList.get(groupPositionMarcar).restaAlPrecioUnaUnidad(childPositionMarcar);
 				if(padresExpandableList.get(groupPositionMarcar).eliminaHijo(childPositionMarcar)){ //Eliminamos el hijo y si la condición es cierta (no tiene ningun hijo) eliminamos el padre
 					padresExpandableList.remove(groupPositionMarcar);
 					PedidoFragment.actualizaExpandableList();

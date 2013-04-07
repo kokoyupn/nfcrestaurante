@@ -77,7 +77,6 @@ public class PadreExpandableListPedido {
 	}
 
 	public boolean eliminaHijo(int posicionHijo) {
-		precio -=configuracionesPlato.get(posicionHijo).getPrecioUnidad();
 		if(configuracionesPlato.get(posicionHijo).getNumeroDeConfiguraciones() == 1){
 			configuracionesPlato.remove(posicionHijo);
 		}else{
@@ -91,6 +90,10 @@ public class PadreExpandableListPedido {
 
 	public void addHijo(HijoExpandableListPedido nuevoHijo) {
 		configuracionesPlato.add(nuevoHijo);
+	}
+
+	public void restaAlPrecioUnaUnidad(int posicionHijo) {
+		precio -=configuracionesPlato.get(posicionHijo).getPrecioUnidad();		
 	}
 	
 }
