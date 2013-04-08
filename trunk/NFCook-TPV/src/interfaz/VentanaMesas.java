@@ -130,7 +130,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		
 		while(iteradorMesas.hasNext()){
 			Mesa unaMesa = iteradorMesas.next();
-			BotonMesa botonMesa = new BotonMesa(unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa());
+			BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa());
 			panelMesas.add(botonMesa, null);
 		}
 		
@@ -139,7 +139,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		while(iteradorMesasCamarero.hasNext()){
 			Mesa unaMesa = iteradorMesasCamarero.next();
 			//if(unaMesa.getIdCamarero()!=null){
-				BotonMesa botonMesa = new BotonMesa(unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa());
+				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa());
 				panelMesasCamarero.add(botonMesa, null);		
 			//}
 		}

@@ -81,5 +81,16 @@ public class Mesa {
 		}
 		return dineroTotalEnMesa;
 	}
+	
+	public int campareTo(Mesa mesa){
+		if(this.idMesa.length()>mesa.idMesa.length()){
+			return 1;
+		}else if(this.idMesa.length()<mesa.idMesa.length()){
+			return -1;
+		}else{
+			return this.idMesa.compareTo(mesa.idMesa);
+		}
+		
+	}
 
 }
