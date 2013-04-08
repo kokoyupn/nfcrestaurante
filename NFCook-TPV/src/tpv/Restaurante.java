@@ -2,6 +2,9 @@ package tpv;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -96,7 +99,30 @@ public class Restaurante {
 	}
 	
 	public Iterator<Mesa> getIteratorMesas(){
-		return mesasRestaurante.values().iterator();
+		Iterator<Mesa> itMesasSinOrdenar = mesasRestaurante.values().iterator();
+		ArrayList<Mesa> arrayMesas = new ArrayList<Mesa>();
+		while(itMesasSinOrdenar.hasNext()){
+			Mesa unaMesa = itMesasSinOrdenar.next();
+			addOrdenado(arrayMesas, unaMesa);
+		}
+		
+		return arrayMesas.iterator();
+		
+	}
+
+	private void addOrdenado(ArrayList<Mesa> arrayMesas, Mesa mesaAdd) {
+		Iterator<Mesa> it = arrayMesas.iterator();
+		boolean encontrado = false;
+		int i = 0;
+		while(it.hasNext() && !encontrado){
+			Mesa mesa = it.next();
+			if(mesaAdd.campareTo(mesa)<0){
+				encontrado = true;
+			}else{
+				i++;				
+			}
+		}
+		arrayMesas.add(i, mesaAdd);
 	}
 
 	public void actualizarNumeroPersonasMesa(String idMesa, int numeroPersonas) {

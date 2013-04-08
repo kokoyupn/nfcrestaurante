@@ -47,14 +47,16 @@ class BotonMesa extends JPanel {
 	private JMenuItem cambiarNumeroPersonas;
 	private JLabel jLabelNumeroPersonas;
 	private JLabel jLabelIconoMesa;
+	private VentanaMesas ventanaMesas;
 	
 	
-	public BotonMesa(Restaurante miRestaurante, int numeroPersonas, String idMesa){
+	public BotonMesa(VentanaMesas ventanaMesas, Restaurante miRestaurante, int numeroPersonas, String idMesa){
 		
 		this.miRestaurante = miRestaurante;
 		this.idMesa = idMesa;
 		this.numeroPersonas = numeroPersonas;
 		estado = miRestaurante.dameEstadoMesa(idMesa);
+		this.ventanaMesas = ventanaMesas;
 		//Creamos el manejador de eventos de raton para el boton de la mesa.
 		EventosRatonBotones manejadorEventosRaton = new EventosRatonBotones();
 		
@@ -89,6 +91,12 @@ class BotonMesa extends JPanel {
 		 */	
 		
 		imagenBotonMesa = new JButton();
+		imagenBotonMesa.setBorderPainted(false);
+		imagenBotonMesa.setContentAreaFilled(false);
+
+		imagenBotonMesa.setFocusable(false);
+
+		imagenBotonMesa.setRolloverEnabled(true);
 		// Ajustamos el tamaño del botón al de la imagen.
 		imagenBotonMesa.setMargin(new Insets(0, 0, 0, 0));
 		// Especificamos que manejadorEventosRaton será la clase encargada de manejar sus eventos de ratón.
@@ -202,14 +210,14 @@ class BotonMesa extends JPanel {
 		jLabelIconoMesa = new JLabel();
 		// En función de su estado cargamos una u otra.
 		if(estado == tpv.Mesa.estadoMesa.CERRADA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaejemplo.jpg"));
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
 		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaEjemploAbierta.jpg"));
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
 		}
 		
 		// Creamos el panel que contiene el label con el idMesa y de esta forma podremos verlo centrado.
-		JPanel jPanelIdMesa = new JPanel();
-		jPanelIdMesa.setBackground(Color.BLACK);
+		JPanel jPanelIdMesa = new JPanelBordesRedondos();
+		//jPanelIdMesa.setBackground(Color.BLACK);
 		// Creamos el label contenedor del idMesa.
 		JLabel jLabelIdMesa = new JLabel(idMesa);
 		// Cambiamos el tamaño de la letra.
@@ -238,7 +246,7 @@ class BotonMesa extends JPanel {
 	protected void actualizarEstadoMesaCerrada() {
 		miRestaurante.actualizaEstadoMesaCerrada(idMesa);
 		estado = tpv.Mesa.estadoMesa.CERRADA;
-		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaejemplo.jpg"));
+		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
 	}
 	
 	/**
@@ -247,7 +255,7 @@ class BotonMesa extends JPanel {
 	protected void actualizarEstadoMesaAbierta() {
 		miRestaurante.actualizaEstadoMesaAbierta(idMesa);
 		estado = tpv.Mesa.estadoMesa.ABIERTA;
-		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/mesaEjemploAbierta.jpg"));
+		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
 	}
 
 	/**
@@ -359,6 +367,7 @@ class BotonMesa extends JPanel {
 			if(!mesasRecienActivadas && !menuMesaAbierto && estado!= tpv.Mesa.estadoMesa.CERRADA){
 				InterfazPlatos platosMesa = new InterfazPlatos(idMesa, miRestaurante);
 				platosMesa.setVisible(true);
+				ventanaMesas.dispose();
 			}
 			mesasRecienActivadas = false;
 		}
