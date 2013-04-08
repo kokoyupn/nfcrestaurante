@@ -1,16 +1,15 @@
 package fragments;
-import  baseDatos.HandlerDB;
 import java.util.ArrayList;
-
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import usuario.DescripcionPlato;
 import adapters.MiCursorAdapterBuscadorPlatos;
+import adapters.MiExpandableListTabsSuperioresCategoriasAdapter;
+import adapters.MiListTabsSuperioresCategoriasAdapter;
+import adapters.PadreExpandableListTabsSuperioresCategorias;
+import adapters.PadreListTabsSuperioresCategorias;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,45 +24,63 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
+import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
-
+/**
+ * Clase encargada de cargar todos los platos dentro de una determinada categoría. Los platos se mostrarán
+ * de diferente forma en función de si tienen imágen para mostrar o no, si esa categoría dispone de varios 
+ * tipos de platos, etc.
+ * 
+ * @author Abel
+ *
+ */
 public class ContenidoTabsSuperioresFragment extends Fragment{
+		private View vistaConExpandableListView;
+		private View vistaConListView;
 		
-		private static final String NOMBRE = "NOMBRE";  
-		private static final String DESCRIPCION = "DESCRIPCION";  
-		private List<Map<String, String>> listaPadres = new ArrayList<Map<String, String>>();  
-		private List<List<Map<String, String>>> listaHijos = new ArrayList<List<Map<String, String>>>();  
-		private SimpleExpandableListAdapter  mAdapter;
-		private SimpleAdapter mAdapterListView;
-		private ExpandableListView exp;
-		public ListView listaCategoriaUnica;
-		private boolean esListaExpandible;
+		private HandlerDB sqlPlatos;
+		private SQLiteDatabase dbPlatos;
+		
+		private ListView listViewPlatosUnicoTipo;
+		private ExpandableListView expandableListViewPlatosVariosTipo;
+		private boolean unicoTipoPlato;
+		
+		private ArrayList<PadreListTabsSuperioresCategorias> platos;
+		private MiListTabsSuperioresCategoriasAdapter miAdapterListTabsSuperioresCategorias;
+		
+		private ArrayList<PadreExpandableListTabsSuperioresCategorias> tiposPlatosConPlatos;
+		private MiExpandableListTabsSuperioresCategoriasAdapter miAdapterExpandableListTabsSuperioresCategorias;
 				
-		private HandlerDB sql;
-		private SQLiteDatabase db;
 		private AutoCompleteTextView buscador;
 		
-		private String tipoTab, restaurante;
+		private String categoriaTab, restaurante;
 		
 		private Boolean cargado = false;
-		
-		private View vistaConExpandaleList;
-		private View vistaConListView;
 		
 	    @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    	if(!cargado){
-	    		vistaConExpandaleList = inflater.inflate(R.layout.expandable_list_tabs_fragment, container, false);
+	    		vistaConExpandableListView = inflater.inflate(R.layout.expandable_list_tabs_fragment, container, false);
 	    		vistaConListView = inflater.inflate(R.layout.list_tabs_fragment, container, false);
 	    		
-	    		importarBaseDatatos(vistaConExpandaleList);
-	    		crearExpandableListOlistView(vistaConExpandaleList, vistaConListView);
+	    		// Importamos la base de datos de los platos
+	    		importarBaseDatos();
+	    		
+	    		// Realizamos la carga de los platos
+	    		cargarPlatosCategoria();
+	    		
+	    		// Preparamos el buscador
+		    	if (!unicoTipoPlato){
+		    		cargarBarraDeBusqueda(vistaConExpandableListView);
+		    	}else{
+		    		cargarBarraDeBusqueda(vistaConExpandableListView);
+		    	}
+		    	
 	    		cargado = true;
 	    	}
 	    	
@@ -73,35 +90,33 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	    	 * xml con una lista simple por si el padre solo tiene un hijo (Ejem bebidas...)
 	    	 * Es simplemente una cuestión estética
 	    	 */
-	    	if (!esListaExpandible){
-	    		cargarBarraDeBusqueda(vistaConListView);
+	    	if (!unicoTipoPlato){
 	    		return vistaConListView;
 	    	}else{
-	    		cargarBarraDeBusqueda(vistaConExpandaleList);
-	    		return vistaConExpandaleList;
+	    		return vistaConExpandableListView;
 	    	}
 	    }
 	    
-	    public void setTipoTab(String tipoTab){
-	    	this.tipoTab = tipoTab;
+	    public void setcategoriaTab(String categoriaTab){
+	    	this.categoriaTab = categoriaTab;
 	    }
 	    
 	    public void setRestaurante(String res){
 	    	this.restaurante = res;
 	    }
 	    
-	    public void importarBaseDatatos(View v ) {
+	    public void importarBaseDatos() {
 	        try{
-	     	   sql=new HandlerDB(v.getContext()); 
-	     	   db=sql.open();
+	     	   sqlPlatos = new HandlerDB(getActivity().getApplicationContext()); 
+	     	   dbPlatos = sqlPlatos.open();
 	         }catch(SQLiteException e){
-	         	Toast.makeText(v.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
+	         	Toast.makeText(getActivity().getApplicationContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();
 	         }
 		}
 	    
 	    public void cargarBarraDeBusqueda(View vista){
 			buscador = (AutoCompleteTextView) vista.findViewById(R.id.autoCompleteTextViewBuscadorPlatos);
-		    Cursor c =  db.rawQuery("SELECT Id AS _id, nombre AS item" + 
+		    Cursor c =  dbPlatos.rawQuery("SELECT Id AS _id, nombre AS item" + 
 		      " FROM Restaurantes" + 
 		      " WHERE Restaurante ='"+ restaurante+"' and nombre LIKE '%" +""+ "%' ", null);
 			
@@ -123,132 +138,126 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 				 });
 	    }
 
-		public void crearExpandableListOlistView(View vistaConExpandaleList, View vistaConListView){
-			try{	    	
-		    	Map<String, String> padreActual;
-		    	List<Map<String, String>> listaHijoActual = null;  
-	    		Map<String, String> hijoActual;  
-		    	
-	    		// Sacamos los padres del ExpandableList 
-	    		Set<String> padresLista = new HashSet<String>();
-	    		String[] camposPadre = new String[]{"TipoPlato"};
-		    	String[] datosPadre = new String[]{restaurante,tipoTab};
-	    		Cursor cP = db.query("Restaurantes", camposPadre, "Restaurante=? AND Categoria=?",datosPadre,null, null,null);
+		public void cargarPlatosCategoria(){
+    		// Sacamos los tipos de platos que hay dentro de esa categoría
+    		Set<String> tiposPlato = new HashSet<String>();
+    		String[] camposSacar = new String[]{"Id", "TipoPlato", "Nombre", "Breve", "Foto"};
+	    	String[] camposCondicionanConsulta = new String[]{restaurante, categoriaTab};
+    		Cursor cP = dbPlatos.query("Restaurantes", camposSacar, "Restaurante=? AND Categoria=?", camposCondicionanConsulta,null, null,null);
+	    	
+    		PadreListTabsSuperioresCategorias plato;
+    	    // Añadimos todos los tipos de platos que haya
+    		platos = new ArrayList<PadreListTabsSuperioresCategorias>();
+    		int imagenPlato;
+    		boolean tieneImagen;
+    		String imagen;
+    	    while(cP.moveToNext()){
+    	    	// Metemos el tipo al conjunto (Si ya está no lo duplica)
+    	    	tiposPlato.add(cP.getString(1));
     	    	
-	    	    // Recorremos todos los registros
-	    	    while(cP.moveToNext()){
-	    	    	padresLista.add(cP.getString(0));
-	    	    }
-	    	    
-	    	    Iterator<String> itPadre = padresLista.iterator();
-	    	    String nombrePadre;
-	    	    String[] camposHijo;
-	    	    String[] datosHijo;
-	    	    
-	    	    //Solo tenemos un padre => utilizamos ListView por estética
-	    	    if(padresLista.size()==1){
-	    	    	esListaExpandible = false;
-	    	    	nombrePadre = itPadre.next();
-	    	    	camposHijo = new String[]{"Nombre","Breve"};
-			    	datosHijo = new String[]{restaurante,tipoTab,nombrePadre};
-	    	    	//Padres Lista
-	    			padreActual = new HashMap<String, String>();  
-	    			listaPadres.add(padreActual);  
-	    			padreActual.put(NOMBRE, nombrePadre);
-	    			listaHijoActual = new ArrayList<Map<String, String>>();
-	    			
-	    			//Consultamos los platos que hay dentro de ese tipo
-	    			Cursor cH = db.query("Restaurantes", camposHijo, "Restaurante=? AND Categoria=? AND TipoPlato=?",datosHijo,null, null,null);
-	    			while(cH.moveToNext()){
-	    				hijoActual = new HashMap<String, String>();  
-			    		listaHijoActual.add(hijoActual);  
-			    		hijoActual.put(NOMBRE, cH.getString(0));  
-			    		hijoActual.put(DESCRIPCION, cH.getString(1));  
-	    				
-	 	    	    }
-	    			listaHijos.add(listaHijoActual);
-	    	    	listaCategoriaUnica = (ListView) vistaConListView.findViewById(R.id.listViewCuenta);
-	    	    	mAdapterListView = new SimpleAdapter(  
-			    			getActivity(),  
-			    			listaHijoActual,
-			   				R.layout.contenido_lista,  
-			   				new String[] {NOMBRE, DESCRIPCION },  
-			    			new int[] { R.id.textViewCuenta, R.id.textViewPrecioPlatoCuenta }  
-			    			);
-	    	    	
-	    	    	listaCategoriaUnica.setAdapter(mAdapterListView);
-	    	    
-	    	    	// Oyente de la lista
-	    	    	listaCategoriaUnica.setOnItemClickListener(new ListView.OnItemClickListener()
-	    	    	{
-						public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3){
-							// Abrimos la pantalla de descripcion del plato y le pasamos el nombre del plato y restaurante
-							@SuppressWarnings("unchecked")
-							Map<String,String> datosPlato = (Map<String, String>) listaCategoriaUnica.getItemAtPosition(arg2);
-							String nombrePlato = datosPlato.get("NOMBRE");
-							Intent intent = new Intent(getActivity(),DescripcionPlato.class);
-							intent.putExtra("nombreRestaurante", restaurante);
-							intent.putExtra("nombrePlato", nombrePlato);
-					    	startActivity(intent);
-						}
-	    	    	});
-	    	    	
-	    	    }else{ // tenemos varios padres => utilizamos expandablelistview
-	    	    	esListaExpandible = true;
-	    	    	while(itPadre.hasNext()){
-		    	    	nombrePadre = itPadre.next();
-		    	    	camposHijo = new String[]{"Nombre","Breve"};
-				    	datosHijo = new String[]{restaurante,tipoTab,nombrePadre};
-		    	    	
-				    	//Padres Lista
-		    			padreActual = new HashMap<String, String>();  
-		    			listaPadres.add(padreActual);  
-		    			padreActual.put(NOMBRE, nombrePadre);
-		    			listaHijoActual = new ArrayList<Map<String, String>>();
-		    			
-		    			//Consultamos los platos que hay dentro de ese tipo
-		    			Cursor cH = db.query("Restaurantes", camposHijo, "Restaurante=? AND Categoria=? AND TipoPlato=?",datosHijo,null, null,null);
-		    			while(cH.moveToNext()){
-		    				hijoActual = new HashMap<String, String>();  
-				    		listaHijoActual.add(hijoActual);  
-				    		hijoActual.put(NOMBRE, cH.getString(0));  
-				    		hijoActual.put(DESCRIPCION, cH.getString(1));  
-		    				
-		 	    	    }
-		    			listaHijos.add(listaHijoActual);
-		    	    }
-	    	    	
-			    	mAdapter = new SimpleExpandableListAdapter(  
-			    			getActivity(),  
-			    			listaPadres,  
-			    			android.R.layout.simple_expandable_list_item_1,  
-			    			new String[] {NOMBRE},  
-			   				new int[] { android.R.id.text1 },  
-			   				listaHijos,  
-			   				R.layout.contenido_lista,  
-			   				new String[] {NOMBRE, DESCRIPCION },  
-			    			new int[] { R.id.textViewCuenta, R.id.textViewPrecioPlatoCuenta }  
-			    			);  
-			   	     
-					exp = (ExpandableListView) vistaConExpandaleList.findViewById(R.id.expandableListViewPlatos);
-					// Oyente de la lista expandible
-					exp.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-						public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id){
-							// Abrimos la pantalla de descripcion del plato y le pasamos el nombre del plato y restaurante
-							Map<String,String> datosPlato = listaHijos.get(groupPosition).get(childPosition);
-							String nombrePlato = datosPlato.get("NOMBRE");
-							Intent intent = new Intent(getActivity(),DescripcionPlato.class);
-							intent.putExtra("nombreRestaurante", restaurante);
-							intent.putExtra("nombrePlato", nombrePlato);
-					    	startActivity(intent);
-					        return false;
-					   }
-					});
-					exp.setAdapter(mAdapter);
-	    	   }
-		    }catch(SQLiteException e){
-		        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL RESTAURANTE SELECCIONADO",Toast.LENGTH_SHORT).show();	
-		    }   
-	    }
+    	    	// Añadimos el plato
+    	    	imagen = cP.getString(4);
+    	    	// Vemos si la imágen es suya y no es la de no disponible
+    	    	tieneImagen = !imagen.equals("fnd_" + sacaSiglasRestauranteIdPlato(cP.getString(0))); 
+    	    	imagenPlato = getResources().getIdentifier(imagen, "drawable", getActivity().getPackageName());
+    	    	plato = new PadreListTabsSuperioresCategorias(cP.getString(2), cP.getString(3), imagenPlato, tieneImagen);
+				platos.add(plato);
+    	    }
+    	    
+    	    // Vemos si se trata de una categoría con un único tipo de plato
+    	    if(tiposPlato.size() == 1){
+    	    	unicoTipoPlato = false;
+       			
+       			listViewPlatosUnicoTipo = (ListView) vistaConListView.findViewById(R.id.listViewPlatosTabsSuperiores);
+       			miAdapterListTabsSuperioresCategorias = new MiListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), platos);
+       			listViewPlatosUnicoTipo.setAdapter(miAdapterListTabsSuperioresCategorias);
+    	    
+    	    	// Oyente de la lista
+       			listViewPlatosUnicoTipo.setOnItemClickListener(new ListView.OnItemClickListener()
+    	    	{
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3){
+						// Abrimos la pantalla de descripcion del plato y le pasamos el nombre del plato y restaurante
+						Intent intent = new Intent(getActivity(),DescripcionPlato.class);
+						intent.putExtra("nombreRestaurante", restaurante);
+						intent.putExtra("nombrePlato", platos.get(arg2).getNombrePlato());
+				    	startActivity(intent);
+					}
+    	    	});
+    	    
+       		// Tenemos varios tipos en esa categoría
+    	    }else{
+    	    	unicoTipoPlato = true;
+    	    	
+    	    	// Recorremos todos los tipos que hay en esa categoría
+    	    	Iterator<String> itTiposPlatos = tiposPlato.iterator();
+    	    	String tipoPlato;
+    	    	
+    	    	// Creamos el array que contendra todos los tipos de platos y sus platos
+        		tiposPlatosConPlatos = new ArrayList<PadreExpandableListTabsSuperioresCategorias>();
+        		PadreExpandableListTabsSuperioresCategorias tipoPlatosConPlatos;
+    	    	while(itTiposPlatos.hasNext()){
+    	    		tipoPlato = itTiposPlatos.next();
+    	    		String[] camposSacarTipoPlato = new String[]{"Id", "Nombre", "Breve", "Foto"};
+        	    	String[] camposCondicionanConsultaTipoPlato = new String[]{restaurante, tipoPlato};
+            		Cursor cPTipoPlato = dbPlatos.query("Restaurantes", camposSacarTipoPlato, "Restaurante=? AND TipoPlato=?", camposCondicionanConsultaTipoPlato, null, null,null);
+        	    	
+            	    // Creamos el array que contendra los platos de un tipo
+            		platos = new ArrayList<PadreListTabsSuperioresCategorias>();
+            		while(cPTipoPlato.moveToNext()){
+            	    	// Creamos la info del plato
+            	    	// Vemos si la imágen es suya y no es la de no disponible
+            			imagen = cPTipoPlato.getString(3);
+            	    	tieneImagen = !imagen.equals("fnd_" + sacaSiglasRestauranteIdPlato(cPTipoPlato.getString(0))); 
+            	    	imagenPlato = getResources().getIdentifier(imagen, "drawable", getActivity().getPackageName());
+            	    	plato = new PadreListTabsSuperioresCategorias(cPTipoPlato.getString(1), cPTipoPlato.getString(2), imagenPlato, tieneImagen);
+        				
+            	    	// Añadimos el plato
+            	    	platos.add(plato);
+            	    }
+            		// Creamos un tipo con sus platos
+            		tipoPlatosConPlatos = new PadreExpandableListTabsSuperioresCategorias(tipoPlato, platos);  
+            		// Añadimos ese tipo a la lista de todos los tipos con sus platos
+            		tiposPlatosConPlatos.add(tipoPlatosConPlatos);
+    	    	}
+    	    	
+    	    	expandableListViewPlatosVariosTipo = (ExpandableListView) vistaConExpandableListView.findViewById(R.id.expandableListViewPlatos);
+    	    	miAdapterExpandableListTabsSuperioresCategorias = new MiExpandableListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), tiposPlatosConPlatos);
+    	    	expandableListViewPlatosVariosTipo.setAdapter(miAdapterExpandableListTabsSuperioresCategorias);
+    	    
+    	    	// Oyente de la lista expandible
+    	    	expandableListViewPlatosVariosTipo.setOnChildClickListener(new OnChildClickListener() {				
+					public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+						Intent intent = new Intent(getActivity(),DescripcionPlato.class);
+						intent.putExtra("nombreRestaurante", restaurante);
+						intent.putExtra("nombrePlato", tiposPlatosConPlatos.get(groupPosition).getNombrePlato(childPosition));
+				    	startActivity(intent);
+						return false;
+					}
+				});
+    	    }
+		}
+		
+		/*
+		 * Metodo encargado de sacar las letras del id de un plato. Estas letras son siglas del restaurante
+		 * y lo llevarán todos los platos del restaurante junto con un número. Ambas partes configuran el id
+		 * de cada plato.
+		 */
+		public String sacaSiglasRestauranteIdPlato(String id){
+			boolean fin = false;
+			String idLetras = "";
+			int numCar = id.length();
+			int i = 0;
+			char c;
+			while(i<numCar && !fin){
+				c = id.charAt(i);
+				if(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'){
+					idLetras = idLetras + c;
+				}else{
+					fin = true;
+				}
+				i++;
+			}
+			return idLetras.toLowerCase();
+		}
 		
 	}

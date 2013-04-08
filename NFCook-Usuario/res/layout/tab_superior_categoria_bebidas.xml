@@ -13,23 +13,41 @@
 
     </GridView>
 
-    <TextView
-        android:id="@+id/textViewTotalPagarBebidas"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="70dp"
-        android:layout_marginRight="10dp"
-        android:text="18e"
-        android:textSize="16sp" />
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/s_redondeados_usuarios_calculadora"
+        android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/imageViewMonedasBebidas"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="70dp"
-        android:layout_marginRight="75dp"
-        android:src="@drawable/total" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textViewTotalPagarBebidas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:text="18e"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/imageViewMonedasBebidas"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="75dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/total" />
+
+        </FrameLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

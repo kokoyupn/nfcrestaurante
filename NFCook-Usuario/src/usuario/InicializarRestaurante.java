@@ -176,7 +176,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
     		}else{
 	    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
-	    		((ContenidoTabsSuperioresFragment) tabFragment).setTipoTab(tipoTab);
+	    		((ContenidoTabsSuperioresFragment) tabFragment).setcategoriaTab(tipoTab);
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
 	    		// Hacemos oyente al tab
 	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
