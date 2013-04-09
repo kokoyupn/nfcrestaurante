@@ -16,13 +16,16 @@ import basesDeDatos.Operaciones;
 
 public class Restaurante {
 	
-	private HashMap<String,Mesa> mesasRestaurante;
-	public static HashMap<String,Producto> productosRestaurante;//La clave es el id del producto
+	private HashMap<String,Mesa> mesasRestaurante; // La clave es el id de la mesa.
+	private HashMap<String,Producto> productosRestaurante; //La clave es el id del producto.
+	private HistoricoComandasMesas comandasMesas;
+	
 	private final String nombreRestaurante = "'Foster'";
 	
 	public Restaurante(){
 		productosRestaurante = new HashMap<String,Producto>();
 		mesasRestaurante = new HashMap<String,Mesa>();
+		comandasMesas = new HistoricoComandasMesas();
 		cargarMesas();
 		cargarProductos();
 	}
@@ -147,6 +150,12 @@ public class Restaurante {
 
 	public estadoMesa dameEstadoMesa(String idMesa) {
 		return mesasRestaurante.get(idMesa).getEstado();
+	}
+	
+	public void addComandaAMesa(String idMesa, String idCamarero, ArrayList<Producto> productos){
+		Comanda comanda = new Comanda(productos, idMesa, idCamarero);
+		comandasMesas.añadirComandaPorMesa(idMesa, comanda);
+		mesasRestaurante.get(idMesa).activarComanda();
 	}
 	
 }

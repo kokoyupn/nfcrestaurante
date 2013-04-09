@@ -8,5 +8,9 @@ public class Bebida extends Producto{
 		super(id, categoria, tipo, nombre, descripción, foto, precio, observaciones);
 		
 	}
+	
+	public String toString(){
+		return super.toString() + "\n \n";
+	}
 
 }
