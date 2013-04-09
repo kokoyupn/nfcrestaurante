@@ -93,4 +93,12 @@ public class Producto {
 		return false;
 	}
 	
+	public String toString(){
+		String mensaje = "*****" + "nombre" + "*****" + "\n";
+		if(!observaciones.equals("")){
+			mensaje +=" - " + observaciones + "\n";
+		}
+		return mensaje;		
+	}
+	
 }

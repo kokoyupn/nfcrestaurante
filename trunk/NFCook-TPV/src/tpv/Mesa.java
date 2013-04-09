@@ -5,9 +5,7 @@ import java.util.ArrayList;
 
 public class Mesa {
 
-	public enum estadoMesa{CERRADA,ABIERTA};
-
-	
+	public enum estadoMesa{CERRADA, ABIERTA, COMANDA};
 	
 	private ArrayList<Producto> productosEnMesa;
 	private String idMesa;
@@ -68,6 +66,14 @@ public class Mesa {
 	
 	public void cerrarMesa() {
 		estado = estadoMesa.CERRADA;
+	}
+	
+	public void activarComanda(){
+		estado = estadoMesa.COMANDA;
+	}
+	
+	public void desactivarComanda(){
+		estado = estadoMesa.ABIERTA;
 	}
 
 	public boolean mesaVacia() {

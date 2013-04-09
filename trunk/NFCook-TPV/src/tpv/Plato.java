@@ -25,4 +25,8 @@ public class Plato extends Producto{
 	public void setExtrasMarcados(String extrasMarcados) {
 		this.extrasMarcados = extrasMarcados;
 	}
+	
+	public String toString(){
+		return super.toString() + " - " + extrasMarcados + "\n \n";
+	}
 }
