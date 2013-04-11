@@ -1,78 +1,161 @@
 package usuario;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Point;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.Toast;
+import org.json.JSONObject;
+
+import buscaRutaMapa.AnalizadorRutaMapa;
 
 import com.example.nfcook.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public class Mapas extends FragmentActivity implements LocationListener{
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class Mapas extends FragmentActivity
+					implements LocationListener, OnMarkerClickListener, 
+							OnInfoWindowClickListener, OnMapClickListener{
+    
+    //Clase adapter del bocadillo que sale encima del marcador del mapa
+    class VentanaMarcadorMapaAdapter implements InfoWindowAdapter {
+
+    	private final View mContents;
+    	
+    	public VentanaMarcadorMapaAdapter()
+    	{
+    		mContents = getLayoutInflater().inflate(R.layout.textview_buscador_platos, null);
+    	}
+    // Métodos de InfoWindowAdapter
+    // Si getInfoWindow(...) devuelve null, llamará entonces a getInfoContents(...)
+    // Si además getInfoContents(...) devuelve null, se muestra el contenido por defecto
+    	public View getInfoContents(Marker marker) { 
+    		TextView titulo = (TextView) mContents.findViewById(R.id.textViewObjetoBusqueda);
+    		titulo.setTextColor(Color.rgb(065, 105, 225));
+    		titulo.setText(marker.getTitle());
+    		SpannableString tituloSubrayado = new SpannableString(titulo.getText());
+    		tituloSubrayado.setSpan(new UnderlineSpan(), 0, tituloSubrayado.length(), 0);
+    		titulo.setText(tituloSubrayado);
+    		return mContents;
+    	}
+    	public View getInfoWindow(Marker marker) {
+    		// TODO Auto-generated method stub
+    		return null;
+    	}
+    	
+    	
+    }
+	
+    private GoogleMap map;
 	private LocationManager locationManager;
 	private static ArrayList<Restaurante> restaurantes;
-	//private String proveedor;
 	private Location miUbicacion;
+	ArrayList<LatLng> puntosRuta;
+    TextView textViewInfoRuta;
+    private Polyline polilyneActual;
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapas);
 		
+		if (map == null) {
+            // intentamos obtener el mapa
+            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+            // si hemos obtenido el mapa, entonces:
+            if (map != null) {
+                inicializarMapa();
+            }
+        }
+	}
+	
+	@Override
+    protected void onResume() {
+        super.onResume();
+        inicializarMapa();
+    }
+	
+	public void inicializarMapa() {
+		
 		if(restaurantes == null)
 			restaurantes = new ArrayList<Restaurante>();
 	    
-	    
-	    // Tomamos el location manager
+		textViewInfoRuta = (TextView) findViewById(R.id.textViewMapas);
+		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener +info");
+		 
+		// Tomamos el location manager
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    miUbicacion = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-	    mostrarPosicion(miUbicacion);
-	    // Definimos un objeto del tipo criteria para que este elija qué proveedor(gps,internet...) nos 
-	    // conviene utilizar
-	    //Criteria criteria = new Criteria();
-	    //proveedor = locationManager.getBestProvider(criteria, false);
-	    
-	    //Location ubicacion = locationManager.getLastKnownLocation(proveedor);
-	    //Location ubicacionPorDefecto = new Location("gps");
-	    //ubicacionPorDefecto.setLatitude(40.4164904);
-	    //ubicacionPorDefecto.setLongitude(-3.7031825);
-	    
-	    // vemos si está el GPS habilitado o disponible
-	    //if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-	    //	Toast.makeText(getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
-		//    ubicacion = ubicacionPorDefecto;
-	    //} else {
-	    //	Toast.makeText(getApplicationContext(), "Mostrando ubicación actual por " + proveedor, Toast.LENGTH_LONG).show();
-		//    onLocationChanged(ubicacion);
-	    //}
-		
-		final GoogleMap mapa = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-		//mapa.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-		mapa.setMyLocationEnabled(true);
+
+	    FragmentManager fragManager = getSupportFragmentManager();
+	    SupportMapFragment fm = (SupportMapFragment) fragManager.findFragmentById(R.id.map);
+        map = fm.getMap();
+        map.setMyLocationEnabled(true);
+        getMiPosicion(miUbicacion);
+        
 		
 		// Asignamos la latitud y longitud de la ubicación actual
-		//LatLng madrid = new LatLng(40.4164904, -3.7031825);
-		LatLng coordenadas = new LatLng(miUbicacion.getLatitude(),miUbicacion.getLongitude());
+        LatLng coordenadas;
+        if(map.getMyLocation() == null)
+        	coordenadas = new LatLng(miUbicacion.getLatitude(),miUbicacion.getLongitude());
+        else
+        	coordenadas = new LatLng(map.getMyLocation().getLatitude(),map.getMyLocation().getLongitude());
 		CameraPosition camPos = new CameraPosition.Builder()
 		        .target(coordenadas)   //Se posiciona en la ubicación actual
 		        .zoom(13)         //Establecemos el zoom en 13
@@ -83,35 +166,46 @@ public class Mapas extends FragmentActivity implements LocationListener{
 		CameraUpdate cameraUpdate =
 		    CameraUpdateFactory.newCameraPosition(camPos);
 		 
-		mapa.animateCamera(cameraUpdate);
-		
-		mapa.setOnMapClickListener(new OnMapClickListener() {
-		    public void onMapClick(LatLng point) {
-		        Projection proj = mapa.getProjection();
-		        Point coord = proj.toScreenLocation(point);
-		 
-		        Toast.makeText(
-		            Mapas.this,
-		            "Click\n" +
-		            "Lat: " + point.latitude + "\n" +
-		            "Lng: " + point.longitude + "\n" +
-		            "X: " + coord.x + " - Y: " + coord.y,
-		            Toast.LENGTH_SHORT).show();
-		    }
-		});
+		map.animateCamera(cameraUpdate);
 		
 		locationManager.requestLocationUpdates(
-		        LocationManager.GPS_PROVIDER, 30000, 0, this);
+		        LocationManager.GPS_PROVIDER, 0, 0, this);
 		//Añadimos cada restaurante de la Comunidad de Madrid
-		mostrarMarcadores(mapa);
+		map.setInfoWindowAdapter(new VentanaMarcadorMapaAdapter());
+		
+		map.setOnMapClickListener(this);
+		map.setOnMarkerClickListener(this);
+		map.setOnInfoWindowClickListener(this);
+		
 		inicializarListaRestaurantes();
+		mostrarMarcadores(map);
 		ordenaRestaurantes();
 		
-		//Implementación del botón "Lista" que nos lleva a otra Activity
-		//ponerOnClickListaMapa();
+        //puntosRuta para dibujar dicha ruta en el mapa
+        puntosRuta = new ArrayList<LatLng>();
 	}
 
-	public void mostrarPosicion(Location ubicacion)
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        MenuItem item = menu.getItem(0);
+        item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			public boolean onMenuItemClick(MenuItem item) {
+				if(map.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+					map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+				else
+					map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+				return false;
+			}
+		});
+        return true;
+	}
+
+	
+	//--------------------- MÉTODOS -----------------------------------
+	//-----------------------------------------------------------------
+	public void getMiPosicion(Location ubicacion)
 	{
 		if(ubicacion == null)
 		{
@@ -121,69 +215,18 @@ public class Mapas extends FragmentActivity implements LocationListener{
 		    ubicacion.setLongitude(-3.7031825);
 		    Toast.makeText(getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
 		}else{
-			Toast.makeText(getApplicationContext(), "Mostrando ubicación actual", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getApplicationContext(), "Mostrando ubicación actual", Toast.LENGTH_SHORT).show();
+			ordenaRestaurantes();
 		}
 		miUbicacion = ubicacion;
 	}
 	
 	private void mostrarMarcadores(GoogleMap mapa)
-	{
-		//Asignamos un nuevo icono al marcador
-		BitmapDescriptor marcadorFoster = BitmapDescriptorFactory.fromResource(R.drawable.foster_mapa);
-	    
-		mapa.addMarker(new MarkerOptions()
-	        .position(new LatLng(40.391862,-3.656012))
-	        .icon(marcadorFoster)
-	        .title("FH Albufera Plaza"));
-	    mapa.addMarker(new MarkerOptions()
-        	.position(new LatLng(40.432216,-3.658168))
-        	.icon(marcadorFoster)
-        	.title("FH Alcalá 230"));
-	    mapa.addMarker(new MarkerOptions()
-        	.position(new LatLng(40.427382,-3.678703))
-        	.icon(marcadorFoster)
-        	.title("FH Alcalá 90"));
-	    mapa.addMarker(new MarkerOptions()
-        	.position(new LatLng(40.38771,-3.763225))
-        	.icon(marcadorFoster)
-        	.title("FH Aluche"));
-	    mapa.addMarker(new MarkerOptions()
-        	.position(new LatLng(40.479467,-3.684711))
-        	.icon(marcadorFoster)
-        	.title("FH Apolonio Morales"));
-	    mapa.addMarker(new MarkerOptions()
-	    	.position(new LatLng(40.449617,-3.650835)).snippet("POYA GORDA")
-	    	.icon(marcadorFoster)
-	    	.title("FH Arturo Soria"));
+	{		
+		mapa.addMarker(restaurantes.get(0).getMarcador());
+		mapa.addMarker(restaurantes.get(1).getMarcador());
+		mapa.addMarker(restaurantes.get(2).getMarcador());
 	}
-	
-	/*public void ponerOnClickListaMapa() {
-		
-		Button botonMapas = (Button) findViewById(R.id.buttonMapas);
-		botonMapas.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				ordenaRestaurantes();
-				Intent intent = new Intent(getApplication(), ListaMapas.class);
-		    	startActivity(intent);
-			}
-		});
-	}*/
-
-	public void onLocationChanged(Location ubicacion) {
-        mostrarPosicion(ubicacion);
-    }
- 
-    public void onProviderDisabled(String provider){
-        Toast.makeText(getApplicationContext(), "Proovedor OFF", Toast.LENGTH_SHORT).show();
-    }
- 
-    public void onProviderEnabled(String provider){
-    	Toast.makeText(getApplicationContext(), "Proovedor ON", Toast.LENGTH_SHORT).show();
-    }
- 
-    public void onStatusChanged(String provider, int status, Bundle extras){
-    	 Toast.makeText(getApplicationContext(), "Estado Proovedor: " + status, Toast.LENGTH_SHORT).show();
-    }
     
     //Métodos para calcular la distancia a cada marcador y para generar la lista ordenada de restaurantes
     
@@ -226,8 +269,8 @@ public class Mapas extends FragmentActivity implements LocationListener{
 		int i = 1;
 		while (i < restaurantes.size())
 		{
-			double distMin = calcularDistanciaEnKm(miUbicacion,new LatLng(restMasCercano.getLat(),restMasCercano.getLng()));
-			double distActual = calcularDistanciaEnKm(miUbicacion, new LatLng(restaurantes.get(i).getLat(),restaurantes.get(i).getLng()));
+			double distMin = calcularDistanciaEnKm(miUbicacion,new LatLng(restMasCercano.getMarcador().getPosition().latitude,restMasCercano.getMarcador().getPosition().longitude));
+			double distActual = calcularDistanciaEnKm(miUbicacion, new LatLng(restaurantes.get(i).getMarcador().getPosition().latitude,restaurantes.get(i).getMarcador().getPosition().longitude));
 			if(distActual < distMin) {
 				restMasCercano = restaurantes.get(i);
 			}
@@ -235,21 +278,47 @@ public class Mapas extends FragmentActivity implements LocationListener{
 		}
 		return restMasCercano;
 	}
-    
+    //-------------------------------------------------------------------------------------------------
     public void inicializarListaRestaurantes() {
+    	//Salto de línea en TextView = Html.fromHtml("<br />")
+		BitmapDescriptor marcadorFoster = BitmapDescriptorFactory.fromResource(R.drawable.foster_mapa);
+
     	if(restaurantes.size() == 0){
-			Restaurante rest1 = new Restaurante("FH Albufera Plaza", 40.391862, -3.656012, calcularDistanciaEnKm(miUbicacion,new LatLng(40.391862,-3.656012)));
+			Restaurante rest1 = new Restaurante("Foster's Hollywood Albufera Plaza", 
+					new MarkerOptions()
+						.position(new LatLng(40.391862, -3.656012))
+						.title("Foster's Hollywood Albufera Plaza")
+						.icon(marcadorFoster),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.391862,-3.656012)),
+					"CC La Albufera Plaza"+ Html.fromHtml("<br />") +"Av. de la Albufera 153 Locales 13 y 14" + Html.fromHtml("<br />") + "28038 Madrid",
+					"91 478 97 84",
+					"D a J 13:00 a 17:00 y  20:00 a 24:00 V, S y Vísperas 13:00 a 17:00 y 20:00 a 1:00" + Html.fromHtml("<br />") + "Delivery: D-J de 13:00 a 17:00 y de 20:30 a 00:00. V-S Vísperas y Festivos hasta 00:30",
+					"www.fostershollywood.es/albuferaplaza", true, true, true, false, false);
 			restaurantes.add(rest1);
-			Restaurante rest2 = new Restaurante("FH Alcalá 230", 40.432216, -3.658168, calcularDistanciaEnKm(miUbicacion,new LatLng(40.432216, -3.658168)));
+			
+			Restaurante rest2 = new Restaurante("Foster's Hollywood Alcalá 230", 
+					new MarkerOptions()
+						.position(new LatLng(40.432216, -3.658168))
+						.title("Foster's Hollywood Alcalá 230")
+						.icon(marcadorFoster),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.432216, -3.658168)),
+					"C/ Alcalá, 230"+ Html.fromHtml("<br />") +"28027 Madrid",
+					"91 356 54 88",
+					"D-J y festivos de 13.00 a 17.00 y de 20.00 a 00.00. V, S y vísperas de festivo de 13.00 a 17.00 y de 20.00 a 01.00.",
+					"www.fostershollywood.es/alcala230", true, true, true, false, false);
 			restaurantes.add(rest2);
-			Restaurante rest3 = new Restaurante("FH Alcalá 90", 40.427382, -3.678703, calcularDistanciaEnKm(miUbicacion,new LatLng(40.427382, -3.678703)));
+			
+			Restaurante rest3 = new Restaurante("Foster's Hollywood Alcalá 90", 
+					new MarkerOptions()
+						.position(new LatLng(40.427382, -3.678703))
+						.title("Foster's Hollywood Alcalá 90")
+						.icon(marcadorFoster),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.427382, -3.678703)),
+					"C/ Alcalá, 90"+ Html.fromHtml("<br />") +"28009 Madrid",
+					"91 781 06 26",
+					"L-D de 13:00 a 17:00 y  20:00 a 24:00"+ Html.fromHtml("<br />") +"Delivery: de 13:00 a 17:00 y de 20:00 a 00:00",
+					"www.fostershollywood.es/alcala90", true, true, true, true, false);
 			restaurantes.add(rest3);
-			Restaurante rest4 = new Restaurante("FH Aluche", 40.38771, -3.763225, calcularDistanciaEnKm(miUbicacion,new LatLng(40.38771, -3.763225)));
-			restaurantes.add(rest4);
-			Restaurante rest5 = new Restaurante("FH Apolonio Morales", 40.479467, -3.684711, calcularDistanciaEnKm(miUbicacion,new LatLng(40.479467, -3.684711)));
-			restaurantes.add(rest5);
-			Restaurante rest6 = new Restaurante("FH Arturo Soria", 40.449617, -3.650835, calcularDistanciaEnKm(miUbicacion,new LatLng(40.449617, -3.650835)));
-			restaurantes.add(rest6);
     	}
     }
     
@@ -257,4 +326,234 @@ public class Mapas extends FragmentActivity implements LocationListener{
     {
     	return restaurantes;
     }
+    
+    //--- MÉTODOS PARA CÁLCULO DE RUTA MAPA-----------------
+    
+    private String getDirectionsUrl(LatLng origin,LatLng dest){
+    	 
+        // Origin of route
+        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+ 
+        // Destination of route
+        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+ 
+        // Sensor enabled
+        String sensor = "sensor=false";
+ 
+        // Building the parameters to the web service
+        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+ 
+        // Output format
+        String output = "json";
+ 
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+ 
+        return url;
+    }
+ 
+    /** A method to download json data from url */
+    private String downloadUrl(String strUrl) throws IOException{
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try{
+            URL url = new URL(strUrl);
+ 
+            // Creating an http connection to communicate with url
+            urlConnection = (HttpURLConnection) url.openConnection();
+ 
+            // Connecting to url
+            urlConnection.connect();
+ 
+            // Reading data from url
+            iStream = urlConnection.getInputStream();
+ 
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+ 
+            StringBuffer sb  = new StringBuffer();
+ 
+            String line = "";
+            while( ( line = br.readLine())  != null){
+                sb.append(line);
+            }
+ 
+            data = sb.toString();
+ 
+            br.close();
+ 
+        }catch(Exception e){
+            Log.d("Exception while downloading url", e.toString());
+        }finally{
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
+    }
+ 
+    // Fetches data from url passed
+    private class DownloadTask extends AsyncTask<String, Void, String>{
+ 
+        // Downloading data in non-ui thread
+        @Override
+        protected String doInBackground(String... url) {
+ 
+            // For storing data from web service
+            String data = "";
+ 
+            try{
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+            }catch(Exception e){
+                Log.d("Background Task",e.toString());
+            }
+            return data;
+        }
+ 
+        // Executes in UI thread, after the execution of
+        // doInBackground()
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+ 
+            ParserTask parserTask = new ParserTask();
+ 
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+        }
+    }
+    
+    /** A class to parse the Google Places in JSON format */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
+ 
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+ 
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+ 
+            try{
+                jObject = new JSONObject(jsonData[0]);
+                AnalizadorRutaMapa parser = new AnalizadorRutaMapa();
+ 
+                // Starts parsing data
+                routes = parser.parse(jObject);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return routes;
+        }
+ 
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+            ArrayList<LatLng> points = null;
+            PolylineOptions lineOptions = null;
+            //MarkerOptions markerOptions = new MarkerOptions();
+            String distance = "";
+            String duration = "";
+ 
+            if(result.size()<1){
+                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
+                return;
+            }
+ 
+            // Traversing through all the routes
+            for(int i=0;i<result.size();i++){
+                points = new ArrayList<LatLng>();
+                lineOptions = new PolylineOptions();
+ 
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
+ 
+                // Fetching all the points in i-th route
+                for(int j=0;j<path.size();j++){
+                    HashMap<String,String> point = path.get(j);
+ 
+                    if(j==0){    // Get distance from the list
+                        distance = (String)point.get("distance");
+                        continue;
+                    }else if(j==1){ // Get duration from the list
+                        duration = (String)point.get("duration");
+                        continue;
+                    }
+ 
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+ 
+                    points.add(position);
+                }
+ 
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.width(4);
+                lineOptions.color(Color.rgb(65, 105, 225)); //Azul Royal
+            }
+ 
+            textViewInfoRuta.setText("Distancia:"+distance + ", Tiempo estimado:"+duration);
+ 
+            // Drawing polyline in the Google Map for the i-th route
+            polilyneActual = map.addPolyline(lineOptions);
+        }
+    }
+    
+    public void onLocationChanged(Location ubicacion) {
+        getMiPosicion(ubicacion);
+    }
+ 
+    public void onProviderDisabled(String provider){
+        //Toast.makeText(getApplicationContext(), "Proovedor OFF", Toast.LENGTH_SHORT).show();
+    }
+ 
+    public void onProviderEnabled(String provider){
+    	//Toast.makeText(getApplicationContext(), "Proovedor ON", Toast.LENGTH_SHORT).show();
+    }
+ 
+    public void onStatusChanged(String provider, int status, Bundle extras){
+    	 //Toast.makeText(getApplicationContext(), "Estado Proovedor: " + status, Toast.LENGTH_SHORT).show();
+    }
+    public void onInfoWindowClick(Marker marker) {
+		Intent intent = new Intent(getBaseContext(),DescripcionRestaurante.class);
+		intent.putExtra("nombreRestaurante", marker.getTitle());
+    	startActivity(intent);
+	}
+	public boolean onMarkerClick(final Marker marker) {
+		// Ya hay una ruta mostrándose
+		if(puntosRuta.size()==2){
+			  puntosRuta.clear();
+              mostrarMarcadores(map);
+        }
+
+        // añadimos el punto origen (mi ubicación) y el destino (el marcador)
+		if (map.getMyLocation() == null)
+			puntosRuta.add(new LatLng(miUbicacion.getLatitude(),miUbicacion.getLongitude()));
+		else
+			puntosRuta.add(new LatLng(map.getMyLocation().getLatitude(),map.getMyLocation().getLongitude()));
+        puntosRuta.add(marker.getPosition());
+        
+        // Borramos una polilinea sólo si existe
+        if (polilyneActual != null)
+        	polilyneActual.remove();
+        
+        // A partir de aquí se dibuja la polilinea o ruta en el mapa
+        LatLng origin = puntosRuta.get(0);
+        LatLng dest = puntosRuta.get(1);
+
+        // Getting URL to the Google Directions API
+        String url = getDirectionsUrl(origin, dest);
+
+        DownloadTask downloadTask = new DownloadTask();
+
+        // Start downloading json data from Google Directions API
+        downloadTask.execute(url);
+        
+		return false;
+	}
+	public void onMapClick(LatLng point) {
+		if (polilyneActual != null)
+        	polilyneActual.remove();
+		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener +info");
+	}
 }

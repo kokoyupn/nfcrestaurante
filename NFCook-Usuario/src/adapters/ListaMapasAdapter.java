@@ -1,6 +1,5 @@
 package adapters;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import com.example.nfcook.R;
@@ -43,7 +42,13 @@ public class ListaMapasAdapter extends BaseAdapter {
     	TextView nombreRest = (TextView) convertView.findViewById(R.id.textViewListaMapaNombre);
     	nombreRest.setText(restActual.getNombre());
     	TextView distancia = (TextView) convertView.findViewById(R.id.textViewListaMapaDistancia);
-        distancia.setText("A " + Math.rint((restActual.getDistancia()*100))/100 + " km");   
+    	if (restActual.getDistancia() >= 1){
+    		double distEnKm = Math.rint((restActual.getDistancia()*100))/100;
+        	distancia.setText("A " + distEnKm + " km");
+    	}else{
+    		int distEnMetros = (int) Math.rint((restActual.getDistancia()*1000));
+    		distancia.setText("A " + distEnMetros + " m");
+    	}
         return convertView;
 	}
 }

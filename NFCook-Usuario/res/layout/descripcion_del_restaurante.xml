@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFDEAD"
+    android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" >
+
+        <ImageView
+            android:id="@+id/imageViewLogoDescRest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/foster_mapa" />
+
+        <TextView
+            android:id="@+id/textViewNombreRest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Nombre Restaurante"
+            android:textColor="@color/negro"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewLineaHorDescRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/linea_azul_horizontal" />
+
+    <ImageView
+        android:id="@+id/imageViewDirRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/senal_direccion" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/tablon_med_desc_rest" >
+
+        <TextView
+            android:id="@+id/textViewDireccionRest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="3dp"
+            android:text="Dirección del restaurante"
+            android:textColor="@color/blanco"
+            android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imageViewHorRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/blanco"
+        android:src="@drawable/marco_horario" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/tablon_grande_desc_rest" >
+
+        <TextView
+            android:id="@+id/textViewHorarioRest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="3dp"
+            android:text="Horario del restaurante"
+            android:textColor="@color/blanco"
+            android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textViewTelefonoRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Télefono"
+        android:textColor="@color/negro"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewURLRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="URL del restaurante"
+        android:textColor="@color/negro"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewTituloServiciosRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Servicios:"
+        android:textColor="@color/negro"
+        android:textSize="16sp" />
+
+    <GridView
+        android:id="@+id/gridViewServiciosRest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:numColumns="3"
+        android:verticalSpacing="5dp" >
+
+    </GridView>
+
+</LinearLayout>
