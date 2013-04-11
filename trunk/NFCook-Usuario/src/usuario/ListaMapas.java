@@ -1,7 +1,5 @@
 package usuario;
 
-import java.util.ArrayList;
-
 import com.example.nfcook.R;
 
 import adapters.ListaMapasAdapter;
@@ -16,10 +14,6 @@ public class ListaMapas extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		//if(restaurantes == null)
-		//	restaurantes = new ArrayList<Restaurante>();
-		//Restaurante r = new Restaurante("MI nabo", 1.999, 2.4);
-		//restaurantes.add(r);
 		setContentView(R.layout.lista_mapas);
 		
 		ListView listView = (ListView) findViewById(R.id.listViewMapas);

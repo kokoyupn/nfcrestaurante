@@ -1,0 +1,77 @@
+package usuario;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import com.example.nfcook.R;
+
+import adapters.ServiciosRestauranteAdapter;
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.widget.GridView;
+import android.widget.TextView;
+
+public class DescripcionRestaurante extends Activity {
+	private Restaurante restaurante;
+	private ArrayList<Restaurante> restaurantes;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.descripcion_del_restaurante);
+
+		Bundle bundle = getIntent().getExtras();
+		String restABuscar = bundle.getString("nombreRestaurante");
+		restaurantes = Mapas.getRestaurantes();
+		boolean enc=false;
+		Iterator<Restaurante> it = restaurantes.iterator();
+	    while(!enc && it.hasNext())
+	    {
+	    	Restaurante restAct = it.next();
+	    	if(restABuscar.equals(restAct.getNombre()))
+	    	{
+	    		enc=true;
+	    		restaurante = restAct;
+	    	}
+	    }
+	    
+	    TextView tituloRest = (TextView) findViewById(R.id.textViewNombreRest);
+	    tituloRest.setText(restaurante.getNombre());
+	    TextView direccion = (TextView) findViewById(R.id.textViewDireccionRest);
+	    direccion.setText(restaurante.getDireccion());
+	    
+	    TextView telf = (TextView) findViewById(R.id.textViewTelefonoRest);
+	    telf.setTextColor(Color.rgb(065, 105, 225));
+	    telf.setText(restaurante.getTelefono());	
+	    SpannableString telfSubrayado = new SpannableString(telf.getText());
+		telfSubrayado.setSpan(new UnderlineSpan(), 0, telfSubrayado.length(), 0);
+		telf.setText(telfSubrayado);
+
+	    TextView horario = (TextView) findViewById(R.id.textViewHorarioRest);
+	    horario.setText(restaurante.getHorario());
+	
+	    TextView url = (TextView) findViewById(R.id.textViewURLRest);
+	    url.setTextColor(Color.rgb(065, 105, 225));
+	    url.setText(restaurante.getURL());	
+	    SpannableString urlSubrayado = new SpannableString(url.getText());
+	    urlSubrayado.setSpan(new UnderlineSpan(), 0, urlSubrayado.length(), 0);
+	    url.setText(urlSubrayado);
+	    
+	    GridView gridViewServ = (GridView) findViewById(R.id.gridViewServiciosRest);
+	    ArrayList<String> servicios = new ArrayList<String>();
+	    if(restaurante.isTakeAway())
+	    	servicios.add("foster_take_away");
+	    if(restaurante.isDelivery())
+	    	servicios.add("foster_a_domicilio");
+	    if(restaurante.isMenuMediodia())
+	    	servicios.add("foster_menu_mediodia");
+	    if(restaurante.isMagia())
+	    	servicios.add("foster_magia");
+	    //if(restaurante.isCumpleanios())
+	    //	servicios.add("foster_cumpleanios");
+	    gridViewServ.setAdapter(new ServiciosRestauranteAdapter(getApplicationContext(), servicios));
+	}
+}

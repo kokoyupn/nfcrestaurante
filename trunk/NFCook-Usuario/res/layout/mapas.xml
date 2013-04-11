@@ -2,15 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/blanco"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/buttonListaMapa"
+    <TextView
+        android:id="@+id/textViewMapas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="listaClick"
-        android:text="Lista" />
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/blanco"
+        android:text="TextView"
+        android:textColor="@color/negro"
+        android:textSize="18sp" />
     
     <fragment
         android:id="@+id/map"
