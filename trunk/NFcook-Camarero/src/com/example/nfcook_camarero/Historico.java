@@ -6,16 +6,28 @@ import java.util.Map;
 
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ExpandableListActivity;  
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;  
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListAdapter;  
+import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.SimpleExpandableListAdapter;  
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
  
- public class Historico extends ExpandableListActivity {  
+ public class Historico extends Activity {  
    private static final String MESA = "MESA";  
    private static final String PRECIO = "PRECIO";
    private static final String CAMARERO = "CAMARERO";
@@ -24,6 +36,7 @@ import android.widget.Toast;
    private HandlerGenerico sql;
    private SQLiteDatabase db;
 	
+   private static ExpandableListView lista;
    private ExpandableListAdapter mAdapter;  
    
    private Map<String, String> padreActual;
@@ -40,13 +53,15 @@ import android.widget.Toast;
    public void onCreate(Bundle savedInstanceState) {  
      super.onCreate(savedInstanceState);  
      
+     lista=new ExpandableListView(this);
+     setContentView(lista);
      importarBaseDatatos();
      //String[] campos = new String[]{"NumMesa","IdCamarero","IdPlato","Observaciones","Extras","FechaHora","NombrePlato"};
  	 
  	 Cursor c = db.query("Historico", null,null,null,null,null,"NumMesa",null);
           
-     List<Map<String, String>> listaPadres = new ArrayList<Map<String, String>>();  
-     List<List<Map<String, String>>> listaHijos = new ArrayList<List<Map<String, String>>>();  
+     final List<Map<String, String>> listaPadres = new ArrayList<Map<String, String>>();  
+     final List<List<Map<String, String>>> listaHijos = new ArrayList<List<Map<String, String>>>();  
      
      
      while(c.moveToNext()){
@@ -97,8 +112,22 @@ import android.widget.Toast;
          padreActual.put(PRECIO,  String.valueOf(precioMesa) + " €");
      }
     catch (Exception e){};
-     
-     
+//    hijo. 
+//    actividad=this.;
+//    ExpandableListView hijos = (ExpandableListView)findViewById(R.layout.hijos_historico);
+//    hijos.setOnItemClickListener(new OnItemClickListener() {
+//	    	
+//	    	
+//
+//			public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
+//	    		
+//	    		Intent intent = new Intent(actividad, PedidoHistorico.class);
+//        		//Le pasamos a la siguiente pantalla el numero de la mesa que se ha pulsado
+//        		intent.putExtra("Posicion", posicion);
+//        		startActivity(intent);
+//	    	}
+//	    });
+    
      mAdapter = new SimpleExpandableListAdapter(  
          this,  
          listaPadres,  
@@ -110,7 +139,22 @@ import android.widget.Toast;
          new String[] { HORA, CAMARERO, PRECIO },  
          new int[] { R.id.hora, R.id.camarero, R.id.precio}
          );  
-     setListAdapter(mAdapter);
+     lista.setAdapter(mAdapter);
+     lista.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+		
+
+		public boolean onChildClick(ExpandableListView arg0, View arg1,
+				int arg2, int arg3, long arg4) {
+		   	  Intent intent = new Intent(arg1.getContext(), PedidoHistorico.class);
+		   	  
+		   	  intent.putExtra("mesa", listaPadres.get(arg2).get(MESA));
+		   	  intent.putExtra("hora", listaHijos.get(arg2).get(arg3).get(HORA));
+		   	  
+	       	  startActivity(intent); 
+			return false;
+		}
+	});
+   
      
    }    
    
