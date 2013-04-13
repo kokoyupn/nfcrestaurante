@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -15,7 +14,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,7 +29,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
@@ -39,21 +42,18 @@ import tpv.Restaurante;
 
 public class InterfazPlatos extends JFrame {
 
-	private JPanel contentPaneGlobal, panelPlatos ;
+	private JPanel contentPaneGlobal, panelPlatos, menuConfig, cobrar, eliminar, enviar, aceptar, promociones;
 	private JTable tablaPlatos;
 	private JButton rehacer, deshacer;
 	static GridBagConstraints gbc_btnNewButton2,gbc_btnBotones,gbc_btnPopup;
 	static JScrollPane scrollPane, scrollPanePl,scrollPaneBotones,scrollPaneTable;
 	private ArrayList<String> categorias;
-	private ArrayList<AuxDeshacerRehacer>  auxiliarDeshacer;
-	private ArrayList<AuxDeshacerRehacer>  auxiliarRehacer;
+	private ArrayList<AuxDeshacerRehacer>  auxiliarDeshacer, auxiliarRehacer;
 	private ArrayList<Producto> productosEnMesa;
 	private Restaurante unRestaurante ;
 	private TablaNoEditable dtm;
-	private String idMesa,precioAux,obsAux,extrasAux;
+	private String idMesa,precioAux,obsAux,extrasAux, idCam, categoriaExtraPadre ;
 	private Producto productoATabla;
-	private JPanel menuConfig;
-	private String categoriaExtraPadre ;
 	private HashMap<String,String> hashExtras; //la clave es el tipo de extra
 	private int contDeshacer,idsUnicos=0; 
 	private JTextField textoObs;
@@ -70,6 +70,8 @@ public class InterfazPlatos extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);//Eliminamos los bordes de la ventana.
+		//Calculamos el tamaño de la pantalla
+		Dimension dimensionesPantalla = getToolkit().getScreenSize();
 		contentPaneGlobal = new JPanel();
 		contentPaneGlobal.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPaneGlobal);
@@ -78,24 +80,26 @@ public class InterfazPlatos extends JFrame {
 		//Panel categorias
 		JPanel panelCategorias = new JPanel();
 		scrollPane = new JScrollPane(panelCategorias);
-		scrollPane.setBounds(500, 11, 824, 307);
+		scrollPane.setBounds((int)(dimensionesPantalla.getWidth()/1366)*1050, 10, (int)(dimensionesPantalla.getWidth()/1366)*307, (int)(dimensionesPantalla.getHeight()/768)*437);
+		scrollPane.setBorder(null);
 		contentPaneGlobal.add(scrollPane);
-		GridBagLayout gbl_panelCategorias = new GridBagLayout();
-		panelCategorias.setLayout(gbl_panelCategorias);
+		panelCategorias.setLayout(new GridLayout(numeroDeCategorias(),1));
 		
 		//Panel platos
 		panelPlatos = new JPanel();
 		scrollPanePl = new JScrollPane(panelPlatos);
-		scrollPanePl.setBounds(500, 329, 824, 415);
+		scrollPanePl.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		//scrollPanePl.setBorder(BorderFactory.createLineBorder(Color.decode("#2C6791")));
+		scrollPanePl.setBounds(10, (int)(dimensionesPantalla.getHeight()/768)*460, (int)(dimensionesPantalla.getWidth()/1366)*1350, (int)(dimensionesPantalla.getHeight()/768)*295);
 		contentPaneGlobal.add(scrollPanePl);
 		GridBagLayout gbl_panelPlatos = new GridBagLayout();
 		panelPlatos.setLayout(gbl_panelPlatos);
 		
 		//Panel botones
 		JPanel panelBotones = new JPanel();
-		panelBotones.setBounds(11, 504, 479, 240);
+		panelBotones.setBounds(10, 10, (int)(dimensionesPantalla.getWidth()/1366)*70, (int)(dimensionesPantalla.getHeight()/768)*530);
 		contentPaneGlobal.add(panelBotones);
-		GridLayout gbl_panelBotones = new GridLayout(3,3);
+		GridLayout gbl_panelBotones = new GridLayout(6,1);
 		panelBotones.setLayout(gbl_panelBotones);
 		
 ////////////////////////////INICIALIZACIONES/////////////////////		
@@ -106,19 +110,31 @@ public class InterfazPlatos extends JFrame {
 		dinero = 0;
 		esExtras = false;
 		esObs = false;
+		idCam = "";
 
 ///////////////GRUPO TOTAL PRECIO////////////////////	
 		
 		dinero = calculaDineroTotal();
 		total = new JLabel("Total: " + dinero + " euros");
-		total.setBounds(114,22,317,40);
+		total.setBounds((int)(dimensionesPantalla.getWidth()/1366)*460,(int)(dimensionesPantalla.getHeight()/768)*20,(int)(dimensionesPantalla.getWidth()/1366)*310,(int)(dimensionesPantalla.getHeight()/768)*60);
 		contentPaneGlobal.add(total);
 		total.setFont(new Font(total.getFont().getName(), total.getFont().getStyle(), 30));
 
-
 		
 ////////////////////////////ELIMINAR PLATO/////////////////////
-		JButton eliminar = new JButton("Eliminar Plato");
+		
+		//JButton eliminar = new JButton();
+		
+		//damos forma y color a los bootnes de categorias
+		eliminar = new JPanelBordesRedondos();
+		((JPanelBordesRedondos) eliminar).setColorPrimario(new Color(105,25,254));
+		((JPanelBordesRedondos) eliminar).setColorSecundario(Color.cyan);
+		//((JPanelBordesRedondos) btnNewButton).setColorContorno(Color.blue);
+		JLabel aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/delete.png"),70,70));
+		eliminar.add(aux);
+		
+		//eliminar.setIcon(tamanioImagen(new ImageIcon("Imagenes/delete.png"), 70, 70));
 		panelBotones.add(eliminar);
 		eliminar.addMouseListener(new MouseAdapter() {
 					@Override
@@ -126,9 +142,8 @@ public class InterfazPlatos extends JFrame {
 						int row = -1;
 						row = tablaPlatos.getSelectedRow();
 						if (row == -1){
-							JOptionPane.showMessageDialog(
-										contentPaneGlobal,
-									   "Debes seleccionar una línea de la tabla y después pulsar el botón eliminar"); 
+							JOptionPane.showOptionDialog(contentPaneGlobal ,"Debes seleccionar una línea de la tabla y después pulsar el botón eliminar",null,JOptionPane.YES_NO_CANCEL_OPTION,
+										JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/warning.png"),50,50), new Object[] {"Aceptar"},"Aceptar");
 						}else{
 							auxiliarDeshacer.add(new AuxDeshacerRehacer(false, productosEnMesa.get(row)));
 							deshacer.setEnabled(true);
@@ -136,52 +151,133 @@ public class InterfazPlatos extends JFrame {
 							total.setText("Total: " + dinero + " euros");
 							productosEnMesa.remove(row);
 							dtm.removeRow(row);
+							
+							auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
+							contDeshacer = 0;
+							rehacer.setEnabled(false);
 						}
 						}	
 					});
-////////////////////////////BOTON COBRAR/////////////////////		
-		JButton cobrar = new JButton("Cobrar mesa");
+////////////////////////////BOTON COBRAR/////////////////////	
+		//damos forma y color a los bootnes de categorias
+		cobrar = new JPanelBordesRedondos();
+		((JPanelBordesRedondos) cobrar).setColorPrimario(new Color(105,25,254));
+		((JPanelBordesRedondos) cobrar).setColorSecundario(Color.cyan);
+		//((JPanelBordesRedondos) cobrar).setColorContorno(Color.blue);
+		aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"),70,70));
+		cobrar.add(aux);
+		
+		
+//		JButton cobrar = new JButton();
 		panelBotones.add(cobrar);
+//		cobrar.setIcon(tamanioImagen(new ImageIcon("Imagenes/pagar.png"), 70, 70));
 		cobrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent arg0){
-				int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE,null,new Object[] {"Aceptar", "Cancelar"},"Cancelar");
-				if (seleccion == 0){//aceptar
-					//TODO cobrar
+				if (productosEnMesa.size() != 0){
+					int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
+					if (seleccion == 0){//aceptar
+						//TODO cobrar
+						
+						reseteaTablaYPrecio();
+						
+						JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
+					}else{
+						JOptionPane.showOptionDialog(contentPaneGlobal ,"No se ha realizado la acción",null,JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
+					}
+				}else{
+					JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos para cobrar",null,JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 				}
 			}
 		});
 
-////////////////////////////BOTON ENVIAR A COCINA/////////////////////	
-		JButton enviar = new JButton("Enviar a cocina");
+////////////////////////////BOTON ENVIAR A COCINA/////////////////////
+		//damos forma y color a los bootnes de categorias
+		enviar = new JPanelBordesRedondos();
+		((JPanelBordesRedondos) enviar).setColorPrimario(new Color(105,25,254));
+		((JPanelBordesRedondos) enviar).setColorSecundario(Color.cyan);
+		//((JPanelBordesRedondos) enviar).setColorContorno(Color.blue);
+		aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/chef.png"),70,70));
+		enviar.add(aux);
+				
+				
+		//JButton enviar = new JButton();
 		panelBotones.add(enviar);
+		//enviar.setIcon(tamanioImagen(new ImageIcon("Imagenes/chef.png"), 70, 70));
 		enviar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent arg0){
-				int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE,null,new Object[] {"Aceptar", "Cancelar"},"Cancelar");
-				if (seleccion == 0){//aceptar
-					//TODO cobrar
+				if (productosEnMesa.size() != 0){
+					int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/chef.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
+					if (seleccion == 0){//aceptar 
+						//saco el cam
+						Iterator<Mesa> itm = getRestaurante().getIteratorMesas();
+						boolean enc = false;
+						while(itm.hasNext() && !enc){
+							Mesa mesa = itm.next();
+							if (mesa.getIdMesa().equals(idMesa)){
+								idCam = mesa.getIdCamarero();
+								enc=true;
+								}
+						}
+						getRestaurante().addComandaAMesa(idMesa, idCam, productosEnMesa);
+						//TODO enviar
+						
+						reseteaTablaYPrecio();
+						
+						JOptionPane.showOptionDialog(contentPaneGlobal ,"Enviado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
+					}else{
+						JOptionPane.showOptionDialog(contentPaneGlobal ,"No enviado",null,JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
+					}
+				}else{
+					JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos para enviar",null,JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 				}
 			}
 		});
 
 ////////////////////////////BOTON PROMOCIONES/////////////////////	
-		JButton promociones = new JButton("<html>" + "Aplicar" + "<br>" + "promociones" + "</html>");
+		//damos forma y color a los bootnes de categorias
+		promociones = new JPanelBordesRedondos();
+		((JPanelBordesRedondos) promociones).setColorPrimario(new Color(105,25,254));
+		((JPanelBordesRedondos) promociones).setColorSecundario(Color.cyan);
+		//((JPanelBordesRedondos) promociones).setColorContorno(Color.blue);
+		aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/oferta.png"),70,70));
+		promociones.add(aux);		
+		
+//		JButton promociones = new JButton();
+//		promociones.setIcon(tamanioImagen(new ImageIcon("Imagenes/oferta.png"), 70, 70));
 		panelBotones.add(promociones);
 
 		
 ////////////////////////////BOTON ACEPTAR/////////////////////		
+		//damos forma y color a los bootnes de categorias
+		aceptar = new JPanelBordesRedondos();
+		((JPanelBordesRedondos) aceptar).setColorPrimario(new Color(105,25,254));
+		((JPanelBordesRedondos) aceptar).setColorSecundario(Color.cyan);
+		//((JPanelBordesRedondos) aceptar).setColorContorno(Color.blue);
+		aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/back.png"),70,70));
+		aceptar.add(aux);
+
 		
-		JButton aceptar = new JButton("Aceptar");
+//		JButton aceptar = new JButton();
+//		aceptar.setIcon(tamanioImagen(new ImageIcon("Imagenes/back.png"), 70, 70));
 		aceptar.setBackground(Color.green);
 		panelBotones.add(aceptar);
 		aceptar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent arg0){
-				//TODO añadir a la base de datos y a Restaurante 
-				String idCam = "";
 				boolean enc = false;
 				Iterator<Mesa> iteratorMesas = getRestaurante().getIteratorMesas();
 				while(iteratorMesas.hasNext() && !enc)
@@ -234,8 +330,18 @@ public class InterfazPlatos extends JFrame {
 		}
 
 		tablaPlatos = new JTable(dtm);
+		tablaPlatos.setRowHeight(20);
+		// Cambio la fuente de dentro de la tabla
+		tablaPlatos.setFont(new Font(tablaPlatos.getFont().getName(), 0, 20)); 
+		//Cambio de fuente de la cacecera de la tabla
+		JTableHeader th; 
+		th = tablaPlatos.getTableHeader(); 
+		//Font fuente = new Font("Verdana", Font.ITALIC, 25); 
+		th.setFont(new Font(th.getFont().getName(), 0, 25)); 
+		
 		scrollPaneTable = new JScrollPane(tablaPlatos);
-		scrollPaneTable.setBounds(11, 92, 479, 400);
+		scrollPaneTable.setBounds((int)(dimensionesPantalla.getWidth()/1366)*90, (int)(dimensionesPantalla.getHeight()/768)*90, (int)(dimensionesPantalla.getWidth()/1366)*950, (int)(dimensionesPantalla.getHeight()/768)*360);
+		scrollPaneTable.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		contentPaneGlobal.add(scrollPaneTable);
 		GridBagLayout gbl_panelTabla = new GridBagLayout();
 		tablaPlatos.setLayout(gbl_panelTabla);	
@@ -250,7 +356,7 @@ public class InterfazPlatos extends JFrame {
 					precioAux = dato;
 					JPanel tecladoNum = new TecladoNumerico();
 					JFrame marco = new JFrame();
-					int res = JOptionPane.showOptionDialog(marco, tecladoNum,"Precio", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
+					int res = JOptionPane.showOptionDialog(marco, tecladoNum,"Editar precio", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
 					if (res == 0){//aceptar
 						tablaAux.setValueAt(((TecladoNumerico)tecladoNum).getPrecio(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
 						productosEnMesa.get(tablaAux.getSelectedRow()).setPrecio(((TecladoNumerico)tecladoNum).getPrecio());
@@ -289,11 +395,14 @@ public class InterfazPlatos extends JFrame {
 		
 		
 ///////////////BOTON DESHACER////////////////////		
+		
 	deshacer = new JButton();
-	deshacer.setIcon(tamanioImagen(new ImageIcon("Imagenes/Undo.png"), 70, 70));
+	deshacer.setBorder(null);
+	deshacer.setBackground(new Color(-1118482));
+	deshacer.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/Undo.png"), 70, 70));
 	deshacer.setEnabled(false);
-	deshacer.setBounds(11,11,70,70);
-	deshacer.addMouseListener(new MouseAdapter() {//eliminar el ultimo registro de la tabla
+	deshacer.setBounds((int)(dimensionesPantalla.getWidth()/1366)*90,10,(int)(dimensionesPantalla.getWidth()/1366)*70,(int)(dimensionesPantalla.getHeight()/768)*70);
+	deshacer.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mousePressed(MouseEvent arg0){
 
@@ -322,12 +431,14 @@ public class InterfazPlatos extends JFrame {
 	});
 	contentPaneGlobal.add(deshacer);		
 
-///////////////BOTON REHACER////////////////////		
+///////////////BOTON REHACER////////////////////
 	rehacer = new JButton();
-	rehacer.setIcon(tamanioImagen(new ImageIcon("Imagenes/Redo.png"), 70, 70));
-	rehacer.setBounds(420,11,70,70);
+	rehacer.setBorder(null);
+	rehacer.setBackground(new Color(-1118482));
+	rehacer.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/Redo.png"), 70, 70));
+	rehacer.setBounds((int)(dimensionesPantalla.getWidth()/1366)*968,10,(int)(dimensionesPantalla.getWidth()/1366)*70,(int)(dimensionesPantalla.getHeight()/768)*70);
 	rehacer.setEnabled(false);
-	rehacer.addMouseListener(new MouseAdapter() {//eliminar el ultimo registro de la tabla
+	rehacer.addMouseListener(new MouseAdapter() {
 	@Override
 	public void mousePressed(MouseEvent arg0){
 		
@@ -361,78 +472,88 @@ public class InterfazPlatos extends JFrame {
 	
 ///////////////CATEGORIAS Y PLATOS////////////////////		
 		//rellenamos de las categorias
-		int j = 0;
-		int i = 0;
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		//leemos las categorias			
-			categorias = new ArrayList<String>();
-			Iterator<Producto> iteratorProductos = unRestaurante.getIteratorProductos();
-			int k = 0; //para delimitar el numero de platos por fila
-			while(iteratorProductos.hasNext()){
-				Producto prod = iteratorProductos.next();
-				String categoria = prod.getCategoria();
-				if (!categorias.contains(categoria)){
-					categorias.add(categoria);
-					String foto = buscaFotoConCategoria(categoria);
+		categorias = new ArrayList<String>();
+		Iterator<Producto> iteratorProductos = unRestaurante.getIteratorProductos();
+		while(iteratorProductos.hasNext()){
+			Producto prod = iteratorProductos.next();
+			String categoria = prod.getCategoria();
+			if (!categorias.contains(categoria)){
+				categorias.add(categoria);
+				//JButton btnNewButton = new JButton(categoria);
 				
-					JButton btnNewButton = new JButton();
-					btnNewButton.setPreferredSize(new Dimension(160, 120));
-					btnNewButton.setIcon(tamanioImagen(new ImageIcon("Imagenes/"+ foto + ".jpg"), 160, 120));
-					btnNewButton.setName(categoria);
-					btnNewButton.addMouseListener(new MouseAdapter() {
-					
-					@Override
-					public void mousePressed(MouseEvent arg0) {
-						panelPlatos.removeAll();
-						String catPulsada = arg0.getComponent().getName();
-						Iterator<Producto> iteratorProductosHijos =  getRestaurante().getIteratorProductos();
-							//rellenamos de los platos
-							int j = 0;
-							int i = 0;
-							int k = 0; //para delimitar el numero de platos por fila
-							gbc_btnNewButton2 = new GridBagConstraints();
-								while(iteratorProductosHijos.hasNext()){
-									final Producto prod = iteratorProductosHijos.next();
-									if (prod.getCategoria().equals(catPulsada)){
-										String nombre = prod.getNombre();
-										String foto = prod.getFoto();
+				//damos forma y color a los bootnes de categorias
+				JPanel btnNewButton = new JPanelBordesRedondos();
+				JLabel jLabelCategoria = new JLabel(categoria);
+				jLabelCategoria.setFont(new Font(jLabelCategoria.getFont().getFontName(), jLabelCategoria.getFont().getStyle(), 30));
+				jLabelCategoria.setForeground(Color.WHITE);
+				((JPanelBordesRedondos) btnNewButton).setColorPrimario(new Color(105,25,254));
+				((JPanelBordesRedondos) btnNewButton).setColorSecundario(Color.cyan);
+				//((JPanelBordesRedondos) btnNewButton).setColorContorno(Color.blue);
+				btnNewButton.add(jLabelCategoria);
+				
+				
+				
+				btnNewButton.setName(categoria);
+//				btnNewButton.setFont(new Font(btnNewButton.getFont().getName(),btnNewButton.getFont().getStyle(),20));
+				btnNewButton.addMouseListener(new MouseAdapter() {
+				
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+					panelPlatos.removeAll();
+					String catPulsada = arg0.getComponent().getName();
+					Iterator<Producto> iteratorProductosHijos =  getRestaurante().getIteratorProductos();
+						//rellenamos de los platos
+						int j = 0;
+						int i = 0;
+						int k = 0; //para delimitar el numero de platos por fila
+						gbc_btnNewButton2 = new GridBagConstraints();
+							while(iteratorProductosHijos.hasNext()){
+								final Producto prod = iteratorProductosHijos.next();
+								if (prod.getCategoria().equals(catPulsada)){
+									String nombre = prod.getNombre();
+									String foto = prod.getFoto();
+									
+//									
+//									//damos forma y color a los bootnes de categorias
+//									final JPanel btnNewButton2 = new JPanelBordesRedondos();
+//									((JPanelBordesRedondos) btnNewButton2).setColorPrimario(Color.blue);
+//									((JPanelBordesRedondos) btnNewButton2).setColorSecundario(Color.cyan);
+//									//((JPanelBordesRedondos) btnNewButton).setColorContorno(Color.blue);
+//									JLabel aux = new JLabel();
+//									aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/Platos/"+ foto + ".jpg"), 137, 99));
+//									btnNewButton2.add(aux);
+									
+									
+									final JButton btnNewButton2 = new JButton();
+									btnNewButton2.setPreferredSize(new Dimension(137, 99));
+									btnNewButton2.setName(nombre);
+									btnNewButton2.setIcon(tamanioImagen(new ImageIcon("Imagenes/Platos/"+ foto + ".jpg"), 137, 99));
+									btnNewButton2.addMouseListener(new MouseAdapter(){
+										@Override
+										public void mousePressed(MouseEvent arg0){
+											generarMenuConfig(prod);		
+										}
 										
-										final JButton btnNewButton2 = new JButton();
-										btnNewButton2.setPreferredSize(new Dimension(160, 120));
-										btnNewButton2.setName(nombre);
-										btnNewButton2.setIcon(tamanioImagen(new ImageIcon("Imagenes/"+ foto + ".jpg"), 160, 120));
-										btnNewButton2.addMouseListener(new MouseAdapter(){
-											@Override
-											public void mousePressed(MouseEvent arg0){
-												generarMenuConfig(prod);		
-											}
-											
-										});//fin listener plato
-										if ((k != 0) && (k % 4) == 0) 
-										{j++;i=0;}
-										gbc_btnNewButton2.gridx = i;
-										gbc_btnNewButton2.gridy = j;	
-										PlatoCelda celda = new PlatoCelda(btnNewButton2, nombre);
-										panelPlatos.add(celda, gbc_btnNewButton2);
-									i++;k++;
-									}
+									});//fin listener plato
+									if ((k != 0) && (k % 9) == 0) 
+									{j++;i=0;}
+									gbc_btnNewButton2.gridx = i;
+									gbc_btnNewButton2.gridy = j;	
+									PlatoCelda celda = new PlatoCelda(btnNewButton2, nombre);
+									panelPlatos.add(celda, gbc_btnNewButton2);
+								i++;k++;
 								}
-							panelPlatos.validate();
-							panelPlatos.repaint();
-							scrollPanePl.validate();
-							scrollPanePl.repaint();
-					}
-					});
-					
-					if ((k != 0) && (k % 4) == 0) 
-					{j++;i=0;}
-					gbc_btnNewButton.gridx = i;
-					gbc_btnNewButton.gridy = j;
-					PlatoCelda celda = new PlatoCelda(btnNewButton, categoria);
-					panelCategorias.add(celda, gbc_btnNewButton);	
-					i++;k++;
-				}	
-			}				
+							}
+						panelPlatos.validate();
+						panelPlatos.repaint();
+						scrollPanePl.validate();
+						scrollPanePl.repaint();
+				}
+				});
+				panelCategorias.add(btnNewButton);
+			}	
+		}				
 	}
 	
 	public void aniadeFilaATabla(Producto prod){
@@ -562,32 +683,47 @@ public class InterfazPlatos extends JFrame {
 		});
 		        
 		JFrame marco = new JFrame();
-		int result = JOptionPane.showOptionDialog(marco, menuConfig,"Configuración", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
+		int result = JOptionPane.showOptionDialog(marco, menuConfig, null, JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
 	
 		if(result == 0 ){//aceptar
-			//TODO si todo bien configurado añade si no muestra mensaje de error
-
-			productoATabla.setObservaciones(textoObs.getText());
-			productoATabla.setIdUnico(idsUnicos);
-			idsUnicos ++;
-			
-			if (productoATabla instanceof Plato){
-				Plato platoATabla = (Plato) productoATabla;
-				Iterator<String> itExtras = hashExtras.values().iterator();//Recorre los extras
-				String extrasConcat = "";
-				while(itExtras.hasNext())
-				{
-					if (extrasConcat == "")
-						extrasConcat = itExtras.next();
-					else
-						extrasConcat = extrasConcat + ", " + itExtras.next();
+			//recorremos el has y si en alguno pone "" falta por rellenar
+			boolean faltaCampo = false;
+			Iterator<Entry<String, String>> itCampos = hashExtras.entrySet().iterator();
+			while(itCampos.hasNext() && !faltaCampo){
+				if(itCampos.next().getValue().equals("")){
+					faltaCampo = true;
 				}
-				platoATabla.setExtrasMarcados(extrasConcat);	
-				productoATabla = (Producto) platoATabla;
 			}
-			deshacer.setEnabled(true);
-			auxiliarDeshacer.add(new AuxDeshacerRehacer(true, productoATabla));
-			aniadeFilaATabla(productoATabla);
+			if (!faltaCampo){
+				productoATabla.setObservaciones(textoObs.getText());
+				productoATabla.setIdUnico(idsUnicos);
+				idsUnicos ++;
+				
+				if (productoATabla instanceof Plato){
+					Plato platoATabla = (Plato) productoATabla;
+					Iterator<String> itExtras = hashExtras.values().iterator();//Recorre los extras
+					String extrasConcat = "";
+					while(itExtras.hasNext())
+					{
+						if (extrasConcat == "")
+							extrasConcat = itExtras.next();
+						else
+							extrasConcat = extrasConcat + ", " + itExtras.next();
+					}
+					platoATabla.setExtrasMarcados(extrasConcat);	
+					productoATabla = (Producto) platoATabla;
+				}
+				deshacer.setEnabled(true);
+				auxiliarDeshacer.add(new AuxDeshacerRehacer(true, productoATabla));
+				aniadeFilaATabla(productoATabla);
+				
+				auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
+				contDeshacer = 0;
+				rehacer.setEnabled(false);
+			}else{
+				JOptionPane.showOptionDialog(contentPaneGlobal ,"<html>Debes rellenar todos los campos de configuración de plato.<br/>Plato NO añadido<html>",null,JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/warning.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
+			}
 		}
 	
 	
@@ -624,21 +760,53 @@ public class InterfazPlatos extends JFrame {
 		return dineroTotalEnMesa;
 	}
 	
-	 private String buscaFotoConCategoria(String categoria){
-		 //buscamos en productos en unRestaurante
-		 Iterator<Producto> iteratorProductos = unRestaurante.getIteratorProductos();
-		 boolean enc = false;
-		 String foto = "fnd_fh";
-		 while(iteratorProductos.hasNext() && !enc){
-			 Producto p = iteratorProductos.next();
-			 if (p.getCategoria().equals(categoria) && !p.getFoto().equals("fnd_fh")){
-				 foto = p.getFoto();
-				 enc = true;
-			 }
-		 }
-		 return foto;
+//	 private String buscaFotoConCategoria(String categoria){
+//		 //buscamos en productos en unRestaurante
+//		 Iterator<Producto> iteratorProductos = unRestaurante.getIteratorProductos();
+//		 boolean enc = false;
+//		 String foto = "fnd_fh";
+//		 while(iteratorProductos.hasNext() && !enc){
+//			 Producto p = iteratorProductos.next();
+//			 if (p.getCategoria().equals(categoria) && !p.getFoto().equals("fnd_fh")){
+//				 foto = p.getFoto();
+//				 enc = true;
+//			 }
+//		 }
+//		 return foto;
+//	 }
+	 
+	 public int numeroDeCategorias(){
+		ArrayList<String> categorias = new ArrayList<String>();
+		Iterator<Producto> iteratorProductos = unRestaurante.getIteratorProductos();
+		while(iteratorProductos.hasNext()){
+				Producto prod = iteratorProductos.next();
+				String categoria = prod.getCategoria();
+				if (!categorias.contains(categoria)){
+					categorias.add(categoria);
+				}
+		}
+		return categorias.size();
 	 }
 	
+	 public void reseteaTablaYPrecio(){
+		productosEnMesa = new ArrayList<Producto>();
+		dinero = 0;
+		total.setText("Total: " + dinero + " euros");
+		
+		auxiliarDeshacer = new ArrayList<AuxDeshacerRehacer>();
+		auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
+		contDeshacer = 0;
+		deshacer.setEnabled(false);
+		rehacer.setEnabled(false);
+		//borro las filas de la tabla
+		int i = tablaPlatos.getRowCount();
+		while(i > 0){
+			dtm.removeRow(i-1);
+			i--;
+		}
+		tablaPlatos.validate();
+		tablaPlatos.repaint();
+	 }
 	
 private class TecladoAlfaNumerico extends JPanel{
 		
@@ -744,7 +912,7 @@ private class TecladoAlfaNumerico extends JPanel{
 			
 			//Boton borrar uno a uno
 			JButton botonBorrarUno = new JButton();
-			botonBorrarUno.setIcon(tamanioImagen(new ImageIcon("Imagenes/Undo.png"), 30, 30));
+			botonBorrarUno.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/Undo.png"), 30, 30));
 			Font FuenteBotonBorrarUno = botonBorrarUno.getFont();
 			botonBorrarUno.setFont(new Font(FuenteBotonBorrarUno.getFontName(), FuenteBotonBorrarUno.getStyle(), 30));
 			botonBorrarUno.addActionListener(new ActionListener() {
@@ -818,7 +986,7 @@ private class TecladoNumerico extends JPanel{
 		panelTeclado.add(botonPunto);
 		
 		JButton botonBorrar = new JButton();
-		botonBorrar.setIcon(tamanioImagen(new ImageIcon("Imagenes/Undo.png"), 30, 30));
+		botonBorrar.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/Undo.png"), 30, 30));
 		Font fuenteBotonNumero = botonBorrar.getFont();
 		botonBorrar.setFont(new Font(fuenteBotonNumero.getFontName(), fuenteBotonNumero.getStyle(), 30));
 		botonBorrar.addActionListener(new ActionListener() {

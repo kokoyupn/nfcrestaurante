@@ -20,35 +20,41 @@ public class PlatoCelda extends JPanel{
 	private JLabel lblNewLabelLinea2 ;
 	
 	public PlatoCelda(JButton boton, String nombrePlato) {	
-
-		
+				
 		JPanel panel = new JPanel();
-		//panel.setBorder((new EmptyBorder(5, 5, 5, 5)));
 		panel.setLayout(new GridBagLayout());
 		
-
 		lblNewLabel = new JLabel();
 		lblNewLabelLinea2 = new JLabel();
 		lblNewLabel.setFont(new Font(lblNewLabel.getFont().getFontName(), lblNewLabel.getFont().getStyle(), 15));
 		lblNewLabelLinea2.setFont(new Font(lblNewLabelLinea2.getFont().getFontName(), lblNewLabelLinea2.getFont().getStyle(), 15));
-
-		
+	
 		GridBagConstraints grid = new GridBagConstraints();
 		grid.gridx = 0;
 		grid.gridy = 0;
 		panel.add(boton,grid);
 		
 		//Como max dos lineas
-		String linea1, linea2;
-		if (nombrePlato.length() > 20){
-			linea1 = nombrePlato.substring(0, 20);
-			if (nombrePlato.length() > 40)
-				linea2 = nombrePlato.substring(20, 40);
-			else{
-				linea2 = nombrePlato.substring(20, nombrePlato.length());
+		String linea1 = "", linea2 = "";
+		if (nombrePlato.length() > 16){
+			String[] palabras = nombrePlato.split(" ");
+			int cont = 0;
+			int i = 0;
+			boolean llena = false;
+			while (i < palabras.length && !llena){
+				if((palabras[i].length() + cont) < 16){// cabe
+					linea1 += palabras[i] + " ";
+					cont += palabras[i].length() + 1;
+					i ++;
+				}else{//no cabe
+					llena = true;
+				}
 			}
-//			lblNewLabel = new JLabel("<html>" + linea1 + "<br>" + linea2 + "</html>");
-			
+			if (nombrePlato.length() > 32)
+				linea2 = nombrePlato.substring(cont, cont + 17);
+			else{
+				linea2 = nombrePlato.substring(cont, nombrePlato.length());
+			}			
 			lblNewLabel.setText(linea1) ;
 			lblNewLabelLinea2.setText(linea2);
 			grid.gridx = 0;
@@ -60,10 +66,8 @@ public class PlatoCelda extends JPanel{
 			
 		}
 		else{
-			//lblNewLabel = new JLabel("" + nombrePlato);
 			lblNewLabel.setText(nombrePlato);
-			lblNewLabelLinea2.setText("");
-		//	lblNewLabel.setSize(new Dimension(100,10));
+			lblNewLabelLinea2.setText("-----------");
 			grid.gridx = 0;
 			grid.gridy = 1;
 			panel.add(lblNewLabel,grid);
@@ -71,30 +75,6 @@ public class PlatoCelda extends JPanel{
 			grid.gridy = 2;
 			panel.add(lblNewLabelLinea2,grid);
 		}
-		add(panel);
-//		add(lblNewLabel);
-//		add(boton);
-
-//		GroupLayout groupLayout = new GroupLayout(this);
-//		groupLayout.setHorizontalGroup(
-//			groupLayout.createParallelGroup(Alignment.LEADING)
-//				.addGroup(groupLayout.createSequentialGroup()
-//					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-//						.addComponent(boton)
-//						.addGroup(groupLayout.createSequentialGroup()
-//							.addGap(0)
-//							.addComponent(lblNewLabel)))
-//					.addContainerGap(10, Short.MAX_VALUE))
-//		);
-//		groupLayout.setVerticalGroup(
-//			groupLayout.createParallelGroup(Alignment.LEADING)
-//				.addGroup(groupLayout.createSequentialGroup()
-//					.addComponent(boton)
-//					.addPreferredGap(ComponentPlacement.RELATED)
-//					.addComponent(lblNewLabel)
-//					.addGap(20))
-//		);
-//		setLayout(groupLayout);	
-		
+		add(panel);		
 	}
 }
