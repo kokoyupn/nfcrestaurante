@@ -7,7 +7,7 @@ public class ContenidoListPedidoHistorico {
 	private String idPlato;
 	private double precio;
 	
-	public ContenidoListPedidoHistorico(String nombre,String extras,String observaciones,double precio,int id,String idPlato){
+	public ContenidoListPedidoHistorico(String nombre,String extras,String observaciones,double precio){
 		this.nombre = nombre;
 		this.extras = extras;
 		this.observaciones = observaciones;
