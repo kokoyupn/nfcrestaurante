@@ -89,7 +89,7 @@ public class PedidoHistorico extends Activity {
 		hora = bundle.getString("hora");
 		
 		TextView mesa = (TextView)findViewById(R.id.tituloPedidoHistorico);
-		mesa.setText("Mesa "+ String.valueOf(numMesa) );
+		mesa.setText("Mesa "+ numMesa+"\n" +"Pedido " + hora.substring(hora.indexOf(" ")+1));
 		
 		try{
 			sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
@@ -118,15 +118,15 @@ public class PedidoHistorico extends Activity {
 	private ArrayList<ContenidoListPedidoHistorico> obtenerElementos() {
 		ArrayList<ContenidoListPedidoHistorico> elementos=null;
 		try{
-			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
-		    String[] numeroDeMesa = new String[]{numMesa};
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio"};
+		    String[] consulta = new String[]{numMesa,hora};
 		    
-		    Cursor c = dbHistorico.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
+		    Cursor c = dbHistorico.query("Historico",campos, "NumMesa=? AND FechaHora=?",consulta, null,null, null);
 		    
 		    elementos = new ArrayList<ContenidoListPedidoHistorico>();
 		     
 		    while(c.moveToNext())
-		    	elementos.add(new ContenidoListPedidoHistorico(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
+		    	elementos.add(new ContenidoListPedidoHistorico(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3))));
 		    	
 		    return elementos;
 		    

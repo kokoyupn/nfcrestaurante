@@ -32,6 +32,12 @@
             android:screenOrientation="portrait">
 
         </activity>
+        
+        <activity
+            android:name=".PedidoHistorico"
+            android:screenOrientation="portrait">
+
+        </activity>
  
          <activity
             android:name=".InfoPlato"
