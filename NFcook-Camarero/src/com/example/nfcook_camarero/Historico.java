@@ -32,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
    private static final String PRECIO = "PRECIO";
    private static final String CAMARERO = "CAMARERO";
    private static final String HORA = "HORA";
+   private static final String HORACOMPLETA = "HORACOMPLETA";
    
    private HandlerGenerico sql;
    private SQLiteDatabase db;
@@ -99,6 +100,7 @@ import android.widget.AdapterView.OnItemClickListener;
     	   hijoActual = new HashMap<String, String>();  
     	   hijo.add(hijoActual);  
     	   hijoActual.put(HORA, "Hora: " + ultimaHoraPedido.substring(ultimaHoraPedido.indexOf(" ")+1));  
+    	   hijoActual.put(HORACOMPLETA, ultimaHoraPedido);  
     	    
        }  
        precioPedido+=c.getInt(8);
@@ -112,21 +114,6 @@ import android.widget.AdapterView.OnItemClickListener;
          padreActual.put(PRECIO,  String.valueOf(precioMesa) + " €");
      }
     catch (Exception e){};
-//    hijo. 
-//    actividad=this.;
-//    ExpandableListView hijos = (ExpandableListView)findViewById(R.layout.hijos_historico);
-//    hijos.setOnItemClickListener(new OnItemClickListener() {
-//	    	
-//	    	
-//
-//			public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-//	    		
-//	    		Intent intent = new Intent(actividad, PedidoHistorico.class);
-//        		//Le pasamos a la siguiente pantalla el numero de la mesa que se ha pulsado
-//        		intent.putExtra("Posicion", posicion);
-//        		startActivity(intent);
-//	    	}
-//	    });
     
      mAdapter = new SimpleExpandableListAdapter(  
          this,  
@@ -147,8 +134,8 @@ import android.widget.AdapterView.OnItemClickListener;
 				int arg2, int arg3, long arg4) {
 		   	  Intent intent = new Intent(arg1.getContext(), PedidoHistorico.class);
 		   	  
-		   	  intent.putExtra("mesa", listaPadres.get(arg2).get(MESA));
-		   	  intent.putExtra("hora", listaHijos.get(arg2).get(arg3).get(HORA));
+		   	  intent.putExtra("mesa", listaPadres.get(arg2).get(MESA).substring(5));
+		   	  intent.putExtra("hora", listaHijos.get(arg2).get(arg3).get(HORACOMPLETA));
 		   	  
 	       	  startActivity(intent); 
 			return false;
