@@ -8,18 +8,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
+import sockets.ClienteFichero;
+
 public class Operaciones extends Conexion{
-    /**
+	private String nombreDB;
+	private final int puerto = 5000;
+	private final String servidor = "nfcook.no-ip.org";
+	/**
      * Constructor for objects of class Operaciones
      * @param string 
      */
     public Operaciones(String nombreDB)
     {
         super(nombreDB);
+        this.nombreDB = nombreDB;
     }
     
-    public boolean insertar(String sql){
+    public boolean insertar(String sql, boolean socket){
         boolean valor = true;
+        if (socket) // enviamos la consulta de insercion por socket 
+        	enviarConsultaSocket(sql);
         conectar();
         try {
             consulta.executeUpdate(sql);
@@ -38,7 +46,7 @@ public class Operaciones extends Conexion{
         return valor;
     }
     public ResultSet consultar(String sql){
-        conectar();
+    	conectar();
         ResultSet resultado = null;
         try {
             resultado = consulta.executeQuery(sql);
@@ -59,6 +67,12 @@ public class Operaciones extends Conexion{
     		e.printStackTrace();
     	}
     }
+    
+    private void enviarConsultaSocket(String sql){
+    	ClienteFichero cliente = new ClienteFichero();
+        cliente.enviaConsulta(nombreDB, servidor, puerto, sql);
+    }
+    
 /*
     public void guardarUsuario(Persona persona){
         insertar("insert into Persona values("+persona.getId()
