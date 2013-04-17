@@ -54,15 +54,15 @@ public class MiListAdapterMesa extends BaseAdapter {
 	    TextView nombre = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.nombrePlato);
 	    nombre.setText(lista.getNombre());
 	    
-	    TextView precio = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.precio);
-	    precio.setText(Double.toString(lista.getPrecio())+" "+"€");
-	    
-	    TextView extras = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.extras);
-	    extras.setText(lista.getExtras());
-	         
-	    TextView observaciones = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.observaciones);
-	    observaciones.setText(lista.getObservaciones());
-	    
+//	    TextView precio = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.precio);
+//	    precio.setText(Double.toString(lista.getPrecio())+" "+"€");
+//	    
+//	    TextView extras = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.extras);
+//	    extras.setText(lista.getExtras());
+//	         
+//	    TextView observaciones = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.observaciones);
+//	    observaciones.setText(lista.getObservaciones());
+//	    
 	    
 	    
 	    return vista;
