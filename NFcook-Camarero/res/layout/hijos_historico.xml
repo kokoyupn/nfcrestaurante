@@ -24,7 +24,7 @@
                 android:src="@drawable/reloj" />
 
             <TextView
-                android:id="@+id/hora"
+                android:id="@+id/horaHijoHistorico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -45,7 +45,7 @@
                 android:src="@drawable/camarero" />
 
             <TextView
-                android:id="@+id/camarero"
+                android:id="@+id/camareroHijoHistorico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -54,7 +54,7 @@
                 android:textSize="12dp" />
 
             <TextView
-                android:id="@+id/precio"
+                android:id="@+id/precioHijoHistorico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
