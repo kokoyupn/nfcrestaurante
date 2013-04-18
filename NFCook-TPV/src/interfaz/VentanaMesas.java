@@ -1,35 +1,24 @@
 package interfaz;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import sockets.ClienteFichero;
+
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Iterator;
 
-
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
+import sockets.EscuchaCliente;
 import tpv.Mesa;
 import tpv.Restaurante;
 
@@ -40,6 +29,8 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	private boolean esPantallaCompleta;
 	private Restaurante unRestaurante;
 	private String idCamarero;
+	private final static int puerto = 5000;
+	private final static String servidor = "nfcook.no-ip.org";
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
 		
@@ -148,9 +139,22 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	
 	
 	public static void main(String args[]){
+		
+		// cargamos las bases de datos desde el Servidor
+		ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
+		ClienteFichero.pide("MiBase.db", servidor, puerto);
+		
+		/* Consulta de prueba de insercion enviada al servidor
+		 * ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
+        		"VALUES ('fh101', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
+        */
 		VentanaMesas ventanaMesas = new VentanaMesas(new Restaurante(), null);
 		ventanaMesas.pack();
 		ventanaMesas.setVisible(true);
+		/*
+		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
+        thread.start();
+        */
 	}
 
 
