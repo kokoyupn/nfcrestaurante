@@ -36,7 +36,7 @@ class BotonMesa extends JPanel {
 	private static boolean menuMesaAbierto = false;
 	private static boolean mesasRecienActivadas = false;
 
-	private String idMesa;
+	private String idMesa, idCamarero;
 	private int numeroPersonas;
 	private Restaurante miRestaurante;
 	private tpv.Mesa.estadoMesa estado;
@@ -50,10 +50,11 @@ class BotonMesa extends JPanel {
 	private VentanaMesas ventanaMesas;
 	
 	
-	public BotonMesa(VentanaMesas ventanaMesas, Restaurante miRestaurante, int numeroPersonas, String idMesa){
+	public BotonMesa(VentanaMesas ventanaMesas, Restaurante miRestaurante, int numeroPersonas, String idMesa, String idCamarero){
 		
 		this.miRestaurante = miRestaurante;
 		this.idMesa = idMesa;
+		this.idCamarero = idCamarero;
 		this.numeroPersonas = numeroPersonas;
 		estado = miRestaurante.dameEstadoMesa(idMesa);
 		this.ventanaMesas = ventanaMesas;
@@ -133,6 +134,7 @@ class BotonMesa extends JPanel {
 				case 1 : //OK
 					actualizaNumeroPersonas(((TecladoParaNumeroPersonas)teclado).getNumeroPersonas());
 					actualizarEstadoMesaAbierta();
+					cargarMesasCamarero();
 					break;
 				}				
 			}
@@ -213,6 +215,8 @@ class BotonMesa extends JPanel {
 			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
 		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
 			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+		}else if(estado == tpv.Mesa.estadoMesa.COMANDA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
 		}
 		
 		// Creamos el panel que contiene el label con el idMesa y de esta forma podremos verlo centrado.
@@ -236,6 +240,10 @@ class BotonMesa extends JPanel {
 		instanciasBotones.add(imagenBotonMesa);
 	}
 	
+	protected void cargarMesasCamarero() {
+		ventanaMesas.cargarMesasCamarero();
+	}
+
 	protected String getIdMesa() {
 		return idMesa;
 	}
@@ -253,7 +261,7 @@ class BotonMesa extends JPanel {
 	 * Actualiza el estado de la mesa a abierta en el restaurante y actualiza el icono en la interfaz.
 	 */
 	protected void actualizarEstadoMesaAbierta() {
-		miRestaurante.actualizaEstadoMesaAbierta(idMesa);
+		miRestaurante.actualizaEstadoMesaAbierta(idMesa, idCamarero);
 		estado = tpv.Mesa.estadoMesa.ABIERTA;
 		jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
 	}

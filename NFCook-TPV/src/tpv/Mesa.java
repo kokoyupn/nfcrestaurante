@@ -54,6 +54,10 @@ public class Mesa {
 	public void setNumeroPersonas(int numeroPersonas){
 		this.numeroPersonas = numeroPersonas;
 	}
+	
+	public void setIdCamarero(String idCamarero) {
+		this.idCamarero = idCamarero;
+	}
 
 	public void añadirProducto(TuplaProdEnv producto) {
 		productosEnMesa.add(producto);

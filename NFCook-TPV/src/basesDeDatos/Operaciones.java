@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 import sockets.ClienteFichero;
+import tpv.FechaYHora;
 
 public class Operaciones extends Conexion{
 	private String nombreDB;
@@ -36,7 +37,7 @@ public class Operaciones extends Conexion{
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }      
         finally{  
-            try{    
+            try{  
                  consulta.close();  
                  conexion.close();  
              }catch (Exception e){                 
@@ -71,6 +72,91 @@ public class Operaciones extends Conexion{
     private void enviarConsultaSocket(String sql){
         ClienteFichero.enviaConsulta(nombreDB, servidor, puerto, sql);
     }
+    
+    
+    public void ficharEntrar(String idCamarero, FechaYHora hora){
+    	insertar("insert into Ficha values('"+idCamarero
+                +"','"+ hora.getDia()
+                +"','"+ hora.getHora()
+                +"','"+ "-"
+                +"','"+ "-"
+                +"')", true);
+    }
+    
+    public void ficharSalir(String idCamarero, FechaYHora hora){
+		insertar("UPDATE Ficha SET horaSalida='"+
+				hora.getHora() +
+				"' where dia='" +
+				hora.getDia() +
+				"' and idCamarero='" +
+				idCamarero + "'", true);
+    }
+    
+    public void ficharParada(String idCamarero, FechaYHora hora){
+		insertar("UPDATE Ficha SET horaParada='"+
+				hora.getHora() +
+				"' where dia='" +
+				hora.getDia() +
+				"' and idCamarero='" +
+				idCamarero + "'", true);
+    }
+
+
+
+	public boolean camararoFichadoEntrar(String idCamarero, FechaYHora fechaYHora) {
+    	try{
+			ResultSet resultados = consultar("select dia from Ficha where dia='" + fechaYHora.getDia() + "' and idCamarero='" + idCamarero + "'");
+	    	if(resultados.next()){
+	    		return true;
+	    	}else{
+	    		return false;
+	    	}
+    	}catch(SQLException e){
+    		e.printStackTrace();
+    		return true;
+    	}
+	}
+
+
+
+	public boolean camararoFichadoSalir(String idCamarero, FechaYHora fechaYHora) {
+		try{
+			ResultSet resultados = consultar("select horaSalida from Ficha where dia='" + fechaYHora.getDia() + "' and idCamarero='" + idCamarero + "'");
+	    	if(resultados.next()){
+	    		if(resultados.getString("horaSalida").equals("-")){
+	    			return false;
+	    		}else{
+		    		return true;
+	    		}
+	    	}else{
+	    		return false;
+	    	}
+    	}catch(SQLException e){
+    		e.printStackTrace();
+    		return true;
+    	}
+	}
+
+
+
+	public boolean camararoFichadoParada(String idCamarero, FechaYHora fechaYHora) {
+		try{
+			ResultSet resultados = consultar("select horaParada from Ficha where dia='" + fechaYHora.getDia() + "' and idCamarero='" + idCamarero + "'");
+	    	if(resultados.next()){
+	    		if(resultados.getString("horaParada").equals("-")){
+	    			return false;
+	    		}else{
+		    		return true;
+	    		}
+	    	}else{
+	    		return false;
+	    	}
+    	}catch(SQLException e){
+    		e.printStackTrace();
+    		return true;
+    	}
+	}
+		
     
 /*
     public void guardarUsuario(Persona persona){

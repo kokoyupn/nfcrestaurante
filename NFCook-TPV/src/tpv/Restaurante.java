@@ -1,5 +1,6 @@
 package tpv;
 
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Restaurante {
 	
 	private HashMap<String,Mesa> mesasRestaurante; // La clave es el id de la mesa.
 	private HashMap<String,Producto> productosRestaurante; //La clave es el id del producto.
+	private ArrayList<String> idsCamareros;
 	private HistoricoComandasMesas comandasMesas;
 	
 	private final String nombreRestaurante = "'Foster'";
@@ -26,10 +28,31 @@ public class Restaurante {
 		productosRestaurante = new HashMap<String,Producto>();
 		mesasRestaurante = new HashMap<String,Mesa>();
 		comandasMesas = new HistoricoComandasMesas();
+		idsCamareros = new ArrayList<String>();
 		cargarMesas();
 		cargarProductos();
+		cargarCamareros();
 	}
 	
+	private void cargarCamareros() {
+		try{
+			Operaciones operacion = new Operaciones("login.db");
+			ResultSet resultados = operacion.consultar("select * from camareros");
+			
+			while(resultados.next()){
+				String idCamarero = resultados.getString("IdCamarero");
+				idsCamareros.add(idCamarero);
+			}
+			operacion.cerrarBaseDeDatos();
+			
+        }catch (SQLException e) {
+            System.out.println("Mensaje:"+e.getMessage());
+            System.out.println("Estado:"+e.getSQLState());
+            System.out.println("Codigo del error:"+e.getErrorCode());
+            JOptionPane.showMessageDialog(null, ""+e.getMessage());
+        }		
+	}
+
 	private void cargarProductos(){
 		try{
 			Operaciones operacion = new Operaciones("MiBase.db");
@@ -132,8 +155,9 @@ public class Restaurante {
 		mesasRestaurante.get(idMesa).setNumeroPersonas(numeroPersonas);
 	}
 
-	public void actualizaEstadoMesaAbierta(String idMesa) {
+	public void actualizaEstadoMesaAbierta(String idMesa, String idCamarero) {
 		mesasRestaurante.get(idMesa).abrirMesa();		
+		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
 	}
 
 	public Iterator<Producto> getIteratorProductos(){
@@ -156,6 +180,10 @@ public class Restaurante {
 		Comanda comanda = new Comanda(productos, idMesa, idCamarero);
 		comandasMesas.añadirComandaPorMesa(idMesa, comanda);
 		mesasRestaurante.get(idMesa).activarComanda();
+	}
+	
+	public boolean existeCamarero(String idCamarero){
+		return idsCamareros.contains(idCamarero);
 	}
 	
 }
