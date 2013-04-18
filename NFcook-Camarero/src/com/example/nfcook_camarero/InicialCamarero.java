@@ -158,6 +158,15 @@ public class InicialCamarero extends Activity{
 				            		    Cursor filasPedido = dbMesas.query("Mesas", null, "NumMesa=?", numeroDeMesa,null, null, null);
 				                		Cursor filasHistorico = dbHistorico.query("Historico", null, null,null, null,null, null);
 				                		
+				                		//Hora de cobro
+				                		Calendar cal = new GregorianCalendar();
+				                        Date date = cal.getTime();
+				                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				                        String formatteDate = df.format(date);
+				                        Date dt = new Date();
+				                        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+				                        String formatteHour = dtf.format(dt.getTime());
+				                        String hora=formatteDate + " " + formatteHour;
 				                		
 				                		while(filasPedido.moveToNext()){
 				                			//Añades los platos a la base de datos del historico y borras de la lista de platos
@@ -168,8 +177,10 @@ public class InicialCamarero extends Activity{
 				                					if(filasPedido.getColumnName(i).equals(filasHistorico.getColumnName(j))){
 				                						nuevo.put(filasPedido.getColumnName(i), filasPedido.getString(i));				
 				    	            				}
+				                					
 				                				}
 				                			}
+				                			nuevo.put("FechaHora", hora);
 				                			dbHistorico.insert("Historico", null, nuevo);
 				    	            	}
 				                		
