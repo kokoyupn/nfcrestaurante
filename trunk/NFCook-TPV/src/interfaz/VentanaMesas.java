@@ -28,7 +28,9 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private Restaurante unRestaurante;
-	private String idCamarero;
+	private String idCamarero;	
+	private JPanel panelMesasCamarero;
+	private JScrollPane scrollpanelMesasCamarero;
 	private final static int puerto = 5000;
 	private final static String servidor = "192.168.1.54";
 
@@ -100,7 +102,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		// Impedimos que tenga barra horizontal.
 		scrollpanelMesasCamarero.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		// Creamos el panel contenedor de las mesas del camarero, GridLayout permite añadir los elementos en forma de matriz, estan obligados a tener el mismo tamaño todos los componentes.
-		JPanel panelMesasCamarero = new JPanel(new GridLayout(0, 2, -17, 0));
+		panelMesasCamarero = new JPanel(new GridLayout(0, 2, -17, 0));
 		// Ponemos un borde al panel por estetica, asi las mesas no saldran pegadas al techo.
 		panelMesasCamarero.setBorder(new EmptyBorder(17, 0, 17, 0));
 		// Para que si pulsamos sobre el panel los botones se activen, esto solo es necesario cuando se han desplegado las opciones de la mesa.
@@ -121,29 +123,43 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		
 		while(iteradorMesas.hasNext()){
 			Mesa unaMesa = iteradorMesas.next();
-			BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa());
+			BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
 			panelMesas.add(botonMesa, null);
 		}
 		
+		cargarMesasCamarero();
+
+	}
+	
+	public void cargarMesasCamarero(){
+		
+		panelMesasCamarero.removeAll();
 		Iterator<Mesa> iteradorMesasCamarero = unRestaurante.getIteratorMesas();
 		
 		while(iteradorMesasCamarero.hasNext()){
 			Mesa unaMesa = iteradorMesasCamarero.next();
-			//if(unaMesa.getIdCamarero()!=null){
-				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa());
-				panelMesasCamarero.add(botonMesa, null);		
-			//}
+			if(unaMesa.getIdCamarero()!=null && unaMesa.getIdCamarero().equals(idCamarero)){
+				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
+				panelMesasCamarero.add(botonMesa, null);
+				panelMesasCamarero.validate();
+				panelMesasCamarero.repaint();
+			}
 		}
-
+		
 	}
-	
 	
 	public static void main(String args[]){
 		
 		// cargamos las bases de datos desde el Servidor
+		//ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
+		//ClienteFichero.pide("MiBase.db", servidor, puerto);
 		/*ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
 		ClienteFichero.pide("MiBase.db", servidor, puerto);
-		*/
+		
+		/* Consulta de prueba de insercion enviada al servidor*/
+		 ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
+        		"VALUES ('fh102', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
+        
 		// Consulta de prueba de insercion enviada al servidor
 		/*  ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
         		"VALUES ('fh103', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");

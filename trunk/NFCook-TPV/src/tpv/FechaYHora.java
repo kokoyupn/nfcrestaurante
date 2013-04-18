@@ -31,5 +31,13 @@ public class FechaYHora{
 	public String toString(){
 		return dia + "/" + mes + "/" + annio + "--"+ hora + ":" + minuto + ":" + segundo;
 	}
+	
+	public String getDia(){
+		return  dia + "/" + mes + "/" + annio;
+	}
+	
+	public String getHora(){
+		return  hora + ":" + minuto + ":" + segundo;
+	}
 
 }
