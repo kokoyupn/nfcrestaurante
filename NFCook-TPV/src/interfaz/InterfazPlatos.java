@@ -2,6 +2,7 @@ package interfaz;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -20,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +32,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -39,6 +42,7 @@ import tpv.Mesa;
 import tpv.Plato;
 import tpv.Producto;
 import tpv.Restaurante;
+import tpv.TuplaProdEnv;
 
 public class InterfazPlatos extends JFrame {
 
@@ -49,7 +53,7 @@ public class InterfazPlatos extends JFrame {
 	static JScrollPane scrollPane, scrollPanePl,scrollPaneBotones,scrollPaneTable;
 	private ArrayList<String> categorias;
 	private ArrayList<AuxDeshacerRehacer>  auxiliarDeshacer, auxiliarRehacer;
-	private ArrayList<Producto> productosEnMesa;
+	private ArrayList<TuplaProdEnv> productosEnMesa;
 	private Restaurante unRestaurante ;
 	private TablaNoEditable dtm;
 	private String idMesa,precioAux,obsAux,extrasAux, idCam, categoriaExtraPadre ;
@@ -80,7 +84,7 @@ public class InterfazPlatos extends JFrame {
 		//Panel categorias
 		JPanel panelCategorias = new JPanel();
 		scrollPane = new JScrollPane(panelCategorias);
-		scrollPane.setBounds((int)(dimensionesPantalla.getWidth()/1366)*1050, 10, (int)(dimensionesPantalla.getWidth()/1366)*307, (int)(dimensionesPantalla.getHeight()/768)*437);
+		scrollPane.setBounds(1050, 10,307, 437);
 		scrollPane.setBorder(null);
 		contentPaneGlobal.add(scrollPane);
 		panelCategorias.setLayout(new GridLayout(numeroDeCategorias(),1));
@@ -90,14 +94,14 @@ public class InterfazPlatos extends JFrame {
 		scrollPanePl = new JScrollPane(panelPlatos);
 		scrollPanePl.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		//scrollPanePl.setBorder(BorderFactory.createLineBorder(Color.decode("#2C6791")));
-		scrollPanePl.setBounds(10, (int)(dimensionesPantalla.getHeight()/768)*460, (int)(dimensionesPantalla.getWidth()/1366)*1350, (int)(dimensionesPantalla.getHeight()/768)*295);
+		scrollPanePl.setBounds(10,460,1350,295);
 		contentPaneGlobal.add(scrollPanePl);
 		GridBagLayout gbl_panelPlatos = new GridBagLayout();
 		panelPlatos.setLayout(gbl_panelPlatos);
 		
 		//Panel botones
 		JPanel panelBotones = new JPanel();
-		panelBotones.setBounds(10, 10, (int)(dimensionesPantalla.getWidth()/1366)*70, (int)(dimensionesPantalla.getHeight()/768)*530);
+		panelBotones.setBounds(10, 10, 70, 530);
 		contentPaneGlobal.add(panelBotones);
 		GridLayout gbl_panelBotones = new GridLayout(6,1);
 		panelBotones.setLayout(gbl_panelBotones);
@@ -105,7 +109,7 @@ public class InterfazPlatos extends JFrame {
 ////////////////////////////INICIALIZACIONES/////////////////////		
 		auxiliarDeshacer = new ArrayList<AuxDeshacerRehacer>();
 		auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
-		productosEnMesa = new ArrayList<Producto>();
+		productosEnMesa = new ArrayList<TuplaProdEnv>();
 		contDeshacer = 0;
 		dinero = 0;
 		esExtras = false;
@@ -116,7 +120,7 @@ public class InterfazPlatos extends JFrame {
 		
 		dinero = calculaDineroTotal();
 		total = new JLabel("Total: " + dinero + " euros");
-		total.setBounds((int)(dimensionesPantalla.getWidth()/1366)*460,(int)(dimensionesPantalla.getHeight()/768)*20,(int)(dimensionesPantalla.getWidth()/1366)*310,(int)(dimensionesPantalla.getHeight()/768)*60);
+		total.setBounds(460,20,310,60);
 		contentPaneGlobal.add(total);
 		total.setFont(new Font(total.getFont().getName(), total.getFont().getStyle(), 30));
 
@@ -145,16 +149,22 @@ public class InterfazPlatos extends JFrame {
 							JOptionPane.showOptionDialog(contentPaneGlobal ,"Debes seleccionar una línea de la tabla y después pulsar el botón eliminar",null,JOptionPane.YES_NO_CANCEL_OPTION,
 										JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/warning.png"),50,50), new Object[] {"Aceptar"},"Aceptar");
 						}else{
-							auxiliarDeshacer.add(new AuxDeshacerRehacer(false, productosEnMesa.get(row)));
-							deshacer.setEnabled(true);
-							dinero = Math.rint((dinero - productosEnMesa.get(row).getPrecio())*100)/100;
-							total.setText("Total: " + dinero + " euros");
-							productosEnMesa.remove(row);
-							dtm.removeRow(row);
-							
-							auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
-							contDeshacer = 0;
-							rehacer.setEnabled(false);
+							if(!productosEnMesa.get(row).isEnviado()){
+								auxiliarDeshacer.add(new AuxDeshacerRehacer(false, productosEnMesa.get(row).getProd()));
+								deshacer.setEnabled(true);
+								dinero = Math.rint((dinero - productosEnMesa.get(row).getProd().getPrecio())*100)/100;
+								total.setText("Total: " + dinero + " euros");
+								productosEnMesa.remove(row);
+								dtm.removeRow(row);
+								
+								auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
+								contDeshacer = 0;
+								rehacer.setEnabled(false);
+							}else{
+								JOptionPane.showOptionDialog(contentPaneGlobal ,"Ese plato ya ha sido enviado a cocina",null,JOptionPane.YES_NO_CANCEL_OPTION,
+										JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/warning.png"),50,50), new Object[] {"Aceptar"},"Aceptar");
+						
+							}
 						}
 						}	
 					});
@@ -214,28 +224,48 @@ public class InterfazPlatos extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent arg0){
 				if (productosEnMesa.size() != 0){
-					int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/chef.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
-					if (seleccion == 0){//aceptar 
-						//saco el cam
-						Iterator<Mesa> itm = getRestaurante().getIteratorMesas();
-						boolean enc = false;
-						while(itm.hasNext() && !enc){
-							Mesa mesa = itm.next();
-							if (mesa.getIdMesa().equals(idMesa)){
-								idCam = mesa.getIdCamarero();
-								enc=true;
-								}
+					if (hayPlatosSinEnviar()){
+						int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/chef.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
+						if (seleccion == 0){//aceptar 
+							//saco el cam
+							Iterator<Mesa> itm = getRestaurante().getIteratorMesas();
+							boolean enc = false;
+							while(itm.hasNext() && !enc){
+								Mesa mesa = itm.next();
+								if (mesa.getIdMesa().equals(idMesa)){
+									idCam = mesa.getIdCamarero();
+									enc=true;
+									}
+							}
+							ArrayList<Producto> aEnviar = platosAEnviar();
+							getRestaurante().addComandaAMesa(idMesa, idCam, aEnviar);
+							//TODO enviar
+							
+							//actualizar en producto
+							for(int i = 0; i < productosEnMesa.size();i++){
+								 productosEnMesa.get(i).setEnviado(true);
+							}
+							
+							auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
+							auxiliarDeshacer = new ArrayList<AuxDeshacerRehacer>();
+							contDeshacer = 0;
+							rehacer.setEnabled(false);
+							deshacer.setEnabled(false);
+							
+							//actualizaTablaConColor();
+							tablaPlatos.repaint();
+							
+							//reseteaTablaYPrecio();
+							
+							JOptionPane.showOptionDialog(contentPaneGlobal ,"Enviado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
+									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
+						}else{
+							JOptionPane.showOptionDialog(contentPaneGlobal ,"No enviado",null,JOptionPane.YES_NO_CANCEL_OPTION,
+									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 						}
-						getRestaurante().addComandaAMesa(idMesa, idCam, productosEnMesa);
-						//TODO enviar
-						
-						reseteaTablaYPrecio();
-						
-						JOptionPane.showOptionDialog(contentPaneGlobal ,"Enviado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
-								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 					}else{
-						JOptionPane.showOptionDialog(contentPaneGlobal ,"No enviado",null,JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos nuevos para enviar",null,JOptionPane.YES_NO_CANCEL_OPTION,
 								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 					}
 				}else{
@@ -312,16 +342,16 @@ public class InterfazPlatos extends JFrame {
 				//mesa encontrada, cargamos los platos
 				productosEnMesa = mesa.getProductosEnMesa();
 				for (int i = 0; i < productosEnMesa.size(); i++){
-					if (productosEnMesa.get(i) instanceof Bebida){ //No tiene configuración
+					if (productosEnMesa.get(i).getProd() instanceof Bebida){ //No tiene configuración
 						configuracion = "No configurable";
 					}else{
-						configuracion = ((Plato)productosEnMesa.get(i)).getExtrasMarcados(); 
+						configuracion = ((Plato)productosEnMesa.get(i).getProd()).getExtrasMarcados(); 
 					}
-					dinero = Math.rint((dinero + productosEnMesa.get(i).getPrecio())*100)/100;
+					dinero = Math.rint((dinero + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
 					total.setText("Total: " + dinero + " euros");
-					nombre = productosEnMesa.get(i).getNombre();
-					observaciones = productosEnMesa.get(i).getObservaciones();
-					precio = productosEnMesa.get(i).getPrecio();
+					nombre = productosEnMesa.get(i).getProd().getNombre();
+					observaciones = productosEnMesa.get(i).getProd().getObservaciones();
+					precio = productosEnMesa.get(i).getProd().getPrecio();
 					
 					Object[] newRow={nombre,observaciones,configuracion,precio};
 					dtm.addRow(newRow);
@@ -331,6 +361,7 @@ public class InterfazPlatos extends JFrame {
 
 		tablaPlatos = new JTable(dtm);
 		tablaPlatos.setRowHeight(20);
+		tablaPlatos.setDefaultRenderer (Object.class, new MiRender());
 		// Cambio la fuente de dentro de la tabla
 		tablaPlatos.setFont(new Font(tablaPlatos.getFont().getName(), 0, 20)); 
 		//Cambio de fuente de la cacecera de la tabla
@@ -340,7 +371,7 @@ public class InterfazPlatos extends JFrame {
 		th.setFont(new Font(th.getFont().getName(), 0, 25)); 
 		
 		scrollPaneTable = new JScrollPane(tablaPlatos);
-		scrollPaneTable.setBounds((int)(dimensionesPantalla.getWidth()/1366)*90, (int)(dimensionesPantalla.getHeight()/768)*90, (int)(dimensionesPantalla.getWidth()/1366)*950, (int)(dimensionesPantalla.getHeight()/768)*360);
+		scrollPaneTable.setBounds(90,90,950,360);
 		scrollPaneTable.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		contentPaneGlobal.add(scrollPaneTable);
 		GridBagLayout gbl_panelTabla = new GridBagLayout();
@@ -350,46 +381,51 @@ public class InterfazPlatos extends JFrame {
 			public void mousePressed(MouseEvent arg0){
 				//si la columna es precio (3) saco el teclado numérico
 				JTable tablaAux = (JTable)arg0.getComponent();
-				int comlumnaPinchada = tablaAux.getSelectedColumn();
-				String dato=String.valueOf(tablaAux.getValueAt(tablaAux.getSelectedRow(),tablaAux.getSelectedColumn()));
-				if(comlumnaPinchada == 3){ // Precio
-					precioAux = dato;
-					JPanel tecladoNum = new TecladoNumerico();
-					JFrame marco = new JFrame();
-					int res = JOptionPane.showOptionDialog(marco, tecladoNum,"Editar precio", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
-					if (res == 0){//aceptar
-						tablaAux.setValueAt(((TecladoNumerico)tecladoNum).getPrecio(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
-						productosEnMesa.get(tablaAux.getSelectedRow()).setPrecio(((TecladoNumerico)tecladoNum).getPrecio());
-						dinero = calculaDineroTotal();
-						total.setText("Total: " + dinero + " euros");
-					}
-				}else if (comlumnaPinchada == 2){ //Extras
-						//miro que no sea bebida
-						if (!productosEnMesa.get(tablaAux.getSelectedRow()).getCategoria().equals("Bebidas")){
-							extrasAux = dato;
-							esExtras = true;
-							esObs = false;
+				int filaPinchada = tablaAux.getSelectedRow();
+				if(!productosEnMesa.get(filaPinchada).isEnviado()){
+					int comlumnaPinchada = tablaAux.getSelectedColumn();
+					String dato=String.valueOf(tablaAux.getValueAt(tablaAux.getSelectedRow(),tablaAux.getSelectedColumn()));
+					if(comlumnaPinchada == 3){ // Precio
+						precioAux = dato;
+						JPanel tecladoNum = new TecladoNumerico();
+						JFrame marco = new JFrame();
+						int res = JOptionPane.showOptionDialog(marco, tecladoNum,"Editar precio", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
+						if (res == 0){//aceptar
+							tablaAux.setValueAt(((TecladoNumerico)tecladoNum).getPrecio(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
+							productosEnMesa.get(tablaAux.getSelectedRow()).getProd().setPrecio(((TecladoNumerico)tecladoNum).getPrecio());
+							dinero = calculaDineroTotal();
+							total.setText("Total: " + dinero + " euros");
+						}
+					}else if (comlumnaPinchada == 2){ //Extras
+							//miro que no sea bebida
+							if (!productosEnMesa.get(tablaAux.getSelectedRow()).getProd().getCategoria().equals("Bebidas")){
+								extrasAux = dato;
+								esExtras = true;
+								esObs = false;
+								JPanel tecladoAlfaNum = new TecladoAlfaNumerico();
+								JFrame marco = new JFrame();
+								int res = JOptionPane.showOptionDialog(marco, tecladoAlfaNum,"Editar configuración de plato", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
+								if (res == 0){//aceptar
+									tablaAux.setValueAt(((TecladoAlfaNumerico)tecladoAlfaNum).getObs(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
+									((Plato)productosEnMesa.get(tablaAux.getSelectedRow()).getProd()).setExtrasMarcados(((TecladoAlfaNumerico)tecladoAlfaNum).getObs());
+								}
+							}
+						}else if (comlumnaPinchada == 1){//Observaciones
+							obsAux = dato;
+							esObs = true;
+							esExtras = false;
 							JPanel tecladoAlfaNum = new TecladoAlfaNumerico();
 							JFrame marco = new JFrame();
-							int res = JOptionPane.showOptionDialog(marco, tecladoAlfaNum,"Editar configuración de plato", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
+							int res = JOptionPane.showOptionDialog(marco, tecladoAlfaNum,"Editar observaciones", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
 							if (res == 0){//aceptar
 								tablaAux.setValueAt(((TecladoAlfaNumerico)tecladoAlfaNum).getObs(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
-								((Plato)productosEnMesa.get(tablaAux.getSelectedRow())).setExtrasMarcados(((TecladoAlfaNumerico)tecladoAlfaNum).getObs());
+								productosEnMesa.get(tablaAux.getSelectedRow()).getProd().setObservaciones(((TecladoAlfaNumerico)tecladoAlfaNum).getObs());
 							}
 						}
-					}else if (comlumnaPinchada == 1){//Observaciones
-						obsAux = dato;
-						esObs = true;
-						esExtras = false;
-						JPanel tecladoAlfaNum = new TecladoAlfaNumerico();
-						JFrame marco = new JFrame();
-						int res = JOptionPane.showOptionDialog(marco, tecladoAlfaNum,"Editar observaciones", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE , null, new String[]{"Aceptar","Cancelar"}, "Cancelar");
-						if (res == 0){//aceptar
-							tablaAux.setValueAt(((TecladoAlfaNumerico)tecladoAlfaNum).getObs(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
-							productosEnMesa.get(tablaAux.getSelectedRow()).setObservaciones(((TecladoAlfaNumerico)tecladoAlfaNum).getObs());
-						}
-					}
-				
+				}else{
+					JOptionPane.showOptionDialog(contentPaneGlobal ,"Un plato enviado no es configurable",null,JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/warning.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
+			}
 			}			
 		});
 		
@@ -401,14 +437,14 @@ public class InterfazPlatos extends JFrame {
 	deshacer.setBackground(new Color(-1118482));
 	deshacer.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/Undo.png"), 70, 70));
 	deshacer.setEnabled(false);
-	deshacer.setBounds((int)(dimensionesPantalla.getWidth()/1366)*90,10,(int)(dimensionesPantalla.getWidth()/1366)*70,(int)(dimensionesPantalla.getHeight()/768)*70);
+	deshacer.setBounds(90,10,70,70);
 	deshacer.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mousePressed(MouseEvent arg0){
 
 			if (auxiliarDeshacer.size()>0){
 				if(auxiliarDeshacer.get(auxiliarDeshacer.size()-1).getAccion() == false){//la ultima accion ha sido eliminar asi que añadimos
-					aniadeFilaATabla(auxiliarDeshacer.get(auxiliarDeshacer.size()-1).getProd());
+					aniadeFilaATabla(new TuplaProdEnv(auxiliarDeshacer.get(auxiliarDeshacer.size()-1).getProd(),false));
 					auxiliarRehacer.add(auxiliarDeshacer.get(auxiliarDeshacer.size()-1));
 					auxiliarDeshacer.remove(auxiliarDeshacer.size()-1);
 				}else{//la ultima accion ha sido añadir, asi que borramos
@@ -436,7 +472,7 @@ public class InterfazPlatos extends JFrame {
 	rehacer.setBorder(null);
 	rehacer.setBackground(new Color(-1118482));
 	rehacer.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/Redo.png"), 70, 70));
-	rehacer.setBounds((int)(dimensionesPantalla.getWidth()/1366)*968,10,(int)(dimensionesPantalla.getWidth()/1366)*70,(int)(dimensionesPantalla.getHeight()/768)*70);
+	rehacer.setBounds(968,10,70,70);
 	rehacer.setEnabled(false);
 	rehacer.addMouseListener(new MouseAdapter() {
 	@Override
@@ -445,7 +481,7 @@ public class InterfazPlatos extends JFrame {
 		if(contDeshacer > 0){
 			if (auxiliarRehacer.size()>0){
 				if(auxiliarRehacer.get(auxiliarRehacer.size()-1).getAccion() == true){//tenemos que añadir
-					aniadeFilaATabla(auxiliarRehacer.get(auxiliarRehacer.size()-1).getProd());
+					aniadeFilaATabla(new TuplaProdEnv(auxiliarRehacer.get(auxiliarRehacer.size()-1).getProd(),false));
 					auxiliarDeshacer.add(auxiliarRehacer.get(auxiliarRehacer.size()-1));
 					auxiliarRehacer.remove(auxiliarRehacer.size()-1);
 				}else{//tenemos que eliminar
@@ -532,7 +568,7 @@ public class InterfazPlatos extends JFrame {
 									btnNewButton2.addMouseListener(new MouseAdapter(){
 										@Override
 										public void mousePressed(MouseEvent arg0){
-											generarMenuConfig(prod);		
+											generarMenuConfig(new TuplaProdEnv(prod, false));		
 										}
 										
 									});//fin listener plato
@@ -556,19 +592,19 @@ public class InterfazPlatos extends JFrame {
 		}				
 	}
 	
-	public void aniadeFilaATabla(Producto prod){
+	public void aniadeFilaATabla(TuplaProdEnv prod){
 		String configuracion;
 		
 		productosEnMesa.add(prod);
-		dinero = Math.rint((dinero + prod.getPrecio())*100)/100;
+		dinero = Math.rint((dinero + prod.getProd().getPrecio())*100)/100;
 		total.setText("Total: " + dinero + " euros");
 		
-		if (prod instanceof Bebida){ //No tiene configuración
+		if (prod.getProd() instanceof Bebida){ //No tiene configuración
 			configuracion = "No configurable";
 		}else{
-			configuracion = ((Plato)prod).getExtrasMarcados(); 
+			configuracion = ((Plato)prod.getProd()).getExtrasMarcados(); 
 		}		
-		Object[] newRow={prod.getNombre(),prod.getObservaciones(),configuracion,prod.getPrecio()};
+		Object[] newRow={prod.getProd().getNombre(),prod.getProd().getObservaciones(),configuracion,prod.getProd().getPrecio()};
 		dtm.addRow(newRow);
 		
 		//Refrescamos
@@ -578,8 +614,8 @@ public class InterfazPlatos extends JFrame {
 		scrollPaneTable.repaint();
 	}
 	
-	public void generarMenuConfig(final Producto prod){
-		productoATabla = prod;
+	public void generarMenuConfig(final TuplaProdEnv prod){
+		productoATabla = prod.getProd();
 		menuConfig = new JPanel(new GridBagLayout());
 		
 		GridBagConstraints grid = new GridBagConstraints();
@@ -587,8 +623,8 @@ public class InterfazPlatos extends JFrame {
 		int i = 0;//para situarlo en el grid;
 		gbc_btnPopup = new GridBagConstraints();
 
-		if (prod instanceof Plato){ 
-			Plato plato = (Plato) prod;
+		if (prod.getProd() instanceof Plato){ 
+			Plato plato = (Plato) prod.getProd();
 			String extras = plato.getExtras();	
 			hashExtras = new HashMap<String,String>();
 			if (!extras.equals("")){
@@ -715,7 +751,7 @@ public class InterfazPlatos extends JFrame {
 				}
 				deshacer.setEnabled(true);
 				auxiliarDeshacer.add(new AuxDeshacerRehacer(true, productoATabla));
-				aniadeFilaATabla(productoATabla);
+				aniadeFilaATabla(new TuplaProdEnv(productoATabla, false));
 				
 				auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
 				contDeshacer = 0;
@@ -735,11 +771,11 @@ public class InterfazPlatos extends JFrame {
 		return imagen;		
 	}
 	
-	public int buscaPosicion(ArrayList<Producto> lista, Producto pr){
+	public int buscaPosicion(ArrayList<TuplaProdEnv> lista, Producto pr){
 		Boolean enc = false;
 		int i = 0;
 		while (!enc && i < lista.size()){
-			if(pr.equals(lista.get(i))){
+			if(pr.equals(lista.get(i).getProd()) && (!lista.get(i).isEnviado())){
 				enc = true;
 				return i;
 			}
@@ -755,7 +791,7 @@ public class InterfazPlatos extends JFrame {
 	public double calculaDineroTotal(){
 		double dineroTotalEnMesa = 0;
 		for(int i = 0; i < productosEnMesa.size();i++){
-			dineroTotalEnMesa = Math.rint((dineroTotalEnMesa + productosEnMesa.get(i).getPrecio())*100)/100;
+			dineroTotalEnMesa = Math.rint((dineroTotalEnMesa + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
 		}
 		return dineroTotalEnMesa;
 	}
@@ -789,7 +825,7 @@ public class InterfazPlatos extends JFrame {
 	 }
 	
 	 public void reseteaTablaYPrecio(){
-		productosEnMesa = new ArrayList<Producto>();
+		productosEnMesa = new ArrayList<TuplaProdEnv>();
 		dinero = 0;
 		total.setText("Total: " + dinero + " euros");
 		
@@ -806,6 +842,43 @@ public class InterfazPlatos extends JFrame {
 		}
 		tablaPlatos.validate();
 		tablaPlatos.repaint();
+	 }
+	 
+	 
+//	 public void actualizaTablaConColor(){
+//		 int i = tablaPlatos.getRowCount()-1;
+//			while(i >= 0){
+//				if (productosEnMesa.get(i).isEnviado()){
+//					//( (String)tablaPlatos.getValueAt(2, 2)).concat("wewewe");
+//				}
+//				i--;
+//			}
+//			tablaPlatos.validate();
+//			tablaPlatos.repaint();
+//	 }
+	 
+	 public boolean hayPlatosSinEnviar(){
+		//mira si en la tabla hay platos con el campo enviado a false
+		int i = tablaPlatos.getRowCount()-1;
+		while(i >= 0){
+			if (productosEnMesa.get(i).isEnviado() == false){
+				return true;
+			}
+			i--;
+		}
+		return false;
+	 }
+	 
+	 public ArrayList<Producto> platosAEnviar(){
+		 ArrayList<Producto> tmp = new ArrayList<Producto>();
+		int i = tablaPlatos.getRowCount()-1;
+		while(i >= 0){
+			if (!productosEnMesa.get(i).isEnviado()){
+				tmp.add(productosEnMesa.get(i).getProd());
+			}
+			i--;
+		}
+		return tmp;
 	 }
 	
 private class TecladoAlfaNumerico extends JPanel{
@@ -1021,4 +1094,31 @@ public class TablaNoEditable extends DefaultTableModel
    }
 }
 	
+
+
+public class MiRender extends DefaultTableCellRenderer
+	{
+	   public Component getTableCellRendererComponent(JTable table,
+	      Object value,
+	      boolean isSelected,
+	      boolean hasFocus,
+	      int row,
+	      int column)
+	   {
+	      super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
+	      {
+	    	 if(productosEnMesa.get(row).isEnviado()){
+		         this.setOpaque(true);
+		         this.setBackground(Color.GREEN);
+		         this.setForeground(Color.BLUE);
+	    	 }else{
+		         this.setOpaque(true);
+		         this.setBackground(Color.WHITE);
+		         this.setForeground(Color.BLACK);
+	    	 }
+	      }
+	      return this;
+	   }
+	}
+
 }
