@@ -53,6 +53,7 @@ public class MiExpandableListAdapterHistorico extends BaseExpandableListAdapter 
 		
 		String camarero = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getCamarero();
 		String hora = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getHora();
+		hora="Hora: "+hora.substring(hora.indexOf(" ")+1);
 		String precioPedido = Math.rint(padresExpandableList.get(groupPosition).getHijoAt(childPosition).getPrecio()*100)/100 + "€";
 		
 		//Cargamos diferente el layout en función de los campos a mostrar.
@@ -113,7 +114,7 @@ public class MiExpandableListAdapterHistorico extends BaseExpandableListAdapter 
         TextView textViewPadreMesa = (TextView) convertView.findViewById(R.id.NumMesaHistorico);
         TextView textViewPadrePrecioMesa = (TextView) convertView.findViewById(R.id.preciomesaHistorico);
         
-        textViewPadreMesa.setText(getGroup(groupPosition).toString());
+        textViewPadreMesa.setText("Mesa "+ padresExpandableList.get(groupPosition).getnumMesa());
         textViewPadrePrecioMesa.setText(Math.rint(((PadreExpandableListHistorico) this.getGroup(groupPosition)).getPrecio()*100)/100 + "€");
         
         return convertView;

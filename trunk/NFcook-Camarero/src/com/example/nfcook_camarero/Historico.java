@@ -35,11 +35,9 @@ public class Historico extends Activity {
 	@Override  
 	public void onCreate(Bundle savedInstanceState) {  
 		importarBaseDatatos();
+		setContentView(R.layout.historico);
 		crearExpandableList();
 		super.onCreate(savedInstanceState);  
-
-		ExpandableListHistorico=new ExpandableListView(this);
-		setContentView(ExpandableListHistorico);
 	}
 
 	public void crearExpandableList() {
@@ -54,32 +52,48 @@ public class Historico extends Activity {
 			final ArrayList<PadreExpandableListHistorico> padres = new ArrayList<PadreExpandableListHistorico>();
 			Iterator<String> iteradorConjuntoMesas = conjuntoMesas.iterator();
 			while(iteradorConjuntoMesas.hasNext()){
-
+				
+				ArrayList<HijoExpandableListHistorico> hijos = new ArrayList<HijoExpandableListHistorico>();
+				
+				String mesaConsulta=iteradorConjuntoMesas.next();
+				
 				String[] campos2 = new String[]{"FechaHora"};//Campos que quieres recuperar
-				Cursor c2 = db.query(true,"Historico",campos,null,null,null,null,null, null);
+				Cursor c2 = db.query(true,"Historico",campos2,"NumMesa=?",new String[]{mesaConsulta},null,null,null, null);
 				Set<String> conjuntoPedidos = new HashSet<String>();
 				while(c2.moveToNext()){
 					conjuntoPedidos.add(c2.getString(0));
 				}
-
-				ArrayList<HijoExpandableListHistorico> hijos = new ArrayList<HijoExpandableListHistorico>();
+				
 				Iterator<String> iteradorConjuntoPedidos = conjuntoPedidos.iterator();
-				String mesaConsulta=iteradorConjuntoMesas.next();
+
 				while(iteradorConjuntoPedidos.hasNext()){
 
-					String[] camposBusquedaObsExt = new String[]{"FechaHora","IdCamarero","sum(Precio)"};
+					String[] camposBusquedaObsExt = new String[]{"IdCamarero","sum(Precio)"};
 					String Pedido = iteradorConjuntoPedidos.next();
-					String[] datos = new String[]{mesaConsulta, Pedido};
+					String[] datos = new String[]{mesaConsulta,Pedido};
 					Cursor cursor = db.query("Historico", camposBusquedaObsExt, "NumMesa=? AND FechaHora=?", datos,null, null,null);
-					HijoExpandableListHistorico unHijo = new HijoExpandableListHistorico(cursor.getString(1), cursor.getString(0), cursor.getDouble(2));
+//					Double precioPedido=0.0;
+//					while(cursor.moveToNext()){
+//						//IdCamarero=
+//						precioPedido+=cursor.getDouble(1);
+//					}
+//					cursor.moveToFirst();
+//					String IdCamarero=cursor.getString(0);
+					
+					cursor.moveToFirst();
+					String IdCamarero=cursor.getString(0);
+					Double precioPedido=cursor.getDouble(1);
+					
+					HijoExpandableListHistorico unHijo = new HijoExpandableListHistorico(IdCamarero,Pedido,precioPedido);
 					hijos.add(unHijo);
 				}
-				double precio= db.query("Historico",new String[]{"sum(Precio)"},"NumMesa=?",new String[]{mesaConsulta},null,null,null).getDouble(0);
-				PadreExpandableListHistorico unPadre = new PadreExpandableListHistorico(mesaConsulta,precio);
+				Cursor cursor=db.query("Historico",new String[]{"sum(Precio)"},"NumMesa=?",new String[]{mesaConsulta},null,null,null);
+				cursor.moveToFirst();
+				PadreExpandableListHistorico unPadre = new PadreExpandableListHistorico(mesaConsulta,cursor.getDouble(0),hijos);//precio);
 				padres.add(unPadre);
 			}
 
-			ExpandableListHistorico = (ExpandableListView) findViewById(R.layout.historico);
+			ExpandableListHistorico = (ExpandableListView) findViewById(R.id.expandableListHistorico);
 			AdapterHistorico = new MiExpandableListAdapterHistorico(this.getApplicationContext(), padres);
 			ExpandableListHistorico.setAdapter(AdapterHistorico);
 

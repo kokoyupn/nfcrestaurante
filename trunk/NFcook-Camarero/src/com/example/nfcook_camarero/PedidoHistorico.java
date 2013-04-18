@@ -126,7 +126,7 @@ public class PedidoHistorico extends Activity {
 		    elementos = new ArrayList<ContenidoListPedidoHistorico>();
 		     
 		    while(c.moveToNext())
-		    	elementos.add(new ContenidoListPedidoHistorico(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3))));
+		    	elementos.add(new ContenidoListPedidoHistorico(c.getString(0) ,c.getString(2),c.getString(1),c.getDouble(3)));
 		    	
 		    return elementos;
 		    
