@@ -69,8 +69,7 @@ public class Operaciones extends Conexion{
     }
     
     private void enviarConsultaSocket(String sql){
-    	ClienteFichero cliente = new ClienteFichero();
-        cliente.enviaConsulta(nombreDB, servidor, puerto, sql);
+        ClienteFichero.enviaConsulta(nombreDB, servidor, puerto, sql);
     }
     
 /*

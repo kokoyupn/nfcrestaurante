@@ -18,13 +18,13 @@ import java.util.ArrayList;
  */
 public class ClienteFichero
 {
-	private InetAddress hostLocal;
+	private static InetAddress hostLocal;
 
     /**
 	 * Establece comunicacion con el servidor en el puerto indicado. Envia la consulta sql
 	 * junto con el fichero que habra que actualizar en el Servidor.
 	**/
-	public void enviaConsulta(String fichero, String servidor, int puerto, String sql){
+	public static void enviaConsulta(String fichero, String servidor, int puerto, String sql){
 
 		try{
 			// Se abre el socket.
@@ -45,10 +45,12 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             MensajeConsulta mensajeConIPs = (MensajeConsulta) ois.readObject(); // mensajeConIPs tiene la misma info que mensajeConsulta
-            transmiteConsultasLocal(mensajeConIPs);
+            //transmiteConsultasLocal(mensajeConIPs);
             
             // cerramos el socket
             socket.close();
+            oos.close();
+            ois.close();
             
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar consulta al Servidor");
@@ -56,7 +58,7 @@ public class ClienteFichero
 		
 	}
 	
-	public void transmiteConsultasLocal(MensajeConsulta mensaje){
+	private static void transmiteConsultasLocal(MensajeConsulta mensaje){
 		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
     	try {
     		int i = 0;
@@ -73,9 +75,11 @@ public class ClienteFichero
     		       	mensajeConsulta.sql = mensaje.sql;
     		       
     		        oos.writeObject(mensajeConsulta);
-    				
+
     		        // cerramos el socket
     				socket.close();
+    				oos.close();
+
     			}
     			i++;
     			}
@@ -97,7 +101,7 @@ public class ClienteFichero
      * @param puerto
      *            Puerto de conexión
      */
-    public void pide(String fichero, String servidor, int puerto)
+    public static void pide(String fichero, String servidor, int puerto)
     {
         try
         {
@@ -112,7 +116,7 @@ public class ClienteFichero
            	mensaje.ips.add(socket.getLocalAddress());
             String ruta = "BasesDeDatosTPV/" + mensaje.nombreFichero;
             
-            oos.writeObject(mensaje);
+            oos.writeObject((Object)mensaje);
 
             // Se abre un fichero para empezar a copiar lo que se reciba.
             FileOutputStream fos = new FileOutputStream(ruta);
@@ -150,7 +154,8 @@ public class ClienteFichero
             
             // Se cierra socket y fichero
             fos.close();
-            ois.close();
+            ois.close();            
+            oos.close();
             socket.close();
 
         } catch (Exception e)

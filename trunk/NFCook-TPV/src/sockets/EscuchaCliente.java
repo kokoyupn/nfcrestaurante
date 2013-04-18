@@ -37,7 +37,6 @@ public class EscuchaCliente extends Thread {
 	            // cerramos los sockets
 	            cliente.close();
 	            servidor.close();
-			
 			}
             
 		} catch (Exception e) {
