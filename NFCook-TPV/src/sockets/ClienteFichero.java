@@ -45,7 +45,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             MensajeConsulta mensajeConIPs = (MensajeConsulta) ois.readObject(); // mensajeConIPs tiene la misma info que mensajeConsulta
-            //transmiteConsultasLocal(mensajeConIPs);
+            transmiteConsultasLocal(mensajeConIPs);
             
             // cerramos el socket
             socket.close();
