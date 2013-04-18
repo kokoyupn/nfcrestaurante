@@ -19,10 +19,10 @@ public class PadreExpandableListHistorico {
     private ArrayList<HijoExpandableListHistorico> hijos;
     
     
-    public PadreExpandableListHistorico(String numMesa, double precio) {
+    public PadreExpandableListHistorico(String numMesa, double precio, ArrayList<HijoExpandableListHistorico> hijos) {
 		this.numMesa = numMesa;
 		this.precio = precio;
-		hijos=new ArrayList<HijoExpandableListHistorico>();
+		this.hijos=hijos;
 	}
     
     public boolean isExpandido() {
