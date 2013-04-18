@@ -7,7 +7,7 @@ public class Mesa {
 
 	public enum estadoMesa{CERRADA, ABIERTA, COMANDA};
 	
-	private ArrayList<Producto> productosEnMesa;
+	private ArrayList<TuplaProdEnv> productosEnMesa;
 	private String idMesa;
 	private int numeroPersonas;
 	private String idCamarero;
@@ -16,17 +16,17 @@ public class Mesa {
 	
 	
 	public Mesa(String idMesa, int numeroPersonas) {
-		productosEnMesa = new ArrayList<Producto>();
+		productosEnMesa = new ArrayList<TuplaProdEnv>();
 		this.idMesa = idMesa;
 		this.numeroPersonas = numeroPersonas;
 		estado = estadoMesa.CERRADA;
 		dineroTotalEnMesa = 0;
 	}
 
-	public ArrayList<Producto> getProductosEnMesa() {
+	public ArrayList<TuplaProdEnv> getProductosEnMesa() {
 		return productosEnMesa;
 	}
-	public void setProductosEnMesa(ArrayList<Producto> productosEnMesa) {
+	public void setProductosEnMesa(ArrayList<TuplaProdEnv> productosEnMesa) {
 		this.productosEnMesa = productosEnMesa;
 	}
 	
@@ -55,9 +55,9 @@ public class Mesa {
 		this.numeroPersonas = numeroPersonas;
 	}
 
-	public void añadirProducto(Producto producto) {
+	public void añadirProducto(TuplaProdEnv producto) {
 		productosEnMesa.add(producto);
-		dineroTotalEnMesa+=producto.getPrecio();
+		dineroTotalEnMesa+=producto.getProd().getPrecio();
 	}
 
 	public void abrirMesa() {
@@ -83,7 +83,7 @@ public class Mesa {
 	public double actualizarDineroTotal(){
 		dineroTotalEnMesa = 0;
 		for(int i = 0; i < productosEnMesa.size();i++){
-			dineroTotalEnMesa += productosEnMesa.get(i).getPrecio();
+			dineroTotalEnMesa += productosEnMesa.get(i).getProd().getPrecio();
 		}
 		return dineroTotalEnMesa;
 	}

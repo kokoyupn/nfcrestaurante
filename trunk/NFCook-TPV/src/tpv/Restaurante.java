@@ -97,7 +97,7 @@ public class Restaurante {
 		
 		producto.setObservaciones(observaciones);
 		
-		mesasRestaurante.get(idMesa).añadirProducto(producto);
+		mesasRestaurante.get(idMesa).añadirProducto(new TuplaProdEnv(producto, false));
 		
 	}
 	

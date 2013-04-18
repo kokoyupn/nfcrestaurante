@@ -23,6 +23,7 @@ public class Producto {
 		this.observaciones = observaciones;
 	}
 	
+
 	public Producto(String id, String categoria, String tipo, String nombre,
 			String descripción, String foto, double precio, String observaciones, int idUnico) {
 		this.id = id;
@@ -35,6 +36,7 @@ public class Producto {
 		this.observaciones = observaciones;
 		this.idUnico = idUnico;
 	}
+	
 
 	public String getId() {
 		return id;
@@ -88,8 +90,7 @@ public class Producto {
 		if (o == null) return false;
 		if (!(o instanceof Producto))return false;
 		Producto p = (Producto) o;
-		if (this.idUnico ==p.getIdUnico()) 
-			return true;
+		if (this.idUnico == p.getIdUnico()) return true;
 		return false;
 	}
 	
