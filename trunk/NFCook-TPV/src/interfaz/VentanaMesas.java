@@ -30,7 +30,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	private Restaurante unRestaurante;
 	private String idCamarero;
 	private final static int puerto = 5000;
-	private final static String servidor = "nfcook.no-ip.org";
+	private final static String servidor = "192.168.1.54";
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
 		
@@ -141,20 +141,22 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	public static void main(String args[]){
 		
 		// cargamos las bases de datos desde el Servidor
-		ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
+		/*ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
 		ClienteFichero.pide("MiBase.db", servidor, puerto);
-		
-		/* Consulta de prueba de insercion enviada al servidor
-		 * ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
-        		"VALUES ('fh101', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
+		*/
+		// Consulta de prueba de insercion enviada al servidor
+		/*  ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
+        		"VALUES ('fh103', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
         */
 		VentanaMesas ventanaMesas = new VentanaMesas(new Restaurante(), null);
 		ventanaMesas.pack();
 		ventanaMesas.setVisible(true);
-		/*
+		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
-        */
+        
+        ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
+        		"VALUES ('fh104', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
 	}
 
 
