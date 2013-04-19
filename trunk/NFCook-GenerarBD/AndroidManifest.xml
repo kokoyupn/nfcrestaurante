@@ -40,6 +40,10 @@
             android:name="generar_bd.BaseDatosPedido"
             android:label="@string/inicial" >
         </activity>
+        <activity
+            android:name="generar_bd.BaseDatosEquivalenciasRestaurantes"
+            android:label="@string/inicial" >
+        </activity>
     </application>
 
 </manifest>
