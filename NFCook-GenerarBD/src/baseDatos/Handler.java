@@ -144,6 +144,10 @@ public class Handler extends SQLiteOpenHelper {
 					"Observaciones TEXT, Extras TEXT, ExtrasBinarios TEXT, PrecioPlato INTEGER)";
 			db.execSQL(query);
 		}
+		else if(DB_NAME=="Equivalencia_Restaurantes.db"){
+			String query="CREATE TABLE Restaurantes(Restaurante TEXT,Numero INTEGER,Abreviatura TEXT)";
+			db.execSQL(query);
+		}
 	}
 	
 	  
