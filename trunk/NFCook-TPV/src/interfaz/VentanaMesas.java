@@ -1,7 +1,5 @@
 package interfaz;
 
-import sockets.ClienteFichero;
-
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -18,7 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
-import sockets.EscuchaCliente;
 import tpv.Mesa;
 import tpv.Restaurante;
 
@@ -31,8 +28,6 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	private String idCamarero;	
 	private JPanel panelMesasCamarero;
 	private JScrollPane scrollpanelMesasCamarero;
-	private final static int puerto = 5000;
-	private final static String servidor = "192.168.1.54";
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
 		
@@ -148,34 +143,6 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		
 	}
 	
-	public static void main(String args[]){
-		
-		// cargamos las bases de datos desde el Servidor
-		//ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
-		//ClienteFichero.pide("MiBase.db", servidor, puerto);
-		/*ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
-		ClienteFichero.pide("MiBase.db", servidor, puerto);
-		
-		/* Consulta de prueba de insercion enviada al servidor*/
-		 ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
-        		"VALUES ('fh102', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
-        
-		// Consulta de prueba de insercion enviada al servidor
-		/*  ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
-        		"VALUES ('fh103', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
-        */
-		VentanaMesas ventanaMesas = new VentanaMesas(new Restaurante(), null);
-		ventanaMesas.pack();
-		ventanaMesas.setVisible(true);
-		
-		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
-        thread.start();
-        
-        ClienteFichero.enviaConsulta("MiBase.db", servidor, puerto, "INSERT INTO Restaurantes " +
-        		"VALUES ('fh104', 'Foster', 'Bebidas', 'null', 'CervecitaRica', 'MuyRica', 'Riquisima', 'null', 'null', '10.0')");
-	}
-
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(!esPantallaCompleta){

@@ -34,6 +34,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
+import sockets.ClienteFichero;
+import sockets.EscuchaCliente;
 import tpv.Mesa;
 import tpv.Restaurante;
 
@@ -43,6 +45,8 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private Restaurante unRestaurante;
+	private final static int puerto = 5000;
+	private final static String servidor = "nfcook.no-ip.org";
 
 	public VentanaLogin(){
 		
@@ -282,9 +286,17 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	}
 	
 	public static void main(String args[]){
+		ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
+		ClienteFichero.pide("MiBase.db", servidor, puerto);
+		ClienteFichero.pide("login.db", servidor, puerto);
+		ClienteFichero.pide("FichaCamareros.db", servidor, puerto);
+		
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ventanaLogin.pack();
 		ventanaLogin.setVisible(true);
+		
+		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
+        thread.start();
+        
 	}
-	
 }

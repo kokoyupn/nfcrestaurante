@@ -90,6 +90,7 @@ public class ClienteFichero
     	}
 		
 	}
+	
     /**
      * Establece comunicación con el servidor en el puerto indicado. Pide el
      * fichero. Cuando llega, lo escribe en pantalla y en disco duro.
@@ -107,7 +108,7 @@ public class ClienteFichero
         {
             // Se abre el socket.
             Socket socket = new Socket(servidor, puerto);
-
+           
             // Se envía un mensaje de petición de fichero.
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             MensajeDameFichero mensaje = new MensajeDameFichero();
