@@ -14,6 +14,19 @@ public class Plato extends Producto{
 		extrasMarcados = "";
 	}
 
+	
+
+	public Plato(String id, String categoria, String tipo, String nombre,
+			String descripción, String foto, double precio,
+			String observaciones, String extras, String extrasMarcados) {
+		super(id, categoria, tipo, nombre, descripción, foto, precio,
+				observaciones);
+		this.extras = extras;
+		this.extrasMarcados = extrasMarcados;
+	}
+
+
+
 	public String getExtrasMarcados() {
 		return extrasMarcados;
 	}

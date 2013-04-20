@@ -36,7 +36,7 @@ public class Producto {
 		this.observaciones = observaciones;
 		this.idUnico = idUnico;
 	}
-	
+
 
 	public String getId() {
 		return id;
