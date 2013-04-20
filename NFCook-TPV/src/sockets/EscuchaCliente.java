@@ -27,13 +27,19 @@ public class EscuchaCliente extends Thread {
 				Socket cliente = servidor.accept();
 				// Se lee el mensaje con la consulta a utilizar
 	            ObjectInputStream ois = new ObjectInputStream(cliente.getInputStream());
-	            MensajeConsulta mensaje = (MensajeConsulta) ois.readObject();
-				System.out.println(mensaje.sql);
+	            Object mensaje = ois.readObject();
 	            
-				// ejecutamos la consulta de insercion en la base de datos
-				Operaciones operacion = new Operaciones(mensaje.nombreFichero);
-	            operacion.insertar(mensaje.sql, false); // false para que no se vuelva a enviar por socket
-	            
+	            if (mensaje instanceof MensajeConsulta){
+	            	// ejecutamos la consulta de insercion en la base de datos
+	            	Operaciones operacion = new Operaciones(((MensajeConsulta) mensaje).nombreFichero);
+		            operacion.insertar(((MensajeConsulta) mensaje).sql, false); // false para que no se vuelva a enviar por socket
+					System.out.println(((MensajeConsulta) mensaje).sql);
+
+	            }else if (mensaje instanceof MensajeArrayConsultas){
+	            	Operaciones operacion = new Operaciones(((MensajeArrayConsultas) mensaje).nombreFichero);
+	            	operacion.introducirComandaBDLLegadaExterna(((MensajeArrayConsultas) mensaje).consultas);
+	            }
+			
 	            // cerramos los sockets
 	            cliente.close();
 	            servidor.close();
