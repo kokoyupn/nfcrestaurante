@@ -2,44 +2,16 @@ package com.example.nfcook_camarero;
 
 import java.util.ArrayList;
 
-import adapters.ContenidoListMesa;
 import adapters.ContenidoListPedidoHistorico;
-import adapters.HijoExpandableListEditar;
-import adapters.MiExpandableListAdapterEditar;
-import adapters.MiListAdapterMesa;
 import adapters.MiListAdapterPedidoHistorico;
-import adapters.PadreExpandableListEditar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.ClipData;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.DragEvent;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.DragShadowBuilder;
-import android.view.View.OnDragListener;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Añade los componentes de cada pedido a la mesa
@@ -53,7 +25,7 @@ import android.widget.Toast;
  * adapter : Objeto de la clase ListaMesaAdapter.
  * precioTotal : TextView que contiene el precio total de los pedidos de la mesa actual.
  * 
- * @author Rober
+ * @author Rober  ESTO ES UN COPIA Y PEGA Y HAY QUE CAMBIARLO
  */
 
 

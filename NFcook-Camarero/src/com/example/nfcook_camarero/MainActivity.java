@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 	  public void onClickBotonInvisible(View boton)
 	  {
 		  //Iniciamos la nueva actividad
-	   	  Intent intent = new Intent(this, InicialCamarero.class);
+	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
        	  intent.putExtra("usuario", "admin");
        	  startActivity(intent); 
 	  }  

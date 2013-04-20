@@ -28,7 +28,7 @@
         </activity>
         
         <activity
-            android:name=".InicialCamarero"
+            android:name=".InicializarPantallasCamarero"
             android:screenOrientation="portrait">
 
         </activity>
