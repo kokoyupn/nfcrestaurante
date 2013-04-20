@@ -137,6 +137,9 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		panelMesasCamarero.validate();
 		panelMesasCamarero.repaint();
 		
+		scrollpanelMesas.validate();
+		scrollpanelMesas.repaint();
+		
 	}
 	
 	public void cargarMesasCamarero(){
@@ -148,23 +151,19 @@ public class VentanaMesas extends JFrame implements ActionListener{
 			if(unaMesa.getIdCamarero()!=null && unaMesa.getIdCamarero().equals(idCamarero)){
 				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
 				panelMesasCamarero.add(botonMesa, null);
-				panelMesasCamarero.validate();
-				panelMesasCamarero.repaint();
 			}
 		}
+		panelMesasCamarero.validate();
+		panelMesasCamarero.repaint();
 		
+		scrollpanelMesasCamarero.validate();
+		scrollpanelMesasCamarero.repaint();
 	}
 	
 	
 	public void refrescarMesasPanel(){
 		cargarMesasRestaurate();
 		cargarMesasCamarero();
-		
-		scrollpanelMesas.validate();
-		scrollpanelMesas.repaint();
-		scrollpanelMesasCamarero.validate();
-		scrollpanelMesasCamarero.repaint();
-		
 	}
 	
 	@Override
