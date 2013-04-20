@@ -424,7 +424,7 @@ public class PantallaMesasFragment extends Fragment {
 		final TextView tituloMesa = (TextView) textEntryView.findViewById(R.id.textViewNumMesa);
 		final TextView tituloPersonas = (TextView) textEntryView.findViewById(R.id.textViewNumPersonas);
 		//Obligamos a que el teclado sea sólo numérico para la comodidad del camarero
-		numPersonas.setInputType(InputType.TYPE_CLASS_NUMBER);
+		numPersonas.setInputType(InputType.TYPE_CLASS_NUMBER); 
 		//Damos valor a los campos		
 		numPersonas.setText("", TextView.BufferType.EDITABLE);
 		numMesa.setText("", TextView.BufferType.EDITABLE);
