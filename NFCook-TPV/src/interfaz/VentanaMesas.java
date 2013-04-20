@@ -27,6 +27,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	private Restaurante unRestaurante;
 	private String idCamarero;	
 	private JPanel panelMesasCamarero;
+	private JPanel panelMesas;
 	private JScrollPane scrollpanelMesasCamarero;
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
@@ -40,6 +41,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		Dimension dimenionesPantalla = getToolkit().getScreenSize();
 				
 		this.unRestaurante = unRestaurante;
+		this.unRestaurante.setVentanaMesas(this);
 		this.idCamarero = idCamarero;
 		
 		/*
@@ -67,7 +69,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		// Impedimos que tenga barra horizontal.
 		scrollpanelMesas.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		// Creamos el panel contenedor de las mesas,GridLayout permite añadir los elementos en forma de matriz, estan obligados a tener el mismo tamaño todos los componentes.
-		JPanel panelMesas = new JPanel(new GridLayout(0, 7, -17, 0));
+		panelMesas = new JPanel(new GridLayout(0, 7, -17, 0));
 		// Ponemos un borde al panel por estetica, asi las mesas no saldran pegadas al techo.
 		panelMesas.setBorder(new EmptyBorder(17, 0, 17, 0));
 		// Para que si pulsamos sobre el panel los botones se activen, esto solo es necesario cuando se han desplegado las opciones de la mesa.
@@ -114,20 +116,27 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		// Añadimos el panel al panel principal.
 		panelContenedorMesasYcamarero.add(scrollpanelMesasCamarero);
 		
-	    Iterator<Mesa> iteradorMesas = unRestaurante.getIteratorMesas();
+		cargarMesasRestaurate();
+		
+		cargarMesasCamarero();
+
+	}
+	
+	public void cargarMesasRestaurate(){
+		panelMesas.removeAll();
+		Iterator<Mesa> iteradorMesas = unRestaurante.getIteratorMesas();
 		
 		while(iteradorMesas.hasNext()){
 			Mesa unaMesa = iteradorMesas.next();
 			BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
 			panelMesas.add(botonMesa, null);
 		}
+		panelMesasCamarero.validate();
+		panelMesasCamarero.repaint();
 		
-		cargarMesasCamarero();
-
 	}
 	
 	public void cargarMesasCamarero(){
-		
 		panelMesasCamarero.removeAll();
 		Iterator<Mesa> iteradorMesasCamarero = unRestaurante.getIteratorMesas();
 		
@@ -141,6 +150,12 @@ public class VentanaMesas extends JFrame implements ActionListener{
 			}
 		}
 		
+	}
+	
+	
+	public void refrescarMesasPanel(){
+		cargarMesasRestaurate();
+		cargarMesasCamarero();
 	}
 	
 	@Override

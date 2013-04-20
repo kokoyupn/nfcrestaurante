@@ -188,6 +188,8 @@ public class Operaciones extends Conexion{
 			VentanaLogin.getRestaurante().cargarConsultaARestaurante(consulta);
 			insertar(consulta, false);
 		}
+		
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 	}
 		
     
