@@ -1,5 +1,7 @@
 package tpv;
 
+import interfaz.VentanaMesas;
+
 import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +24,8 @@ public class Restaurante {
 	private HashMap<String,Producto> productosRestaurante; //La clave es el id del producto.
 	private ArrayList<String> idsCamareros;
 	private HistoricoComandasMesas comandasMesas;
+	
+	private VentanaMesas ventanaMesas;
 	
 	private final String nombreRestaurante = "'Foster'";
 	
@@ -111,6 +115,16 @@ public class Restaurante {
             JOptionPane.showMessageDialog(null, ""+e.getMessage());
         }
 		
+	}
+	
+	public void setVentanaMesas(VentanaMesas ventanaMesas){
+		this.ventanaMesas = ventanaMesas;
+	}
+	
+	public void refrescaVentanaMesas(){
+		if(ventanaMesas!=null){
+			ventanaMesas.refrescarMesasPanel();
+		}
 	}
 	
 	public void añadirProductoEnMesa(String idMesa, Producto producto, String extrasMarcados, String observaciones){
