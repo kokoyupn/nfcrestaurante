@@ -44,7 +44,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
-	private Restaurante unRestaurante;
+	private static Restaurante unRestaurante;
 	private final static int puerto = 5000;
 	private final static String servidor = "nfcook.no-ip.org";
 
@@ -131,6 +131,12 @@ public class VentanaLogin extends JFrame implements ActionListener{
             grafica.setFullScreenWindow(null);
 		}
 		esPantallaCompleta = !esPantallaCompleta;
+	}
+	/*
+	 * Sera utilizado para poderIntroducir las comandas que lleguen por red local.
+	 */
+	public static Restaurante getRestaurante(){
+		return unRestaurante;
 	}
 	
 	private class TecladoParaLogin extends JPanel{
@@ -240,7 +246,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(unRestaurante.existeCamarero(clave)){
-						VentanaMesas ventanaMesas = new VentanaMesas(unRestaurante, textFieldnumero.getText().toString());
+						VentanaMesas ventanaMesas = new VentanaMesas(unRestaurante, clave);
 						ventanaMesas.pack();
 						ventanaMesas.setVisible(true);
 						dispose();

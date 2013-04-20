@@ -4,12 +4,18 @@
  */
 package basesDeDatos;
 
+import interfaz.VentanaLogin;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.swing.JOptionPane;
 
 import sockets.ClienteFichero;
 import tpv.FechaYHora;
+import tpv.Restaurante;
 
 public class Operaciones extends Conexion{
 	private String nombreDB;
@@ -156,9 +162,36 @@ public class Operaciones extends Conexion{
     		return true;
     	}
 	}
+
+	/*
+	 * FIXME si una consilt tiene un plato con ' (hamburguesa director la consulta se corrompe porque espera cada campo entre ' ')
+	 */
+	public void introducirComandaBD(ArrayList<String> arrayConsultas) {
+		/*
+		 * TODO Ahora envia las consultas una a una al servidor, hay que mejorarlo a todas de golpe -> Alex
+		 */
+		Iterator<String> itConsultas = arrayConsultas.iterator();
+		while(itConsultas.hasNext()){
+			insertar(itConsultas.next(), false);
+		}
+	}
+	
+	/*
+	 * FIXME si una consilt tiene un plato con ' (hamburguesa director la consulta se corrompe porque espera cada campo entre ' ')
+	 */
+	public void introducirComandaBDLLegadaExterna(ArrayList<String> arrayConsultas){
+		Iterator<String> itConsultas = arrayConsultas.iterator();
+		while(itConsultas.hasNext()){
+			String consulta = itConsultas.next();
+			VentanaLogin.getRestaurante().cargarConsultaARestaurante(consulta);
+			insertar(consulta, false);
+		}
+	}
 		
     
-/*
+/* 
+ * 							-EJEMPLOS-
+ * 
     public void guardarUsuario(Persona persona){
         insertar("insert into Persona values("+persona.getId()
                     +",'"+persona.getPrimer_nombre()

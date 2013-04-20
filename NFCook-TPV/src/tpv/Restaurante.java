@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
@@ -159,13 +160,17 @@ public class Restaurante {
 		mesasRestaurante.get(idMesa).abrirMesa();		
 		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
 	}
+	
+	public void actualizaEstadoMesaCerrada(String idMesa) {
+		mesasRestaurante.get(idMesa).cerrarMesa();				
+	}
+	
+	public void actualizaEstadoMesaComanda(String idMesa) {
+		mesasRestaurante.get(idMesa).activarComanda();				
+	}
 
 	public Iterator<Producto> getIteratorProductos(){
 		return productosRestaurante.values().iterator();
-	}
-
-	public void actualizaEstadoMesaCerrada(String idMesa) {
-		mesasRestaurante.get(idMesa).cerrarMesa();				
 	}
 
 	public boolean mesaVacia(String idMesa) {
@@ -176,14 +181,217 @@ public class Restaurante {
 		return mesasRestaurante.get(idMesa).getEstado();
 	}
 	
+	/**
+	 * Añadimos la comanda, la enviamos a cocina y por Red local para los demas tpv
+	 * @param idMesa
+	 * @param idCamarero
+	 * @param productos
+	 */
 	public void addComandaAMesa(String idMesa, String idCamarero, ArrayList<Producto> productos){
 		Comanda comanda = new Comanda(productos, idMesa, idCamarero);
 		comandasMesas.añadirComandaPorMesa(idMesa, comanda);
 		mesasRestaurante.get(idMesa).activarComanda();
+		
+		ArrayList<String> arrayConsultas = creaArrayConsultasInfoMesa(idMesa, idCamarero, productos);
+		Operaciones operacionSQlite = new Operaciones("InfoMesas.db");
+		operacionSQlite.introducirComandaBD(arrayConsultas);
+		operacionSQlite.cerrarBaseDeDatos();
 	}
 	
 	public boolean existeCamarero(String idCamarero){
 		return idsCamareros.contains(idCamarero);
+	}
+	
+	public ArrayList<String> creaArrayConsultasInfoMesa(String idMesa, String idCamarero, ArrayList<Producto> productos){
+		Iterator<Producto> itProductos = productos.iterator();
+		ArrayList<String> arrayConsultas = new ArrayList<String>();
+		while(itProductos.hasNext()){
+			Producto unProducto = itProductos.next();
+			arrayConsultas.add(crearConsultaProducto(unProducto, idCamarero, idMesa));
+		}
+		return arrayConsultas;
+	}
+
+	public String crearConsultaProducto(Producto unProducto, String idCamarero, String idMesa) {
+		String idProducto = unProducto.getId();
+		String categoria = unProducto.getCategoria();
+		String tipo = unProducto.getTipo();
+		String nombreProducto = unProducto.getNombre();
+		double precio = unProducto.getPrecio();
+		String observaciones = unProducto.getObservaciones();
+		String extrasMarcados = null;
+		String extras = null;
+	
+		String consulta = null;
+		
+		if(unProducto instanceof Plato){
+			extrasMarcados = ((Plato) unProducto).getExtrasMarcados();
+			extras = ((Plato) unProducto).getExtras();
+			consulta = generaConsultaPlato(idMesa, idCamarero, idProducto, categoria, tipo, nombreProducto, precio, observaciones, extras, extrasMarcados);
+
+		}else{
+			consulta = generaConsultaBeida(idMesa, idCamarero, idProducto, categoria, tipo, nombreProducto, precio, observaciones);
+		}
+		return consulta;
+	}
+
+	private String generaConsultaBeida(String idMesa, String idCamarero,
+									   String idProducto, String categoria, String tipo,
+									   String nombreProducto, double precio, String observaciones) {
+		
+		return "insert into infoMesas values('"+ idMesa + "',"+
+											 "'" + idCamarero + "'," +
+											 "'" + idProducto + "'," +
+											 "'" + categoria + "'," +
+											 "'" + tipo + "',"+
+											 "'" + nombreProducto + "'," +
+											 "'" + precio + "'," +
+											 "'" + observaciones + "',"+
+											 "'" + null +"'," +
+											 "'" + null + "'"+
+											 ")";
+	}
+
+	private String generaConsultaPlato(String idMesa, String idCamarero,String idProducto, String categoria, String tipo,
+									   String nombreProducto, double precio, String observaciones,
+									   String extras, String extrasMarcados) {
+		
+		return "insert into infoMesas values('"+ idMesa + "',"+
+											"'" + idCamarero + "'," +
+											"'" + idProducto + "'," +
+											"'" + categoria + "'," +
+											"'" + tipo + "',"+
+											"'" + nombreProducto + "'," +
+											"'" + precio + "'," +
+											"'" + observaciones + "',"+
+											"'" + extras +"'," +
+											"'" + extrasMarcados + "'"+
+											")";
+	}
+
+	public void cargarConsultaARestaurante(String consulta) {
+		StringTokenizer consultaTokenizada = new StringTokenizer(consulta , ",");		
+		
+		String idMesa = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		//Eliminamos el idCamarero
+		consultaTokenizada.nextToken();
+		String idProducto = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		String categoria = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		String tipo = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		String nombreProducto = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		double precio = Double.parseDouble(devuelveStringSinComillas(consultaTokenizada.nextToken()));
+		String observaciones = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		
+		String tokenExtras = consultaTokenizada.nextToken();
+		String extras = "";
+		if(empiezaPorComilla(tokenExtras) && terminaPorComilla(tokenExtras)){
+			extras = devuelveStringSinComillas(tokenExtras);
+		}else if(empiezaPorComilla(tokenExtras)){
+			boolean primero = true;
+			while(!terminaPorComilla(tokenExtras)){
+				if(tokenExtras.contains("\\") || primero){
+					extras += devuelveStringSinComillas(tokenExtras);
+					primero = false;
+				}else{
+					extras += "," + devuelveStringSinComillas(tokenExtras);
+				}
+				tokenExtras = consultaTokenizada.nextToken();
+			}
+			extras += devuelveStringSinComillas(tokenExtras);
+		}
+		
+		String tokenExtrasMarcados = consultaTokenizada.nextToken();
+		String extrasMarcados = "";
+		if(empiezaPorComilla(tokenExtrasMarcados) && terminaPorComilla(tokenExtrasMarcados)){
+			extrasMarcados = devuelveStringSinComillas(tokenExtrasMarcados);
+		}else if(empiezaPorComilla(tokenExtrasMarcados)){
+			boolean primero = true;
+			while(!terminaPorComilla(tokenExtrasMarcados)){
+				if(primero){
+					extrasMarcados += devuelveStringSinComillas(tokenExtrasMarcados);
+					primero = false;
+				}else{
+					extrasMarcados += "," + devuelveStringSinComillas(tokenExtrasMarcados);
+				}
+				tokenExtrasMarcados = consultaTokenizada.nextToken();
+			}
+			if(primero){
+				extrasMarcados += devuelveStringSinComillas(tokenExtrasMarcados);
+			}else{
+				extrasMarcados += "," + devuelveStringSinComillas(tokenExtrasMarcados);
+			}
+		}
+		
+		Operaciones operacionSQlite = new Operaciones("MiBase.db");
+		ResultSet resultados = operacionSQlite.consultar("select Descripcion, Foto from Restaurantes where Restaurante=" + nombreRestaurante + " and Id='" + idProducto+ "'");
+		try {
+			resultados.next();
+			Producto nuevoProducto = null;
+			
+			if(categoria.equals("Bebidas")){
+				nuevoProducto = new Bebida(idProducto, categoria, tipo, nombreProducto, resultados.getString("Descripcion"), resultados.getString("Foto"), precio, observaciones);
+			}else{
+				nuevoProducto = new Plato(idProducto, categoria, tipo, nombreProducto, resultados.getString("Descripcion"), resultados.getString("Foto"), precio, observaciones, extras, extrasMarcados);
+			}
+			
+			mesasRestaurante.get(idMesa).añadirProducto(new TuplaProdEnv(nuevoProducto, true));
+			actualizaEstadoMesaComanda(idMesa);
+			
+			operacionSQlite.cerrarBaseDeDatos();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private String devuelveStringSinComillas(String conComillas){
+		if(!conComillas.contains("'")){
+			return conComillas;
+		}else if(conComillas.contains(")")){
+			return conComillas.replace("')", "");
+		}
+		int posChar = 0;
+		String conComillasAux = "";
+		boolean encontrado = false;
+		
+		/*
+		 * Nos quedamos solo con 'token'
+		 */
+		
+		while(posChar< conComillas.length()){
+			if((conComillas.charAt(posChar) == '\'') && !encontrado){
+				encontrado = true;
+				conComillasAux += conComillas.charAt(posChar);
+			}else if(encontrado){
+				conComillasAux += conComillas.charAt(posChar);
+			}
+			posChar++;
+		}
+		
+		/*
+		 * Eliminamos '   ' y )
+		 */
+		posChar = 0;
+		String sinComillas = "";
+		int a  = conComillasAux.length();
+		while(posChar< conComillasAux.length()){
+			if((conComillasAux.charAt(posChar) == '\'' || conComillasAux.charAt(posChar) == ')') && (posChar == 0 || posChar == (conComillasAux.length()-1))){
+				posChar++;
+			}else{
+				sinComillas += conComillasAux.charAt(posChar);
+				posChar++;
+			}
+		}
+		
+		return sinComillas;	
+	}
+	
+	public boolean empiezaPorComilla(String palabra){
+		return palabra.charAt(0) == '\'';
+	}
+	
+	public boolean terminaPorComilla(String palabra){
+		return palabra.charAt(palabra.length()-1) == '\'' || palabra.charAt(palabra.length()-1) == ')';
 	}
 	
 }
