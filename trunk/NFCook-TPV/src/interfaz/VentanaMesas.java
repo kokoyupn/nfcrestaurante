@@ -68,7 +68,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		// Ponemos un borde al ScrollPanel por estetica. Efecto hundido.
 		scrollpanelMesas.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		// Ajustamos el tamaño del panel a partir del tamaño de la ventana.
-		scrollpanelMesas.setBounds(10, 10, (int) dimenionesPantalla.getWidth()-300, (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
+		scrollpanelMesas.setBounds(10, 10, (int) (dimenionesPantalla.getWidth()-(dimenionesPantalla.getWidth()/4)), (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
 		// Impedimos que tenga barra horizontal.
 		scrollpanelMesas.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		// Creamos el panel contenedor de las mesas,GridLayout permite añadir los elementos en forma de matriz, estan obligados a tener el mismo tamaño todos los componentes.
@@ -98,7 +98,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		// Ponemos un borde al ScrollPanel por estetica. Efecto hundido.
 		scrollpanelMesasCamarero.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		// Ajustamos el tamaño del panel a partir del tamaño de la ventana.
-		scrollpanelMesasCamarero.setBounds((int) dimenionesPantalla.getWidth()-280, 10, (int) dimenionesPantalla.getWidth()-1010, (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
+		scrollpanelMesasCamarero.setBounds((int) (dimenionesPantalla.getWidth()-(dimenionesPantalla.getWidth()/4))+20, 10, (int) ((dimenionesPantalla.getWidth()/4)-30), (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
 		// Impedimos que tenga barra horizontal.
 		scrollpanelMesasCamarero.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		// Creamos el panel contenedor de las mesas del camarero, GridLayout permite añadir los elementos en forma de matriz, estan obligados a tener el mismo tamaño todos los componentes.

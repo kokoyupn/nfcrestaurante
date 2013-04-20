@@ -79,7 +79,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		// Creamos el panel contenedor de la imagen
 		JPanel panelImagen = new JPanel(new BorderLayout());
 		// Ajustamos el tamaño del panel a partir del tamaño de la ventana.
-		panelImagen.setBounds(10, 10, (int) dimenionesPantalla.getWidth()-800, (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
+		panelImagen.setBounds(10, 10, (int) ((dimenionesPantalla.getWidth()/2)-170), (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
 		// Ponemos un borde al panel por estetica, asi las mesas no saldran pegadas al techo.
 		panelImagen.setBorder(new EmptyBorder(17, 0, 17, 0));
 		// Creamos la imagen que contendra el panel.
@@ -97,7 +97,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		// Creamos el panel contenedor del teclado para el login.
 		JPanel panelTecladoLogin = new JPanel();
 		// Ajustamos el tamaño del panel a partir del tamaño de la ventana.
-		panelTecladoLogin.setBounds((int) dimenionesPantalla.getWidth()-780, 10, (int) dimenionesPantalla.getWidth()-510, (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
+		panelTecladoLogin.setBounds((int) ((dimenionesPantalla.getWidth()/2)-150), 10, (int) (dimenionesPantalla.getWidth()-((dimenionesPantalla.getWidth()/2)-170))-30, (int) dimenionesPantalla.getHeight()-20); //(x, y, w, z) -> X = despazamiento a derecha; Y = despazamiento encima; W = ancho ; Z = largo.
 		// Ponemos un borde al panel por estetica, asi las mesas no saldran pegadas al techo.
 		panelTecladoLogin.setBorder(new EmptyBorder(150, 0, 17, 0));
 		// Añadimos el panel al panel principal.
