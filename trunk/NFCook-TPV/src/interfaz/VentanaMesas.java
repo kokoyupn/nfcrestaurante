@@ -25,10 +25,13 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private Restaurante unRestaurante;
-	private String idCamarero;	
+	private String idCamarero;
+	
 	private JPanel panelMesasCamarero;
 	private JPanel panelMesas;
+	
 	private JScrollPane scrollpanelMesasCamarero;
+	private JScrollPane scrollpanelMesas;
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
 		
@@ -61,7 +64,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		 */
 		
 		// Creamos un JScrollPane por si no entrasen todas las mesas.
-		JScrollPane scrollpanelMesas = new JScrollPane();
+		scrollpanelMesas = new JScrollPane();
 		// Ponemos un borde al ScrollPanel por estetica. Efecto hundido.
 		scrollpanelMesas.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		// Ajustamos el tamaño del panel a partir del tamaño de la ventana.
@@ -91,7 +94,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		 */
 		
 		// Creamos un JScrollPane por si no entrasen todas las mesas.
-		JScrollPane scrollpanelMesasCamarero = new JScrollPane();
+		scrollpanelMesasCamarero = new JScrollPane();
 		// Ponemos un borde al ScrollPanel por estetica. Efecto hundido.
 		scrollpanelMesasCamarero.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		// Ajustamos el tamaño del panel a partir del tamaño de la ventana.
@@ -156,6 +159,12 @@ public class VentanaMesas extends JFrame implements ActionListener{
 	public void refrescarMesasPanel(){
 		cargarMesasRestaurate();
 		cargarMesasCamarero();
+		
+		scrollpanelMesas.validate();
+		scrollpanelMesas.repaint();
+		scrollpanelMesasCamarero.validate();
+		scrollpanelMesasCamarero.repaint();
+		
 	}
 	
 	@Override
