@@ -167,9 +167,11 @@ public class Operaciones extends Conexion{
 	 * FIXME si una consilt tiene un plato con ' (hamburguesa director la consulta se corrompe porque espera cada campo entre ' ')
 	 */
 	public void introducirComandaBD(ArrayList<String> arrayConsultas) {
-		/*
-		 * TODO Ahora envia las consultas una a una al servidor, hay que mejorarlo a todas de golpe -> Alex
-		 */
+		
+		// Enviamos el array de consultas al servidor y a los otros clientes
+        ClienteFichero.enviaArrayConsultas(nombreDB, servidor, puerto, arrayConsultas);
+        
+        // Insertamos las consutlas en la base de datos local
 		Iterator<String> itConsultas = arrayConsultas.iterator();
 		while(itConsultas.hasNext()){
 			insertar(itConsultas.next(), false);

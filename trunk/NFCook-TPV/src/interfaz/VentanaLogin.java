@@ -303,6 +303,6 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
-        
+                
 	}
 }

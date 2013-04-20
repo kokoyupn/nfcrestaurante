@@ -58,6 +58,44 @@ public class ClienteFichero
 		
 	}
 	
+	/**
+	 * Establece comunicacion con el servidor en el puerto indicado. Envia el array con consultas sql
+	 * junto con el fichero que habra que actualizar en el Servidor.
+	**/
+	public static void enviaArrayConsultas(String fichero, String servidor, int puerto, ArrayList<String> consultas){
+
+		try{
+			// Se abre el socket.
+            Socket socket = new Socket(servidor, puerto);
+
+            hostLocal = socket.getLocalAddress();
+            
+            // Se envía un mensaje de petición de fichero.
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            MensajeArrayConsultas mensajeArrayConsulta = new MensajeArrayConsultas();
+            mensajeArrayConsulta.nombreFichero = fichero;
+            mensajeArrayConsulta.consultas = consultas;
+            mensajeArrayConsulta.ips = new ArrayList<InetAddress>();
+            mensajeArrayConsulta.ips.add(socket.getLocalAddress());
+           
+            oos.writeObject(mensajeArrayConsulta);
+            
+            // recibir las IP internas de todos los clientes y enviar esta misma info
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            MensajeArrayConsultas mensajeConIPs = (MensajeArrayConsultas) ois.readObject(); // mensajeConIPs tiene la misma info que mensajeConsulta
+            transmiteConsultasLocal(mensajeConIPs);
+            
+            // cerramos el socket
+            socket.close();
+            oos.close();
+            ois.close();
+            
+		}catch(Exception excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar consulta al Servidor");
+		}
+		
+	}
+	
 	private static void transmiteConsultasLocal(MensajeConsulta mensaje){
 		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
     	try {
@@ -91,6 +129,38 @@ public class ClienteFichero
 		
 	}
 	
+	private static void transmiteConsultasLocal(MensajeArrayConsultas mensaje){
+		// recorremos todos los clientes salvo el actual para enviarles el array con las consultas sql
+    	try {
+    		int i = 0;
+    		while(i<mensaje.ips.size()){
+    			if(!mensaje.ips.get(i).equals(hostLocal)){
+
+    				Socket socket = new Socket(mensaje.ips.get(i), 5002);
+    		    	ObjectOutputStream oos;
+    				System.out.println("Aceptado servidor");
+    				oos = new ObjectOutputStream(socket.getOutputStream());
+    				 
+    				MensajeArrayConsultas mensajeArrayConsulta = new MensajeArrayConsultas();
+    				mensajeArrayConsulta.nombreFichero = mensaje.nombreFichero;
+    				mensajeArrayConsulta.consultas = mensaje.consultas;
+    				
+    		        oos.writeObject(mensajeArrayConsulta);
+
+    		        // cerramos el socket
+    				socket.close();
+    				oos.close();
+
+    			}
+    			i++;
+    			}
+    		
+    	}catch (IOException e) {
+			System.err.println("Error al enviar las consultas a los Clientes");
+    		e.printStackTrace();
+    	}
+		
+	}
     /**
      * Establece comunicación con el servidor en el puerto indicado. Pide el
      * fichero. Cuando llega, lo escribe en pantalla y en disco duro.
