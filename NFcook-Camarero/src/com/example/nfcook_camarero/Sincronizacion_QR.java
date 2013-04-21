@@ -19,12 +19,20 @@ import android.widget.Toast;
 
 public class Sincronizacion_QR extends Activity {
 	
-	private	HandlerGenerico sqlMesas,sqlrestaurante;
+	private	HandlerGenerico sqlMesas,sqlrestaurante,sqlEquivalencia;;
 	private	String numMesa;
 	private	String idCamarero;
 	private	String numPersonas; 
-	private	SQLiteDatabase dbMesas,dbMiBase;
+	private	SQLiteDatabase dbMesas,dbMiBase,dbEquivalencia;
 	
+	String restaurante;
+	int numeroRestaurante;
+	String abreviatura;
+	
+	//Fecha y hora
+	String formatteHour;
+	String formatteDate;
+	    
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_qr);
@@ -34,7 +42,46 @@ public class Sincronizacion_QR extends Activity {
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
+		restaurante=bundle.getString("Restaurante");
 		
+		
+		//Fecha y hora 
+				//Sacamos la fecha a la que el camarero ha introducido la mesa
+		Calendar cal = new GregorianCalendar();
+	    Date date = cal.getTime();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		formatteDate = df.format(date);
+		//Sacamos la hora a la que el camarero ha introducido la mesa
+		Date dt = new Date();
+		SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+		formatteHour = dtf.format(dt.getTime());
+		
+		 //Obtengo los datos del restaurante su numero y abreviatura
+        try{ //Abrimos la base de datos para consultarla
+ 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Equivalencia_Restaurantes.db"); 
+ 	        dbEquivalencia = sqlEquivalencia.open();
+ 	     
+ 	    }catch(SQLiteException e){
+ 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos equivalencia",Toast.LENGTH_SHORT).show();
+ 	       }
+ 	   
+ 	   try{
+ 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
+ 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
+ 		   String[] campos = new String[]{"Numero","Abreviatura"};
+ 		   String[] datos = new String[]{restaurante};
+ 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
+ 		   Cursor c = dbEquivalencia.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
+ 	  	   
+ 	  	   c.moveToFirst();
+        	 
+ 	  	   numeroRestaurante = c.getInt(0);
+ 	  	   abreviatura = c.getString(1);
+ 	  	   
+ 	  	   System.out.println("NUMERO"+numeroRestaurante+"ABREVIATURA"+abreviatura);
+ 	  	
+ 		}catch(Exception e){ }
+        
 		//Lectura QR
 		Intent intent = new Intent("com.example.nfcook_camarero.SCAN");
 		intent.putExtra("SCAN_MODE","QR_CODE_MODE");
@@ -89,21 +136,13 @@ public class Sincronizacion_QR extends Activity {
 			if (plato.contains("*"))
 				observaciones =  stTodoSeparado.nextToken();
 					
-			anadirPlatos("Foster", "fh"+id, extras, observaciones);
+			anadirPlatos(restaurante, abreviatura+id, extras, observaciones);
 		}	
 	}
 	
 	public void anadirPlatos(String restaurante,String id,String extras,String observaciones){
           
-    	//Sacamos la fecha a la que el camarero ha introducido la mesa
-        Calendar cal = new GregorianCalendar();
-        Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formatteDate = df.format(date);
-        //Sacamos la hora a la que el camarero ha introducido la mesa
-        Date dt = new Date();
-        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
-        String formatteHour = dtf.format(dt.getTime());
+    	
         Cursor cursor = null;
         String extrasFinal="";
             

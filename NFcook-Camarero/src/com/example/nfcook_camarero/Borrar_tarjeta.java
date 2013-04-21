@@ -49,7 +49,12 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
 	boolean escritoBienEnTag;
 	boolean esMFC;
 	ProgressDialog	progressDialogSinc;
-	
+	String restaurante;
+	int numeroRestaurante;
+	/*Variables para obtener el valor equivalente del restaurante*/
+	String ruta="/data/data/com.example.nfcook_camarero/databases/";
+	private SQLiteDatabase dbEquivalencia;
+	private HandlerGenerico sql;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
@@ -77,7 +82,7 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
 	   */
 	  @Override
 	  protected Void doInBackground(Void... params) {	  		  
-		  SystemClock.sleep(2000);
+		  SystemClock.sleep(1000);
 		  // si es Mifare Classic
 		  if (esMFC) {
 				try {   
@@ -131,8 +136,40 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //Cargamos el sonido
         sonido=sonidoManager.load(R.raw.confirm);
-		// creamos el progresDialog que se mostrara
+		
+        //Obtengo el resturante
+  		/*Bundle bundle = getIntent().getExtras();
+  		restaurante = bundle.getString("restaurante");*/
+  		restaurante="Foster";
+  		
+  		 try{ //Abrimos la base de datos para consultarla
+ 	       	sql = new HandlerGenerico(getApplicationContext(),ruta,"Equivalencia_Restaurantes.db"); 
+ 	        dbEquivalencia = sql.open();
+ 	     
+ 	    }catch(SQLiteException e){
+ 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos equivalencia",Toast.LENGTH_SHORT).show();
+ 	       }
+ 	   
+ 	   try{
+ 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
+ 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
+ 		   String[] campos = new String[]{"Numero","Abreviatura"};
+ 		   String[] datos = new String[]{restaurante};
+ 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
+ 		   Cursor c = dbEquivalencia.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
+ 	  	   		   	 	   
+ 	  	   c.moveToFirst();
+        	
+ 	  	   numeroRestaurante = c.getInt(0);
+ 	  	   String abreviatura = c.getString(1);
+ 	  	   
+ 	  	
+ 		}catch(Exception e){ }
+ 	   
+        
+        // creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
+
 	}
 	
 	/**
@@ -159,10 +196,10 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
 		}
 		else {
 			if (escritoBienEnTag) {
-			 Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
+			 Toast.makeText(this, "Borrado correctamente.", Toast.LENGTH_LONG ).show();		
 			}
 			else {
-				Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
+				Toast.makeText(this, "Borrado no completado", Toast.LENGTH_LONG ).show();		 
 			}
 		}
 		finish();	
@@ -183,9 +220,17 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
 		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
 		
 		ArrayList<Byte> al = new ArrayList<Byte>();
+		al.add((byte) numeroRestaurante);
+		pedidoCodificadoEnBytes.addAll(al);
+		
+		al = new ArrayList<Byte>();
 		al.add((byte) Integer.parseInt(aux));
+		pedidoCodificadoEnBytes.addAll(al);
+		
 		
 		pedidoCodificadoEnBytes.addAll(al);
+		
+		
 		// Obtenemos instancia de MifareClassic para el tag.
 				MifareClassic mfc = MifareClassic.get(mytag);
 												

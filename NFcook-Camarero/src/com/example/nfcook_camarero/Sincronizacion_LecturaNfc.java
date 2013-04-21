@@ -51,17 +51,22 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	ProgressDialog	progressDialogSinc;
 	
 	//Variables usadas para añadir la lista de platos a la base de datos mesas
-	HandlerGenerico sqlMesas,sqlrestaurante;
+	HandlerGenerico sqlMesas,sqlrestaurante,sqlEquivalencia;
 	String numMesa;
 	String idCamarero;
 	String numPersonas; 
-	SQLiteDatabase dbMesas,dbMiBase;
+	String restaurante;
+	int numeroRestaurante;
+	String abreviatura;
+	SQLiteDatabase dbMesas,dbMiBase,dbEquivalencia;
 	ArrayList<Byte> mensaje;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
-	
+	//Fecha y hora
+	String formatteHour;
+    String formatteDate;
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas (decodificacion de pedido, lectura NFC y 
 	 * añadir a la base de datos Mesas) mientras se muestra un progress dialog. 
@@ -128,6 +133,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
+		restaurante=bundle.getString("Restaurante");
 		
 		ctx=this;
 		
@@ -137,13 +143,50 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
 		mTechLists = new String[][] { new String[] { MifareClassic.class.getName() } };
 		writeTagFilters = new IntentFilter[] { tagDetected }; 
-			
+		//Fecha y hora 
+		//Sacamos la fecha a la que el camarero ha introducido la mesa
+    	Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        formatteDate = df.format(date);
+        //Sacamos la hora a la que el camarero ha introducido la mesa
+        Date dt = new Date();
+        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+        formatteHour = dtf.format(dt.getTime());
+        
 		//Creamos la instacia del manager de sonido
 		sonidoManager = new SonidoManager(getApplicationContext());
 		// Pone el volumen al volumen del movil actual
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //Cargamos el sonido
         sonido=sonidoManager.load(R.raw.confirm);
+        //Obtengo los datos del restaurante su numero y abreviatura
+        try{ //Abrimos la base de datos para consultarla
+ 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Equivalencia_Restaurantes.db"); 
+ 	        dbEquivalencia = sqlEquivalencia.open();
+ 	     
+ 	    }catch(SQLiteException e){
+ 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos equivalencia",Toast.LENGTH_SHORT).show();
+ 	       }
+ 	   
+ 	   try{
+ 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
+ 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
+ 		   String[] campos = new String[]{"Numero","Abreviatura"};
+ 		   String[] datos = new String[]{restaurante};
+ 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
+ 		   Cursor c = dbEquivalencia.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
+ 	  	   
+ 	  	   c.moveToFirst();
+        	 
+ 	  	   numeroRestaurante = c.getInt(0);
+ 	  	   abreviatura = c.getString(1);
+ 	  	   
+ 	  	   System.out.println("NUMERO"+numeroRestaurante+"ABREVIATURA"+abreviatura);
+ 	  	
+ 		}catch(Exception e){ }
+        
+        
 		// creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
 	}
@@ -196,9 +239,16 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		aux += "255";
 		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
 		
-		ArrayList<Byte> al = new ArrayList<Byte>();
+		ArrayList<Byte> al= new ArrayList<Byte>();
+		al.add((byte) numeroRestaurante);
+		pedidoCodificadoEnBytes.addAll(al);
+		
+		al = new ArrayList<Byte>();
 		al.add((byte) Integer.parseInt(aux));
 		pedidoCodificadoEnBytes.addAll(al);
+		
+		
+		
 		
 		mensaje = new ArrayList<Byte>();
 			
@@ -362,7 +412,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 				for (int i = 0; i < numComentario; i++)
 					comentario += (char)decodificaByte(itPlatos.next());
 				//Añadimos el plato
-				añadirPlatos("Foster","fh"+id,extras,comentario);
+				añadirPlatos(restaurante,abreviatura+id,extras,comentario);
 			}		
 		}
 		
@@ -419,15 +469,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	public void añadirPlatos(String restaurante,String id,String extras,String observaciones)
 	{
           
-    		//Sacamos la fecha a la que el camarero ha introducido la mesa
-        	Calendar cal = new GregorianCalendar();
-            Date date = cal.getTime();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String formatteDate = df.format(date);
-            //Sacamos la hora a la que el camarero ha introducido la mesa
-            Date dt = new Date();
-            SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
-            String formatteHour = dtf.format(dt.getTime());
+    	
             Cursor cursor = null;
             String extrasFinal="";
             

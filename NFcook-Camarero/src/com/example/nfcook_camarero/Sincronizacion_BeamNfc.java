@@ -53,7 +53,20 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 	//Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
-		
+	
+	String restaurante;
+	int numeroRestaurante;
+	String abreviatura;
+	/*Variables para obtener el valor equivalente del restaurante*/
+	String ruta="/data/data/com.example.nfcook_camarero/databases/";
+	private SQLiteDatabase dbEquivalencia;
+	private HandlerGenerico sqlEquivalencia;
+	
+	
+	//Fecha y hora
+	String formatteHour;
+	String formatteDate;
+	    
 	/**Metodo que se encarga de cerrar la ventana
 	 * */
 	public void cerrarVentana()
@@ -67,6 +80,48 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 		
 		context=this;
 		
+		//El numero de la mesa se obtiene de la pantalla anterior
+		Bundle bundle = getIntent().getExtras();
+		restaurante=bundle.getString("Restaurante");
+		//restaurante="Foster";
+		
+		//Obtengo los datos del restaurante su numero y abreviatura
+        try{ //Abrimos la base de datos para consultarla
+ 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Equivalencia_Restaurantes.db"); 
+ 	        dbEquivalencia = sqlEquivalencia.open();
+ 	     
+ 	    }catch(SQLiteException e){
+ 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos equivalencia",Toast.LENGTH_SHORT).show();
+ 	       }
+ 	   
+ 	   try{
+ 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
+ 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
+ 		   String[] campos = new String[]{"Numero","Abreviatura"};
+ 		   String[] datos = new String[]{restaurante};
+ 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
+ 		   Cursor c = dbEquivalencia.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
+ 	  	   
+ 	  	   c.moveToFirst();
+        	 
+ 	  	   numeroRestaurante = c.getInt(0);
+ 	  	   abreviatura = c.getString(1);
+ 	  	   
+ 	  	   System.out.println("NUMERO"+numeroRestaurante+"ABREVIATURA"+abreviatura);
+ 	  	
+ 		}catch(Exception e){ }
+        		
+ 	//Fecha y hora 
+ 			//Sacamos la fecha a la que el camarero ha introducido la mesa
+ 	    	Calendar cal = new GregorianCalendar();
+ 	        Date date = cal.getTime();
+ 	        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+ 	        formatteDate = df.format(date);
+ 	        //Sacamos la hora a la que el camarero ha introducido la mesa
+ 	        Date dt = new Date();
+ 	        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+ 	        formatteHour = dtf.format(dt.getTime());
+ 	        
 		//Creamos la instacia del manager de sonido
 		sonidoManager = new SonidoManager(getApplicationContext());
 		// Pone el volumen al volumen del movil actual
@@ -181,7 +236,7 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 						if (plato.contains("*"))  {
 							comentario =  stTodoSeparado.nextToken();
 						}
-						añadirPlatos("Foster","fh"+id,extras,comentario);
+						añadirPlatos(restaurante,abreviatura+id,extras,comentario);
 					}			
 				}
 				
@@ -191,15 +246,7 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 	public void añadirPlatos(String restaurante,String id,String extras,String observaciones)
 	{
 		
-    		//Sacamos la fecha a la que el camarero ha introducido la mesa
-        	Calendar cal = new GregorianCalendar();
-            Date date = cal.getTime();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String formatteDate = df.format(date);
-            //Sacamos la hora a la que el camarero ha introducido la mesa
-            Date dt = new Date();
-            SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
-            String formatteHour = dtf.format(dt.getTime());
+    		
             Cursor cursor = null;
             String extrasFinal="";
             

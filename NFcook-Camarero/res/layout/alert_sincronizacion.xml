@@ -12,7 +12,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#9be92c"
+            android:background="#0B3861"
             android:orientation="vertical" >
 
             <TextView
@@ -33,27 +33,27 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" >
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp" >
 
             <ImageView
                 android:id="@+id/imageNFC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickNfcsincronizacion"
+                android:layout_marginRight="10dp"
                 android:src="@drawable/nfc_icono" />
 
             <ImageView
                 android:id="@+id/imageBeam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickBeamsincronizacion"
                 android:src="@drawable/beam_icono" />
 
             <ImageView
                 android:id="@+id/imageQR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickQRsincronizacion"
+                android:layout_marginLeft="10dp"
                 android:src="@drawable/qr_icono" />
 
         </LinearLayout>
