@@ -19,8 +19,7 @@ import tpv.Restaurante;
 
 public class Operaciones extends Conexion{
 	private String nombreDB;
-	private final int puerto = 5000;
-	private final String servidor = "nfcook.no-ip.org";
+	
 	/**
      * Constructor for objects of class Operaciones
      * @param string 
@@ -76,7 +75,7 @@ public class Operaciones extends Conexion{
     }
     
     private void enviarConsultaSocket(String sql){
-        ClienteFichero.enviaConsulta(nombreDB, servidor, puerto, sql);
+        ClienteFichero.enviaConsulta(nombreDB, sql);
     }
     
     
@@ -169,7 +168,7 @@ public class Operaciones extends Conexion{
 	public void introducirComandaBD(ArrayList<String> arrayConsultas) {
 		
 		// Enviamos el array de consultas al servidor y a los otros clientes
-        ClienteFichero.enviaArrayConsultas(nombreDB, servidor, puerto, arrayConsultas);
+        ClienteFichero.enviaArrayConsultas(nombreDB, arrayConsultas);
         
         // Insertamos las consutlas en la base de datos local
 		Iterator<String> itConsultas = arrayConsultas.iterator();
