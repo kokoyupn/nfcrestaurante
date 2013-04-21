@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:background="#9be92c"
+        android:background="#0B3861"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"

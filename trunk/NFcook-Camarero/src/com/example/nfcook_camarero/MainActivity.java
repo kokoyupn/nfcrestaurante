@@ -64,6 +64,8 @@ public class MainActivity extends Activity {
 		  //Iniciamos la nueva actividad
 	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
        	  intent.putExtra("usuario", "admin");
+/**FIXME esta linea la tendras que poner luego bien la e puesto para probar una cosa que me acia falta */       	  
+       	  intent.putExtra("Restaurante","Foster");
        	  startActivity(intent); 
 	  }  
  /**
@@ -76,7 +78,8 @@ public class MainActivity extends Activity {
 public void  onClickBotonEntrar(View boton)
    {
 	   /*Contiene en nombre que introduces por pantalla en el editText*/
-	   usuario = (EditText) findViewById(R.id.editTextUsuario);
+	
+	usuario = (EditText) findViewById(R.id.editTextUsuario);
 	   /*Contiene la contraseña que introduces por pantalla en el editText*/
 	   password = (EditText) findViewById(R.id.editTextPass);
 	

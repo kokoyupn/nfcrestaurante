@@ -44,6 +44,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -59,13 +60,13 @@ public class PantallaMesasFragment extends Fragment {
     private static String numeroPersonas;
     private double precio;
     private static int idUnico = 0;
-    
     private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
     //Ventana emergente para la sincronizacion
     private AlertDialog ventanaEmergenteSincronizacion;
     private HandlerGenerico sqlMesas, sqlMiBase;
 	private SQLiteDatabase dbMesas, dbMiBase;
 	
+	private String restaurante;
     /*NFC*/
 	Context ctx;
 	Intent intent;
@@ -74,7 +75,7 @@ public class PantallaMesasFragment extends Fragment {
     	vista = inflater.inflate(R.layout.inicial_camarero, container, false);
 
         
-        
+    	
         //Quitamos barra de titulo de la aplicacion
         //this.getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
         //creamos la lista de mesas
@@ -83,7 +84,14 @@ public class PantallaMesasFragment extends Fragment {
         // Obtenemos el idCamarero de la pantalla anterior
         Bundle bundle = getActivity().getIntent().getExtras();
         idCamarero = bundle.getString("usuario");
-
+        
+        /**FIXME
+         Tienes que descomentar esta linea cuando lo agas para que de la pantalla de login le pase a esta el restaurante para hacerlo todo generico
+         las de sincronizacion nfc, beam y qr ya lo tienen exo pero la pantalla tambien tendras que pasarselo a la de rober para q llege a la de añadir plato para que 
+         se carge generico
+         */
+        restaurante=bundle.getString("Restaurante");
+        //restaurante="Foster";
         
 	   //Para importar la base de Assets
         try{
@@ -170,6 +178,7 @@ public class PantallaMesasFragment extends Fragment {
 				    	if (item == 0){
 				    		//Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
 				    		//Boton Cobrar--------------------------------------------------------------------
+				    		
 				    		AlertDialog.Builder alert = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
 				             alert.setMessage("¿Seguro que quieres cobrar y cerrar esta mesa? "); //mensaje            
 				             alert.setNegativeButton("Cancelar", null);
@@ -232,7 +241,53 @@ public class PantallaMesasFragment extends Fragment {
 				    		});
 				    		ventanaEmergenteSincronizacion.setView(vistaAviso);
 				    		ventanaEmergenteSincronizacion.show();
-				    		
+				    		/*Declaro los metodos para los on click de los botones*/
+				    		ImageView imagenNfc= (ImageView)ventanaEmergenteSincronizacion.findViewById(R.id.imageNFC);  
+				    		imagenNfc.setOnClickListener(new OnClickListener() {
+
+									public void onClick(View v) {
+										intent = new Intent(ctx,Sincronizacion_LecturaNfc.class);
+										intent.putExtra("NumMesa", numeroMesaAEditar);
+										intent.putExtra("IdCamarero",idCamarero);
+										intent.putExtra("Personas", numeroPersonas);
+										intent.putExtra("Restaurante", restaurante);
+										ventanaEmergenteSincronizacion.dismiss();
+										
+										startActivity(intent);
+										
+									}
+				    				}
+				    				);
+				    		ImageView imagenQr= (ImageView)ventanaEmergenteSincronizacion.findViewById(R.id.imageQR);  
+				    		imagenQr.setOnClickListener(new OnClickListener() {
+
+									public void onClick(View v) {
+										intent = new Intent(ctx,Sincronizacion_QR.class);
+										intent.putExtra("NumMesa", numeroMesaAEditar);
+										intent.putExtra("IdCamarero",idCamarero);
+										intent.putExtra("Personas", numeroPersonas);
+										intent.putExtra("Restaurante", restaurante);
+										ventanaEmergenteSincronizacion.dismiss();
+										
+										startActivity(intent);
+										
+									}
+				    				}
+				    				);
+				    		ImageView imagenBeam= (ImageView)ventanaEmergenteSincronizacion.findViewById(R.id.imageBeam);  
+				    		imagenBeam.setOnClickListener(new OnClickListener() {
+
+									public void onClick(View v) {
+										intent = new Intent(ctx,Sincronizacion_BeamNfc.class);
+								    	intent.putExtra("Restaurante", restaurante);
+								    	ventanaEmergenteSincronizacion.dismiss();
+										
+										startActivity(intent);
+										
+									}
+				    				}
+				    				);
+	
 				    		
 				    	//----------------- onClickListener de editar número de mesa --------------------------------
 				    	}else if(item == 2){
@@ -697,37 +752,6 @@ public class PantallaMesasFragment extends Fragment {
     	return idUnico;
     }
 	
-	//Metodos usados en el alert dialog de sincronizar
-    public void onClickNfcsincronizacion(View v)
-    {
-    	intent = new Intent(ctx,Sincronizacion_LecturaNfc.class);
-		intent.putExtra("NumMesa", numeroMesaAEditar);
-		intent.putExtra("IdCamarero",idCamarero);
-		intent.putExtra("Personas", numeroPersonas);
-		ventanaEmergenteSincronizacion.dismiss();
-		
-		startActivity(intent);
-		
-    }
-    public void onClickBeamsincronizacion(View v)
-    {
-
-    	intent = new Intent(ctx,Sincronizacion_BeamNfc.class);
-		ventanaEmergenteSincronizacion.dismiss();
-		
-		startActivity(intent);
-    }
-    public void onClickQRsincronizacion(View v)
-    {
-
-    	intent = new Intent(ctx,Sincronizacion_QR.class);
-		intent.putExtra("NumMesa", numeroMesaAEditar);
-		intent.putExtra("IdCamarero",idCamarero);
-		intent.putExtra("Personas", numeroPersonas);
-		ventanaEmergenteSincronizacion.dismiss();
-		
-		startActivity(intent);
-    }
     //---Metodos estaticos para poder acceder a estos datos desde otra actividades
     public static String dameMesa()
     {
