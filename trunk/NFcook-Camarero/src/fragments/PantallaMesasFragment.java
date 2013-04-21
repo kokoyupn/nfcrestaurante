@@ -85,13 +85,9 @@ public class PantallaMesasFragment extends Fragment {
         Bundle bundle = getActivity().getIntent().getExtras();
         idCamarero = bundle.getString("usuario");
         
-        /**FIXME
-         Tienes que descomentar esta linea cuando lo agas para que de la pantalla de login le pase a esta el restaurante para hacerlo todo generico
-         las de sincronizacion nfc, beam y qr ya lo tienen exo pero la pantalla tambien tendras que pasarselo a la de rober para q llege a la de añadir plato para que 
-         se carge generico
-         */
+        
         restaurante=bundle.getString("Restaurante");
-        //restaurante="Foster";
+        //restaurante="VIPS";
         
 	   //Para importar la base de Assets
         try{
@@ -134,6 +130,7 @@ public class PantallaMesasFragment extends Fragment {
         		intent.putExtra("NumMesa", pulsada.getNumMesa());
         		intent.putExtra("IdCamarero",idCamarero);
         		intent.putExtra("Personas", pulsada.getNumPersonas());
+        		intent.putExtra("Restaurante", restaurante);
         		//Lanzamos la actividad
         		startActivity(intent);
                 }
@@ -147,7 +144,6 @@ public class PantallaMesasFragment extends Fragment {
         botonAnadirMesa.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				Toast.makeText(getActivity().getApplicationContext(), "HOLA", Toast.LENGTH_SHORT).show();
 				onAniadirClick(vista);
 			}
 		});

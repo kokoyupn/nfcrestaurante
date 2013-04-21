@@ -79,6 +79,7 @@ public class Mesa extends Activity {
 	
 	
 	private AutoCompleteTextView actwObservaciones;
+	private String restaurante;
 	
 	
 	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
@@ -105,6 +106,7 @@ public class Mesa extends Activity {
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
+		restaurante = bundle.getString("Restaurante");
 		
 		TextView mesa = (TextView)findViewById(R.id.numeroDeMesa);
 		mesa.setText("Mesa "+ String.valueOf(numMesa) );
@@ -266,6 +268,7 @@ public class Mesa extends Activity {
             		intent.putExtra("NumMesa", numMesa);
             		intent.putExtra("IdCamarero",idCamarero);
             		intent.putExtra("Personas", numPersonas);
+            		intent.putExtra("Restaurante", restaurante);
             		startActivity(intent);
             		
             	}catch(Exception e){
