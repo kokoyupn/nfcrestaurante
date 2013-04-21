@@ -31,7 +31,10 @@ import tpv.Restaurante;
 class BotonMesa extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	
 	private static ArrayList<JButton> instanciasBotones = new ArrayList<JButton>();
+	private static JLabel imagenEstadoPulsada = null;
+	private static tpv.Mesa.estadoMesa estadoImagenPulsada;
 	
 	private static boolean menuMesaAbierto = false;
 	private static boolean mesasRecienActivadas = false;
@@ -122,6 +125,8 @@ class BotonMesa extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				//Despulsamos la imagen
+				cargarImagenDespulsado();
 				//Activamos todos los botones de VentanaMesa, al salir de este metodo el JPopupMenu se cerra luego tendremos que poder pinchar en otra mesa.
 				activarTodosLosBotones();
 				// Creamos el teclado para introducir el numero de personas.
@@ -134,7 +139,7 @@ class BotonMesa extends JPanel {
 				case 1 : //OK
 					actualizaNumeroPersonas(((TecladoParaNumeroPersonas)teclado).getNumeroPersonas());
 					actualizarEstadoMesaAbierta();
-					cargarMesasCamarero();
+					cargarMesasCamareroYRestaurante();
 					break;
 				}				
 			}
@@ -150,6 +155,8 @@ class BotonMesa extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//Despulsamos la imagen
+				cargarImagenDespulsado();
 				activarTodosLosBotones();
 				if(estado != tpv.Mesa.estadoMesa.CERRADA){
 					JPanel teclado = new TecladoParaNumeroPersonas();
@@ -160,6 +167,7 @@ class BotonMesa extends JPanel {
 						break;
 					case 1 : //OK
 						actualizaNumeroPersonas(((TecladoParaNumeroPersonas)teclado).getNumeroPersonas());
+						cargarMesasCamareroYRestaurante();
 						break;
 					}	
 				}
@@ -173,6 +181,8 @@ class BotonMesa extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				//Despulsamos la imagen
+				cargarImagenDespulsado();
 				activarTodosLosBotones();
 				if(estado != tpv.Mesa.estadoMesa.CERRADA ){
 					if(!mesaVacia()){
@@ -182,6 +192,7 @@ class BotonMesa extends JPanel {
 					}else{
 						actualizarEstadoMesaCerrada();
 						actualizaNumeroPersonas(0);
+						cargarMesasCamareroYRestaurante();
 					}
 				}
 			}
@@ -240,8 +251,9 @@ class BotonMesa extends JPanel {
 		instanciasBotones.add(imagenBotonMesa);
 	}
 	
-	protected void cargarMesasCamarero() {
+	protected void cargarMesasCamareroYRestaurante() {
 		ventanaMesas.cargarMesasCamarero();
+		ventanaMesas.cargarMesasRestaurate();
 	}
 
 	protected String getIdMesa() {
@@ -361,6 +373,17 @@ class BotonMesa extends JPanel {
 		}
 	}
 	
+	public static void despulsarImagen(){
+		
+		if(estadoImagenPulsada == tpv.Mesa.estadoMesa.CERRADA){
+			imagenEstadoPulsada.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
+		}else if(estadoImagenPulsada == tpv.Mesa.estadoMesa.ABIERTA){
+			imagenEstadoPulsada.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+		}else if(estadoImagenPulsada == tpv.Mesa.estadoMesa.COMANDA){
+			imagenEstadoPulsada.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
+		}
+	}
+	
 	/**
 	 * Clase encargada de gestionar eventos de ratón, extiende de MouseAdapter para no tener que implementar los metodos
 	 * que no necesitemos.
@@ -382,6 +405,7 @@ class BotonMesa extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
+			cargarImagenPulsado();
 			if(!menuMesaAbierto){
 				desactivarTodosLosBotones();
 				timerPopupMenu.start();
@@ -394,11 +418,38 @@ class BotonMesa extends JPanel {
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
+			cargarImagenDespulsado();
 			activarTodosLosBotones();
 			timerPopupMenu.stop();
 		}
 		
 	}
+	
+	public void cargarImagenPulsado(){
+		imagenEstadoPulsada = jLabelIconoMesa;
+		estadoImagenPulsada = estado;
+		if(estado == tpv.Mesa.estadoMesa.CERRADA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerradaPulsada.png"));
+		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbiertaPulsada.png"));
+		}else if(estado == tpv.Mesa.estadoMesa.COMANDA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComandaPulsada.png"));
+		}
+	}
+	
+	public void cargarImagenDespulsado(){
+		imagenEstadoPulsada = jLabelIconoMesa;
+		estadoImagenPulsada = estado;
+		if(estado == tpv.Mesa.estadoMesa.CERRADA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
+		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+		}else if(estado == tpv.Mesa.estadoMesa.COMANDA){
+			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
+		}
+	}
+	
+	
 	/**
 	 * Panel contenedor del teclado para el número de las personas.
 	 * @author Prado

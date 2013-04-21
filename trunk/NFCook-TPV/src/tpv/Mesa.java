@@ -103,4 +103,8 @@ public class Mesa {
 		
 	}
 
+	public boolean esMesaCerrada() {
+		return estado == estadoMesa.CERRADA;
+	}
+
 }

@@ -80,6 +80,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 			
 			@Override
 			public void mousePressed(MouseEvent arg0) {
+				BotonMesa.despulsarImagen();
 				BotonMesa.activarTodosLosBotones();
 			}
 			
@@ -110,6 +111,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 			
 			@Override
 			public void mousePressed(MouseEvent arg0) {
+				BotonMesa.despulsarImagen();
 				BotonMesa.activarTodosLosBotones();
 			}
 			
@@ -148,7 +150,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		
 		while(iteradorMesasCamarero.hasNext()){
 			Mesa unaMesa = iteradorMesasCamarero.next();
-			if(unaMesa.getIdCamarero()!=null && unaMesa.getIdCamarero().equals(idCamarero)){
+			if(unaMesa.getIdCamarero()!=null && unaMesa.getIdCamarero().equals(idCamarero) && !unaMesa.esMesaCerrada()){
 				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
 				panelMesasCamarero.add(botonMesa, null);
 			}
