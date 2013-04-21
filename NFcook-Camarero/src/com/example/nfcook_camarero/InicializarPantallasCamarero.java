@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -17,7 +18,6 @@ public class InicializarPantallasCamarero extends Activity implements TabContent
 	
 	// Tabs con las mesas y el histórico
 	private TabHost tabs;
-	
 	private View tabContentView;
 	
 	@Override

@@ -29,7 +29,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Hora"
+                android:textColor="@color/negro"
                 android:textSize="18dp" />
+
         </LinearLayout>
 
         <FrameLayout
@@ -51,6 +53,7 @@
                 android:layout_marginLeft="30dp"
                 android:gravity="right"
                 android:text="Camarero"
+                android:textColor="@color/negro"
                 android:textSize="12dp" />
 
             <TextView
@@ -60,6 +63,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:text="Precio"
+                android:textColor="@color/negro"
                 android:textSize="12dp" />
 
         </FrameLayout>

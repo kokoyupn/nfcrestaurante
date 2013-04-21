@@ -64,8 +64,7 @@ public class MainActivity extends Activity {
 		  //Iniciamos la nueva actividad
 	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
        	  intent.putExtra("usuario", "admin");
-/**FIXME esta linea la tendras que poner luego bien la e puesto para probar una cosa que me acia falta */       	  
-       	  intent.putExtra("Restaurante","Foster");
+       	  intent.putExtra("Restaurante","foster");
        	  startActivity(intent); 
 	  }  
  /**
@@ -79,7 +78,7 @@ public void  onClickBotonEntrar(View boton)
    {
 	   /*Contiene en nombre que introduces por pantalla en el editText*/
 	
-	usuario = (EditText) findViewById(R.id.editTextUsuario);
+	   usuario = (EditText) findViewById(R.id.editTextUsuario);
 	   /*Contiene la contraseña que introduces por pantalla en el editText*/
 	   password = (EditText) findViewById(R.id.editTextPass);
 	
@@ -91,12 +90,11 @@ public void  onClickBotonEntrar(View boton)
 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos login",Toast.LENGTH_SHORT).show();
 	       }
 	   
-	   try{
-				
+	   try{	
 		   String[] campos = new String[]{"Nombre","Contraseña"};
-		   String[] datos = new String[]{usuario.getText().toString()};//, password.getText().toString()};
+		   String[] datos = new String[]{usuario.getText().toString(), password.getText().toString()};
 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
-		   Cursor c = dbLogin.query("Camareros",campos,"Nombre=?",datos, null,null, null);
+		   Cursor c = dbLogin.query("Camareros",campos,"Nombre=? AND Contraseña=?",datos, null,null, null);
 	  	  
 		   	  	   
 	  	   c.moveToFirst();
@@ -109,8 +107,9 @@ public void  onClickBotonEntrar(View boton)
     	   {  
     	   	  //abrir_ventanaEmergente("Bienvenido: "+usu,R.drawable.icono_usuario);
            	  //Iniciamos la nueva actividad
-    	   	  Intent intent = new Intent(this, InicialCamarero.class);
+    	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
+           	  intent.putExtra("Restaurante",password.getText().toString());
            	  startActivity(intent);	
     	   }
     	   else{
