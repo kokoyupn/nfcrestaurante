@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import baseDatos.HandlerDB;
 import com.example.nfcook.R;
 
+import fragments.PantallaInicialRestaurante;
+
 import adapters.InfomacionPlatoPantallaReparto;
 import adapters.MiGridViewCalculadoraAdapter;
 import adapters.MiViewPagerAdapter;
 import adapters.PadreGridViewCalculadora;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,8 +25,10 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -64,11 +70,7 @@ public class Calculadora extends Activity{
     private int numPersonaActual;
 
 	public void onCreate(Bundle savedInstanceState) {   
-        //Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //Quitamos barra de notificaciones
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
+       
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calculadora);
         
@@ -264,6 +266,31 @@ public class Calculadora extends Activity{
 	    }catch(SQLiteException e){
 	         Toast.makeText(getApplicationContext(),"ERROR AL ABRIR LA BD DE CUENTA EN LA PANTALLA CALCULADORA",Toast.LENGTH_SHORT).show();
 	    }
+	
+        /******************************** AYUDA ********************************/
+        
+        ImageView imageViewBotonAyuda = (ImageView) findViewById(R.id.imageViewLogoDescRest);
+    	// Implementamos el oyente
+    	imageViewBotonAyuda.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ImageView imageViewInfoAyuda = (ImageView) findViewById(R.id.imageViewInfoAyuda);
+			    imageViewInfoAyuda.setVisibility(ImageView.VISIBLE);
+			}
+		});
+    	
+    	
+    	ImageView imageViewInfoAyuda = (ImageView) findViewById(R.id.imageViewInfoAyuda);
+    	// Implementamos el oyente
+    	imageViewInfoAyuda.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ImageView imageViewInfoAyuda = (ImageView) findViewById(R.id.imageViewInfoAyuda);
+				imageViewInfoAyuda.setVisibility(ImageView.INVISIBLE);
+			}
+		});
+    	
+    	/**FIXME 
+    	 * Lanzar la imagen cuando se abra por primera vez */
+        
 	}
 	
 	public static void eliminaPersona(int posPersona){
