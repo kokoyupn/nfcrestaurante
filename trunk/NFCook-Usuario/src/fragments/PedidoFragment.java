@@ -49,10 +49,7 @@ public class PedidoFragment extends Fragment{
 	private static HandlerDB sqlPedido;
 	private static SQLiteDatabase dbPedido;
 	
-	/**
-	 * TODO variable para poder usar sin tarjetas. ELIMINAR
-	 */
-	NfcAdapter adapter;
+	private NfcAdapter adapter;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -66,9 +63,7 @@ public class PedidoFragment extends Fragment{
         ponerOnClickSincronizarPedidoBeam();
         ponerOnClickSincronizarPedidoQR();
         
-        /**
-    	 * TOFIX variable para poder usar sin tarjetas. ELIMINAR
-    	 */
+        // me devuelve null si no tiene NFC, si no, me devuelve el adapter nfc del dispositivo
         adapter = NfcAdapter.getDefaultAdapter(vistaConExpandaleList.getContext());
         
         return vistaConExpandaleList;
@@ -210,38 +205,12 @@ public class PedidoFragment extends Fragment{
 			public void onClick(View v) {
 				// cierro la ventana emergente
 				ventanaEmergenteElegirSincronizacion.dismiss();
-				if (adapter != null) {
-					/**
-					 * TODO para poder usar sin tarjetas. ELIMINAR
-					 */
-					if (!adapter.isEnabled()){
-						Toast.makeText(vistaConExpandaleList.getContext(),"NFC desactivado. Esta opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
-						enviarPedidoACuenta();
-						Fragment fragmentCuenta = new CuentaFragment();
-					    ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-					    FragmentTransaction m = getFragmentManager().beginTransaction();
-					    m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-					    m.commit();	
-					    //Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
-					} else {
-						// abro la ventana para sincronizar con NFC
-						Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
-						intent.putExtra("Restaurante", restaurante);
-						startActivityForResult(intent, 0);
-					}
-				} else {
-					/**
-					 * TODO para poder usar sin tarjetas. ELIMINAR
-					 */
-					Toast.makeText(vistaConExpandaleList.getContext(),"No tienes NFC. Esta opción existe solo para probrar las cosas. Luego ELIMINAR",Toast.LENGTH_LONG).show();
-					enviarPedidoACuenta();
-					Fragment fragmentCuenta = new CuentaFragment();
-				    ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-				    FragmentTransaction m = getFragmentManager().beginTransaction();
-				    m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-				    m.commit();	
-				    //Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
-				}
+				if (adapter != null) {					
+					// abro la ventana para sincronizar con NFC
+					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+					intent.putExtra("Restaurante", restaurante);
+					startActivityForResult(intent, 0);
+				} else Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
 			} 
 		});
 	}
@@ -261,58 +230,6 @@ public class PedidoFragment extends Fragment{
 		} 	
 	}
 	
-	
-	/**
-	 * TODO para poder usar sin tarjetas. ELIMINAR
-	 */
-	private void enviarPedidoACuenta(){
-		HandlerDB sqlCuenta = null;
-		sqlPedido = null;
-		SQLiteDatabase dbCuenta = null;
-		dbPedido = null;
-		
-		try{
-			sqlPedido = new HandlerDB(getActivity(), "Pedido.db");
-			dbPedido = sqlPedido.open();
-		}catch(SQLiteException e){
-         	Toast.makeText(getActivity(),"NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)",Toast.LENGTH_SHORT).show();
-		}
-		try{
-			sqlCuenta = new HandlerDB(getActivity(), "Cuenta.db");
-			dbCuenta = sqlCuenta.open();
-		}catch(SQLiteException e){
-         	Toast.makeText(getActivity(),"NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC",Toast.LENGTH_SHORT).show();
-		}	
-		//Campos que quieres recuperar
-		String[] campos = new String[]{"Id","Plato","Observaciones","Extras","PrecioPlato","Restaurante","IdHijo"};
-		String[] datosRestaurante = new String[]{restaurante};	
-		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
-    	
-    	while(cursorPedido.moveToNext()){
-    		ContentValues platoCuenta = new ContentValues();
-        	platoCuenta.put("Id", cursorPedido.getString(0));
-        	platoCuenta.put("Plato", cursorPedido.getString(1));
-        	platoCuenta.put("Observaciones", cursorPedido.getString(2));
-        	platoCuenta.put("Extras", cursorPedido.getString(3));
-        	platoCuenta.put("PrecioPlato",cursorPedido.getDouble(4));
-        	platoCuenta.put("Restaurante",cursorPedido.getString(5));
-        	platoCuenta.put("IdHijo", cursorPedido.getString(6));
-    		dbCuenta.insert("Cuenta", null, platoCuenta);
-    	}
-		
-		try{
-			dbPedido.delete("Pedido", "Restaurante=?", datosRestaurante);	
-		}catch(SQLiteException e){
-         	Toast.makeText(getActivity(),"ERROR AL BORRAR BASE DE DATOS PEDIDO",Toast.LENGTH_SHORT).show();
-		}
-		
-		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
-		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity) vistaConExpandaleList.getContext());
-		
-		sqlCuenta.close();
-		sqlPedido.close();	
-	}	
-	
 	/**
 	 * Crea el onClick la imagen botonBeam
 	 */
@@ -323,12 +240,15 @@ public class PedidoFragment extends Fragment{
 		botonBeam.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+
 				// cierro la ventana emergente
 				ventanaEmergenteElegirSincronizacion.dismiss();
-				//abro la ventana para sincronizar con Beam
-				Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
-				intent.putExtra("Restaurante", restaurante);
-				startActivityForResult(intent, 0);
+				if (adapter != null) {		
+					//abro la ventana para sincronizar con Beam
+					Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
+					intent.putExtra("Restaurante", restaurante);
+					startActivityForResult(intent, 0);
+				} else Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
 			}
 		});
 		
