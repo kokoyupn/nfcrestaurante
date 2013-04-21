@@ -124,7 +124,7 @@ public class ClienteFichero
     		
     	}catch (IOException e) {
 			System.err.println("Error al enviar las consultas a los Clientes");
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	}
 		
 	}
@@ -157,7 +157,7 @@ public class ClienteFichero
     		
     	}catch (IOException e) {
 			System.err.println("Error al enviar las consultas a los Clientes");
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	}
 		
 	}
