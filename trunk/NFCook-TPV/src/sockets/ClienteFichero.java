@@ -19,12 +19,14 @@ import java.util.ArrayList;
 public class ClienteFichero
 {
 	private static InetAddress hostLocal;
+	private final static int puerto = 5000;
+	private final static String servidor = "192.168.1.54";
 
     /**
 	 * Establece comunicacion con el servidor en el puerto indicado. Envia la consulta sql
 	 * junto con el fichero que habra que actualizar en el Servidor.
 	**/
-	public static void enviaConsulta(String fichero, String servidor, int puerto, String sql){
+	public static void enviaConsulta(String fichero, String sql){
 
 		try{
 			// Se abre el socket.
@@ -62,7 +64,7 @@ public class ClienteFichero
 	 * Establece comunicacion con el servidor en el puerto indicado. Envia el array con consultas sql
 	 * junto con el fichero que habra que actualizar en el Servidor.
 	**/
-	public static void enviaArrayConsultas(String fichero, String servidor, int puerto, ArrayList<String> consultas){
+	public static void enviaArrayConsultas(String fichero, ArrayList<String> consultas){
 
 		try{
 			// Se abre el socket.
@@ -172,7 +174,7 @@ public class ClienteFichero
      * @param puerto
      *            Puerto de conexión
      */
-    public static void pide(String fichero, String servidor, int puerto)
+    public static void pide(String fichero)
     {
         try
         {
@@ -234,4 +236,36 @@ public class ClienteFichero
             e.printStackTrace();
         }
     }
+
+    
+    /**
+     * Metodo que envia la IP del TPV para eliminarlo del servidor al cerrarse el programa.
+     * Envia un objeto de tipo MensajeConsulta pero con el nombre de fichero vacio, 
+     * para indicar que es para el cierre del TPV.
+     * **/
+    public static void enviaIPtpv(){
+    	
+    	try{
+	    	// Se abre el socket.
+	        Socket socket = new Socket(servidor, puerto);
+	       
+	        // Se envía un mensaje de petición de fichero.
+	        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+	        MensajeConsulta mensaje = new MensajeConsulta();
+	    	mensaje.ips = new ArrayList<InetAddress>();
+	       	mensaje.ips.add(socket.getLocalAddress());
+	        
+	        oos.writeObject((Object)mensaje);
+	        
+	        //cerramos el socket
+	        socket.close();
+	        oos.close();
+        
+    	}catch(Exception exceptionCierreTPV){
+    		System.err.println("Fallo al enviar el cierre del TPV");
+    	}
+
+    }
+    
+
 }

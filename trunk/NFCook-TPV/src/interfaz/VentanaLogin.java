@@ -45,9 +45,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private static Restaurante unRestaurante;
-	private final static int puerto = 5000;
-	private final static String servidor = "nfcook.no-ip.org";
-
+	
 	public VentanaLogin(){
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -292,10 +290,10 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	}
 	
 	public static void main(String args[]){
-		ClienteFichero.pide("MesasRestaurante.db", servidor, puerto);
-		ClienteFichero.pide("MiBase.db", servidor, puerto);
-		ClienteFichero.pide("login.db", servidor, puerto);
-		ClienteFichero.pide("FichaCamareros.db", servidor, puerto);
+		ClienteFichero.pide("MesasRestaurante.db");
+		ClienteFichero.pide("MiBase.db");
+		ClienteFichero.pide("login.db");
+		ClienteFichero.pide("FichaCamareros.db");
 		
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ventanaLogin.pack();
@@ -303,6 +301,5 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
-                
-	}
+  	}
 }
