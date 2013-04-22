@@ -1,5 +1,6 @@
 package tpv;
 
+import interfaz.InterfazPlatos;
 import interfaz.VentanaMesas;
 
 import java.lang.reflect.Array;
@@ -26,6 +27,8 @@ public class Restaurante {
 	private HistoricoComandasMesas comandasMesas;
 	
 	private VentanaMesas ventanaMesas;
+	
+	private InterfazPlatos ventanaPlatos;
 	
 	private final String nombreRestaurante = "'Foster'";
 	
@@ -125,9 +128,19 @@ public class Restaurante {
 		this.ventanaMesas = ventanaMesas;
 	}
 	
+	public void setIterfazPlatos(InterfazPlatos ventanaPlatos){
+		this.ventanaPlatos = ventanaPlatos;
+	}
+	
 	public void refrescaVentanaMesas(){
 		if(ventanaMesas!=null){
 			ventanaMesas.refrescarMesasPanel();
+		}
+	}
+	
+	public void refrescaInterfazPlatos(){
+		if(ventanaPlatos!=null){
+			ventanaPlatos.refrescarTablaPanel();
 		}
 	}
 	

@@ -78,6 +78,7 @@ public class InterfazPlatos extends JFrame {
 	public InterfazPlatos(final String idMesa, final Restaurante unRestaurante) {
 		this.idMesa = idMesa;
 		this.unRestaurante = unRestaurante;
+		this.unRestaurante.setIterfazPlatos(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);//Eliminamos los bordes de la ventana.
@@ -917,7 +918,53 @@ public class InterfazPlatos extends JFrame {
 		}
 		return tmp;
 	 }
+	 
+	 public void refrescarTablaPanel(){
+		 cargarTablaPlatos();
+	 }
 	
+	 private void cargarTablaPlatos() {
+		//creamos las columnas
+		Object[][] datos = {};
+		String[] columnNames = {"Nombre","Observaciones","Configuración","Precio"};
+		dtm= new TablaNoEditable(datos,columnNames);
+		//Cargamos los platos de la mesa
+		Iterator<Mesa> iteratorMesas = unRestaurante.getIteratorMesas();
+		String nombre,configuracion,observaciones;
+		double precio;
+		while(iteratorMesas.hasNext())
+		{
+			Mesa mesa = iteratorMesas.next();
+			if (mesa.getIdMesa().equals(idMesa)){ 
+				//mesa encontrada, cargamos los platos
+				productosEnMesa = mesa.getProductosEnMesa();
+				for (int i = 0; i < productosEnMesa.size(); i++){
+					if (productosEnMesa.get(i).getProd() instanceof Bebida){ //No tiene configuración
+						configuracion = "No configurable";
+					}else{
+						configuracion = ((Plato)productosEnMesa.get(i).getProd()).getExtrasMarcados(); 
+					}
+					dinero = Math.rint((dinero + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
+					total.setText("Total: " + dinero + " euros");
+					nombre = productosEnMesa.get(i).getProd().getNombre();
+					observaciones = productosEnMesa.get(i).getProd().getObservaciones();
+					precio = productosEnMesa.get(i).getProd().getPrecio();
+					
+					Object[] newRow={nombre,observaciones,configuracion,precio};
+					dtm.addRow(newRow);
+				}
+			}
+		}
+
+		tablaPlatos = new JTable(dtm);
+		
+		//Refrescamos
+		tablaPlatos.validate();
+		tablaPlatos.repaint();
+		scrollPaneTable.validate();
+		scrollPaneTable.repaint();
+	 }
+
 private class TecladoAlfaNumerico extends JPanel{
 		
 		private static final long serialVersionUID = 1L;
