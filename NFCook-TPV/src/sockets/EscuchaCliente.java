@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import tpv.Mesa.estadoMesa;
+
 import basesDeDatos.Operaciones;
 
 public class EscuchaCliente extends Thread {
@@ -38,6 +40,11 @@ public class EscuchaCliente extends Thread {
 	            }else if (mensaje instanceof MensajeArrayConsultas){
 	            	Operaciones operacion = new Operaciones(((MensajeArrayConsultas) mensaje).nombreFichero);
 	            	operacion.introducirComandaBDLLegadaExterna(((MensajeArrayConsultas) mensaje).consultas);
+	            
+	            }else if (mensaje instanceof MensajeEstadoMesa){
+	            	MensajeEstadoMesa mensajeUtilizar = (MensajeEstadoMesa)mensaje;
+	            	Operaciones operacion = new Operaciones(mensajeUtilizar.nombreFichero);
+	            	operacion.actualizarMesaBDLLegadaExterna(mensajeUtilizar.sql, mensajeUtilizar.idMesa, mensajeUtilizar.idCamarero, mensajeUtilizar.numPersonas, mensajeUtilizar.estado);
 	            }
 			
 	            // cerramos los sockets

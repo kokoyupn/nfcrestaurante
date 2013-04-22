@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import tpv.Mesa.estadoMesa;
+
 /**
  * Pide un fichero al ServidorFichero, lo escribe en pantalla cuando lo recibe y
  * lo guarda en disco.
@@ -20,6 +22,7 @@ public class ClienteFichero
 {
 	private static InetAddress hostLocal;
 	private final static int puerto = 5000;
+	private final static int puertoClientes = 5002;
 	private final static String servidor = "nfcook.no-ip.org";
 
     /**
@@ -46,8 +49,8 @@ public class ClienteFichero
             
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            MensajeConsulta mensajeConIPs = (MensajeConsulta) ois.readObject(); // mensajeConIPs tiene la misma info que mensajeConsulta
-            transmiteConsultasLocal(mensajeConIPs);
+            Object mensajeConIPs = ois.readObject();
+            transmiteMensajeLocal(mensajeConIPs);
             
             // cerramos el socket
             socket.close();
@@ -84,8 +87,8 @@ public class ClienteFichero
             
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            MensajeArrayConsultas mensajeConIPs = (MensajeArrayConsultas) ois.readObject(); // mensajeConIPs tiene la misma info que mensajeConsulta
-            transmiteConsultasLocal(mensajeConIPs);
+            Object mensajeConIPs = ois.readObject();
+            transmiteMensajeLocal(mensajeConIPs);
             
             // cerramos el socket
             socket.close();
@@ -95,27 +98,78 @@ public class ClienteFichero
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar consulta al Servidor");
 		}
-		
 	}
 	
-	private static void transmiteConsultasLocal(MensajeConsulta mensaje){
+	/**
+	 * Establece comunicacion con el servidor en el puerto indicado. Envia el estado de una mesa junto con 
+	 * la consulta sql y el fichero que habra que actualizar en el Servidor.
+	**/
+	public static void enviaEstadoMesa(String idMesa, String idCamarero, int numPersonas, estadoMesa estado, String fichero, String sql){
+
+		try{
+			// Se abre el socket.
+            Socket socket = new Socket(servidor, puerto);
+
+            hostLocal = socket.getLocalAddress();
+            
+            // Se envía un mensaje de petición de fichero.
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            MensajeEstadoMesa mensajeEstadoMesa = new MensajeEstadoMesa();
+            mensajeEstadoMesa.idMesa = idMesa;
+            mensajeEstadoMesa.idCamarero = idCamarero;
+            mensajeEstadoMesa.numPersonas = numPersonas;
+            mensajeEstadoMesa.estado = estado;
+            mensajeEstadoMesa.nombreFichero = fichero;
+            mensajeEstadoMesa.sql = sql;
+            mensajeEstadoMesa.ips = new ArrayList<InetAddress>();
+            mensajeEstadoMesa.ips.add(socket.getLocalAddress());
+           
+            oos.writeObject(mensajeEstadoMesa);
+            
+            // recibir las IP internas de todos los clientes y enviar esta misma info
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Object mensajeConIPs = ois.readObject();
+            transmiteMensajeLocal(mensajeConIPs);
+            
+            // cerramos el socket
+            socket.close();
+            oos.close();
+            ois.close();
+            
+		}catch(Exception excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar el estado de una mesa al Servidor");
+		}
+	}
+	
+	/**
+	 * Se encarga de transmitir el mensaje a los clientes en red local, en función del tipo que sea.
+	 * **/
+	private static void transmiteMensajeLocal(Object mensaje){
+		if (mensaje instanceof MensajeConsulta){
+			transmiteMensajeConsultasLocal((MensajeConsulta)mensaje);
+			
+		}else if (mensaje instanceof MensajeArrayConsultas){
+			transmiteArrayConsultasLocal((MensajeArrayConsultas)mensaje);
+			
+		}else if (mensaje instanceof MensajeEstadoMesa) {
+			transmiteEstadoMesaLocal((MensajeEstadoMesa)mensaje);
+		}
+	}
+	
+	private static void transmiteMensajeConsultasLocal(MensajeConsulta mensaje){
 		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
     	try {
     		int i = 0;
     		while(i<mensaje.ips.size()){
     			if(!mensaje.ips.get(i).equals(hostLocal)){
 
-    				Socket socket = new Socket(mensaje.ips.get(i), 5002);
+    				Socket socket = new Socket(mensaje.ips.get(i), puertoClientes);
     		    	ObjectOutputStream oos;
     				System.out.println("Aceptado servidor");
     				oos = new ObjectOutputStream(socket.getOutputStream());
     				 
-    		        MensajeConsulta mensajeConsulta = new MensajeConsulta();
-    		       	mensajeConsulta.nombreFichero = mensaje.nombreFichero;
-    		       	mensajeConsulta.sql = mensaje.sql;
-    		       
-    		        oos.writeObject(mensajeConsulta);
-
+    				oos.writeObject(mensaje);
+    		      
     		        // cerramos el socket
     				socket.close();
     				oos.close();
@@ -125,29 +179,24 @@ public class ClienteFichero
     			}
     		
     	}catch (IOException e) {
-			System.err.println("Error al enviar las consultas a los Clientes");
+			System.err.println("Error al enviar la consulta a los Clientes");
     		//e.printStackTrace();
     	}
-		
 	}
 	
-	private static void transmiteConsultasLocal(MensajeArrayConsultas mensaje){
+	private static void transmiteArrayConsultasLocal(MensajeArrayConsultas mensaje){
 		// recorremos todos los clientes salvo el actual para enviarles el array con las consultas sql
     	try {
     		int i = 0;
     		while(i<mensaje.ips.size()){
     			if(!mensaje.ips.get(i).equals(hostLocal)){
 
-    				Socket socket = new Socket(mensaje.ips.get(i), 5002);
+    				Socket socket = new Socket(mensaje.ips.get(i), puertoClientes);
     		    	ObjectOutputStream oos;
     				System.out.println("Aceptado servidor");
     				oos = new ObjectOutputStream(socket.getOutputStream());
-    				 
-    				MensajeArrayConsultas mensajeArrayConsulta = new MensajeArrayConsultas();
-    				mensajeArrayConsulta.nombreFichero = mensaje.nombreFichero;
-    				mensajeArrayConsulta.consultas = mensaje.consultas;
     				
-    		        oos.writeObject(mensajeArrayConsulta);
+    				oos.writeObject(mensaje);
 
     		        // cerramos el socket
     				socket.close();
@@ -158,11 +207,38 @@ public class ClienteFichero
     			}
     		
     	}catch (IOException e) {
-			System.err.println("Error al enviar las consultas a los Clientes");
+			System.err.println("Error al enviar el array con las consultas a los Clientes");
     		//e.printStackTrace();
     	}
-		
 	}
+	
+	public static void transmiteEstadoMesaLocal(MensajeEstadoMesa mensaje){
+		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
+    	try {
+    		int i = 0;
+    		while(i<mensaje.ips.size()){
+    			if(!mensaje.ips.get(i).equals(hostLocal)){
+
+    				Socket socket = new Socket(mensaje.ips.get(i), puertoClientes);
+    		    	ObjectOutputStream oos;
+    				System.out.println("Aceptado servidor");
+    				oos = new ObjectOutputStream(socket.getOutputStream());
+    				 
+    		        oos.writeObject(mensaje);
+
+    		        // cerramos el socket
+    				socket.close();
+    				oos.close();
+
+    			}
+    			i++;
+    			}
+    		
+    	}catch (IOException e) {
+			System.err.println("Error al enviar el estado de una mesa a los Clientes");
+    	}
+	}
+	
     /**
      * Establece comunicación con el servidor en el puerto indicado. Pide el
      * fichero. Cuando llega, lo escribe en pantalla y en disco duro.

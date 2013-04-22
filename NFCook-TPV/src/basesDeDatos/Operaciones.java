@@ -192,13 +192,15 @@ public class Operaciones extends Conexion{
 	}
 
 	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, estadoMesa estado) {
+		String fichero = "MesasRestaurante.db";
 		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
 														"' numeroPersonas='" + numeroPersonas + "',"+
 														"where idMesa='" + idMesa + "')";
 		
-		//LLama ala clase de alex
+		// Enviamos el estado de la mesa al servidor y los clientes
+		ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
 		
-		//Modificamos base de datos local.
+		// Modificamos base de datos local.
 		insertar(consulta, false);
 		
 	}
