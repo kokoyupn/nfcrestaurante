@@ -48,7 +48,6 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        
         importarBaseDatatos();
     	crearRestaurantesListView();
 		
@@ -87,6 +86,11 @@ public class MainActivity extends Activity{
     		logosRestaurantes.add(getResources().getIdentifier(logo,"drawable",this.getPackageName()));
     	}
     	
+    	/*
+    	 * FIXME Los restaurantes de abajo están añadidos a la lista manualmente, puesto
+    	 * que al no haber información sobre ellos en la bd no saldrían si no y queremos
+    	 * que sagan.
+    	 */
     	logosRestaurantesListaInicial.add(getResources().getIdentifier("fridays","drawable",this.getPackageName()));
     	logosRestaurantesListaInicial.add(getResources().getIdentifier("ginos","drawable",this.getPackageName()));
     	

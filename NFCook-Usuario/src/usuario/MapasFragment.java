@@ -1,5 +1,4 @@
 package usuario;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +11,32 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 import buscaRutaMapa.AnalizadorRutaMapa;
 
 import com.example.nfcook.R;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +44,9 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -32,49 +57,22 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.View;
-
-import android.widget.TextView;
-import android.widget.Toast;
-
-public class Mapas extends FragmentActivity
+public class MapasFragment extends Fragment 
 					implements LocationListener, OnMarkerClickListener, 
 							OnInfoWindowClickListener, OnMapClickListener{
     
-    /**
-     * Clase adapter del bocadillo que sale encima del marcador del mapa
-     * 
-     * @author Alejandro V.
-     *
-     */
+    //Clase adapter del bocadillo que sale encima del marcador del mapa
     class VentanaMarcadorMapaAdapter implements InfoWindowAdapter {
 
     	private final View mContents;
     	
-    	public VentanaMarcadorMapaAdapter() {
-    		mContents = getLayoutInflater().inflate(R.layout.textview_buscador_platos, null);
+    	public VentanaMarcadorMapaAdapter()
+    	{
+    		mContents = getActivity().getLayoutInflater().inflate(R.layout.textview_buscador_platos, null);
     	}
-    	
-    	// Métodos de InfoWindowAdapter
-    	// Si getInfoWindow(...) devuelve null, llamará entonces a getInfoContents(...)
-    	// Si además getInfoContents(...) devuelve null, se muestra el contenido por defecto
+    // Métodos de InfoWindowAdapter
+    // Si getInfoWindow(...) devuelve null, llamará entonces a getInfoContents(...)
+    // Si además getInfoContents(...) devuelve null, se muestra el contenido por defecto
     	public View getInfoContents(Marker marker) { 
     		TextView titulo = (TextView) mContents.findViewById(R.id.textViewObjetoBusqueda);
     		titulo.setTextColor(Color.rgb(065, 105, 225));
@@ -84,79 +82,122 @@ public class Mapas extends FragmentActivity
     		titulo.setText(tituloSubrayado);
     		return mContents;
     	}
-    	
     	public View getInfoWindow(Marker marker) {
+    		// TODO Auto-generated method stub
     		return null;
-    	}	
+    	}
+    	
+    	
     }
 	
     private GoogleMap map;
 	private LocationManager locationManager;
 	private static ArrayList<Restaurante> restaurantes;
 	private Location miUbicacion;
-	private ArrayList<LatLng> puntosRuta;
-    private TextView textViewInfoRuta;
+	ArrayList<LatLng> puntosRuta;
+    TextView textViewInfoRuta;
     private Polyline polilyneActual;
+    View vista;
+    MapView mMapView;
     
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {	
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.mapas);
-		
-		if (map == null) {
-            // Obtenemos el mapa
-            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            // Si hemos obtenido el mapa, lo cargamos
-            if (map != null) {
-                inicializarMapa();
-            }
-        }
+    @Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    	vista = super.onCreateView(inflater, container, savedInstanceState);
+    	// inflat and return the layout
+    			View v = getActivity().getLayoutInflater().inflate(R.layout.mapas, container, false);
+    			mMapView = (MapView) v.findViewById(R.id.map);
+    			mMapView.onCreate(savedInstanceState);
+    			mMapView.onResume();//needed to get the map to display immediately
+    			
+    			try {
+    	     		MapsInitializer.initialize(getActivity().getApplicationContext());
+    	 		} catch (GooglePlayServicesNotAvailableException e) {
+    	     		e.printStackTrace();
+    	 		}
+    	 		
+    	 		map = mMapView.getMap();
+    	 		
+    	 		//Perform any camera updates here
+    			
+    			return vista;
 	}
+    
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)     {
+        super.onViewCreated(view, savedInstanceState);
+    }
 	
 	@Override
-    protected void onResume() {
+	public void onResume() {
         super.onResume();
+		mMapView.onResume();
         inicializarMapa();
     }
 	
+	@Override
+	public void onPause() {
+		super.onPause();
+		mMapView.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mMapView.onDestroy();
+	}
+	
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		mMapView.onLowMemory();
+	}
+	
+	@Override
+	 public void onDestroyView() {
+	        super.onDestroyView(); 
+	        Fragment fragment = (getFragmentManager().findFragmentById(R.id.map));  
+	        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+	        ft.remove(fragment);
+	        ft.commit();
+	}
+	
 	public void inicializarMapa() {
+		
 		if(restaurantes == null)
 			restaurantes = new ArrayList<Restaurante>();
 	    
-		textViewInfoRuta = (TextView) findViewById(R.id.textViewMapas);
+		textViewInfoRuta = (TextView) vista.findViewById(R.id.textViewMapas);
 		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener +info");
 		 
 		// Tomamos el location manager
-	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	    locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 	    miUbicacion = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-	    FragmentManager fragManager = getSupportFragmentManager();
-	    SupportMapFragment fm = (SupportMapFragment) fragManager.findFragmentById(R.id.map);
-        map = fm.getMap();
+	    
+	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMyLocationEnabled(true);
         getMiPosicion(miUbicacion);
-       	
+        
+		
 		// Asignamos la latitud y longitud de la ubicación actual
         LatLng coordenadas;
-        if(map.getMyLocation() == null){
+        if(map.getMyLocation() == null)
         	coordenadas = new LatLng(miUbicacion.getLatitude(),miUbicacion.getLongitude());
-        }else{
+        else
         	coordenadas = new LatLng(map.getMyLocation().getLatitude(),map.getMyLocation().getLongitude());
-        }
-        
-        CameraPosition camPos = new CameraPosition.Builder()
+		CameraPosition camPos = new CameraPosition.Builder()
 		        .target(coordenadas)   //Se posiciona en la ubicación actual
 		        .zoom(13)         //Establecemos el zoom en 13
 		        //.bearing(0)      //Establecemos la orientación al norte
 		        .tilt(70)         //Bajamos el punto de vista de la cámara 70 grados
 		        .build();
 		 
-		CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(camPos);
+		CameraUpdate cameraUpdate =
+		    CameraUpdateFactory.newCameraPosition(camPos);
 		 
 		map.animateCamera(cameraUpdate);
 		
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(
+		        LocationManager.GPS_PROVIDER, 0, 0, this);
 		//Añadimos cada restaurante de la Comunidad de Madrid
 		map.setInfoWindowAdapter(new VentanaMarcadorMapaAdapter());
 		
@@ -172,9 +213,8 @@ public class Mapas extends FragmentActivity
         puntosRuta = new ArrayList<LatLng>();
 	}
 
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+	public boolean onCreateOptionsMenu(Menu menu) {
+        getActivity().getMenuInflater().inflate(R.menu.activity_main, menu);
         MenuItem item = menu.getItem(0);
         item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
@@ -192,14 +232,15 @@ public class Mapas extends FragmentActivity
 	
 	//--------------------- MÉTODOS -----------------------------------
 	//-----------------------------------------------------------------
-	public void getMiPosicion(Location ubicacion) {
+	public void getMiPosicion(Location ubicacion)
+	{
 		if(ubicacion == null)
 		{
 			//Si no hay señal de GPS mostramos la Puerta del Sol de Madrid por defecto
 			ubicacion = new Location("gps");
 			ubicacion.setLatitude(40.4164904);
 		    ubicacion.setLongitude(-3.7031825);
-		    Toast.makeText(getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
+		    Toast.makeText(getActivity().getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
 		}else{
 			//Toast.makeText(getApplicationContext(), "Mostrando ubicación actual", Toast.LENGTH_SHORT).show();
 			ordenaRestaurantes();
@@ -207,7 +248,8 @@ public class Mapas extends FragmentActivity
 		miUbicacion = ubicacion;
 	}
 	
-	private void mostrarMarcadores(GoogleMap mapa) {		
+	private void mostrarMarcadores(GoogleMap mapa)
+	{		
 		mapa.addMarker(restaurantes.get(0).getMarcador());
 		mapa.addMarker(restaurantes.get(1).getMarcador());
 		mapa.addMarker(restaurantes.get(2).getMarcador());
@@ -237,7 +279,8 @@ public class Mapas extends FragmentActivity
     	return distancia;
     }
     
-    public void ordenaRestaurantes() {
+    public void ordenaRestaurantes()
+    {
     	ArrayList<Restaurante> listaAux = new ArrayList<Restaurante>();
     	while(restaurantes.size() > 0){
 	    	Restaurante restActual = buscaRestauranteMasCercano();
@@ -262,7 +305,6 @@ public class Mapas extends FragmentActivity
 		}
 		return restMasCercano;
 	}
-    
     //-------------------------------------------------------------------------------------------------
     public void inicializarListaRestaurantes() {
     	//Salto de línea en TextView = Html.fromHtml("<br />")
@@ -307,11 +349,13 @@ public class Mapas extends FragmentActivity
     	}
     }
     
-    public static ArrayList<Restaurante> getRestaurantes() {
+    public static ArrayList<Restaurante> getRestaurantes()
+    {
     	return restaurantes;
     }
     
-    //--- MÉTODOS PARA CÁLCULO DE RUTA MAPA----------------- 
+    //--- MÉTODOS PARA CÁLCULO DE RUTA MAPA-----------------
+    
     private String getDirectionsUrl(LatLng origin,LatLng dest){
     	 
         // Origin of route
@@ -438,7 +482,7 @@ public class Mapas extends FragmentActivity
             String duration = "";
  
             if(result.size()<1){
-                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
                 return;
             }
  
@@ -498,7 +542,7 @@ public class Mapas extends FragmentActivity
     	 //Toast.makeText(getApplicationContext(), "Estado Proovedor: " + status, Toast.LENGTH_SHORT).show();
     }
     public void onInfoWindowClick(Marker marker) {
-		Intent intent = new Intent(getBaseContext(),DescripcionRestaurante.class);
+		Intent intent = new Intent(getActivity().getBaseContext(),DescripcionRestaurante.class);
 		intent.putExtra("nombreRestaurante", marker.getTitle());
     	startActivity(intent);
 	}
@@ -534,11 +578,10 @@ public class Mapas extends FragmentActivity
         
 		return false;
 	}
-	
 	public void onMapClick(LatLng point) {
-		if (polilyneActual != null){
+		if (polilyneActual != null)
         	polilyneActual.remove();
-		}
 		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener +info");
 	}
 }
+

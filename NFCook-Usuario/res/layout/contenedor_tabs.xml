@@ -3,7 +3,8 @@
     android:id="@+id/FrameLayoutPestanas"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_gravity="center" >
+    android:layout_gravity="center"
+    android:background="#ffdd8d" >
 
     <ImageView
         android:id="@+id/imageViewLogoRestaurante"
@@ -16,6 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="#ffdd8d"
         android:gravity="bottom"
         android:orientation="horizontal" >
 
@@ -34,7 +36,9 @@
                 <TabWidget
                     android:id="@android:id/tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:background="#c38838" >
+
                 </TabWidget>
 
                 <FrameLayout

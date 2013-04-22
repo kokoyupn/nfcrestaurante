@@ -78,7 +78,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 		    	if (!unicoTipoPlato){
 		    		cargarBarraDeBusqueda(vistaConExpandableListView);
 		    	}else{
-		    		cargarBarraDeBusqueda(vistaConExpandableListView);
+		    		cargarBarraDeBusqueda(vistaConListView);
 		    	}
 		    	
 	    		cargado = true;
