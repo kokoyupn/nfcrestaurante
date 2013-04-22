@@ -45,6 +45,11 @@ public class EscuchaCliente extends Thread {
 	            	MensajeEstadoMesa mensajeUtilizar = (MensajeEstadoMesa)mensaje;
 	            	Operaciones operacion = new Operaciones(mensajeUtilizar.nombreFichero);
 	            	operacion.actualizarMesaBDLLegadaExterna(mensajeUtilizar.sql, mensajeUtilizar.idMesa, mensajeUtilizar.idCamarero, mensajeUtilizar.numPersonas, mensajeUtilizar.estado);
+	            
+	            }else if (mensaje instanceof MensajeMesaVisitada){
+	            	MensajeMesaVisitada mensajeUtilizar = (MensajeMesaVisitada)mensaje;
+	            	Operaciones operacion = new Operaciones("");
+	            	operacion.actualizaVisitadoMesaLLegadaExterna(mensajeUtilizar.idMesa, mensajeUtilizar.visitado);
 	            }
 			
 	            // cerramos los sockets

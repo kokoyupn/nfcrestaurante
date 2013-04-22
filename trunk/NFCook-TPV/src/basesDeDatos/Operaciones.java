@@ -212,7 +212,7 @@ public class Operaciones extends Conexion{
 	}
 	
 	public void actualizaVisitadoMesa(String idMesa, boolean visitada){
-		// TODO ALEX
+		ClienteFichero.enviaMesaVisitada(idMesa, visitada);
 	}
 	
 	public void actualizaVisitadoMesaLLegadaExterna(String idMesa, boolean visitada){
