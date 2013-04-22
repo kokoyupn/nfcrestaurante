@@ -61,7 +61,7 @@
 
         </activity>
          <activity
-            android:name=".AnadirBebidas"
+            android:name=".AnadirBebida"
             android:screenOrientation="portrait">
 
         </activity>      
