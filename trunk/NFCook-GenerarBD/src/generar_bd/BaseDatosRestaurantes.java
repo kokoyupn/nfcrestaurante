@@ -42,10 +42,10 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Americano");
     	desayunosVips.put("Breve", "El auténtico desayuno americano con nuestras famosas tortitas.");
     	desayunosVips.put("Foto", "v58");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
     					  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");
        	desayunosVips.put("Precio", 3.95);
-    	desayunosVips.put("Descripcion", "Dos de nuestras famosas tortitas, acompañadas de huevos revueltos o fritos, crujiente bacon y patatas recién fritas o 'Home Fries' (patatas caseras cocidas y fritas especiadas con óregano, ajo y pimentón).");
+    	desayunosVips.put("Descripcion", "Dos de nuestras famosas tortitas, acompañadas de huevos revueltos o fritos, crujiente bacon y patatas recién fritas o `Home Fries´ (patatas caseras cocidas y fritas especiadas con óregano, ajo y pimentón).");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -57,7 +57,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Churros con Chocolate o Café");
     	desayunosVips.put("Breve", "Churros recién hechos. Tómatelos con o sin azúcar espolvereada.");
     	desayunosVips.put("Foto", "v59");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");    	
     	desayunosVips.put("Precio", 2.95);
     	desayunosVips.put("Descripcion", "Crujientes churros recién hechos. Tómatelos como más te gusten, con o sin azúcar espolvoreada.");
@@ -72,10 +72,10 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Croissant French Toast");
     	desayunosVips.put("Breve", "Ni la mejor de las fotos puede hacer justicia a su delicioso sabor. Advertencia: engancha");
     	desayunosVips.put("Foto", "v60");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");    	
     	desayunosVips.put("Precio", 3.95);
-    	desayunosVips.put("Descripcion", "El auténtico 'Croissant French Toast' bañado en leche y huevo, acompañado de rojadas de fresa y plátano naturales con un toque de canela y caramelo.");
+    	desayunosVips.put("Descripcion", "El auténtico `Croissant French Toast´ bañado en leche y huevo, acompañado de rojadas de fresa y plátano naturales con un toque de canela y caramelo.");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -87,10 +87,10 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "English Breakfast");
     	desayunosVips.put("Breve", "Nuestro English Breakfast ahora es más auténticamente English que nunca.");
     	desayunosVips.put("Foto", "v61");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");
     	desayunosVips.put("Precio", 5.95);
-    	desayunosVips.put("Descripcion", "El clásico desayuno inglés: Huevos revueltos o dos huevos fritos, bacon, patatas fritas o 'Home Fries', champiñones, tomate a la plancha, salchicha Lincolnshire y barrita de pan integral recién tostada. Acompañado de un zumo de naranja natural.");
+    	desayunosVips.put("Descripcion", "El clásico desayuno inglés: Huevos revueltos o dos huevos fritos, bacon, patatas fritas o `Home Fries´, champiñones, tomate a la plancha, salchicha Lincolnshire y barrita de pan integral recién tostada. Acompañado de un zumo de naranja natural.");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -102,7 +102,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Ibérico");
     	desayunosVips.put("Breve", "Para los amantes de la textura, aroma y sabor singular de nuestro Jamón Ibérico.");
     	desayunosVips.put("Foto", "v62");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");
         desayunosVips.put("Precio", 3.75);
     	desayunosVips.put("Descripcion", "Jamón Ibérico con nuestra receta de tomate natural en un mollete de Antequera recién tostado y aceite de oliva virgen extra Carbonell.");
@@ -117,7 +117,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Ligero");
     	desayunosVips.put("Breve", "Si te cuidas y no quieres renunciar al sabor prueba nuestro desayuno más ligero. ");
     	desayunosVips.put("Foto", "v63");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");
         desayunosVips.put("Precio", 2.95);
     	desayunosVips.put("Descripcion", "Pan de pan integral tostado con queso de Burgos, finas láminas de pavo y rodajas de tomate.");
@@ -132,7 +132,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Tortitas con Frutas");
     	desayunosVips.put("Breve", "Si te gustan las tortitas y te consideras un amante de la fruta, no puedes dejar de darte este capricho.");
     	desayunosVips.put("Foto", "v64");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");
         desayunosVips.put("Precio", 4.95);
     	desayunosVips.put("Descripcion", "Nuestras tortitas con fresas y kiwis en rodajas, cremosa leche condensada y sirope de fresa. ¡Tocarás el cielo!.");
@@ -147,7 +147,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Nombre", "Yogur con frambuesa y mango");
     	desayunosVips.put("Breve", "Para activarte por las mañanas prueba nuestro Yogur Activia con Frambuesas y Mango.");
     	desayunosVips.put("Foto", "v65");
-    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+    	desayunosVips.put("Extras", "Complementos:Huevo o extra de salchicha Lincolnshire o `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Bacon ahumado,Zumo de naranja natural (25cl)");
         desayunosVips.put("Precio", 2.95);
     	desayunosVips.put("Descripcion", "Es un postre sano, ligero y refrescante. Una mezcla de Yogur Activia con mango, frambuesas y sirope de fresa.   Te encantará.");
@@ -308,7 +308,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ensaladasVips.put("Nombre", "Ensalada César");
      	ensaladasVips.put("Breve", "Ligera y sabrosa ensalada con pollo crujiente aderezada con nuestra clásica salsa César.");
      	ensaladasVips.put("Foto", "v39");
-        entrantesVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
+     	ensaladasVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
         ensaladasVips.put("Precio", 9.50);
      	ensaladasVips.put("Descripcion", "Ligera y sabrosa ensalada a base de lechuga, queso Parmesano, croutons de pan y pollo crujiente. Aderezada con nuestra salsa César.");
      	db.insert("Restaurantes", null, ensaladasVips);
@@ -322,7 +322,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ensaladasVips.put("Nombre", "Ensalada Louisiana");
      	ensaladasVips.put("Breve", "Sabrosos dados de pollo con salsa de Bourbon y melaza.");
      	ensaladasVips.put("Foto", "v40");
-        entrantesVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
+     	ensaladasVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
         ensaladasVips.put("Precio", 9.95);
      	ensaladasVips.put("Descripcion", "Sabrosos dados de pollo con salsa de Bourbon y melaza, con mezcla de lechugas frescas, pimiento rojo, bacon crujiente y cebolla frita.");
      	db.insert("Restaurantes", null, ensaladasVips);
@@ -336,7 +336,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ensaladasVips.put("Nombre", "Ensalada Siciliana");
      	ensaladasVips.put("Breve", "Ligera ensalada de tomates, con lechuga romana, rúcula, perlas de Mozzarella y aceitunas negras.");
      	ensaladasVips.put("Foto", "v41");
-        entrantesVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
+     	ensaladasVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
         ensaladasVips.put("Precio", 8.95);
      	ensaladasVips.put("Descripcion", "Ensalada de tomates: natural, Cherry y seco, con una mezcla de lechuga romana y rúcula, perlas de Mozzarella y aceitunas negras, aderezada con una vinagreta de especias.");
      	db.insert("Restaurantes", null, ensaladasVips);
@@ -350,7 +350,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ensaladasVips.put("Nombre", "Ensalada Toscana");
      	ensaladasVips.put("Breve", "Nuestra ensalada templada con pollo a la plancha, bacon crujiente y mucho más.");
      	ensaladasVips.put("Foto", "v42");
-        entrantesVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
+     	ensaladasVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
         ensaladasVips.put("Precio", 9.75);
      	ensaladasVips.put("Descripcion", "Ensalada templada con pollo a la plancha, bacon crujiente y queso Gorgonzola sobre una variada mezcla de lechugas.");
      	db.insert("Restaurantes", null, ensaladasVips);
@@ -364,7 +364,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ensaladasVips.put("Nombre", "Ensalada Varese");
      	ensaladasVips.put("Breve", "Mezcla de lechugas con quesos Gorgonzola, de Cabra y Parmesano.");
      	ensaladasVips.put("Foto", "v43");
-        entrantesVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
+     	ensaladasVips.put("Extras", "Extras:Cebolla frita,Bacon ahumado,Queso,Bol Mayonesa,Pechuga de pollo crujiente");
         ensaladasVips.put("Precio", 9.25);
      	ensaladasVips.put("Descripcion", "Ensalada templada con pollo a la plancha, bacon crujiente y queso Gorgonzola sobre una variada mezcla de lechugas.");
      	db.insert("Restaurantes", null, ensaladasVips);
@@ -381,7 +381,7 @@ public class BaseDatosRestaurantes extends Activity {
        	principalesVips.put("Nombre", "Costillas BBQ");
        	principalesVips.put("Breve", "Tiernas costillas de cerdo glaseadas con salsa barbacoa, patatas fritas y aros de cebolla.");
        	principalesVips.put("Foto", "v11");
-       	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+       	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");
         principalesVips.put("Precio", 9.95);
        	principalesVips.put("Descripcion", "Tiernísimas costillas de cerdo glaseadas con nuestra salsa barbacoa, acompañadas de unas crujientes patatas fritas, aros de cebolla y nuestra salsa Barbacoa Chipotle. ¡Echa la salsa por encima de las costillas y disfrútalas!");
@@ -396,7 +396,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Flatbread de Pollo Barbacoa");
      	principalesVips.put("Breve", "Tiernas costillas de cerdo glaseadas con salsa barbacoa, patatas fritas y aros de cebolla.");
      	principalesVips.put("Foto", "v12");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 8.95);
      	principalesVips.put("Descripcion", "Fina masa de pan crujiente recién horneado con pechuga de pollo a la Barbacoa, pimientos asados rojos y amarillos, ajetes y crema agria con jugo de lima.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -410,7 +410,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Langostinos Sriracha");
      	principalesVips.put("Breve", "Deliciosos langostinos con salsa Sriracha inspirado en los sabores de oriente.");
      	principalesVips.put("Foto", "v13");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 9.95);
      	principalesVips.put("Descripcion", "Deliciosos langostinos con salsa Sriracha sobre un lecho de arroz vaporizado con puré de cilantro. Acompañados con cebolla caramelizada, tirabeques al vapor, pimientos rojos asados y espárragos.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -424,7 +424,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Lasagna de Verduras Asadas");
      	principalesVips.put("Breve", "Lasagna de verduras y crema de queso de Cabra con albahaca. Gratinada con bechamel y Parmesano.");
      	principalesVips.put("Foto", "v14");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 9.95);
      	principalesVips.put("Descripcion", "Láminas de pasta de trigo rellenas de verduras asadas y crema de queso de Cabra y albahaca, gratinadas con una suave bechamel y queso Parmesano. Acompáñalas con una ensalada de lechugas y dados de tomate o con dos rebanadas de pan de ajo.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -438,7 +438,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Lomo Alto de Novillo Argentino");
      	principalesVips.put("Breve", "Lomo alto de novillo argentino con salsa Chimichurri y patatas VIPS.");
      	principalesVips.put("Foto", "v15");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 15.50);
      	principalesVips.put("Descripcion", "Jugoso y tierno lomo alto de novillo argentino acompañado con salsa Chimichurri y guarnición de patatas VIPS, espárragos, calabacín y tomate a la parrilla.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -452,7 +452,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Lomo de Merluza");
      	principalesVips.put("Breve", "Lomo de merluza rebozado con mayonesa de lima.");
      	principalesVips.put("Foto", "v16");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.50);
      	principalesVips.put("Descripcion", "Lomo de Merluza rebozado con mayonesa de lima. Acompañado de una ensalada de lechugas frescas con pico de gallo aliñadas con una ligera salsa Ranch y crema de aceto.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -464,9 +464,9 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Categoria", "Principal");
      	principalesVips.put("TipoPlato", "Plato Principal");
      	principalesVips.put("Nombre", "Pasta Little Italy");
-     	principalesVips.put("Breve", "Nuestras exclusivas 'Meat Balls' con pasta, aderezada salsa de tomate y Pesto, Parmesano y Mozzarella.");
+     	principalesVips.put("Breve", "Nuestras exclusivas `Meat Balls´ con pasta, aderezada salsa de tomate y Pesto, Parmesano y Mozzarella.");
      	principalesVips.put("Foto", "v17");
-     	principalesVips.put("Extras","Complementos:Rodas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.95);
      	principalesVips.put("Descripcion", "Nuestras exclusivas Meat Balls con pasta y salsa de tomate. Acompañadas de queso Parmesano, Mozzarella, salsa Pesto y dos rebanadas de pan de ajo.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -480,7 +480,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Pechuga de Pollo Villaroy");
      	principalesVips.put("Breve", "Dos pechugas de pollo cubiertas de bechamel, empanadas con huevo y patatas fritas.");
      	principalesVips.put("Foto", "v18");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.50);
      	principalesVips.put("Descripcion", "Dos pechugas de pollo cubiertas con salsa bechamel, empanadas y acompañadas de un huevo frito, mezcla de lechugas con tomate, patatas fritas y salsa de tomate Concassé.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -494,7 +494,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Salteado de Pollo Oriental");
      	principalesVips.put("Breve", "Pechuga de pollo con salsa agridulce de soja y piña, pimientos rojos, brócoli, anacardos y arroz.");
      	principalesVips.put("Foto", "v19");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 10.95);
      	principalesVips.put("Descripcion", "Sabrosas tiras de pechuga de pollo con salsa agridulce de soja y piña, salteadas con pimientos, brócoli y anacardos. Servidas sobre una base de arroz blanco.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -508,7 +508,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Verduras Asadas con Hierbas Aromáticas");
      	principalesVips.put("Breve", "Verduras asadas aromatizadas con aceite de hierbas y albahaca.");
      	principalesVips.put("Foto", "v20");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 7.95);
      	principalesVips.put("Descripcion", "Verduras asadas aromatizadas con un aceite de hierbas mezcladas con hojas frescas de albahaca.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -522,7 +522,7 @@ public class BaseDatosRestaurantes extends Activity {
      	principalesVips.put("Nombre", "Pallarda de Ternera");
      	principalesVips.put("Breve", "Filete de ternera con verduras salteadas y rodajas de tomate a la plancha.");
      	principalesVips.put("Foto", "v21");
-     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por 'Home Fries' (patatas caseras cocidas cada día y posteriormente fritas" +
+     	principalesVips.put("Extras","Complementos:Rodajas de tomate natural a la parrila,Cambia tus patatas fritas por `Home Fries´ (patatas caseras cocidas cada día y posteriormente fritas" +
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.95);
      	principalesVips.put("Descripcion", "Tierno filete de ternera acompañado de verduras salteadas y rodajas de tomate a la plancha.");
      	db.insert("Restaurantes", null, principalesVips);
@@ -689,7 +689,7 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Nombre", "Focaccia Milano");
      	sadwichesVips.put("Breve", "¡Crujiente pehuga de pollo empanada en un pan Focaccia recién horneado!");
      	sadwichesVips.put("Foto", "v32");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
      					  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");
         sadwichesVips.put("Precio", 7.95);
      	sadwichesVips.put("Descripcion", "Crujiente pechuga de pollo empanada y sazonada con Parmesano, óregano y cayena, con " +
@@ -704,10 +704,10 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Restaurante", "VIPS");
      	sadwichesVips.put("Categoria", "Principal");
      	sadwichesVips.put("TipoPlato", "Sandwich");
-     	sadwichesVips.put("Nombre", "Fundy O'Clock");
+     	sadwichesVips.put("Nombre", "Fundy O`Clock");
      	sadwichesVips.put("Breve", "Jamón York y pavo cocido, acompañado de huevos revueltos y quesos Cheddar.");
      	sadwichesVips.put("Foto", "v33");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 7.95);
      	sadwichesVips.put("Descripcion", "Lonchas de jamón York y pavo cocido, acompañadas de huevos revueltos y una deliciosa mezca de quesos Cheddar fundidos.");
      	db.insert("Restaurantes", null, sadwichesVips);
@@ -721,7 +721,7 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Nombre", "Philly Steak");
      	sadwichesVips.put("Breve", "Si te gusta la ternera, ¡no podrás resistirse al nuevo Philly Steak!");
      	sadwichesVips.put("Foto", "v34");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 8.95);
      	sadwichesVips.put("Descripcion", "Jugosas láminas de ternera con un suave toque picante, queso Provolone fundido, " +
      			"cebolla roja a la plancha, tomate y fresca lechuga en un delicado pan campesino con mayonesa de lima. " +
@@ -737,7 +737,7 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Nombre", "Salmón Club");
      	sadwichesVips.put("Breve", "Nuestro nuevo sándwich de salmón noruego ahumado. ¡Exquisito!");
      	sadwichesVips.put("Foto", "v35");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 8.95);
      	sadwichesVips.put("Descripcion", "Crujiente pan de sándwich recién tostado, untado con una suave crema de queso con cebollino" +
      			"y alcaparras, láminas de salmón noruego ahumado, con cebolla roja, tomate y fresca lechuga Batavia. " +
@@ -754,7 +754,7 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Nombre", "VIPS Club");
      	sadwichesVips.put("Breve", "Nuestro gran clásico renovado, ¡más irresistible que nunca!.");
      	sadwichesVips.put("Foto", "v36");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 8.75);
      	sadwichesVips.put("Descripcion", "Nuestro gran clásico renovado, más irresistible que nunca con sus tres pisos de pollo a la plancha, bacon crujiente, tomates frescos y mayonesa. Ahora con el doble de queso y jamón York, acompañados por un cremoso queso Emmental Suizo, lechuga Batavia y más patatas fritas.");
      	db.insert("Restaurantes", null, sadwichesVips);
@@ -768,10 +768,10 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Nombre", "VIPS Club Nature");
      	sadwichesVips.put("Breve", "Déjate sorprender con nuestra nueva versión del VIPS Club Nature, ahora con más pavo.");
      	sadwichesVips.put("Foto", "v37");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 9.25);
      	sadwichesVips.put("Descripcion", "Nueva versión del VIPS Club Nature ahora con más pavo a la plancha. Elaborado con pan " +
-     			"integral, mayonesa, queso y bacon tostado sin grasa. Servido con 'crudités' crujientes de zanahoria y " +
+     			"integral, mayonesa, queso y bacon tostado sin grasa. Servido con `crudités´ crujientes de zanahoria y " +
      			"apio y una cremosa salsa de queso Gorgonzola.");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
@@ -784,7 +784,7 @@ public class BaseDatosRestaurantes extends Activity {
      	sadwichesVips.put("Nombre", "VIPS Roll Brooklyn");
      	sadwichesVips.put("Breve", "Nuestro original sándwich gigante enrollado.");
      	sadwichesVips.put("Foto", "v38");
-     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por 'Home Fries' " +
+     	sadwichesVips.put("Extras", "Complementos:Queso o bacon ahumado o Jamón York,Cambia tus patatas fritas por `Home Fries´ " +
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 9.25);
      	sadwichesVips.put("Descripcion", "Nuestro sándwich gigante enrollado con una nueva receta. Pollo a la parrilla, el triple de jamón York y cremoso queso fundido, bacon, suave pepinillo agridulce, cebolla caramelizada y mayonesa con mostaza.  Acompañado de patatas fritas y salsa de mostaza y miel.");
      	db.insert("Restaurantes", null, sadwichesVips);
@@ -817,7 +817,7 @@ public class BaseDatosRestaurantes extends Activity {
      	dulcesVips.put("Foto", "v49");
      	dulcesVips.put("Extras", "Complemento:Bola de helado artesano");
         dulcesVips.put("Precio", 3.95);
-     	dulcesVips.put("Descripcion", "El auténtico 'Croissant French Toast' bañado en leche y huevo, acompañado de rojadas de fresa y plátano naturales con un toque de canela y caramelo. Servido con una bola de helado de vainilla.");
+     	dulcesVips.put("Descripcion", "El auténtico `Croissant French Toast´ bañado en leche y huevo, acompañado de rojadas de fresa y plátano naturales con un toque de canela y caramelo. Servido con una bola de helado de vainilla.");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -1290,7 +1290,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n23.put("Restaurante", "Foster");
      	n23.put("Categoria", "Entrante");
      	n23.put("TipoPlato", "");
-     	n23.put("Nombre", "Nachos 'San Fernando'");
+     	n23.put("Nombre", "Nachos `San Fernando´");
      	n23.put("Descripcion", "Renovamos el clásico. Tiras de maíz cubiertas de quesos fundidos y chili con carne" +
      			"coronadas con crema agria, jalapeños y pico de gallo");
      	n23.put("Breve", "Tiras de maiz con queso fundido y chili con carne, crema agria y jalapeños");
@@ -1339,10 +1339,10 @@ public class BaseDatosRestaurantes extends Activity {
      	n26.put("TipoPlato", "");
      	n26.put("Nombre", "Chicken & Prime Salad");
      	n26.put("Descripcion", "Sobre una cama de espinacas y brotes baby, una pechuga de pollo empanada, acompañadas de tomates secos y nueces. " +
-     			"Sugerencia: alíñala con salsa de mostaza y miel. O si lo prefieres con salsa Roquefort, salsa rusa o aceite y vinagre.");
+     			"Sugerencia: alíñala con salsa de mostaza y miel. O si lo prefieres con salsa Roquefort, salsa rosa o aceite y vinagre.");
      	n26.put("Breve", "Ensalada con pechuga de pollo empanada, tomates secos y nueces");
      	n26.put("Foto", "fh6");
-     	n26.put("Extras", "Salsa:Mostaza-Miel,Roquefor,Rusa,Aceite-Vinagre");
+     	n26.put("Extras", "Salsa:Mostaza-Miel,Roquefor,Rosa,Aceite-Vinagre");
      	n26.put("Precio", 9.85);
      	db.insert("Restaurantes", null, n26);
      	idFoster++;
@@ -1352,7 +1352,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n27.put("Restaurante", "Foster");
      	n27.put("Categoria", "Ensaladas");
      	n27.put("TipoPlato", "");
-     	n27.put("Nombre", "Foster's Caesar Salad");
+     	n27.put("Nombre", "Foster`s Caesar Salad");
      	n27.put("Descripcion", "Reinventamos el clásico. Tierna lechuga romana con pechuga de pollo a la parrilla, croutons y ahora delicioso queso Grana Padano en lascas. Aderazada con salsa parmesana.");
      	n27.put("Breve", "Ensalda con pechuga de pollo a la parrilla, croutons, queso Grana Padano y salsa César");
      	n27.put("Foto", "fnd_fh");
@@ -1368,10 +1368,10 @@ public class BaseDatosRestaurantes extends Activity {
      	n28.put("TipoPlato", "");
      	n28.put("Nombre", "Santa Mónica Salad");
      	n28.put("Descripcion", "Mezcla de lechugas con trozos de pollo empanado, bacon crujiente, mezcla de quesos rallados, tomate y zanahoria. " +
-     			"Servida con salsa Roquefort, salsa rusa, salsa de mostaza y miel o aceite y vinagre.");
+     			"Servida con salsa Roquefort, salsa rosa, salsa de mostaza y miel o aceite y vinagre.");
      	n28.put("Breve", "Lechugas con trozos de pollo empanado, bacon, mezcla de quesos, tomate y zanahoria");
      	n28.put("Foto", "fnd_fh");
-     	n28.put("Extras", "Salsa:Roquefort,Rusa,Mostaza-Miel,Aceite-Vinagre");
+     	n28.put("Extras", "Salsa:Roquefort,Rosa,Mostaza-Miel,Aceite-Vinagre");
      	n28.put("Precio", 9.85);
      	db.insert("Restaurantes", null, n28);
      	idFoster++;
@@ -1384,7 +1384,7 @@ public class BaseDatosRestaurantes extends Activity {
     	bb1.put("Restaurante", "Foster");
     	bb1.put("Categoria", "Principal");
     	bb1.put("TipoPlato", "Hamburguesa");
-    	bb1.put("Nombre", "PLATO ESTRELLA: Director's Choice");
+    	bb1.put("Nombre", "PLATO ESTRELLA: Director`s Choice");
     	bb1.put("Descripcion", "Con delicioso queso Cheddar fundido, bacon" +
        			"tomate en rodajas, mezclas de brotes baby," +
        			"cebolla morada y mayonesa.");
@@ -1467,7 +1467,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb6.put("Restaurante", "Foster");
      	bb6.put("Categoria", "Principal");
      	bb6.put("TipoPlato", "Hamburguesa");
-     	bb6.put("Nombre", "'All American' Burger");
+     	bb6.put("Nombre", "`All American´ Burger");
      	bb6.put("Descripcion","La más natural. " +
        			"Nuestra nueva carne de hamburguesa y pan " +
        			"artesanal, servida con la nueva mezcla de brotes baby, " +
@@ -1552,7 +1552,7 @@ public class BaseDatosRestaurantes extends Activity {
      	b11.put("Restaurante", "Foster");
        	b11.put("Categoria", "Principal");
        	b11.put("TipoPlato", "Hamburguesa");
-       	b11.put("Nombre", "'Director's' Chicken Burger");
+       	b11.put("Nombre", "Director`s Chicken Burger");
        	b11.put("Descripcion","Filete de pechuga de pollo a la parrilla, servido en nuestro pan " +
        			"artesano de hamburguesa, con delicioso queso Cheddar fundido, " +
        			"bacon, mezcla de brotes baby, tomate y mayonesa.");
@@ -1571,9 +1571,9 @@ public class BaseDatosRestaurantes extends Activity {
      	n29.put("Restaurante", "Foster");
      	n29.put("Categoria", "Principal");
      	n29.put("TipoPlato", "Costillas");
-     	n29.put("Nombre", "Foster's Iberian Ribs");
+     	n29.put("Nombre", "Foster`s Iberian Ribs");
      	n29.put("Descripcion", "Costillas de cerdo ibérico cocinadas al estilo " +
-     			"Foster's Hollywood. Servidas con salsa barbacoa. Costillar completo");
+     			"Foster`s Hollywood. Servidas con salsa barbacoa. Costillar completo");
      	n29.put("Breve", "Costillas de cerdo ibérico con salsa barbacoa");
      	n29.put("Foto", "fh9");
      	n29.put("Extras", "Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
@@ -1588,7 +1588,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n30.put("TipoPlato", "Costillas");
      	n30.put("Nombre", "National Star Ribs");
      	n30.put("Descripcion", "Jugosas costillas de cerdo ahumadas, " +
-     			"especialmente seleccionadas para Foster's Hollywood.");
+     			"especialmente seleccionadas para Foster`s Hollywood.");
      	n30.put("Breve", "Costillas de cerdo ahumadas con salsa a elegir");
      	n30.put("Foto", "fnd_fh");
      	n30.put("Extras", "Salsa:Barbacoa,Cajun,Barbacoa-Miel/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
@@ -1806,7 +1806,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n43.put("Restaurante", "Foster");
      	n43.put("Categoria", "Principal");
      	n43.put("TipoPlato", "Sandwiches");
-     	n43.put("Nombre", "Foster's Philly Sandwich");
+     	n43.put("Nombre", "Foster`s Philly Sandwich");
      	n43.put("Descripcion", "Carne de vacuno asada y troceada con salsa de " +
      			"champiñones y cebolla pochada. Cubierta de " +
      			"una mezcla de quesos fundidos y servido en pan de ciabatta.");
@@ -1872,7 +1872,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n60.put("TipoPlato", "");
      	n60.put("Nombre", "Big Chocolate Cookie");
      	n60.put("Descripcion", "Desde Norteamérica llega esta deliciosa Cookie " +
-     			"y Foster's Hollywood la acompaña de helado de " +
+     			"y Foster`s Hollywood la acompaña de helado de " +
      			"vainilla, chocolate caliente y nata. Born in the USA!");
      	n60.put("Breve", "Cookie con chocolate caliente, nata y helado de vainilla");
      	n60.put("Foto", "fh40");
@@ -1886,8 +1886,8 @@ public class BaseDatosRestaurantes extends Activity {
      	n61.put("Restaurante", "Foster");
      	n61.put("Categoria", "Postre");
      	n61.put("TipoPlato", "");
-     	n61.put("Nombre", "'All Star' Brownie");
-     	n61.put("Descripcion", "La estrella de Foster's Hollywood. Un dulce caliente de chocolate, " +
+     	n61.put("Nombre", "`All Star´ Brownie");
+     	n61.put("Descripcion", "La estrella de Foster`s Hollywood. Un dulce caliente de chocolate, " +
      			"acompañado de helado de vainilla, cubierto con nueces y nuestra salsa de " +
      			"chocolate caliente. Típicamente americano.");
      	n61.put("Breve", "Brownie con chocolate caliente, nata y helado de vainilla");
@@ -1903,7 +1903,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n62.put("Categoria", "Postre");
      	n62.put("TipoPlato", "");
      	n62.put("Nombre", "Oreo Cookie Sundae");
-     	n62.put("Descripcion", "Las famosas galletas Oreo llegan a Foster's " +
+     	n62.put("Descripcion", "Las famosas galletas Oreo llegan a Foster`s " +
      			"Hollywood y las combinamos con dos grandes " +
      			"bolas de helado de vainilla, salsa de chocolate y " +
      			"nata. A todos nos encanta!");
@@ -1921,7 +1921,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n63.put("TipoPlato", "");
      	n63.put("Nombre", "Sweet Lolly Pops");
      	n63.put("Descripcion", "Déjate sorprender por los nuevos Lolly Pops de " +
-     			"Foster's Hollywood. Seis deliciosos bocados de " +
+     			"Foster`s Hollywood. Seis deliciosos bocados de " +
      			"tarta de queso y tarta de chocolate con " +
      			"diferentes y divertidas coberturas. Pruébalos!");
      	n63.put("Breve", "Lolly Pops de tarta de queso y tarta de chocolate");
