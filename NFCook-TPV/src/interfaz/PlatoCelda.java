@@ -1,5 +1,6 @@
 package interfaz;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -68,6 +69,7 @@ public class PlatoCelda extends JPanel{
 		else{
 			lblNewLabel.setText(nombrePlato);
 			lblNewLabelLinea2.setText("-----------");
+			lblNewLabelLinea2.setForeground(new Color(-1118482));
 			grid.gridx = 0;
 			grid.gridy = 1;
 			panel.add(lblNewLabel,grid);
