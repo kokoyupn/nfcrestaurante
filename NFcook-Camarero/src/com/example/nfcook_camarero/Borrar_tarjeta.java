@@ -228,9 +228,6 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
 		pedidoCodificadoEnBytes.addAll(al);
 		
 		
-		pedidoCodificadoEnBytes.addAll(al);
-		
-		
 		// Obtenemos instancia de MifareClassic para el tag.
 				MifareClassic mfc = MifareClassic.get(mytag);
 												

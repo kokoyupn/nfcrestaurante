@@ -390,18 +390,20 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
 		Iterator<Byte> itPlatos = mensaje.iterator();
 		Iterator<Byte> iteradorAux = mensaje.iterator();
+		
 		boolean correcto=false;
 		boolean parar=false;
 		int numRestaurante;
-		while(iteradorAux.hasNext()){
-		  {int n = decodificaByte(iteradorAux.next());
-		   correcto= n==255;
-		  }
-		  
+		int n;
+		while(iteradorAux.hasNext() && !correcto){
+			   n = decodificaByte(iteradorAux.next());
+			    correcto= n==255;
+			  }
+			  
 			
 		
 		
-		if (correcto){
+	if (correcto){
 		numRestaurante = decodificaByte(itPlatos.next());
 		if(numeroRestaurante==numRestaurante )
 		{
@@ -428,16 +430,17 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 					comentario += (char)decodificaByte(itPlatos.next());
 				//Añadimos el plato
 				añadirPlatos(restaurante,abreviatura+id,extras,comentario);
-			}		
-		}
-		}
+			}//if parar		
+		 }//while
+		}//if
 	
-	else{Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
-	}
+		else{
+			Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
+		}
 		}
 		else {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos (-1)", Toast.LENGTH_LONG).show();
 		}
-		}
+		
 	
 	}
 	

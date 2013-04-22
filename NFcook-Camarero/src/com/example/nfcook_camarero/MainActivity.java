@@ -109,11 +109,12 @@ public void  onClickBotonEntrar(View boton)
            	  //Iniciamos la nueva actividad
     	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
+
            	  if (password.getText().toString().equals("foster"))
            		  intent.putExtra("Restaurante","Foster");
            	  else
            		 intent.putExtra("Restaurante","VIPS");
-           	  startActivity(intent);	
+
     	   }
     	   else{
     		   //La contraseña no es la misma que la guardada en la base de datos
