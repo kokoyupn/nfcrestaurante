@@ -24,6 +24,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -50,6 +51,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 public class PantallaMesasFragment extends Fragment {
+	
+	//Necesaria para poder almacenar el ultimo idUnico;
+	private static PantallaMesasFragment propiaInstancia;
+	
 	private View vista;
 	private GridView gridviewCam;
     private static ArrayList<MesaView> mesas;
@@ -83,6 +88,10 @@ public class PantallaMesasFragment extends Fragment {
         // Obtenemos el idCamarero de la pantalla anterior
         Bundle bundle = getActivity().getIntent().getExtras();
         idCamarero = bundle.getString("usuario");
+        
+        //Restablecemos el ultimo idUnico que se introdujo
+        propiaInstancia = this;
+        cargarUltimoIdentificadorUnico();
         
         
         restaurante=bundle.getString("Restaurante");
@@ -747,6 +756,20 @@ public class PantallaMesasFragment extends Fragment {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }*/
+	
+	private void cargarUltimoIdentificadorUnico() {
+		//SharedPreferences nos permite recuperar datos aunque la aplicacion se haya cerrado
+      	SharedPreferences ultimoId = getActivity().getSharedPreferences("Identificador_Unico", 0);
+      	idUnico = ultimoId.getInt("identificadorUnico", 0); // 0 es lo que devuelve si no hubiese nada con esa clave		
+	}
+	
+	public void setUltimoIdentificadorUnico(){
+		//Almacenamos la posicion del restaurante de la lista
+		SharedPreferences preferencia = getActivity().getSharedPreferences("Identificador_Unico", 0);
+		SharedPreferences.Editor editor = preferencia.edit();
+		editor.putInt("identificadorUnico", idUnico);
+		editor.commit(); //Para que surja efecto el cambio
+	}
     
     public boolean onOptionsItemSelected(MenuItem item) {
             Intent intent = new Intent (getActivity().getApplication(),PantallaHistoricoFragment.class);
@@ -772,4 +795,8 @@ public class PantallaMesasFragment extends Fragment {
     {
     	return numeroPersonas;
     }
+
+	public static PantallaMesasFragment getInstanciaClase() {
+		return propiaInstancia;
+	}
 }
