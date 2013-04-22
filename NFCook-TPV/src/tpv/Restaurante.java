@@ -261,8 +261,9 @@ public class Restaurante {
 	private String generaConsultaBeida(String idMesa, String idCamarero,
 									   String idProducto, String categoria, String tipo,
 									   String nombreProducto, double precio, String observaciones) {
-		
-		return "insert into infoMesas values('"+ idMesa + "',"+
+		FechaYHora dia = new FechaYHora();
+		return "insert into infoMesas values('" + dia.getDia() + "',"+
+											 "'" + idMesa + "',"+
 											 "'" + idCamarero + "'," +
 											 "'" + idProducto + "'," +
 											 "'" + categoria + "'," +
@@ -279,7 +280,9 @@ public class Restaurante {
 									   String nombreProducto, double precio, String observaciones,
 									   String extras, String extrasMarcados) {
 		
-		return "insert into infoMesas values('"+ idMesa + "',"+
+		FechaYHora dia = new FechaYHora();
+		return "insert into infoMesas values('" + dia.getDia() + "',"+
+											 "'" + idMesa + "',"+
 											"'" + idCamarero + "'," +
 											"'" + idProducto + "'," +
 											"'" + categoria + "'," +
@@ -415,6 +418,51 @@ public class Restaurante {
 	
 	public boolean terminaPorComilla(String palabra){
 		return palabra.charAt(palabra.length()-1) == '\'' || palabra.charAt(palabra.length()-1) == ')';
+	}
+	
+	
+	public void cargarRestaurante(){
+		
+		FechaYHora dia = new FechaYHora();
+		Operaciones operacionSQlite = new Operaciones("InfoMesas.db");
+		ResultSet resultados = operacionSQlite.consultar("select * from infoMesas where dia='" + dia.getDia() + "'" );
+		try {
+			while(resultados.next()){
+				String idMesa = resultados.getString("idMesa");
+				//String idCamarero = resultados.getString("idCamarero");
+				String idProducto = resultados.getString("idProducto");
+				String categoria = resultados.getString("categoria");
+				String tipo = resultados.getString("tipo");
+				String nombreProducto = resultados.getString("nombreProducto");
+				double precio = resultados.getDouble("precio");
+				String observaciones = resultados.getString("obsevaciones");
+				String extras = resultados.getString("extras");
+				String extrasMarcados = resultados.getString("extrasMarcados");
+				
+				Operaciones operacionSQliteMiBase = new Operaciones("MiBase.db");
+				ResultSet resultadosMiBase = operacionSQliteMiBase.consultar("select Descripcion, Foto from Restaurantes where Restaurante=" + nombreRestaurante + " and Id='" + idProducto+ "'");
+				try {
+					resultadosMiBase.next();
+					Producto nuevoProducto = null;
+					
+					if(categoria.equals("Bebidas")){
+						nuevoProducto = new Bebida(idProducto, categoria, tipo, nombreProducto, resultadosMiBase.getString("Descripcion"), resultadosMiBase.getString("Foto"), precio, observaciones);
+					}else{
+						nuevoProducto = new Plato(idProducto, categoria, tipo, nombreProducto, resultadosMiBase.getString("Descripcion"), resultadosMiBase.getString("Foto"), precio, observaciones, extras, extrasMarcados);
+					}
+					
+					mesasRestaurante.get(idMesa).añadirProducto(new TuplaProdEnv(nuevoProducto, true));
+					actualizaEstadoMesaComanda(idMesa);
+					
+					operacionSQliteMiBase.cerrarBaseDeDatos();
+				}catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			operacionSQlite.cerrarBaseDeDatos();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

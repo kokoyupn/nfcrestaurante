@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
@@ -19,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 import tpv.Mesa;
 import tpv.Restaurante;
 
-public class VentanaMesas extends JFrame implements ActionListener{
+public class VentanaMesas extends JFrame implements ActionListener, MouseMotionListener{
 	
 	private static final long serialVersionUID = 1L;
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -39,6 +40,7 @@ public class VentanaMesas extends JFrame implements ActionListener{
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//Eliminamos los bordes de la ventana.
 		setUndecorated(true);
+		this.addMouseMotionListener(this);
 		
 		//Calculamos el tamaño de la pantalla
 		Dimension dimenionesPantalla = getToolkit().getScreenSize();
@@ -177,6 +179,17 @@ public class VentanaMesas extends JFrame implements ActionListener{
             grafica.setFullScreenWindow(null);
 		}
 		esPantallaCompleta = !esPantallaCompleta;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		System.out.println("Raton Drag");
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		System.out.println("Raton moviendose");
 	}
 	
 }
