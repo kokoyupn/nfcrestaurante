@@ -133,6 +133,7 @@ public class Mesa extends Activity {
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
+	  	    		System.out.println("EDITAR");
 	  	    			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
 		  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
 		  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
@@ -157,6 +158,7 @@ public class Mesa extends Activity {
 	  	    	public boolean onTouch(View v, MotionEvent event) {
 	            	switch (event.getAction() ) {
 	            		case MotionEvent.ACTION_DOWN:
+	            			System.out.println("DOWN");
 	            			mueves=false;
 	            			primeraVez=true;
 	            			noVolver=false;
@@ -177,6 +179,7 @@ public class Mesa extends Activity {
         		        	break;
 	        	        	
 	            		case MotionEvent.ACTION_UP:
+	            			System.out.println("UP");
 	            			if(mueves){
 		            			if(!noBorrar){
 			            			if(moviendose){
@@ -232,6 +235,7 @@ public class Mesa extends Activity {
 	            			break;
 	                        
 	            		case MotionEvent.ACTION_MOVE:
+	            			System.out.println("MOVE");
 	            			mueves=true;
 	            			if(primeraVez){
 	            				System.out.println("yRAWEvento"+event.getRawY());
@@ -566,6 +570,16 @@ public class Mesa extends Activity {
 		String observaciones = platoNuevo.getObservaciones();
 		String extras = platoNuevo.getExtras();
 		
+		//FIXME esto quitarlo cuando cambie prado el null
+		if(observaciones==null){
+			observaciones="";
+			
+		}
+			
+		if(extras==null)
+			extras="";
+	
+		
 		int i = 0;
 		while(i<adapter.getCount() && !comunes){
 			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
@@ -588,6 +602,12 @@ public class Mesa extends Activity {
 		String nombre = platoEditar.getNombre();
 		String observaciones = platoEditar.getObservaciones();
 		String extras = platoEditar.getExtras();
+		
+		//FIXME esto quitarlo cuando cambie prado el null
+		if(observaciones==null)
+			observaciones="";
+		if(extras==null)
+			extras="";
 		
 		int i = 0;
 		while(i<adapter.getCount() && !comunes){
