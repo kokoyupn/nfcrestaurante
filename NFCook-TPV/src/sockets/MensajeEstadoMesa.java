@@ -3,10 +3,19 @@ package sockets;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import tpv.Mesa.estadoMesa;
-
 public class MensajeEstadoMesa {
-
+	/*
+	public MensajeEstadoMesa(String nombreFichero, String sql, String idMesa, String idCamarero, int numPersonas, int estado, ArrayList<InetAddress> ips){
+		this.nombreFichero = nombreFichero;
+		this.sql = sql;
+		this.idMesa = idMesa;
+		this.idCamarero = idCamarero;
+		this.numPersonas = numPersonas;
+		this.estado = estado;
+		this.ips = ips;
+	}
+	*/
+	
 	/** Nombre del fichero que se transmite. Por defecto "" */
     public String nombreFichero = "";
 
@@ -23,7 +32,7 @@ public class MensajeEstadoMesa {
     public int numPersonas = 0;
     
     /** Estado de la mesa **/
-    public estadoMesa estado = estadoMesa.CERRADA;
+    public int estado = 0;
     
     /** ArrayList con las direcciones IP de los clientes que se han conectado al servidor **/
     public ArrayList<InetAddress> ips;

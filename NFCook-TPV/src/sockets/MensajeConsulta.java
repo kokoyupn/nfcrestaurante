@@ -12,6 +12,13 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class MensajeConsulta implements Serializable
 {
+	/*
+	public MensajeConsulta(String nombreFichero, String sql, ArrayList<InetAddress> ips){
+		this.nombreFichero = nombreFichero;
+		this.sql = sql;
+		this.ips = ips;
+	}
+	*/
     /** Nombre del fichero que se transmite. Por defecto "" */
     public String nombreFichero = "";
 

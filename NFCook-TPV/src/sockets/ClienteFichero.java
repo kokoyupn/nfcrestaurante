@@ -104,7 +104,7 @@ public class ClienteFichero
 	 * Establece comunicacion con el servidor en el puerto indicado. Envia el estado de una mesa junto con 
 	 * la consulta sql y el fichero que habra que actualizar en el Servidor.
 	**/
-	public static void enviaEstadoMesa(String idMesa, String idCamarero, int numPersonas, estadoMesa estado, String fichero, String sql){
+	public static void enviaEstadoMesa(String idMesa, String idCamarero, int numPersonas, int estado, String fichero, String sql){
 
 		try{
 			// Se abre el socket.
