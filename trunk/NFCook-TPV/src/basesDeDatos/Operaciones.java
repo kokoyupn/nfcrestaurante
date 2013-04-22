@@ -198,7 +198,7 @@ public class Operaciones extends Conexion{
 														"where idMesa='" + idMesa + "'";
 		
 		// Enviamos el estado de la mesa al servidor y los clientes
-		//ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
+		ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
 		
 		// Modificamos base de datos local.
 		insertar(consulta, false);
