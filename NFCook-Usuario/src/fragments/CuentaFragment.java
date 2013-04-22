@@ -8,6 +8,7 @@ import com.example.nfcook.R;
 
 import adapters.MiListCuentaAdapter;
 import adapters.PadreListCuenta;
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,6 +36,11 @@ public class CuentaFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.cuenta, container, false);
 		
+		// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActivity().getActionBar();
+    	actionbar.setTitle(" CUENTA");
+    	
 		// Cargamos la estructura desde la que mostraremos en la listview
 		cargarCuenta();
 		// Creamos la listview y le aplicamos el adpater

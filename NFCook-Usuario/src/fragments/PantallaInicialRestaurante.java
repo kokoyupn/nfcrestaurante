@@ -4,6 +4,7 @@ import com.example.nfcook.R;
 
 import usuario.InicializarMapas;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -35,6 +36,11 @@ public class PantallaInicialRestaurante extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.inicio_restaurante, container, false);
 		
+		// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActivity().getActionBar();
+    	actionbar.setTitle(" INICIO");
+		
 		// Cargamos el mensaje de bienvenida
 		TextView textViewMensajeBienvenida = (TextView)vista.findViewById(R.id.textViewBienvenidaRestaurante);
 		
@@ -58,7 +64,7 @@ public class PantallaInicialRestaurante extends Fragment{
 		oyenteAyuda();
 		oyenteImagenExplicativaAyuda();
 		
-		 // Vemos si es la primera vez que corremos la aplicación para ayudar al usuario
+		// Vemos si es la primera vez que corremos la aplicación para ayudar al usuario
         if(primeraVezIniciada()){
         	marcarAplicacionComoInicializada();
         	// Lanzamos la ayuda
@@ -84,7 +90,7 @@ public class PantallaInicialRestaurante extends Fragment{
 		});
 	}
 	
-	public void oyentePromociones(){
+	public void oyentePromociones(){    	
 		ImageView imageViewPromociones = (ImageView) vista.findViewById(R.id.imageViewPromociones);
 		imageViewPromociones.setOnClickListener(new View.OnClickListener() {
 			
@@ -98,11 +104,16 @@ public class PantallaInicialRestaurante extends Fragment{
 		});
 	}
 	
-	public void oyenteAyuda(){
+	public void oyenteAyuda(){  	
 		ImageView imageViewAyuda = (ImageView) vista.findViewById(R.id.imageViewAyudaPantallaInicial);
 		imageViewAyuda.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				// Ponemos el título a la actividad
+		        // Recogemos ActionBar
+		        ActionBar actionbar = getActivity().getActionBar();
+		    	actionbar.setTitle(" AYUDA");
+		    	
 				FrameLayout frameLayoutBienvenida = (FrameLayout) vista.findViewById(R.id.FrameLayoutBienvenida);
 
 				ImageView imageViewAyuda = (ImageView) vista.findViewById(R.id.imageViewAyudaPantallaInicial);
@@ -118,7 +129,7 @@ public class PantallaInicialRestaurante extends Fragment{
 		});
 	}
 
-	public void oyenteImagenExplicativaAyuda(){
+	public void oyenteImagenExplicativaAyuda(){ 	
 		ImageView informacionAyuda = (ImageView) vista.findViewById(R.id.imageViewInformacionAyuda);
 		informacionAyuda.setOnClickListener(new View.OnClickListener() {
 			
@@ -135,15 +146,15 @@ public class PantallaInicialRestaurante extends Fragment{
 	
 	public boolean primeraVezIniciada(){
 		// Vemos si ya ha sido iniciada la aplicacion alguna vez
-		SharedPreferences iniciada = getActivity().getSharedPreferences("Iniciada", 0);
-		return iniciada.getInt("PrimeraVez", -1) == -1;
+		SharedPreferences iniciada = getActivity().getSharedPreferences("Aplicacion", 0);
+		return iniciada.getInt("Iniciada", -1) == -1;
 	}
 	
 	public void marcarAplicacionComoInicializada(){
 		// Marcamos con 0 que la aplicación ha sido inicializada
-		SharedPreferences preferencia = getActivity().getSharedPreferences("Iniciada", 0);
+		SharedPreferences preferencia = getActivity().getSharedPreferences("Aplicacion", 0);
 		SharedPreferences.Editor editor = preferencia.edit();
-		editor.putInt("PrimeraVez", 0);
+		editor.putInt("Iniciada", 0);
 		editor.commit();
 	}
 }

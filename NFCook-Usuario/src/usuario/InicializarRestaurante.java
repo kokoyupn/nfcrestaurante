@@ -172,25 +172,20 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	    		ContenidoTabSuperiorCategoriaBebidas.setTipoTab(tipoTab);
 	    		ContenidoTabSuperiorCategoriaBebidas.setRestaurante(restaurante);
 	    		// Hacemos oyente al tab
-	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
+	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment, tipoTab, this));
     		}else{
 	    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setcategoriaTab(tipoTab);
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
 	    		// Hacemos oyente al tab
-	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab));
+	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab, this));
     		}
     		// Añadimos dicha categoría como tab
     		actionbar.addTab(tab);
     	}
     	
-    	// Quitamos la barra del actionbar
-    	/*
-    	 * TODO En un futuro incorporaremos funciones al actionbar y habrá que habilitarla de buevo
-    	 */
-    	actionbar.setDisplayShowHomeEnabled(false);
-    	actionbar.setDisplayShowTitleEnabled(false);
-    	actionbar.setDisplayUseLogoEnabled(false);
+    	// Ponemos el título a la actividad
+    	actionbar.setTitle(" INICIO");
 	}
 	
 	/*
@@ -453,5 +448,4 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			}
 		}, 3500);	
 	}
-	
 }

@@ -11,11 +11,11 @@ import usuario.SincronizarPedidoQR;
 import adapters.HijoExpandableListPedido;
 import adapters.MiExpandableListAdapterPedido;
 import adapters.PadreExpandableListPedido;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -54,7 +54,13 @@ public class PedidoFragment extends Fragment{
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
-        importarBaseDatatos();
+        
+		// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActivity().getActionBar();
+    	actionbar.setTitle(" PEDIDO");
+    	
+		importarBaseDatatos();
         crearExpandableList();
         actualizarPrecioPedido();
         crearVentanaEmergenteElegirSincronizacion();
