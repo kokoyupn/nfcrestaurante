@@ -174,10 +174,14 @@ public class PantallaMesasFragment extends Fragment {
 				    	if (item == 0){
 				    		//Toast.makeText(getApplicationContext(), "Hacer cobrar mesa", Toast.LENGTH_SHORT).show();
 				    		//Boton Cobrar--------------------------------------------------------------------
-				    		
+				    		View vistaAviso = LayoutInflater.from(PantallaMesasFragment.this.getActivity()).inflate(R.layout.alert_dialog_cobrar, null);
+				    		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewCobrar);
+				    		texto.setText("Cobrar");
 				    		AlertDialog.Builder alert = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
-				             alert.setMessage("¿Seguro que quieres cobrar y cerrar esta mesa? "); //mensaje            
-				             alert.setNegativeButton("Cancelar", null);
+				            //alert.setMessage("¿Seguro que quieres cobrar y cerrar esta mesa? "); //mensaje            
+				    		TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensajeCobrar);
+				    		mensaje.setText("¿Estas seguro que quieres cobrar y cerrar esta mesa?");
+				    		 alert.setNegativeButton("Cancelar", null);
 				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 				               	public void onClick(DialogInterface dialog, int whichButton) {
 				                	try{
@@ -221,6 +225,7 @@ public class PantallaMesasFragment extends Fragment {
 				                	}
 				               	}
 				             });//fin onclick aceptar
+				             alert.setView(vistaAviso);
 				             alert.show();
 				    		//Boton Cobrar--------------------------------------------------------------------
 				    		
@@ -408,8 +413,14 @@ public class PantallaMesasFragment extends Fragment {
 				    		ventEmergEditMesa.show();
 				    	//---------Eliminar Mesa------
 				    	}else if (item == 4){
-							 AlertDialog.Builder alert = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
-				             alert.setMessage("¿Seguro que quieres eliminar esta mesa? "); //mensaje            
+							 
+				    	    View vistaAviso = LayoutInflater.from(PantallaMesasFragment.this.getActivity()).inflate(R.layout.alert_dialog_cobrar, null);
+				    		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewCobrar);
+				    		texto.setText("Eliminar Mesa");
+				    		
+				    		AlertDialog.Builder alert = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
+				            TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensajeCobrar);
+					    	mensaje.setText("¿Seguro que quieres eliminar esta mesa?");
 				             alert.setNegativeButton("Cancelar", null);
 				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 				               	public void onClick(DialogInterface dialog, int whichButton) {
@@ -432,6 +443,7 @@ public class PantallaMesasFragment extends Fragment {
 					             	gridviewCam.setAdapter(adapterCam);
 				               	}
 				             });//fin onclick aceptar
+				             alert.setView(vistaAviso);
 				             alert.show();
 				    	} //fin else item 4
 				    	else if (item == 5){
