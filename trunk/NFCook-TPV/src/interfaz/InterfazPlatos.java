@@ -40,6 +40,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import basesDeDatos.Operaciones;
+
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
 import tpv.Cobro;
@@ -334,6 +336,11 @@ public class InterfazPlatos extends JFrame {
 				dispose();
 				VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 				ventanaMesa.setVisible(true);
+				
+				Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
+				operacionSQlite.actualizaVisitadoMesa(idMesa, false);
+				operacionSQlite.cerrarBaseDeDatos();
+				
 			} 	
 		});
 		

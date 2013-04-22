@@ -484,7 +484,10 @@ public class Restaurante {
 		mesasRestaurante.get(idMesa).setNumeroPersonas(numeroPersonas);
 		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
 		mesasRestaurante.get(idMesa).setEstado(estado);
-		mesasRestaurante.get(idMesa).setVisitada(true);
+	}
+	
+	public void actualizaMesaEstaVisitadaLLegadaExterna(String idMesa, boolean visitada){
+		mesasRestaurante.get(idMesa).setVisitada(visitada);
 	}
 
 	public boolean mesaVisitada(String idMesa) {

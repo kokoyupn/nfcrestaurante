@@ -423,6 +423,10 @@ class BotonMesa extends JPanel {
 				InterfazPlatos platosMesa = new InterfazPlatos(idMesa, miRestaurante);
 				platosMesa.setVisible(true);
 				ventanaMesas.dispose();
+				
+				Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
+				operacionSQlite.actualizaVisitadoMesa(idMesa, true);
+				operacionSQlite.cerrarBaseDeDatos();
 			}
 			mesasRecienActivadas = false;
 		}

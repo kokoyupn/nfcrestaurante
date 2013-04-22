@@ -206,10 +206,18 @@ public class Operaciones extends Conexion{
 	}
 	
 	public void actualizarMesaBDLLegadaExterna(String consulta, String idMesa, String idCamarero,int numeroPersonas, int estado) {
-		
 		insertar(consulta, false);
 		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
-		
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+	}
+	
+	public void actualizaVisitadoMesa(String idMesa, boolean visitada){
+		// TODO ALEX
+	}
+	
+	public void actualizaVisitadoMesaLLegadaExterna(String idMesa, boolean visitada){
+		VentanaLogin.getRestaurante().actualizaMesaEstaVisitadaLLegadaExterna(idMesa, visitada);
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 	}
 		
     
