@@ -569,17 +569,6 @@ public class Mesa extends Activity {
 		String nombre = platoNuevo.getNombre();
 		String observaciones = platoNuevo.getObservaciones();
 		String extras = platoNuevo.getExtras();
-		
-		//FIXME esto quitarlo cuando cambie prado el null
-		if(observaciones==null){
-			observaciones="";
-			
-		}
-			
-		if(extras==null)
-			extras="";
-	
-		
 		int i = 0;
 		while(i<adapter.getCount() && !comunes){
 			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
@@ -602,13 +591,6 @@ public class Mesa extends Activity {
 		String nombre = platoEditar.getNombre();
 		String observaciones = platoEditar.getObservaciones();
 		String extras = platoEditar.getExtras();
-		
-		//FIXME esto quitarlo cuando cambie prado el null
-		if(observaciones==null)
-			observaciones="";
-		if(extras==null)
-			extras="";
-		
 		int i = 0;
 		while(i<adapter.getCount() && !comunes){
 			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);

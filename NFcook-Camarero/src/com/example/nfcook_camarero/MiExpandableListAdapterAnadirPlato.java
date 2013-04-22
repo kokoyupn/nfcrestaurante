@@ -266,8 +266,8 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			
 			public void onClick(DialogInterface dialog, int which) {
 				boolean bienEditado = true;
-		    	String observaciones = null;
-		    	String nuevosExtrasMarcados = null;
+		    	String observaciones = "";
+		    	String nuevosExtrasMarcados = "";
 		    	if(!actwObservaciones.getText().toString().equals("")){
 		        	observaciones = actwObservaciones.getText().toString();
 		    	}
