@@ -11,7 +11,7 @@ public class Imprimir{
 		PrinterJob job = PrinterJob.getPrinterJob();
 		
 			job.setPrintable(new ObjetoDeImpresion(texto,100,200));
-//			if(job.printDialog()){
+			if(job.printDialog()){
 				try{
 					
 					job.print();
@@ -19,6 +19,6 @@ public class Imprimir{
 				}catch(PrinterException e){
 					System.out.println(e);
 				}
-//		}
+		}
 	}
 }

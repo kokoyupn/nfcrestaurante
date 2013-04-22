@@ -20,7 +20,7 @@ public class ClienteFichero
 {
 	private static InetAddress hostLocal;
 	private final static int puerto = 5000;
-	private final static String servidor = "192.168.1.54";
+	private final static String servidor = "nfcook.no-ip.org";
 
     /**
 	 * Establece comunicacion con el servidor en el puerto indicado. Envia la consulta sql
