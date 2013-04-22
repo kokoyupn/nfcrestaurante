@@ -178,7 +178,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		texto.setText("Cobrar");
 				    		AlertDialog.Builder alert = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
 				            //alert.setMessage("¿Seguro que quieres cobrar y cerrar esta mesa? "); //mensaje            
-				    		TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensajeCobrar);
+				    		TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensaje);
 				    		mensaje.setText("¿Estas seguro que quieres cobrar y cerrar esta mesa?");
 				    		 alert.setNegativeButton("Cancelar", null);
 				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
@@ -418,7 +418,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		texto.setText("Eliminar Mesa");
 				    		
 				    		AlertDialog.Builder alert = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
-				            TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensajeCobrar);
+				            TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensaje);
 					    	mensaje.setText("¿Seguro que quieres eliminar esta mesa?");
 				             alert.setNegativeButton("Cancelar", null);
 				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
