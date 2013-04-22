@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import fragments.PantallaMesasFragment;
 import adapters.ContenidoListMesa;
 import adapters.HijoExpandableListEditar;
 import adapters.MiCursorAdapterBuscadorPlatos;
@@ -142,7 +143,7 @@ public class AnadirPlatos extends Activity{
    		while(cPMiBaseCat.moveToNext()){
    			String categoriaPlato = cPMiBaseCat.getString(0);
    			
-   			if(!categoriaSinRepe.contains(categoriaPlato)){
+   			if(!categoriaSinRepe.contains(categoriaPlato) && !categoriaPlato.equals("Bebidas")){
    				categoriaSinRepe.add(categoriaPlato);
 	   			//Sacamos los platos con categoriaPlato igual al del padre de la base de datos MiBase.db. Seran los hijos
 	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre","Precio"};
@@ -343,7 +344,7 @@ public class AnadirPlatos extends Activity{
                     String formatteHour = dtf.format(dt.getTime());
                     
 		        	ContentValues plato = new ContentValues();
-		        	int idUnico = InicialCamarero.getIdUnico();
+		        	int idUnico = PantallaMesasFragment.getIdUnico();
 		        	plato.put("NumMesa", numMesa);
 		        	plato.put("IdCamarero", idCamarero);
 		        	plato.put("IdPlato", cursor.getString(0));

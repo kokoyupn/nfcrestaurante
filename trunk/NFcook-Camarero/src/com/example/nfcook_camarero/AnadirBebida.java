@@ -9,8 +9,10 @@ import java.util.GregorianCalendar;
 
 //import usuario.DescripcionPlato;
 
+
 import com.example.nfcook_camarero.R;
 
+import fragments.PantallaMesasFragment;
 import adapters.ContenidoListMesa;
 import adapters.MiGridViewBebidasAdapter;
 import adapters.PadreGridViewBebidas;
@@ -214,7 +216,7 @@ public class AnadirBebida extends Activity{
 					//String pb = nombrePrecioId[1];
 					//double precioBebida = Double.parseDouble(pb);
 					String idBebida = bebida.getIdPlato();
-					int idUnico = InicialCamarero.getIdUnico();//ya suma 1 dentro
+					int idUnico = PantallaMesasFragment.getIdUnico();//ya suma 1 dentro
 				    
 					System.out.println("LEga");
 					

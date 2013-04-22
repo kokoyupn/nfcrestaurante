@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.example.nfcook_camarero.R;
 
+import fragments.PantallaMesasFragment;
 import adapters.ContenidoListMesa;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -200,7 +201,7 @@ public class AnadirBebidas extends Activity {
 					String pb = nombrePrecioId[1];
 					double precioBebida = Double.parseDouble(pb);
 					String idBebida = nombrePrecioId[2];
-					int idUnico = InicialCamarero.getIdUnico();
+					int idUnico = PantallaMesasFragment.getIdUnico();
 					
 					ContentValues nuevaBebida = new ContentValues();
 	            	nuevaBebida.put("NumMesa", numMesa);

@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/naranja2"
+    android:background="#63B8FF"
     android:scrollbarAlwaysDrawVerticalTrack="false" >
 
     <LinearLayout
-        android:id="@+id/LinearLayout1"
+        android:id="@+id/LinearLayoutEliminarMesa"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

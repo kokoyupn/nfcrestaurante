@@ -9,9 +9,7 @@ import java.util.Iterator;
 
 import com.example.nfcook_camarero.Borrar_tarjeta;
 import com.example.nfcook_camarero.HandlerGenerico;
-import com.example.nfcook_camarero.Historico;
 import com.example.nfcook_camarero.InfoPlato;
-import com.example.nfcook_camarero.InicialCamarero;
 import com.example.nfcook_camarero.InicialCamareroAdapter;
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.MesaView;
@@ -45,6 +43,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -140,7 +139,7 @@ public class PantallaMesasFragment extends Fragment {
         
         
         // establecimiento del oyente de añadir mesa
-        Button botonAnadirMesa = (Button) vista.findViewById(R.id.aniadirMesa);
+        LinearLayout botonAnadirMesa = (LinearLayout) vista.findViewById(R.id.LinearLayoutAniadirMesa);
         botonAnadirMesa.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -150,7 +149,7 @@ public class PantallaMesasFragment extends Fragment {
         
         
      // establecimiento del oyente de eliminar mesa
-        Button botonEliminarMesa = (Button) vista.findViewById(R.id.eliminarMesa);
+        LinearLayout botonEliminarMesa = (LinearLayout) vista.findViewById(R.id.LinearLayoutEliminarMesa);
         botonEliminarMesa.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -750,7 +749,7 @@ public class PantallaMesasFragment extends Fragment {
     }*/
     
     public boolean onOptionsItemSelected(MenuItem item) {
-            Intent intent = new Intent (getActivity().getApplication(),Historico.class);
+            Intent intent = new Intent (getActivity().getApplication(),PantallaHistoricoFragment.class);
             startActivity(intent);
             return true;
         }
