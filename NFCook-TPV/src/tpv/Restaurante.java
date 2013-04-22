@@ -507,4 +507,8 @@ public class Restaurante {
 		return mesasRestaurante.get(idMesa).isVisitada();
 	}
 	
+	public Iterator<TuplaProdEnv> getIteratorProductosEnMesa(String idMesa){
+		return mesasRestaurante.get(idMesa).getIteratorProductosEnMesa();
+	}
+	
 }
