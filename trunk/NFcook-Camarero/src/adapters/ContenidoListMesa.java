@@ -1,5 +1,7 @@
 package adapters;
 
+import java.util.ArrayList;
+
 public class ContenidoListMesa {
 	
 	private String nombre, extras, observaciones;
@@ -7,6 +9,7 @@ public class ContenidoListMesa {
 	private String idPlato;
 	private double precio;
 	private int cantidad;
+	private ArrayList<Integer> repetidos;
 	
 	public ContenidoListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato){
 		this.nombre = nombre;
@@ -16,7 +19,8 @@ public class ContenidoListMesa {
 		this.id = id;
 		this.idPlato = idPlato;
 		this.cantidad = 1;
-		
+		repetidos=new ArrayList<Integer>();
+		repetidos.add(id);
 	}
 	
 	
@@ -64,6 +68,20 @@ public class ContenidoListMesa {
 
 	public void restaCantidad() {
 		cantidad--;
+		
+	}
+
+
+
+	public void aniadeId(int id) {
+		repetidos.add(id);
+		
+	}
+
+
+
+	public void eliminaId() {
+		repetidos.remove(0);//FIXME no se si bien
 		
 	}
 

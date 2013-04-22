@@ -208,7 +208,9 @@ public class Mesa extends Activity {
 			            	    				}
 			            	    				
 			            	    				//Resta 1 a la cantidad de esa posicion del adapter
-			            	    				adapter.deletePosicion(itemId);
+			            	    				adapter.deletePosicion(itemId);//FIXME probar esto bien
+			            	    				
+			            	    				
 			            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
 			            	    				//siguiente vista la coloca con el margen de donde estuviera el raton al levantar
 			            	    				vista.setTranslationX(0);
@@ -577,6 +579,7 @@ public class Mesa extends Activity {
 				(elemento.getObservaciones()).equals(observaciones) && 
 				(elemento.getExtras()).equals(extras) ){
 					elemento.sumaCantidad();
+					elemento.aniadeId(platoNuevo.getId());
 					System.out.println("CantidadElemento: "+elemento.getCantidad());
 					comunes = true;
 				}

@@ -100,6 +100,7 @@ public class MiListAdapterMesa extends BaseAdapter {
 	
 	public void deletePosicion(int posicion){
 		contenido.get(posicion).restaCantidad();
+		contenido.get(posicion).eliminaId();//FIXME no se si bien
 		if(contenido.get(posicion).getCantidad()==0)
 			contenido.remove(posicion);
 	}
