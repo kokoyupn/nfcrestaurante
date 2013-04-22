@@ -82,6 +82,11 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 		    	}
 		    	
 	    		cargado = true;
+	    		
+	            // Ponemos el título a la actividad
+	            // Recogemos ActionBar
+	            //ActionBar actionbar = getActivity().getActionBar();
+	        	//actionbar.setTitle(" CONFIGURE SU MENÚ...");
 	    	}
 	    	
 	    	/* No podíamos hacer un xml común  para ambos, pues al poner los dos tipos de lista
@@ -90,7 +95,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	    	 * xml con una lista simple por si el padre solo tiene un hijo (Ejem bebidas...)
 	    	 * Es simplemente una cuestión estética
 	    	 */
-	    	if (!unicoTipoPlato){
+	    	if (unicoTipoPlato){
 	    		return vistaConListView;
 	    	}else{
 	    		return vistaConExpandableListView;
@@ -166,7 +171,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
     	    
     	    // Vemos si se trata de una categoría con un único tipo de plato
     	    if(tiposPlato.size() == 1){
-    	    	unicoTipoPlato = false;
+    	    	unicoTipoPlato = true;
        			
        			listViewPlatosUnicoTipo = (ListView) vistaConListView.findViewById(R.id.listViewPlatosTabsSuperiores);
        			miAdapterListTabsSuperioresCategorias = new MiListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), platos);
@@ -186,7 +191,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
     	    
        		// Tenemos varios tipos en esa categoría
     	    }else{
-    	    	unicoTipoPlato = true;
+    	    	unicoTipoPlato = false;
     	    	
     	    	// Recorremos todos los tipos que hay en esa categoría
     	    	Iterator<String> itTiposPlatos = tiposPlato.iterator();

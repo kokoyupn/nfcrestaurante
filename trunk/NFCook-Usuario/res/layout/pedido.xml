@@ -12,23 +12,6 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/azul" >
-
-            <TextView
-                android:id="@+id/textViewTituloPedido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Pedido"
-                android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-                android:textSize="30sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <ExpandableListView
@@ -48,30 +31,34 @@
         android:layout_gravity="bottom" >
 
         <ImageView
-            android:id="@+id/imageViewMonedas"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="bottom|right"
-        	android:layout_marginRight="75dp"
-        	android:layout_marginBottom="15dp"
-            android:src="@drawable/total" />
-
-        <TextView
-            android:id="@+id/textViewTotalPedido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="15dp"
-            android:textSize="16dp" />
-
-        <ImageView
             android:id="@+id/imageSincronizar"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/sincronizar_icono" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|right"
+            android:gravity="bottom|right" >
+
+            <ImageView
+                android:id="@+id/imageViewMonedas"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/total" />
+
+            <TextView
+                android:id="@+id/textViewTotalPedido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="10dp"
+                android:textSize="16dp" />
+
+        </LinearLayout>
 
     </FrameLayout>
 

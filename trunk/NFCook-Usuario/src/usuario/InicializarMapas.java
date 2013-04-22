@@ -1,12 +1,15 @@
 package usuario;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 
 import com.example.nfcook.R;
 import fragments.ListaMapasFragment;
@@ -21,6 +24,11 @@ public class InicializarMapas extends TabActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs_mapas);
+        
+     	// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" MAPAS");
 		
 		// Inicializamos y cargamos Tabs
 		inicializarTabs();
@@ -78,5 +86,11 @@ public class InicializarMapas extends TabActivity{
         
         // Seleccionamos el tab Mapa de inicio
         tabs.setCurrentTabByTag("tabMapa");
+        
+        // Cambiamos el color de la letra de los tabs de mapas
+        for(int i=0; i<=tabs.getChildCount(); i++){
+        	TextView textViewTituloTab = (TextView) tabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+        	textViewTituloTab.setTextColor(Color.parseColor("#FFFFFF"));
+        }
     }
 }

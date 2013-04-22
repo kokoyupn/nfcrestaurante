@@ -3,13 +3,12 @@
     android:id="@+id/FrameLayoutBienvenida"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="60dp"
+    android:layout_marginBottom="50dp"
     android:background="#ffdd8d" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:orientation="vertical" >
 
         <TextView
@@ -25,8 +24,8 @@
 
         <ImageView
             android:id="@+id/imageViewLogoRestaurantePantallaInicial"
-            android:layout_width="241dp"
-            android:layout_height="241dp"
+            android:layout_width="216dp"
+            android:layout_height="216dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/logo_foster_inicio" />
 
@@ -41,6 +40,7 @@
                 android:layout_height="110dp"
                 android:layout_gravity="top|center_horizontal"
                 android:layout_marginRight="110dp"
+                android:layout_marginTop="-10dp"
                 android:src="@drawable/mapas1" />
 
             <ImageView
@@ -48,7 +48,8 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="25dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="15dp"
                 android:src="@drawable/promo1" />
 
             <ImageView
@@ -57,11 +58,9 @@
                 android:layout_height="110dp"
                 android:layout_gravity="top|center_horizontal"
                 android:layout_marginLeft="110dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="-7dp"
                 android:src="@drawable/ayuda1" />
-
         </FrameLayout>
-
     </LinearLayout>
 
     <ImageView

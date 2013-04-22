@@ -1,6 +1,8 @@
 package fragments;
 
 import com.example.nfcook.R;
+
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +17,11 @@ public class PromocionesFragment extends Fragment {
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+		// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActivity().getActionBar();
+    	actionbar.setTitle(" PROMOCIONES");
+    	
 		View viewPromociones = inflater.inflate(R.layout.promociones, container, false);
 		WebView webPromociones = (WebView) viewPromociones.findViewById(R.id.webViewPromociones);
 		webPromociones.getSettings().setJavaScriptEnabled(true);  

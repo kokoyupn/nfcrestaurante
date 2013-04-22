@@ -109,22 +109,20 @@
             android:label="@string/sincronizar_pedido_QR"
             android:screenOrientation="portrait">
         </activity>
-         <activity
-            android:name="usuario.Mapas"
-            android:label="@string/mapas"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
-        </activity>
-         <activity
-            android:name="usuario.ListaMapas"
-            android:label="@string/mapas"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
-        </activity>
         <activity
             android:name="usuario.DescripcionRestaurante"
             android:label="@string/info_restaurante"
             android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
+        </activity>
+         <activity
+            android:name="usuario.InicializarMapas"
+            android:label="@string/contenido_tabs_mapas"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="usuario.Mapas"
+            android:label="@string/mapas"
             android:screenOrientation="portrait">
         </activity>
     </application>

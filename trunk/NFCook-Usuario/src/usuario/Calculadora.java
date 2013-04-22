@@ -4,18 +4,15 @@ import java.util.ArrayList;
 
 import baseDatos.HandlerDB;
 import com.example.nfcook.R;
-
-import fragments.PantallaInicialRestaurante;
-
 import adapters.InfomacionPlatoPantallaReparto;
 import adapters.MiGridViewCalculadoraAdapter;
 import adapters.MiViewPagerAdapter;
 import adapters.PadreGridViewCalculadora;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -25,10 +22,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.MarginLayoutParams;
-import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -73,6 +67,11 @@ public class Calculadora extends Activity{
        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calculadora);
+        
+        // Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" CALCULADORA");
         
         // Recogemos el número de comensales que vendrá de la ventana emergente anterior
         Bundle bundle = getIntent().getExtras();
@@ -288,9 +287,13 @@ public class Calculadora extends Activity{
 			}
 		});
     	
-    	/**FIXME 
-    	 * Lanzar la imagen cuando se abra por primera vez */
-        
+    	// Vemos si es la primera vez que corremos la aplicación para ayudar al usuario
+        if(primeraVezIniciada()){
+        	marcarCalculadoraComoInicializada();
+        	// Lanzamos la ayuda
+			ImageView imageViewAyuda = (ImageView) findViewById(R.id.imageViewLogoDescRest);
+			imageViewAyuda.performClick();
+        }     
 	}
 	
 	public static void eliminaPersona(int posPersona){
@@ -324,4 +327,18 @@ public class Calculadora extends Activity{
 
         return;
     } 
+	
+	public boolean primeraVezIniciada(){
+		// Vemos si ya ha sido iniciada la aplicacion alguna vez
+		SharedPreferences iniciada = getSharedPreferences("Calculadora", 0);
+		return iniciada.getInt("Iniciada", -1) == -1;
+	}
+	
+	public void marcarCalculadoraComoInicializada(){
+		// Marcamos con 0 que la aplicación ha sido inicializada
+		SharedPreferences preferencia = getSharedPreferences("Calculadora", 0);
+		SharedPreferences.Editor editor = preferencia.edit();
+		editor.putInt("Iniciada", 0);
+		editor.commit();
+	}
 }
