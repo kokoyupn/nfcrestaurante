@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
+
 import com.example.nfcook_camarero.R;
-import com.example.nfcook_camarero.Historico;
 
 
+
+import fragments.PantallaHistoricoFragment;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
@@ -82,7 +84,7 @@ public class MiExpandableListAdapterHistorico extends BaseExpandableListAdapter 
 	public void expandePadres(){
 		for(int i=0;i<padresExpandableList.size();i++){
 			if(padresExpandableList.get(i).isExpandido()){
-				Historico.expandeGrupoLista(i);
+				PantallaHistoricoFragment.expandeGrupoLista(i);
 			}
 		}
 	}

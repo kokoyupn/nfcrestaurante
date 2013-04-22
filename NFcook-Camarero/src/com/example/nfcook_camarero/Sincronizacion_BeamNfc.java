@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
+import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -305,16 +306,16 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
        			//Meto el plato en la base de datos Mesas
 	       		ContentValues plato = new ContentValues();
 	        	
-	        	plato.put("NumMesa",InicialCamarero.dameMesa());
-	        	plato.put("IdCamarero",InicialCamarero.dameCamarero()); 
+	        	plato.put("NumMesa",PantallaMesasFragment.dameMesa());
+	        	plato.put("IdCamarero",PantallaMesasFragment.dameCamarero()); 
 	        	plato.put("IdPlato", id);
 	        	plato.put("Observaciones", observaciones);
 	        	plato.put("Extras",extrasFinal);
 	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
 	        	plato.put("Nombre", cursor.getString(0));
 	        	plato.put("Precio",cursor.getDouble(1));
-	        	plato.put("Personas",InicialCamarero.dameNumPersonas());
-	        	plato.put("IdUnico", InicialCamarero.getIdUnico());
+	        	plato.put("Personas",PantallaMesasFragment.dameNumPersonas());
+	        	plato.put("IdUnico", PantallaMesasFragment.getIdUnico());
 	        	dbMesas.insert("Mesas", null, plato);
 	        	dbMesas.close();
 	              	

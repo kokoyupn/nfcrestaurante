@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.Iterator;
+
+import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -547,7 +549,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
        			dbMesas= sqlMesas.open();
        			//Meto el plato en la base de datos Mesas
 	       		ContentValues plato = new ContentValues();
-	        	int idUnico = InicialCamarero.getIdUnico();
+	        	int idUnico = PantallaMesasFragment.getIdUnico();
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", id);

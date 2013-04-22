@@ -5,6 +5,7 @@ import fragments.PantallaMesasFragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class InicializarPantallasCamarero extends Activity implements TabContent
     
     // Metodo encargado crear los tabs inferiores con las funcionalidades que ofrecemos al usuario
     private void cargarTabs(){
-    	// Creamos el tab1 --> Inicio
+    	// Creamos el tab1 --> Mesas
         TabHost.TabSpec spec = tabs.newTabSpec("tabMesas");
         // Hacemos referencia a su layout correspondiente
         spec.setContent(R.id.tab1);
@@ -49,11 +50,17 @@ public class InicializarPantallasCamarero extends Activity implements TabContent
         // Lo añadimos
         tabs.addTab(spec);
         
-        // Creamos el tab2 --> Promociones
+        // Creamos el tab2 --> Histórico
         spec = tabs.newTabSpec("tabHistorico");
         spec.setContent(R.id.tab2);
         spec.setIndicator("HISTÓRICO", null);
         tabs.addTab(spec);
+        
+        for(int i=0;i<=tabs.getChildCount();i++) 
+		{ 
+            TextView tv = (TextView) tabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
+        }
         
     }
     

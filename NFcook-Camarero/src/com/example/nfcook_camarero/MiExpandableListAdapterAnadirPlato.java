@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import fragments.PantallaMesasFragment;
 import junit.framework.Assert;
 
 
@@ -296,7 +297,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
                     String formatteHour = dtf.format(dt.getTime());
                     
 		        	ContentValues plato = new ContentValues();
-		        	int idUnico = InicialCamarero.getIdUnico();
+		        	int idUnico = PantallaMesasFragment.getIdUnico();
 		        	String idPlato = padresExpandableList.get(groupPositionMarcar).getIdPlato(position);
 		        	String nombrePlato = padresExpandableList.get(groupPositionMarcar).getNombrePlato(position);
 		        	double precioPlato = padresExpandableList.get(groupPositionMarcar).getPrecioPlato(position);
