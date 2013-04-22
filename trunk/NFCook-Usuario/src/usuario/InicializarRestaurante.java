@@ -25,7 +25,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -230,27 +229,21 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         // Lo añadimos
         tabs.addTab(spec);
         
-        // Creamos el tab2 --> Promociones
-        spec = tabs.newTabSpec("tabPromociones");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabPromociones"));
-        tabs.addTab(spec);
-        
-        // Creamos el tab3 --> Pedido a sincronizar
+        // Creamos el tab2 --> Pedido a sincronizar
         spec = tabs.newTabSpec("tabPedidoSincronizar");
-        spec.setContent(R.id.tab3);
+        spec.setContent(R.id.tab2);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabPedidoSincronizar"));
         tabs.addTab(spec);
         
-        // Creamos el tab4 --> Cuenta
+        // Creamos el tab3 --> Cuenta
         spec = tabs.newTabSpec("tabCuenta");
-        spec.setContent(R.id.tab4);
+        spec.setContent(R.id.tab3);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabCuenta"));
         tabs.addTab(spec);
         
-        // Creamos el tab5 --> Calculadora
+        // Creamos el tab4 --> Calculadora
         spec = tabs.newTabSpec("tabCalculadora");
-        spec.setContent(R.id.tab5);
+        spec.setContent(R.id.tab4);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabCalculadora"));
         tabs.addTab(spec);
         
@@ -259,7 +252,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
          * inferiores, redirigimos como tab pulsado al falso, de esta forma conseguimos
          * que cada vez que pulsemos en cada tab inferior entre en el método onchanged.
          */
-        // Creamos el tab6 --> tabFalso
+        // Creamos el tab5 --> tabFalso
         spec = tabs.newTabSpec("tabFalso");
         spec.setContent(R.id.tab5);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabFalso"));
@@ -282,19 +275,16 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	textoTab.setTextColor(Color.BLACK);
     	// Asignamos el título e icono para cada tab
     	if(nombreTab.equals("tabInicio")){
-     		textoTab.setText("Inicio");
+     		textoTab.setText("INICIO");
      		imagenTab.setImageResource(getResources().getIdentifier("inicio","drawable",this.getPackageName()));
-     	}else if(nombreTab.equals("tabPromociones")){
-    		textoTab.setText("Promociones");
-    		imagenTab.setImageResource(getResources().getIdentifier("ofertas","drawable",this.getPackageName()));
-    	}else if(nombreTab.equals("tabPedidoSincronizar")){
-    		textoTab.setText("Pedido a \nSincronizar");
+     	}else if(nombreTab.equals("tabPedidoSincronizar")){
+    		textoTab.setText("PEDIDO");
     		imagenTab.setImageResource(getResources().getIdentifier("pedido","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabCuenta")){
-    		textoTab.setText("Cuenta");
+    		textoTab.setText("CUENTA");
     		imagenTab.setImageResource(getResources().getIdentifier("pagar","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabCalculadora")){
-    		textoTab.setText("Calculadora");
+    		textoTab.setText("CALCULADORA");
     		imagenTab.setImageResource(getResources().getIdentifier("calculadora","drawable",this.getPackageName()));
     	}
     	return tabInferiorContentView;
@@ -317,19 +307,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        m.commit();
-		}else if(tabId.equals("tabPromociones")){
-			// Descamarcamos el tab superior activado para evitar confusiones
-			desmarcarTabSuperiorActivo();
-			// Marcamos el tab falso
-            tabs.setCurrentTabByTag("tabFalso");
-
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			if(restaurante.equals("Foster")){
-				intent.setData(Uri.parse("http://www.elchequegorron.es/"));
-			}else if(restaurante.equals("vips")){
-				intent.setData(Uri.parse("http://www.vips.es/promociones"));
-			}
-    		startActivity(intent);
 		}else if(tabId.equals("tabPedidoSincronizar")){
 			// Descamarcamos el tab superior activado para evitar confusiones
 			desmarcarTabSuperiorActivo();
