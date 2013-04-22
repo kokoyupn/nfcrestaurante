@@ -211,17 +211,6 @@ public class Operaciones extends Conexion{
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 		VentanaLogin.getRestaurante().refrescaInterfazPlatos();
 	}
-	
-	public void actualizaVisitadoMesa(String idMesa, boolean visitada){
-		ClienteFichero.enviaMesaVisitada(idMesa, visitada);
-	}
-	
-	public void actualizaVisitadoMesaLLegadaExterna(String idMesa, boolean visitada){
-		VentanaLogin.getRestaurante().actualizaMesaEstaVisitadaLLegadaExterna(idMesa, visitada);
-		VentanaLogin.getRestaurante().refrescaVentanaMesas();
-	}
-		
-    
 /* 
  * 							-EJEMPLOS-
  * 
