@@ -140,7 +140,7 @@ public class Restaurante {
 	
 	public void refrescaInterfazPlatos(){
 		if(ventanaPlatos!=null){
-			ventanaPlatos.refrescarTablaPanel();
+			ventanaPlatos.refrescarTabla();
 		}
 	}
 	

@@ -3,8 +3,6 @@ package tpv;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.text.html.HTML;
-
 public class Comanda {
 	
 	private ArrayList<Producto> comanda;
@@ -51,7 +49,7 @@ public class Comanda {
 //		boolean comidaBool = false;
 //		boolean bebidaBool = false;
 		if(!comida.equals("Mesa: " + idMesa)){
-			Imprimir.imprime(comida);
+			Imprimir.imprime(comida,null);
 			//comidaBool = true;
 		}
 //		if(!bebida.equals("Mesa: " + idMesa)){

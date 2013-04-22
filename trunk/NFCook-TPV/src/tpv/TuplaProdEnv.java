@@ -6,7 +6,6 @@ public class TuplaProdEnv {
 	private boolean enviado;
 	
 	public TuplaProdEnv(Producto prod, boolean enviado) {
-		super();
 		this.prod = prod;
 		this.enviado = enviado;
 	}

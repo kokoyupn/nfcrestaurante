@@ -1,17 +1,21 @@
 package tpv;
 
-import java.awt.*;
-import java.awt.print.*;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 
 class ObjetoDeImpresion implements Printable{
 	
 	private String texto;
 	private int x, y;
+	private Image img;
 	
-	public ObjetoDeImpresion(String texto, int x, int y){
+	public ObjetoDeImpresion(String texto, int x, int y, Image img){
 		this.texto = texto; 
 		this.x = x;
 		this.y = y;
+		this.img = img;
 	}
 	
 	public int print(Graphics g, PageFormat f, int pageIndex){
@@ -53,6 +57,9 @@ class ObjetoDeImpresion implements Printable{
 					yAux += 20;
 				}
 				conPlatos ++;
+			}
+			if (img != null){
+				g.drawImage(img,x + 20,yAux,null);
 			}
 			return PAGE_EXISTS;
 		}else{

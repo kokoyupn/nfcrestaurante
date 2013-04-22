@@ -1,7 +1,12 @@
 package tpv;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.imageio.ImageIO;
 
 public class Cobro {
 
@@ -46,10 +51,10 @@ public class Cobro {
 			Producto producto = itProductos.next();
 			if(producto instanceof Plato){
 //				comida +=  ((Plato) producto).toString() + " " + calculaPuntos(60,((Plato)producto).toString()+producto.getPrecio()+"€") + producto.getPrecio() + "€";
-				comida +=  ((Plato) producto).toString() + " -->" + "Precio: " + producto.getPrecio() + " €";
+				comida +=  ((Plato) producto).toString() + " -->" + "Precio: " + producto.getPrecio() + "€";
 			}else{
 //				bebida += ((Bebida) producto).toString() + calculaPuntos(60,((Bebida)producto).toString()+producto.getPrecio()+"€") + producto.getPrecio() + "€";
-				bebida += ((Bebida) producto).toString() + " -->" + "Precio: " + producto.getPrecio() + " €";
+				bebida += ((Bebida) producto).toString() + " -->" + "Precio: " + producto.getPrecio() + "€";
 			}
 		}
 		boolean comidaBool = false;
@@ -63,7 +68,7 @@ public class Cobro {
 		
 		String textoAImprimir = "";
 		//cuando lea "Nombre: " saltara de linea
-		textoAImprimir = 	restaurante.toUpperCase() +
+		textoAImprimir = 	restaurante.toUpperCase() + "------- NFCook" +
 							"Nombre: " + "Mesa: " + idMesa +  ".  Le atendió " + idCamarero + 
 							"Nombre: " + "Fecha y hora: " + horaEnvioYFecha; 
 		
@@ -74,9 +79,12 @@ public class Cobro {
 		}else{//no hay comida
 			textoAImprimir += bebida; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
 		}
-		textoAImprimir += "Nombre: " + "Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
+		textoAImprimir += "Nombre: " + separador(80) +
+				"Nombre: " + "Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
 		
-		Imprimir.imprime(textoAImprimir);
+		//TODO cambiar por imagen de codigo QR
+		Image img = loadImage("Imagenes/BotonesInterfazPlatos/warning.png");
+		Imprimir.imprime(textoAImprimir,img);
 		
 	}
 	
@@ -88,6 +96,25 @@ public class Cobro {
 			result += ".";
 		}
 		return result;
+	}
+	
+	public String separador(int n){
+		String res = "";
+		for(int i = 0; i < n; i++){
+			res += "-";
+		}
+		return res;
+	}
+	
+	public static BufferedImage loadImage(String ref) {
+		BufferedImage bimg = null;
+		try {
+
+			bimg = ImageIO.read(new File(ref));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bimg;
 	}
 	
 }
