@@ -6,6 +6,7 @@ public class ContenidoListMesa {
 	private int id;
 	private String idPlato;
 	private double precio;
+	private int cantidad;
 	
 	public ContenidoListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato){
 		this.nombre = nombre;
@@ -14,8 +15,11 @@ public class ContenidoListMesa {
 		this.precio = precio;
 		this.id = id;
 		this.idPlato = idPlato;
+		this.cantidad = 1;
 		
 	}
+	
+	
 	
 	public String getIdPlato(){
 		return idPlato;
@@ -42,11 +46,25 @@ public class ContenidoListMesa {
 	}
 
 	public double getPrecio() {
-		return precio;
+		return precio*cantidad;
 	}
 
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
+	}
+	
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void sumaCantidad() {
+		cantidad++;
+		
+	}
+
+	public void restaCantidad() {
+		cantidad--;
+		
 	}
 
 	

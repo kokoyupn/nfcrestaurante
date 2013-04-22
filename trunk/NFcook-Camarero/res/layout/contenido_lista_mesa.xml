@@ -16,11 +16,20 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/unidades"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/precio" />
+
+        <TextView
             android:id="@+id/precio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:textSize="14sp"
             android:textStyle="bold" />
 

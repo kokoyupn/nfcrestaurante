@@ -54,45 +54,19 @@ public class MiListAdapterMesa extends BaseAdapter {
 	    TextView nombre = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.nombrePlato);
 	    nombre.setText(lista.getNombre());
 	    
-//	    TextView precio = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.precio);
-//	    precio.setText(Double.toString(lista.getPrecio())+" "+"€");
-//	    
-//	    TextView extras = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.extras);
-//	    extras.setText(lista.getExtras());
-//	         
-//	    TextView observaciones = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.observaciones);
-//	    observaciones.setText(lista.getObservaciones());
-//	    
+	    TextView unidades = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.unidades);
+	    unidades.setText("Uds: " + lista.getCantidad());
 	    
+	    TextView precio = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.precio);
+	    precio.setText(Double.toString(lista.getPrecio())+" "+"€");
+
+	    TextView extras = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.extras);
+	    extras.setText(lista.getExtras());
+	         
+	    TextView observaciones = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.observaciones);
+	    observaciones.setText(lista.getObservaciones());    
 	    
 	    return vista;
-	    
-				/*switch(event.getAction()){
-					case MotionEvent.ACTION_MOVE:
-						Log.d("llega","llega");
-						Iterator<ContenidoListaMesa> it = contenido.iterator();
-						boolean encontrado = false;
-						
-						while(it.hasNext() && !encontrado){
-							ContenidoListaMesa m = it.next();
-							(ListView)v.
-							if(m == (ListView)v.getc )
-								encontrado = true;
-							else
-								pos++;
-						}
-						
-						if(encontrado)
-							contenido.remove(pos);
-						
-				}*/
-	    		
-	    	    /*LinearLayout container = (LinearLayout) v;
-	    	    container.addView(view);
-	    	    view.setVisibility(View.VISIBLE);*/
-				
-			
-	    	
 	    }
 	
 	public void deleteId(int id){
@@ -125,7 +99,9 @@ public class MiListAdapterMesa extends BaseAdapter {
 	
 	
 	public void deletePosicion(int posicion){
-		contenido.remove(posicion);
+		contenido.get(posicion).restaCantidad();
+		if(contenido.get(posicion).getCantidad()==0)
+			contenido.remove(posicion);
 	}
 	
 	

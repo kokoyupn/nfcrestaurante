@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -72,10 +74,11 @@ public class Mesa extends Activity {
 	private View.OnTouchListener tocuhListener;
 	private boolean moviendose;
 	private View vista;
-	private int inicial, itemId;
+	private int inicial, itemId,XinicialEvento,YinicialEvento;
 	private boolean noBorrar=false;
 	private boolean noVolver=false;
-	
+	private boolean entrar=false;
+	private boolean primeraVez,mueves;
 	
 	
 	private AutoCompleteTextView actwObservaciones;
@@ -154,7 +157,13 @@ public class Mesa extends Activity {
 	  	    	public boolean onTouch(View v, MotionEvent event) {
 	            	switch (event.getAction() ) {
 	            		case MotionEvent.ACTION_DOWN:
+	            			mueves=false;
+	            			primeraVez=true;
 	            			noVolver=false;
+	            			XinicialEvento=(int) event.getRawX();
+	            			YinicialEvento=(int) event.getRawY();
+	            			
+	            			System.out.println("YRawinicial"+YinicialEvento);
 	            			
 	            			itemId = platos.pointToPosition((int) event.getX(), (int) event.getY());
 	        	        	int pos=itemId-platos.getFirstVisiblePosition();
@@ -164,88 +173,136 @@ public class Mesa extends Activity {
         		        	vista.getLocationOnScreen(coord);
         		        	inicial=coord[0];
         		        	
+        		        	//Si le pones un return true no funciona el onclick
         		        	break;
 	        	        	
 	            		case MotionEvent.ACTION_UP:
-	            			if(!noBorrar){
-		            			if(moviendose){
-			            			 if (event.getX()>inicial && event.getX() - inicial > 100){
-			            				//Calculas para ver si donde levantas el dedo es la misma vista de donde empezaste
-		            		        	int altoVista=vista.getHeight();
-		            		        	int[] coordenadas=new int[2];//Vista
-		            		        	vista.getLocationOnScreen(coordenadas);//Guarda X e Y
-		            		        	int finVista=coordenadas[1]+altoVista;
-		            		        	
-		            		        	//Entras si sigues con el dedo en la misma vista
-		            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
-		            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
-		            	    				String identificador = Integer.toString(platoSeleccionado.getId());
-		            	    				try{
-		            	    					sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-		            	    					dbMesas= sqlMesas.open();
-		            	    					
-		            	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
-		            	    				}catch(Exception e){
-		            	    					System.out.println("Error borrar de la base pedido en ondrag");
-		            	    				}
-		            	    				
-		            	    				//Borras la posicion del adapter
-		            	    				adapter.deletePosicion(itemId);
-		            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
-		            	    				//siguiente vista la coloca con el margen de donde estuviera el raton al levantar
-		            	    				vista.setTranslationX(0);
-		            	    				//Notificas que has borrado un elemento del adapter y que repinte la lista
-		            	    				adapter.notifyDataSetChanged();
-		            	    				
-		            	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
-		            	    				precioTotal.setText(Double.toString( Math.rint( adapter.getPrecio()*100 )/100) +" €");
-		            	            		
-		            	            		}
-			            		     }else{
-			            		    	 //Si no se ha borrado, se devuelve a su sitio
-			            				 vista.setTranslationX(0);
-			            			 }
+	            			if(mueves){
+		            			if(!noBorrar){
+			            			if(moviendose){
+			            				
+			            				WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+			            				Display display = wm.getDefaultDisplay();
+			            				int ancho = display.getWidth()/4*3;
+				            			if (event.getX()>inicial && event.getX() - XinicialEvento > ancho && event.getX() > XinicialEvento){
+				            				//Calculas para ver si donde levantas el dedo es la misma vista de donde empezaste
+			            		        	int altoVista=vista.getHeight();
+			            		        	int[] coordenadas=new int[2];//Vista
+			            		        	vista.getLocationOnScreen(coordenadas);//Guarda X e Y
+			            		        	int finVista=coordenadas[1]+altoVista;
+			            		        	
+			            		        	//Entras si sigues con el dedo en la misma vista
+			            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
+			            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
+			            	    				String identificador = Integer.toString(platoSeleccionado.getId());
+			            	    				try{
+			            	    					sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			            	    					dbMesas= sqlMesas.open();
+			            	    					
+			            	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
+			            	    				}catch(Exception e){
+			            	    					System.out.println("Error borrar de la base pedido en ondrag");
+			            	    				}
+			            	    				
+			            	    				//Resta 1 a la cantidad de esa posicion del adapter
+			            	    				adapter.deletePosicion(itemId);
+			            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
+			            	    				//siguiente vista la coloca con el margen de donde estuviera el raton al levantar
+			            	    				vista.setTranslationX(0);
+			            	    				//Notificas que has borrado un elemento del adapter y que repinte la lista
+			            	    				adapter.notifyDataSetChanged();
+			            	    				
+			            	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
+			            	    				precioTotal.setText(Double.toString( Math.rint( adapter.getPrecio()*100 )/100) +" €");
+			            	            		
+			            	            		}
+				            		     }else{
+				            		    	 //Si no se ha borrado, se devuelve a su sitio
+				            				 vista.setTranslationX(0);
+				            			 }
+			            			}
+			            			if(noVolver)
+			            				//Si has activado el scroll piedes la seleccion de la vista
+			            				noVolver=false;
 		            			}
-		            			if(noVolver)
-		            				//Si has activado el scroll piedes la seleccion de la vista
-		            				noVolver=false;
-	            			}
-	                        break;
+	            			}else
+	            				//Si no pasas por el ACTION_MOVE, es un click, asique permites devolviendo false que ejecute el onClick
+		                        return false;
+	            			
+	            			break;
 	                        
 	            		case MotionEvent.ACTION_MOVE:
-	            			try{
-	            				int altoV=vista.getHeight();
-            		        	int[] coordena=new int[2];//Vista
-            		        	vista.getLocationOnScreen(coordena);//Guarda X e Y
-            		        	int finVis=coordena[1]+altoV;
-            		        	
-            		        	//Desplazas la vista si no te sales de ella verticalmente, si es la primera vez y si no has activado el scroll
-		            			if(!moviendose && !(event.getRawY()<coordena[1]) && !(event.getRawY()>finVis) && !noVolver){
-		            				moviendose=true;
-		            				noBorrar=false;
-			            			
-		        	        		vista.setTranslationX(event.getX());		        	        		
-			        	        
-		        	        	//Si te sales de la vista, devuelves false para que lo procese el metodo(el que 
-		        	        	//activa el scroll) y pierdes el poder desplazar la vista(y la devuelves a su sitio)
-		            			}else if( event.getRawY()<coordena[1] || event.getRawY()>finVis ){	 
-		            				vista.setTranslationX(0);
-		            				noBorrar=true;
-		            				noVolver=true;
-		            				return false;
-		            			
-		            			//Si no has perdido la vista, la mueves horizontalmente
-		            			}else if(!noVolver){
-		            				noBorrar=false;
-		            				vista.setTranslationX(event.getX());
-		            			}
-	            			
-	            			}catch(Exception e){
-	            				System.out.println("catch MOVE");	
+	            			mueves=true;
+	            			if(primeraVez){
+	            				System.out.println("yRAWEvento"+event.getRawY());
+	            				int x,y;
+	            				y = (int) Math.abs(event.getRawY()-YinicialEvento);
+	            				System.out.println("y"+y);
+	            				x = (int) Math.abs(event.getRawX()-XinicialEvento);
+	            				System.out.println("x"+x);
+	            				if(y>x)
+	            					entrar = false;//No hacerlo
+	            				else
+	            					entrar = true;
 	            			}
+	            			
+	            			if(entrar){
+	            				System.out.println("entra");
+	            				primeraVez=false;
+		            			try{
+		            				int xActual=(int) event.getRawX();
+		            				int desplazamiento=XinicialEvento-xActual;
+		            				
+		            				int altoV=vista.getHeight();
+	            		        	int[] coordena=new int[2];//Vista
+	            		        	vista.getLocationOnScreen(coordena);//Guarda X e Y
+	            		        	int finVis=coordena[1]+altoV;
+	            		        	
+	            		        	//Desplazas la vista si no te sales de ella verticalmente, si es la primera vez y si no has activado el scroll
+			            			if(!moviendose && !(event.getRawY()<coordena[1]) && !(event.getRawY()>finVis) && !noVolver){
+			            				moviendose=true;
+			            				noBorrar=false;
+			            				
+			            				if(desplazamiento<0){//Si mueves el dedo a la derecha
+				            				vista.setTranslationX(event.getRawX()-XinicialEvento);
+				            				System.out.println("primera vez que desplaza1");
+				            				
+				            			}
+				            			else if(desplazamiento>0 && vista.getTranslationX()==0)
+				            				vista.setTranslationX(0);
+				            			
+				        	        
+			        	        	//Si te sales de la vista, devuelves false para que lo procese el metodo(el que 
+			        	        	//activa el scroll) y pierdes el poder desplazar la vista(y la devuelves a su sitio)
+			            			}else if( event.getRawY()<coordena[1] || event.getRawY()>finVis ){	 
+			            				vista.setTranslationX(0);
+			            				noBorrar=true;
+			            				noVolver=true;
+			            				return false;
+			            			
+			            			//Si no has perdido la vista, la mueves horizontalmente
+			            			}else if(!noVolver){
+			            				noBorrar=false;
+			            				
+			            				if(desplazamiento<=0)//Si desplazas a la derecha
+				            				vista.setTranslationX(event.getRawX()-XinicialEvento);
+			            				else if(desplazamiento>0 && vista.getTranslationX()==0)
+				            				vista.setTranslationX(0);
+				            			else if(desplazamiento>0)
+				            				vista.setTranslationX(event.getRawX()-XinicialEvento);
+				            			else if(desplazamiento==0)
+				            				vista.setTranslationX(event.getRawX());
+			            				
+			            			}
+		            			
+		            			}catch(Exception e){
+		            				System.out.println("catch MOVE");	
+		            			}
+	            			}else
+	            				return false;//Consigues que actue el scroll 
 	            			break;
 	            	}
-	            	return true;
+	            	return true;//Si esta a false, se pone a la vez scroll y desplazamiento horiz. de la vista
 	            }
 	        };
 	        
@@ -285,15 +342,16 @@ public class Mesa extends Activity {
 		aniadirBebida.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
-        		    Intent intent = new Intent(actividad, AnadirBebidas.class);
+        		    Intent intent = new Intent(actividad, AnadirBebida.class);
             		intent.putExtra("NumMesa", numMesa);
             		intent.putExtra("IdCamarero",idCamarero);
             		intent.putExtra("Personas", numPersonas);
-
+            		
             		startActivity(intent);
             		
             	}catch(Exception e){
-            		System.out.println("Catch funcionalidad de boton AñadirBebida");
+            		System.out.println("Catch funcionalidad de boton AñadirBebida "+e.getMessage()+
+            				"LOcalizacion: "+e.getCause());
             		
             	}
             }
@@ -316,9 +374,38 @@ public class Mesa extends Activity {
 		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
 		    
 		    elementos = new ArrayList<ContenidoListMesa>();
-		     
-		    while(c.moveToNext())
-		    	elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
+		    
+		    boolean primero = true;
+		    int numElems=0;
+		    while(c.moveToNext()){
+		    	numElems++;
+		    	System.out.println("Elems: "+numElems);
+		    	if(primero){
+		    		elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
+		    		System.out.println("Primero: "+c.getString(0));
+		    		primero=false;
+		    	}else{
+		    		int i = 0;
+		    		boolean repetido = false;
+		    		while(i<elementos.size() && !repetido){
+		    			System.out.println("Entra");
+	    				
+			    		if( (elementos.get(i).getNombre()).equals(c.getString(0)) &&
+			    			(elementos.get(i).getExtras()).equals(c.getString(2)) &&
+			    			(elementos.get(i).getObservaciones()).equals(c.getString(1)) ){
+			    				System.out.println("Repes: "+c.getString(0));
+			    				repetido = true;
+			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
+			    		}else
+			    			i++;
+		    		}
+		    		if(!repetido){
+		    			elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
+		    			System.out.println("nombre: "+elementos.get(i).getNombre()+" extras: "+elementos.get(i).getExtras()+" obs: "+elementos.get(i).getObservaciones());
+		    		}
+		    	}
+		    	
+		    }
 		    	
 		    return elementos;
 		    
@@ -380,8 +467,19 @@ public class Mesa extends Activity {
 		        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
 				sqlMesas.close();
 				
+				
 				adapter.setExtras(posicion,nuevosExtrasMarcados);
 				adapter.setObservaciones(posicion,observacionesNuevas);
+				
+				//mirar si qeda igual q otro------------
+				ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(posicion);
+				
+				//Si se ha modificado uno y queda igual que algun otro, esta funcion se encarga 
+				//ya de buscar y borrar el que mas a la derecha este y de sumar 1 al de la 
+				//izquierda
+				buscaComunesEditar(elemento,posicion);
+				//----------------------------------	
+					
 				platos.setAdapter(adapter);
 			}
 		});
@@ -461,9 +559,64 @@ public class Mesa extends Activity {
   			expandableListEditarExtras.setVisibility(ExpandableListView.INVISIBLE);
   		}
 	}
+	
+	public static boolean buscaComunes(ContenidoListMesa platoNuevo){
+		boolean comunes = false;
+		String nombre = platoNuevo.getNombre();
+		String observaciones = platoNuevo.getObservaciones();
+		String extras = platoNuevo.getExtras();
+		
+		int i = 0;
+		while(i<adapter.getCount() && !comunes){
+			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
+			System.out.println("PlatoNuevo: "+platoNuevo.getNombre()+"Elemento: "+elemento.getNombre());
+			if( (elemento.getNombre()).equals(nombre) && 
+				(elemento.getObservaciones()).equals(observaciones) && 
+				(elemento.getExtras()).equals(extras) ){
+					elemento.sumaCantidad();
+					System.out.println("CantidadElemento: "+elemento.getCantidad());
+					comunes = true;
+				}
+			i++;
+		}
+		return comunes;
+	}
+	
+	public static void buscaComunesEditar(ContenidoListMesa platoEditar,int posicion){
+		boolean comunes = false;
+		
+		String nombre = platoEditar.getNombre();
+		String observaciones = platoEditar.getObservaciones();
+		String extras = platoEditar.getExtras();
+		
+		int i = 0;
+		while(i<adapter.getCount() && !comunes){
+			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
+			if( i!=posicion &&
+				(elemento.getNombre()).equals(nombre) && 
+				(elemento.getObservaciones()).equals(observaciones) && 
+				(elemento.getExtras()).equals(extras) ){
+					
+					comunes = true;
+					if(i<posicion){
+						elemento.sumaCantidad();
+						adapter.deletePosicion(posicion);
+					}else{
+						platoEditar.sumaCantidad();
+						adapter.deletePosicion(i);
+					}
+						
+				}
+			i++;
+		}
+	}
 
 	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
-		adapter.addPlato(platoNuevo);
+		System.out.println("actualizaListPlatos");
+		
+		if(!buscaComunes(platoNuevo))
+			adapter.addPlato(platoNuevo);
+		
 		platos.setAdapter(adapter);
 		precioTotal.setText( Math.rint(adapter.getPrecio()*100)/100 +" €");
 	}
