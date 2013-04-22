@@ -121,8 +121,30 @@ public class Mesa {
 		return visitada;
 	}
 
-	public void setEstado(estadoMesa estado) {
-		this.estado = estado;
+	public void setEstado(int estado) {
+		switch (estado) {
+		case 0:
+			this.estado = estadoMesa.CERRADA;
+			break;
+		case 1:
+			this.estado = estadoMesa.ABIERTA;
+			break;
+		case 2:
+			this.estado = estadoMesa.COMANDA;
+			break;
+		}
+	}
+
+	public static int getIntDadoEstado(estadoMesa estado) {
+		if(estado == estadoMesa.CERRADA){
+			return 0;
+		}else if(estado == estadoMesa.ABIERTA){
+			return 1;
+		}else if(estado == estadoMesa.COMANDA){
+			return 2;
+		}else{
+			return -1;
+		}
 	}
 
 }
