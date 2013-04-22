@@ -345,6 +345,7 @@ public class AnadirPlatos extends Activity{
                     
 		        	ContentValues plato = new ContentValues();
 		        	int idUnico = PantallaMesasFragment.getIdUnico();
+		        	PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
 		        	plato.put("NumMesa", numMesa);
 		        	plato.put("IdCamarero", idCamarero);
 		        	plato.put("IdPlato", cursor.getString(0));

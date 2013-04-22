@@ -298,6 +298,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
                     
 		        	ContentValues plato = new ContentValues();
 		        	int idUnico = PantallaMesasFragment.getIdUnico();
+		        	PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
 		        	String idPlato = padresExpandableList.get(groupPositionMarcar).getIdPlato(position);
 		        	String nombrePlato = padresExpandableList.get(groupPositionMarcar).getNombrePlato(position);
 		        	double precioPlato = padresExpandableList.get(groupPositionMarcar).getPrecioPlato(position);
