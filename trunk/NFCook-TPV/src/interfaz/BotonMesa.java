@@ -3,6 +3,7 @@ package interfaz;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -116,8 +117,7 @@ class BotonMesa extends JPanel {
 		// Preparamos la fuente para poder modificar el tamaño de la letra de los JMenuItem.
 		Font fuentePopupMenuItem = propiedadesMesa.getFont();
 		
-		JMenuItem abrirMesa = new JMenuItem("Abrir mesa");
-		abrirMesa.setBackground(Color.YELLOW);
+		JMenuItem abrirMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonAbrirMesa.png"));
 		// Cambiamos el tamaño de la letra, mantenemos el estilo y el tipo de letra.
 		abrirMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
 		// Añadimos oyente para cuando pulsemos en el.
@@ -144,11 +144,11 @@ class BotonMesa extends JPanel {
 				}				
 			}
 		});
-		JMenuItem cobrarMesa = new JMenuItem("Cobrar mesa");
+		JMenuItem cobrarMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonCobrarMesa.png"));
 		cobrarMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
-		JMenuItem sincronizarMesa = new JMenuItem("Sincronizar mesa");
+		JMenuItem sincronizarMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonSincronizarMesa.png"));
 		sincronizarMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
-		cambiarNumeroPersonas =  new JMenuItem("Editar nºpersonas");
+		cambiarNumeroPersonas =  new JMenuItem(new ImageIcon("Imagenes/Botones/botonEditarPersonas.png"));
 		cambiarNumeroPersonas.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
 		
 		cambiarNumeroPersonas.addActionListener(new ActionListener() {
@@ -174,7 +174,7 @@ class BotonMesa extends JPanel {
 			}
 		});
 		
-		JMenuItem cerrarMesa = new JMenuItem("Cerrar mesa");
+		JMenuItem cerrarMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonCerrarMesa.png"));
 		cerrarMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
 		
 		cerrarMesa.addActionListener(new ActionListener() {
@@ -459,62 +459,93 @@ class BotonMesa extends JPanel {
 		
 		private static final long serialVersionUID = 1L;
 		
-		private final JTextField numero = new JTextField();
+		private JTextField textFieldnumero = new JTextField();
 		
 		public TecladoParaNumeroPersonas(){
 			
-						
 			JPanel panelTeclado = new JPanel();
 			panelTeclado.setLayout(new GridBagLayout());
+			this.add(panelTeclado);
+			cargarNumeros(panelTeclado);
+			cargarAreaTexto(panelTeclado);
+
 			
-			this.setLayout(new BorderLayout());
+		}
+
+		private void cargarAreaTexto(JPanel panelTeclado) {
 			
-			numero.setFont(new Font(numero.getFont().getName(), numero.getFont().getStyle(), 30));
+			textFieldnumero.setFont(new Font(textFieldnumero.getFont().getName(), textFieldnumero.getFont().getStyle(), 50));
+			textFieldnumero.setHorizontalAlignment(JTextField.CENTER);
+			textFieldnumero.setFocusable(false);
 			
-			this.add(numero,BorderLayout.NORTH);
-			this.add(panelTeclado,BorderLayout.CENTER);
-			
-			int fila = 1;
-			int columna = 0;
-			for(int i = 0; i<10; i++){
-				JButton botonNumero = new JButton(i+"");
-				Font fuenteBotonNumero = botonNumero.getFont();
-				botonNumero.setFont(new Font(fuenteBotonNumero.getFontName(), fuenteBotonNumero.getStyle(), 30));
-				botonNumero.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						numero.setText(numero.getText()+((JButton)arg0.getSource()).getText());
-					}
-				});
-				GridBagConstraints constraints = new GridBagConstraints();
-				if(columna == 3){
-					columna = 0;
-					fila++;
-				}
-				constraints.gridx = columna; // El área de texto empieza en la columna columna.
-				constraints.gridy = fila; // El área de texto empieza en la fila fila.
-				panelTeclado.add(botonNumero, constraints);
-				columna++;
-			}
 			GridBagConstraints constraints = new GridBagConstraints();
-			constraints.gridx = columna; // El área de texto empieza en la columna cero.
-			constraints.gridy = fila; // El área de texto empieza en la fila cero
+			constraints.gridx = 0;
+			constraints.gridy = 0;
+			constraints.gridwidth = 5;
+			//Decimos que ocupe esas 3 columnas.
+			constraints.fill = GridBagConstraints.BOTH;
+			panelTeclado.add(textFieldnumero,constraints);
+			
+		}
+
+		private void cargarNumeros(JPanel panelTeclado) {
+			GridBagConstraints constraints = new GridBagConstraints();
+			Font fuente = new Font(Font.SANS_SERIF, Font.CENTER_BASELINE, 60);
+			
+			int numeroBoton = 1;
+			for(int fila = 1; fila<4 ; fila++){
+				for(int columna = 0; columna<3; columna++){
+					JButton botonNumero = new JButton(numeroBoton +"");
+					botonNumero.setFont(fuente);
+					constraints.gridx = columna;
+					constraints.gridy = fila;
+					constraints.insets = new Insets(3, 3, 3, 3);
+					panelTeclado.add(botonNumero, constraints);
+					numeroBoton++;
+					
+					botonNumero.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent boton) {
+							textFieldnumero.setText(textFieldnumero.getText() + ((JButton) boton.getSource()).getText());
+						}
+					});
+				}
+			}
+			
+			JButton botonCero = new JButton("0");
+			botonCero.setFont(fuente);
+			constraints.gridx = 0;
+			constraints.gridy = 4;
+			constraints.insets = new Insets(3, 3, 3, 3);
+			panelTeclado.add(botonCero, constraints);
+			botonCero.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent boton) {
+					textFieldnumero.setText(textFieldnumero.getText() + ((JButton) boton.getSource()).getText());
+				}
+			});
+			
 			JButton botonBorrar = new JButton("C");
-			Font fuenteBotonNumero = botonBorrar.getFont();
-			botonBorrar.setFont(new Font(fuenteBotonNumero.getFontName(), fuenteBotonNumero.getStyle(), 30));
+			botonBorrar.setFont(fuente);
+			constraints.gridx = 1;
+			constraints.gridy = 4;
+			constraints.gridwidth = 2;
+			constraints.fill = GridBagConstraints.BOTH;
+			constraints.insets = new Insets(3, 3, 3, 3);
 			botonBorrar.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					numero.setText("");					
+					textFieldnumero.setText("");
 				}
 			});
 			panelTeclado.add(botonBorrar, constraints);
 		}
 
 		public int getNumeroPersonas() {
-			return Integer.parseInt(numero.getText());
+			return Integer.parseInt(textFieldnumero.getText().toString());
 		}
 		
 	}

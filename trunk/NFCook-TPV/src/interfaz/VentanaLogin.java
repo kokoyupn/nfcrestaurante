@@ -57,6 +57,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		Dimension dimenionesPantalla = getToolkit().getScreenSize();
 				
 		unRestaurante = new Restaurante();
+		unRestaurante.cargarRestaurante();
 		
 		/*
 		 * JPanel principal (contiene el JPanel de la imagen y del login ).
