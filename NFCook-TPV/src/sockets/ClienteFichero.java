@@ -9,8 +9,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import tpv.Mesa.estadoMesa;
-
 /**
  * Pide un fichero al ServidorFichero, lo escribe en pantalla cuando lo recibe y
  * lo guarda en disco.
@@ -142,6 +140,41 @@ public class ClienteFichero
 	}
 	
 	/**
+	 * Establece comunicacion con el servidor en el puerto indicado. Envia el array con consultas sql
+	 * junto con el fichero que habra que actualizar en el Servidor.
+	**/
+	public static void enviaMesaVisitada(String idMesa, boolean visitada){
+
+		try{
+			// Se abre el socket.
+            Socket socket = new Socket(servidor, puerto);
+
+            hostLocal = socket.getLocalAddress();
+            
+            // Se envía un mensaje de petición de fichero.
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            ArrayList<InetAddress> ips = new ArrayList<InetAddress>();
+            ips.add(socket.getLocalAddress());
+            MensajeMesaVisitada mensajeMesaVisitada = new MensajeMesaVisitada(idMesa, visitada, ips);
+           
+            oos.writeObject(mensajeMesaVisitada);
+            
+            // recibir las IP internas de todos los clientes y enviar esta misma info
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Object mensajeConIPs = ois.readObject();
+            transmiteMensajeLocal(mensajeConIPs);
+            
+            // cerramos el socket
+            socket.close();
+            oos.close();
+            ois.close();
+            
+		}catch(Exception excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar consulta al Servidor");
+		}
+	}
+	
+	/**
 	 * Se encarga de transmitir el mensaje a los clientes en red local, en función del tipo que sea.
 	 * **/
 	private static void transmiteMensajeLocal(Object mensaje){
@@ -153,6 +186,9 @@ public class ClienteFichero
 			
 		}else if (mensaje instanceof MensajeEstadoMesa) {
 			transmiteEstadoMesaLocal((MensajeEstadoMesa)mensaje);
+		
+		}else if (mensaje instanceof MensajeMesaVisitada) {
+			transmiteMesaVisitadaLocal((MensajeMesaVisitada)mensaje);
 		}
 	}
 	
@@ -236,6 +272,34 @@ public class ClienteFichero
     		
     	}catch (IOException e) {
 			System.err.println("Error al enviar el estado de una mesa a los Clientes");
+    	}
+	}
+	
+	private static void transmiteMesaVisitadaLocal(MensajeMesaVisitada mensaje){
+		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
+    	try {
+    		int i = 0;
+    		while(i<mensaje.ips.size()){
+    			if(!mensaje.ips.get(i).equals(hostLocal)){
+
+    				Socket socket = new Socket(mensaje.ips.get(i), puertoClientes);
+    		    	ObjectOutputStream oos;
+    				System.out.println("Aceptado servidor");
+    				oos = new ObjectOutputStream(socket.getOutputStream());
+    				 
+    				oos.writeObject(mensaje);
+    		      
+    		        // cerramos el socket
+    				socket.close();
+    				oos.close();
+
+    			}
+    			i++;
+    			}
+    		
+    	}catch (IOException e) {
+			System.err.println("Error al enviar la consulta a los Clientes");
+    		//e.printStackTrace();
     	}
 	}
 	
