@@ -30,6 +30,7 @@ import javax.swing.Timer;
 
 import basesDeDatos.Operaciones;
 
+import sockets.OperacionesSocketsSinBD;
 import tpv.Mesa;
 import tpv.Restaurante;
 
@@ -424,9 +425,8 @@ class BotonMesa extends JPanel {
 				platosMesa.setVisible(true);
 				ventanaMesas.dispose();
 				
-				Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
-				operacionSQlite.actualizaVisitadoMesa(idMesa, true);
-				operacionSQlite.cerrarBaseDeDatos();
+				OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
+				operacion.actualizaVisitadoMesa(idMesa, true);
 			}
 			mesasRecienActivadas = false;
 		}

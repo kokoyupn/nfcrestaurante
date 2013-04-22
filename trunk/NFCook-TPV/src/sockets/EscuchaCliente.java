@@ -48,7 +48,7 @@ public class EscuchaCliente extends Thread {
 	            
 	            }else if (mensaje instanceof MensajeMesaVisitada){
 	            	MensajeMesaVisitada mensajeUtilizar = (MensajeMesaVisitada)mensaje;
-	            	Operaciones operacion = new Operaciones("");
+	            	OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 	            	operacion.actualizaVisitadoMesaLLegadaExterna(mensajeUtilizar.idMesa, mensajeUtilizar.visitado);
 	            }
 			

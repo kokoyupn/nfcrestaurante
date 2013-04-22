@@ -42,6 +42,7 @@ import javax.swing.table.JTableHeader;
 
 import basesDeDatos.Operaciones;
 
+import sockets.OperacionesSocketsSinBD;
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
 import tpv.Cobro;
@@ -338,9 +339,8 @@ public class InterfazPlatos extends JFrame {
 				VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 				ventanaMesa.setVisible(true);
 				
-				Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
-				operacionSQlite.actualizaVisitadoMesa(idMesa, false);
-				operacionSQlite.cerrarBaseDeDatos();
+				OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
+				operacion.actualizaVisitadoMesa(idMesa, false);
 				
 			} 	
 		});
