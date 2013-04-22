@@ -421,7 +421,7 @@ class BotonMesa extends JPanel {
 		public void mouseClicked(MouseEvent arg0) {
 			// Solo abrimos la mesa si no esta JPopupMenu abierto, la mesa tiene cualquier estado que no sea cerrada y además no hemos salido justo en ese momento del JPopupMenu de otra mesa.
 			if(!mesasRecienActivadas && !menuMesaAbierto && estado!= tpv.Mesa.estadoMesa.CERRADA){
-				InterfazPlatos platosMesa = new InterfazPlatos(idMesa, miRestaurante);
+				InterfazPlatos platosMesa = new InterfazPlatos(idMesa, miRestaurante, idCamarero);
 				platosMesa.setVisible(true);
 				ventanaMesas.dispose();
 				

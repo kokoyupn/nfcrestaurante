@@ -75,10 +75,12 @@ public class InterfazPlatos extends JFrame {
 	
 	/**
 	 * Create the frame.
+	 * @param idCamarero 
 	 */
-	public InterfazPlatos(final String idMesa, final Restaurante unRestaurante) {
+	public InterfazPlatos(final String idMesa, final Restaurante unRestaurante, String idCamarero) {
 		this.idMesa = idMesa;
 		this.unRestaurante = unRestaurante;
+		this.idCam = idCamarero;
 		this.unRestaurante.setIterfazPlatos(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -123,7 +125,6 @@ public class InterfazPlatos extends JFrame {
 		dinero = 0;
 		esExtras = false;
 		esObs = false;
-		idCam = "";
 
 ///////////////GRUPO TOTAL PRECIO////////////////////	
 		
@@ -240,16 +241,6 @@ public class InterfazPlatos extends JFrame {
 						int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
 								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/chef.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
 						if (seleccion == 0){//aceptar 
-							//saco el cam
-							Iterator<Mesa> itm = getRestaurante().getIteratorMesas();
-							boolean enc = false;
-							while(itm.hasNext() && !enc){
-								Mesa mesa = itm.next();
-								if (mesa.getIdMesa().equals(idMesa)){
-									idCam = mesa.getIdCamarero();
-									enc=true;
-									}
-							}
 							ArrayList<Producto> aEnviar = platosAEnviar();
 							getRestaurante().addComandaAMesa(idMesa, idCam, aEnviar);
 							
@@ -323,18 +314,6 @@ public class InterfazPlatos extends JFrame {
 		aceptar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent arg0){
-				boolean enc = false;
-				Iterator<Mesa> iteratorMesas = getRestaurante().getIteratorMesas();
-				while(iteratorMesas.hasNext() && !enc)
-				{
-					Mesa mesa = iteratorMesas.next();
-					if (mesa.getIdMesa().equals(idMesa)){
-						mesa.setProductosEnMesa(productosEnMesa);
-						mesa.actualizarDineroTotal();
-						idCam = mesa.getIdCamarero();
-						enc = true;
-						}
-				}
 				dispose();
 				VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 				ventanaMesa.setVisible(true);
@@ -923,46 +902,9 @@ public class InterfazPlatos extends JFrame {
 		 cargarTablaPlatos();
 	 }
 	
-	 private void cargarTablaPlatos() {
-		//creamos las columnas
-		Object[][] datos = {};
-		String[] columnNames = {"Nombre","Observaciones","Configuración","Precio"};
-		dtm= new TablaNoEditable(datos,columnNames);
-		//Cargamos los platos de la mesa
-		Iterator<Mesa> iteratorMesas = unRestaurante.getIteratorMesas();
-		String nombre,configuracion,observaciones;
-		double precio;
-		while(iteratorMesas.hasNext())
-		{
-			Mesa mesa = iteratorMesas.next();
-			if (mesa.getIdMesa().equals(idMesa)){ 
-				//mesa encontrada, cargamos los platos
-				productosEnMesa = mesa.getProductosEnMesa();
-				for (int i = 0; i < productosEnMesa.size(); i++){
-					if (productosEnMesa.get(i).getProd() instanceof Bebida){ //No tiene configuración
-						configuracion = "No configurable";
-					}else{
-						configuracion = ((Plato)productosEnMesa.get(i).getProd()).getExtrasMarcados(); 
-					}
-					dinero = Math.rint((dinero + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
-					total.setText("Total: " + dinero + " euros");
-					nombre = productosEnMesa.get(i).getProd().getNombre();
-					observaciones = productosEnMesa.get(i).getProd().getObservaciones();
-					precio = productosEnMesa.get(i).getProd().getPrecio();
-					
-					Object[] newRow={nombre,observaciones,configuracion,precio};
-					dtm.addRow(newRow);
-				}
-			}
-		}
-
-		tablaPlatos = new JTable(dtm);
-		
-		//Refrescamos
-		tablaPlatos.validate();
-		tablaPlatos.repaint();
-		scrollPaneTable.validate();
-		scrollPaneTable.repaint();
+	 public void cargarTablaPlatos() {
+		 // TODO guille. Carga la tabla con los productos de la mesa y a poder ser no te cargues si han metido alguna nuevo y no esta enviado.
+		 // He hecho un metodo en el Restaurante que devuelve Iterator<TuplaProdEnv> si le pasas el idMesa para que sea mas limpio el codigo =D.
 	 }
 
 private class TecladoAlfaNumerico extends JPanel{

@@ -1,6 +1,7 @@
 package tpv;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import tpv.Mesa.estadoMesa;
 
@@ -145,6 +146,10 @@ public class Mesa {
 		}else{
 			return -1;
 		}
+	}
+
+	public Iterator<TuplaProdEnv> getIteratorProductosEnMesa() {
+		return productosEnMesa.iterator();
 	}
 
 }
