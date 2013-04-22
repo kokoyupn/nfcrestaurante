@@ -40,6 +40,6 @@ public class Plato extends Producto{
 	}
 	
 	public String toString(){
-		return super.toString() + " - " + extrasMarcados + "\n \n";
+		return super.toString() + " - " + extrasMarcados + "\n";
 	}
 }

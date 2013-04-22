@@ -1,6 +1,6 @@
 package tpv;
 
-public class Producto {
+public class Producto implements Cloneable{
 	private String id;
 	private int idUnico;
 	private String categoria;
@@ -95,11 +95,26 @@ public class Producto {
 	}
 	
 	public String toString(){
-		String mensaje = "*****" + "nombre" + "*****" + "\n";
+		//Posteriormente tokenizaremos por "Nombre: "
+		String mensaje = "Nombre: " + "**"+ nombre + " ** ";
 		if(!observaciones.equals("")){
-			mensaje +=" - " + observaciones + "\n";
+			mensaje +=" - " + observaciones;
 		}
 		return mensaje;		
 	}
+	
+	public Object clone()
+    {
+        Object clone = null;
+        try
+        {
+            clone = super.clone();
+        } 
+        catch(CloneNotSupportedException e)
+        {
+            System.out.println(e.toString());
+        }
+        return clone;
+    }
 	
 }
