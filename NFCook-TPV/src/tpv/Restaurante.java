@@ -480,7 +480,7 @@ public class Restaurante {
 		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
 	}
 
-	public void actualizaMesaLLegadaExtarna(String idMesa, String idCamarero, int numeroPersonas, estadoMesa estado) {
+	public void actualizaMesaLLegadaExtarna(String idMesa, String idCamarero, int numeroPersonas, int estado) {
 		mesasRestaurante.get(idMesa).setNumeroPersonas(numeroPersonas);
 		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
 		mesasRestaurante.get(idMesa).setEstado(estado);

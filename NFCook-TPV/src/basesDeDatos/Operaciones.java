@@ -191,21 +191,21 @@ public class Operaciones extends Conexion{
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 	}
 
-	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, estadoMesa estado) {
+	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, int estado) {
 		String fichero = "MesasRestaurante.db";
 		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
-														"' numeroPersonas='" + numeroPersonas + "',"+
-														"where idMesa='" + idMesa + "')";
+														"numeroPersonas='" + numeroPersonas + "' "+
+														"where idMesa='" + idMesa + "'";
 		
 		// Enviamos el estado de la mesa al servidor y los clientes
-		ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
+		//ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
 		
 		// Modificamos base de datos local.
 		insertar(consulta, false);
 		
 	}
 	
-	public void actualizarMesaBDLLegadaExterna(String consulta, String idMesa, String idCamarero,int numeroPersonas, estadoMesa estado) {
+	public void actualizarMesaBDLLegadaExterna(String consulta, String idMesa, String idCamarero,int numeroPersonas, int estado) {
 		
 		insertar(consulta, false);
 		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);

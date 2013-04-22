@@ -30,6 +30,7 @@ import javax.swing.Timer;
 
 import basesDeDatos.Operaciones;
 
+import tpv.Mesa;
 import tpv.Restaurante;
 
 class BotonMesa extends JPanel {
@@ -312,7 +313,7 @@ class BotonMesa extends JPanel {
 		miRestaurante.actualizarNumeroPersonasMesa(idMesa, numeroPersonas);
 		
 		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
-		operacionSQlite.actualizarMesaBD(idMesa, idCamarero, numeroPersonas, estado);
+		operacionSQlite.actualizarMesaBD(idMesa, idCamarero, numeroPersonas, Mesa.getIntDadoEstado(estado));
 		operacionSQlite.cerrarBaseDeDatos();
 		
 	}
