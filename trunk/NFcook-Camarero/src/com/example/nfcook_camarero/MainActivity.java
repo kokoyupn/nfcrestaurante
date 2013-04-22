@@ -63,8 +63,8 @@ public class MainActivity extends Activity {
 	  {
 		  //Iniciamos la nueva actividad
 	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
-       	  intent.putExtra("usuario", "admin");
-       	  intent.putExtra("Restaurante","foster");
+       	  intent.putExtra("usuario", "Foster");
+       	  intent.putExtra("Restaurante","Foster");
        	  startActivity(intent); 
 	  }  
  /**
@@ -109,7 +109,10 @@ public void  onClickBotonEntrar(View boton)
            	  //Iniciamos la nueva actividad
     	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
-           	  intent.putExtra("Restaurante",password.getText().toString());
+           	  if (password.getText().toString().equals("foster"))
+           		  intent.putExtra("Restaurante","Foster");
+           	  else
+           		 intent.putExtra("Restaurante","VIPS");
            	  startActivity(intent);	
     	   }
     	   else{
