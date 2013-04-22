@@ -427,14 +427,10 @@ public class SincronizarPedidoNFC extends Activity implements
 		// variable donde ira el pedido con la codificacion final
 		pedidoCodificadoEnBytes = new ArrayList<Byte>();
 
-		// el comienzo del array será el ultimo bloque escrito o la copia de seguridad
-		if (heSincronizadoMalAntes) {
-			for (int i = 0; i < copiaSeguridad.size(); i++)
-				pedidoCodificadoEnBytes.add(copiaSeguridad.get(i));
-		} else {
-			for (int i = 0; i < copiaUltimoBloque.size(); i++)
-				pedidoCodificadoEnBytes.add(copiaUltimoBloque.get(i));
-		}
+		// el comienzo del array será el ultimo bloque escrito falle o no falle
+		for (int i = 0; i < copiaUltimoBloque.size(); i++)
+			pedidoCodificadoEnBytes.add(copiaUltimoBloque.get(i));
+		
 		// separamos por platos
 		StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr, "@");
 
@@ -658,10 +654,9 @@ public class SincronizarPedidoNFC extends Activity implements
 		int bytesProhibidosTag = (mfc.getSectorCount() + 1) * 16;
 		int bytesLibresTag = bytesTag - bytesProhibidosTag;
 		heCalculadoTam = true;
-		if (!heSincronizadoMalAntes)
-			return (copiaSeguridad.size() + pedidoCodificadoEnBytes.size() < bytesLibresTag);
-		else 
-			return (pedidoCodificadoEnBytes.size() < bytesLibresTag);
+
+		return (copiaSeguridad.size() + pedidoCodificadoEnBytes.size() < bytesLibresTag);
+		
 	}
 
 	/**
@@ -745,7 +740,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		boolean sectorValido = false;
 		leidoBienDeTag = true;
 		// Variable usada para saber por el bloque que vamos
-		int numBloque = 0;
+		int numBloque = numBloqueComienzo;
 		// el texto que ha escrito el usuario
 		byte[] textoByte = null;
 		// para copiaSeguridad
