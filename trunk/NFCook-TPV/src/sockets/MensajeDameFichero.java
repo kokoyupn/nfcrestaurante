@@ -19,6 +19,12 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class MensajeDameFichero implements Serializable
 {
+	/*
+	public MensajeDameFichero (String nombreFichero, ArrayList<InetAddress> ips){
+		this.nombreFichero = nombreFichero;
+		this.ips = ips;
+	}*/
+	
     /** path completo del fichero que se pide */
     public String nombreFichero;
     

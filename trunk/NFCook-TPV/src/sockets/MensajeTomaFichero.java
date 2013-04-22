@@ -19,6 +19,14 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class MensajeTomaFichero implements Serializable
 {
+	/*
+	public MensajeTomaFichero (String nombreFichero, boolean ultimoMensaje, int bytesValidos, byte[] contenidoFichero){
+		this.nombreFichero = nombreFichero;
+		this.ultimoMensaje = ultimoMensaje;
+		this.bytesValidos = bytesValidos;
+		this.contenidoFichero = contenidoFichero;
+	}
+	*/
     /** Nombre del fichero que se transmite. Por defecto "" */
     public String nombreFichero="";
 
