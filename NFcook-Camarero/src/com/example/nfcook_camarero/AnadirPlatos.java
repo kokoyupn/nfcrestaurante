@@ -91,11 +91,8 @@ public class AnadirPlatos extends Activity{
         //Sacamos el TipoPlato de la base de datos MiBase.db. Seran los padres
     	String[] infoTipoPlato = new String[]{"TipoPlato"};
     	//solo los platos del restaurante que corresponda
-    	String[] datos;
-    	if (restaurante.equals("foster"))
-    		datos = new String[]{"Foster"};
-    	else
-    		datos = new String[]{"VIPS"};
+    	
+    	String[] datos = new String[]{restaurante};
 
    		Cursor cPMiBase = dbMiBase.query("Restaurantes", infoTipoPlato, "Restaurante=?" ,datos,null, null,null);
    		
@@ -108,11 +105,9 @@ public class AnadirPlatos extends Activity{
    				tipoSinRepe.add(tipoPlato);
 	   			//Sacamos los platos con tipoPlato igual al del padre de la base de datos MiBase.db. Seran los hijos
 	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre","Precio"};
-	   	    	String[] info;
-	   	    	if (restaurante.equals("foster"))
-	   	    		info = new String[]{tipoPlato,"Foster"};
-	   	    	else
-	   	    		info = new String[]{tipoPlato,"VIPS"};
+	   	    	
+	   	    	String[] info = new String[]{tipoPlato,restaurante};
+	   	    	
 
 	   	   		Cursor cPMiBase2 = dbMiBase.query("Restaurantes", infoPlato, "TipoPlato=? AND Restaurante=?",info,null, null,null);
 	   	   		
@@ -139,11 +134,8 @@ public class AnadirPlatos extends Activity{
    		//Sacamos la categoria de la base de datos MiBase.db. Seran los padres
     	String[] infoTipoPlatoCat = new String[]{"Categoria"};
     	//leemos los platos del restaurante correspondiente
-    	String[] datosCat;
-    	if (restaurante.equals("foster"))
-    		datosCat = new String[]{"Foster",""};
-    	else
-    		datosCat = new String[]{"VIPS",""};
+    
+    	String[] datosCat = new String[]{restaurante,""};
 
    		Cursor cPMiBaseCat = dbMiBase.query("Restaurantes", infoTipoPlatoCat, "Restaurante=? AND TipoPlato=?" ,datosCat,null, null,null);
    		
@@ -154,12 +146,8 @@ public class AnadirPlatos extends Activity{
    				categoriaSinRepe.add(categoriaPlato);
 	   			//Sacamos los platos con categoriaPlato igual al del padre de la base de datos MiBase.db. Seran los hijos
 	   	    	String[] infoPlato = new String[]{"Id","Foto","Nombre","Precio"};
-	   	    	String[] info;
-	   	    	if(restaurante.equals("foster"))
-	   	    		info = new String[]{categoriaPlato,"Foster"};
-	   	    	else
-	   	    		info = new String[]{categoriaPlato,"VIPS"};
-
+	   	
+	   	    	String[] info = new String[]{categoriaPlato,restaurante};
 	   	   		Cursor cPMiBaseCat2 = dbMiBase.query("Restaurantes", infoPlato, "Categoria=? AND Restaurante=?",info,null, null,null);
 	   	   		
 	   	   		ArrayList<String> idHijos= new ArrayList<String>();
@@ -196,19 +184,10 @@ public class AnadirPlatos extends Activity{
 			}
 		 
 			buscador = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewBuscadorPlatos);
-		    Cursor c;
-		    if(restaurante.equals("foster"))
-		    	c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
+		    Cursor c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
 		    			" FROM Restaurantes" + 
-		    			" WHERE Restaurante ='"+ "foster" +"' and nombre LIKE '%" +""+ "%' ", null);
-		    else
-		    	c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
-		    			" FROM Restaurantes" + 
-		    			" WHERE Restaurante ='"+ "VIPS" +"' and nombre LIKE '%" +""+ "%' ", null);
-		    if (restaurante.equals("foster"))
-		    	buscador.setAdapter(new MiCursorAdapterBuscadorPlatos(getApplicationContext(), c, CursorAdapter.NO_SELECTION, "Foster"));
-		    else
-		    	buscador.setAdapter(new MiCursorAdapterBuscadorPlatos(getApplicationContext(), c, CursorAdapter.NO_SELECTION, "VIPS"));
+		    			" WHERE Restaurante ='"+ restaurante +"' and nombre LIKE '%" +""+ "%' ", null);
+		    buscador.setAdapter(new MiCursorAdapterBuscadorPlatos(getApplicationContext(), c, CursorAdapter.NO_SELECTION, restaurante));
 		    buscador.setThreshold(2);
 			
 			buscador.setOnItemClickListener(new OnItemClickListener() {
@@ -242,11 +221,9 @@ public class AnadirPlatos extends Activity{
 		 SQLiteDatabase dbMiBase= sqlMiBase.open();
 		 
 		 String[] campos = new String[]{"Extras","Id"};
-		 String[] datos;
-		 if(restaurante.equals("foster"))
-			 datos = new String[]{"Foster",nombrePlato};
-		 else
-			 datos = new String[]{"VIPS",nombrePlato};
+		
+		 String[] datos = new String[]{restaurante, nombrePlato};
+		 
 		 Cursor cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Nombre=?",datos,null,null,null);
 		 
 		 cursor.moveToFirst();
@@ -349,11 +326,9 @@ public class AnadirPlatos extends Activity{
 		    		}
 		    		
 		    		String[] campos = new String[]{"Id","Precio"};
-		    		String[] datos;
-		    		if(restaurante.equals("foster"))
-		    			datos = new String[]{"Foster",nombrePlato};
-		    		else
-		    			datos = new String[]{"VIPS",nombrePlato};
+		    		
+		    		String[] datos = new String[]{restaurante, nombrePlato};
+		    		
 		      		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Nombre=?",datos,null,null,null); 
 		      		cursor.moveToFirst();
 		    		
