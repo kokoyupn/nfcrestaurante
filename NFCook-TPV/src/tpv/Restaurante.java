@@ -298,6 +298,8 @@ public class Restaurante {
 	public void cargarConsultaARestaurante(String consulta) {
 		StringTokenizer consultaTokenizada = new StringTokenizer(consulta , ",");		
 		
+		String fecha = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		
 		String idMesa = devuelveStringSinComillas(consultaTokenizada.nextToken());
 		//Eliminamos el idCamarero
 		consultaTokenizada.nextToken();
@@ -435,7 +437,7 @@ public class Restaurante {
 				String tipo = resultados.getString("tipo");
 				String nombreProducto = resultados.getString("nombreProducto");
 				double precio = resultados.getDouble("precio");
-				String observaciones = resultados.getString("obsevaciones");
+				String observaciones = resultados.getString("observaciones");
 				String extras = resultados.getString("extras");
 				String extrasMarcados = resultados.getString("extrasMarcados");
 				

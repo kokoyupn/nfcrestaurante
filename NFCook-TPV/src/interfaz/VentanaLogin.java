@@ -295,6 +295,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		ClienteFichero.pide("MiBase.db");
 		ClienteFichero.pide("login.db");
 		ClienteFichero.pide("FichaCamareros.db");
+		ClienteFichero.pide("InfoMesas.db");
 		
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ventanaLogin.pack();
