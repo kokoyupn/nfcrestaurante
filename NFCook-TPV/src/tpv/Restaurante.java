@@ -99,13 +99,15 @@ public class Restaurante {
 	private void cargarMesas(){
 		try{
 			Operaciones operacion = new Operaciones("MesasRestaurante.db");
-			ResultSet resultados = operacion.consultar("select * from mesas");
+			ResultSet resultados = operacion.consultar("select * from mesasRestaurante");
 			
 			while(resultados.next()){
-				String idMesa = resultados.getString("NumeroMesa");
-				int numeroPersonas = resultados.getInt("NumeroPersonas");
+				String idMesa = resultados.getString("idMesa");
+				int numeroPersonas = resultados.getInt("numeroPersonas");
+				String idCamarero = resultados.getString("idCamarero");
 				
-				Mesa nuevaMesa = new Mesa(idMesa, numeroPersonas);
+				
+				Mesa nuevaMesa = new Mesa(idMesa, numeroPersonas, idCamarero);
 				mesasRestaurante.put(idMesa, nuevaMesa);
 			}
 			operacion.cerrarBaseDeDatos();
@@ -465,6 +467,28 @@ public class Restaurante {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void modificarEstadoMesallegadaPorLan(String idMesa, String idCamarero, int numeroPersonas, tpv.Mesa.estadoMesa estadoMesa){
+		if(estadoMesa == tpv.Mesa.estadoMesa.ABIERTA){
+			mesasRestaurante.get(idMesa).abrirMesa();
+		}else if(estadoMesa == tpv.Mesa.estadoMesa.CERRADA){
+			mesasRestaurante.get(idMesa).cerrarMesa();
+		}
+		mesasRestaurante.get(idMesa).setNumeroPersonas(numeroPersonas);
+		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
+	}
+
+	public void actualizaMesaLLegadaExtarna(String idMesa, String idCamarero, int numeroPersonas, estadoMesa estado) {
+		mesasRestaurante.get(idMesa).setNumeroPersonas(numeroPersonas);
+		mesasRestaurante.get(idMesa).setIdCamarero(idCamarero);
+		mesasRestaurante.get(idMesa).setEstado(estado);
+		mesasRestaurante.get(idMesa).setVisitada(true);
+	}
+
+	public boolean mesaVisitada(String idMesa) {
+		return mesasRestaurante.get(idMesa).isVisitada();
 	}
 	
 }

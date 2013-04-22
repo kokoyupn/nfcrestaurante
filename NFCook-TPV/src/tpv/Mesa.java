@@ -2,6 +2,8 @@ package tpv;
 
 import java.util.ArrayList;
 
+import tpv.Mesa.estadoMesa;
+
 
 public class Mesa {
 
@@ -13,12 +15,16 @@ public class Mesa {
 	private String idCamarero;
 	private estadoMesa estado;
 	private double dineroTotalEnMesa;
+	private boolean visitada;
 	
 	
-	public Mesa(String idMesa, int numeroPersonas) {
+	public Mesa(String idMesa, int numeroPersonas, String idCamarero) {
 		productosEnMesa = new ArrayList<TuplaProdEnv>();
 		this.idMesa = idMesa;
 		this.numeroPersonas = numeroPersonas;
+		if(!idCamarero.equals("-")){
+			this.idCamarero = idCamarero;
+		}
 		estado = estadoMesa.CERRADA;
 		dineroTotalEnMesa = 0;
 	}
@@ -105,6 +111,18 @@ public class Mesa {
 
 	public boolean esMesaCerrada() {
 		return estado == estadoMesa.CERRADA;
+	}
+
+	public void setVisitada(boolean visitada) {
+		this.visitada = visitada;
+	}
+	
+	public boolean isVisitada(){
+		return visitada;
+	}
+
+	public void setEstado(estadoMesa estado) {
+		this.estado = estado;
 	}
 
 }

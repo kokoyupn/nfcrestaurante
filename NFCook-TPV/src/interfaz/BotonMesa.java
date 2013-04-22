@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -26,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+
+import basesDeDatos.Operaciones;
 
 import tpv.Restaurante;
 
@@ -137,8 +140,8 @@ class BotonMesa extends JPanel {
 				case 0 :
 					break;
 				case 1 : //OK
-					actualizaNumeroPersonas(((TecladoParaNumeroPersonas)teclado).getNumeroPersonas());
 					actualizarEstadoMesaAbierta();
+					actualizaNumeroPersonas(((TecladoParaNumeroPersonas)teclado).getNumeroPersonas());
 					cargarMesasCamareroYRestaurante();
 					break;
 				}				
@@ -223,11 +226,23 @@ class BotonMesa extends JPanel {
 		jLabelIconoMesa = new JLabel();
 		// En función de su estado cargamos una u otra.
 		if(estado == tpv.Mesa.estadoMesa.CERRADA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerradaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
+			}
 		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbiertaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+			}
 		}else if(estado == tpv.Mesa.estadoMesa.COMANDA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComandaLAN.png"));	
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
+			}
 		}
 		
 		// Creamos el panel que contiene el label con el idMesa y de esta forma podremos verlo centrado.
@@ -295,6 +310,10 @@ class BotonMesa extends JPanel {
 		this.numeroPersonas = numeroPersonas;
 		jLabelNumeroPersonas.setText(numeroPersonas+"");
 		miRestaurante.actualizarNumeroPersonasMesa(idMesa, numeroPersonas);
+		
+		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
+		operacionSQlite.actualizarMesaBD(idMesa, idCamarero, numeroPersonas, estado);
+		operacionSQlite.cerrarBaseDeDatos();
 		
 	}
 	
@@ -373,6 +392,10 @@ class BotonMesa extends JPanel {
 		}
 	}
 	
+	
+	/*
+	 * TODO añadir la foto de visitadas
+	 */
 	public static void despulsarImagen(){
 		
 		if(estadoImagenPulsada == tpv.Mesa.estadoMesa.CERRADA){
@@ -429,11 +452,24 @@ class BotonMesa extends JPanel {
 		imagenEstadoPulsada = jLabelIconoMesa;
 		estadoImagenPulsada = estado;
 		if(estado == tpv.Mesa.estadoMesa.CERRADA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerradaPulsada.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerradaPulsadaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerradaPulsada.png"));
+			}
 		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbiertaPulsada.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbiertaPulsadaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbiertaPulsada.png"));
+			}
 		}else if(estado == tpv.Mesa.estadoMesa.COMANDA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComandaPulsada.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComandaPulsadaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComandaPulsada.png"));
+			}
+
 		}
 	}
 	
@@ -441,11 +477,23 @@ class BotonMesa extends JPanel {
 		imagenEstadoPulsada = jLabelIconoMesa;
 		estadoImagenPulsada = estado;
 		if(estado == tpv.Mesa.estadoMesa.CERRADA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerradaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaCerrada.png"));
+			}
 		}else if(estado == tpv.Mesa.estadoMesa.ABIERTA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbiertaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaAbierta.png"));
+			}
 		}else if(estado == tpv.Mesa.estadoMesa.COMANDA){
-			jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
+			if(miRestaurante.mesaVisitada(idMesa)){
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComandaLAN.png"));
+			}else{
+				jLabelIconoMesa.setIcon(new ImageIcon("Imagenes/Botones/mesaComanda.png"));
+			}
 		}
 	}
 	

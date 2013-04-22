@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 
 import sockets.ClienteFichero;
 import tpv.FechaYHora;
-import tpv.Restaurante;
+import tpv.Mesa.estadoMesa;
 
 public class Operaciones extends Conexion{
 	private String nombreDB;
@@ -189,6 +189,25 @@ public class Operaciones extends Conexion{
 		}
 		
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+	}
+
+	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, estadoMesa estado) {
+		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
+														"' numeroPersonas='" + numeroPersonas + "',"+
+														"where idMesa='" + idMesa + "')";
+		
+		//LLama ala clase de alex
+		
+		//Modificamos base de datos local.
+		insertar(consulta, false);
+		
+	}
+	
+	public void actualizarMesaBDLLegadaExterna(String consulta, String idMesa, String idCamarero,int numeroPersonas, estadoMesa estado) {
+		
+		insertar(consulta, false);
+		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
+		
 	}
 		
     
