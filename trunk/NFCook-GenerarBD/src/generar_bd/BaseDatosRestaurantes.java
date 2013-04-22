@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.widget.Toast;
-
 public class BaseDatosRestaurantes extends Activity {	   
 	public Handler sql;
 	public SQLiteDatabase db;
@@ -944,7 +943,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips.put("Nombre", "Batido con Oreo");
      	batidosVips.put("Breve", "Delicioso batido de chocolate blanco y galletas Oreo.");
      	batidosVips.put("Foto", "v44");
-     	dulcesVips.put("Extras", "Complemento:Bola de helado artesano");
+     	batidosVips.put("Extras", "Complemento:Bola de helado artesano");
         batidosVips.put("Precio", 5.75);
      	batidosVips.put("Descripcion", "Delicioso batido de chocolate blanco y galletas Oreo, servido con nata.");
      	db.insert("Restaurantes", null, batidosVips);
@@ -958,7 +957,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips.put("Nombre", "Batidos VIPS con Nata y Sirope");
      	batidosVips.put("Breve", "¡Disfruta del nuevo sabor de dulce de leche!");
      	batidosVips.put("Foto", "v45");
-     	dulcesVips.put("Extras", "Complemento:Bola de helado artesano");
+     	batidosVips.put("Extras", "Complemento:Bola de helado artesano");
         batidosVips.put("Precio", 5.75);
      	batidosVips.put("Descripcion", "Todo un clásico de la casa renovado. Más dulce, cremoso y con mayor cantidad. 4 Bolas de helado a elegir entre: Chocolate, fresa, vainilla, chocolate blanco, yogur con arándanos y chocolate belga y nuestro nuevo sabor de dulce de leche. Leche, nata líquida azucarada y nata montada con un toque de sirope. ¡Disfrutarás hasta el último sorbo!.");
      	db.insert("Restaurantes", null, batidosVips);
@@ -972,7 +971,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips.put("Nombre", "Copa dulce de leche");
      	batidosVips.put("Breve", "Descubre la irresistible combinación de sabores de esta nueva Copa.");
      	batidosVips.put("Foto", "v46");
-     	dulcesVips.put("Extras", "Complemento:Bola de helado artesano");
+     	batidosVips.put("Extras", "Complemento:Bola de helado artesano");
         batidosVips.put("Precio", 5.95);
      	batidosVips.put("Descripcion", "Irresistible combinación de tres bolas de helado de dulce de leche, yogur Activia, plátano y nata, servida con trocitos de cookies y sirope de dulce de leche.");
      	db.insert("Restaurantes", null, batidosVips);
@@ -986,7 +985,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips.put("Nombre", "Copa homenaje al chocolate");
      	batidosVips.put("Breve", "Un homenaje para los amantes del chocolate.");
      	batidosVips.put("Foto", "v47");
-     	dulcesVips.put("Extras", "Complemento:Bola de helado artesano");
+     	batidosVips.put("Extras", "Complemento:Bola de helado artesano");
         batidosVips.put("Precio", 5.95);
      	batidosVips.put("Descripcion", "Delicioso brownie bañado en sirope de chocolate, con mousse, palitos de chocolate y dos bolas de helado de chocolate y chocolate belga.");
      	db.insert("Restaurantes", null, batidosVips);
