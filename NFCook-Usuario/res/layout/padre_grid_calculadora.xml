@@ -38,9 +38,11 @@
             android:layout_marginRight="27dp"
             android:layout_marginTop="3dp"
             android:ems="10"
-            android:text="Abelino"
             android:textColor="@color/blanco"
-            android:textSize="15sp" />
+            android:textSize="15sp" 
+            android:inputType="text">
+            <requestFocus />
+        </EditText>       
 
     </FrameLayout>
 

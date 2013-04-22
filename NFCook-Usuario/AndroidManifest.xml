@@ -86,6 +86,7 @@
          <activity
             android:name="usuario.Calculadora"
             android:label="@string/calculadora"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"  >
         </activity>
         <activity
