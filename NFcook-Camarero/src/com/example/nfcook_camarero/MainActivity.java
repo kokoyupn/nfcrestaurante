@@ -114,7 +114,7 @@ public void  onClickBotonEntrar(View boton)
            		  intent.putExtra("Restaurante","Foster");
            	  else
            		 intent.putExtra("Restaurante","VIPS");
-
+           	  	 startActivity(intent);
     	   }
     	   else{
     		   //La contraseña no es la misma que la guardada en la base de datos
@@ -124,7 +124,7 @@ public void  onClickBotonEntrar(View boton)
   	
 		}catch(Exception e){
 			//No existe ese usuario en la base de datos
-			abrir_ventanaEmergente("No existe ese usuario",R.drawable.icono_usuario);
+			abrir_ventanaEmergente("No existe ese usuario o contraseña incorrecta",R.drawable.icono_usuario);
 		}
 	   
    }
