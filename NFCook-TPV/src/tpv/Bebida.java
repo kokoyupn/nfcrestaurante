@@ -10,7 +10,7 @@ public class Bebida extends Producto{
 	}
 	
 	public String toString(){
-		return super.toString() + "\n \n";
+		return super.toString() + "\n";
 	}
 
 }

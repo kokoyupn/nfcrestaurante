@@ -3,6 +3,8 @@ package tpv;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.text.html.HTML;
+
 public class Comanda {
 	
 	private ArrayList<Producto> comanda;
@@ -41,17 +43,28 @@ public class Comanda {
 		while(itProductos.hasNext()){
 			Producto producto = itProductos.next();
 			if(producto instanceof Plato){
-				comida += ((Plato) producto).toString() + "\n";
+				comida +=  ((Plato) producto).toString();
 			}else{
-				bebida += ((Bebida) producto).toString() + "\n";
+				bebida += ((Bebida) producto).toString();
 			}
 		}
+//		boolean comidaBool = false;
+//		boolean bebidaBool = false;
 		if(!comida.equals("Mesa: " + idMesa)){
-			//TODO enviar a la impresiora.
+			Imprimir.imprime(comida);
+			//comidaBool = true;
 		}
-		if(!bebida.equals("Mesa: " + idMesa)){
-			//TODO enviar a la impresora.
-		}
+//		if(!bebida.equals("Mesa: " + idMesa)){
+//			//Imprimir.imprime(bebida); //Las bebidas no van a cocina
+//			//bebidaBool = true;
+//		}
+//		if (comidaBool && bebidaBool){
+//			Imprimir.imprime(comida + bebida); //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
+//		}else if(comidaBool){//no hay bebida
+//			Imprimir.imprime(comida ); //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
+//		}else{//no hay comida
+//			Imprimir.imprime( bebida); //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
+//		}
 	}
 	
 }

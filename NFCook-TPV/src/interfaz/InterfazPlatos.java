@@ -5,23 +5,27 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.PrintJob;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,6 +42,7 @@ import javax.swing.table.JTableHeader;
 
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
+import tpv.Cobro;
 import tpv.Mesa;
 import tpv.Plato;
 import tpv.Producto;
@@ -63,12 +68,12 @@ public class InterfazPlatos extends JFrame {
 	private JTextField textoObs;
 	private boolean esExtras,esObs;
 	private JLabel total;
-	private double dinero;
+	private double dinero,dineroAcobrar;
 	
 	/**
 	 * Create the frame.
 	 */
-	public InterfazPlatos(final String idMesa, Restaurante unRestaurante) {
+	public InterfazPlatos(final String idMesa, final Restaurante unRestaurante) {
 		this.idMesa = idMesa;
 		this.unRestaurante = unRestaurante;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,7 +134,7 @@ public class InterfazPlatos extends JFrame {
 		
 		//JButton eliminar = new JButton();
 		
-		//damos forma y color a los bootnes de categorias
+		//damos forma y color a los botones de categorias
 		eliminar = new JPanelBordesRedondos();
 		((JPanelBordesRedondos) eliminar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) eliminar).setColorSecundario(Color.cyan);
@@ -169,7 +174,7 @@ public class InterfazPlatos extends JFrame {
 						}	
 					});
 ////////////////////////////BOTON COBRAR/////////////////////	
-		//damos forma y color a los bootnes de categorias
+		//damos forma y color a los botones de categorias
 		cobrar = new JPanelBordesRedondos();
 		((JPanelBordesRedondos) cobrar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) cobrar).setColorSecundario(Color.cyan);
@@ -189,7 +194,10 @@ public class InterfazPlatos extends JFrame {
 					int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
 					if (seleccion == 0){//aceptar
-						//TODO cobrar
+						//TODO cobrar 
+						
+						ArrayList<Producto> aCobrar = platosACobrar();
+						Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante());
 						
 						reseteaTablaYPrecio();
 						
@@ -207,7 +215,7 @@ public class InterfazPlatos extends JFrame {
 		});
 
 ////////////////////////////BOTON ENVIAR A COCINA/////////////////////
-		//damos forma y color a los bootnes de categorias
+		//damos forma y color a los botones de categorias
 		enviar = new JPanelBordesRedondos();
 		((JPanelBordesRedondos) enviar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) enviar).setColorSecundario(Color.cyan);
@@ -240,7 +248,6 @@ public class InterfazPlatos extends JFrame {
 							}
 							ArrayList<Producto> aEnviar = platosAEnviar();
 							getRestaurante().addComandaAMesa(idMesa, idCam, aEnviar);
-							//TODO enviar
 							
 							//actualizar en producto
 							for(int i = 0; i < productosEnMesa.size();i++){
@@ -253,11 +260,8 @@ public class InterfazPlatos extends JFrame {
 							rehacer.setEnabled(false);
 							deshacer.setEnabled(false);
 							
-							//actualizaTablaConColor();
 							tablaPlatos.repaint();
-							
-							//reseteaTablaYPrecio();
-							
+
 							JOptionPane.showOptionDialog(contentPaneGlobal ,"Enviado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
 									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 						}else{
@@ -276,7 +280,7 @@ public class InterfazPlatos extends JFrame {
 		});
 
 ////////////////////////////BOTON PROMOCIONES/////////////////////	
-		//damos forma y color a los bootnes de categorias
+		//damos forma y color a los botones de categorias
 		promociones = new JPanelBordesRedondos();
 		((JPanelBordesRedondos) promociones).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) promociones).setColorSecundario(Color.cyan);
@@ -288,10 +292,17 @@ public class InterfazPlatos extends JFrame {
 //		JButton promociones = new JButton();
 //		promociones.setIcon(tamanioImagen(new ImageIcon("Imagenes/oferta.png"), 70, 70));
 		panelBotones.add(promociones);
+		promociones.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent arg0){
+
+			}
+		});
 
 		
+		
 ////////////////////////////BOTON ACEPTAR/////////////////////		
-		//damos forma y color a los bootnes de categorias
+		//damos forma y color a los botones de categorias
 		aceptar = new JPanelBordesRedondos();
 		((JPanelBordesRedondos) aceptar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) aceptar).setColorSecundario(Color.cyan);
@@ -518,16 +529,15 @@ public class InterfazPlatos extends JFrame {
 				categorias.add(categoria);
 				//JButton btnNewButton = new JButton(categoria);
 				
-				//damos forma y color a los bootnes de categorias
+				//damos forma y color a los botones de categorias
 				JPanel btnNewButton = new JPanelBordesRedondos();
-				JLabel jLabelCategoria = new JLabel(categoria);
+				JLabel jLabelCategoria = new JLabel(categoria.toUpperCase());
 				jLabelCategoria.setFont(new Font(jLabelCategoria.getFont().getFontName(), jLabelCategoria.getFont().getStyle(), 30));
 				jLabelCategoria.setForeground(Color.WHITE);
 				((JPanelBordesRedondos) btnNewButton).setColorPrimario(new Color(105,25,254));
 				((JPanelBordesRedondos) btnNewButton).setColorSecundario(Color.cyan);
 				//((JPanelBordesRedondos) btnNewButton).setColorContorno(Color.blue);
 				btnNewButton.add(jLabelCategoria);
-				
 				
 				
 				btnNewButton.setName(categoria);
@@ -551,7 +561,7 @@ public class InterfazPlatos extends JFrame {
 									String foto = prod.getFoto();
 									
 //									
-//									//damos forma y color a los bootnes de categorias
+//									//damos forma y color a los botones de categorias
 //									final JPanel btnNewButton2 = new JPanelBordesRedondos();
 //									((JPanelBordesRedondos) btnNewButton2).setColorPrimario(Color.blue);
 //									((JPanelBordesRedondos) btnNewButton2).setColorSecundario(Color.cyan);
@@ -568,7 +578,9 @@ public class InterfazPlatos extends JFrame {
 									btnNewButton2.addMouseListener(new MouseAdapter(){
 										@Override
 										public void mousePressed(MouseEvent arg0){
-											generarMenuConfig(new TuplaProdEnv(prod, false));		
+//											prod.setIdUnico(idsUnicos);
+//											idsUnicos ++;
+											generarMenuConfig(new TuplaProdEnv((Producto)prod.clone(), false));		
 										}
 										
 									});//fin listener plato
@@ -615,6 +627,8 @@ public class InterfazPlatos extends JFrame {
 	}
 	
 	public void generarMenuConfig(final TuplaProdEnv prod){
+//		productoATabla = new Producto(prod.getProd().getId(),prod.getProd().getCategoria(), prod.getProd().getTipo(), prod.getProd().getNombre(),
+//				prod.getProd().getDescripción(), prod.getProd().getFoto(),prod.getProd().getPrecio(),prod.getProd().getObservaciones(), prod.getProd().getIdUnico());
 		productoATabla = prod.getProd();
 		menuConfig = new JPanel(new GridBagLayout());
 		
@@ -869,11 +883,27 @@ public class InterfazPlatos extends JFrame {
 		return false;
 	 }
 	 
+	 //busca los platos en la tabla (y array) que aun no han sido enviados y los devuelve en un ArrayList
 	 public ArrayList<Producto> platosAEnviar(){
 		 ArrayList<Producto> tmp = new ArrayList<Producto>();
 		int i = tablaPlatos.getRowCount()-1;
 		while(i >= 0){
 			if (!productosEnMesa.get(i).isEnviado()){
+				tmp.add(productosEnMesa.get(i).getProd());
+			}
+			i--;
+		}
+		return tmp;
+	 }
+	 
+	 //busca los platos en la tabla (y array) que han sido enviados y los devuelve en un ArrayList
+	 public ArrayList<Producto> platosACobrar(){
+		 ArrayList<Producto> tmp = new ArrayList<Producto>();
+		int i = tablaPlatos.getRowCount()-1;
+		dineroAcobrar = 0;
+		while(i >= 0){
+			if (productosEnMesa.get(i).isEnviado()){
+				dineroAcobrar = Math.rint((dineroAcobrar + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
 				tmp.add(productosEnMesa.get(i).getProd());
 			}
 			i--;

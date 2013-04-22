@@ -29,6 +29,8 @@ public class Restaurante {
 	
 	private final String nombreRestaurante = "'Foster'";
 	
+
+
 	public Restaurante(){
 		productosRestaurante = new HashMap<String,Producto>();
 		mesasRestaurante = new HashMap<String,Mesa>();
@@ -195,12 +197,19 @@ public class Restaurante {
 		return mesasRestaurante.get(idMesa).getEstado();
 	}
 	
+	
+	public String getNombreRestaurante() {
+		return nombreRestaurante;
+	}
+	
+
 	/**
 	 * Añadimos la comanda, la enviamos a cocina y por Red local para los demas tpv
 	 * @param idMesa
 	 * @param idCamarero
 	 * @param productos
 	 */
+
 	public void addComandaAMesa(String idMesa, String idCamarero, ArrayList<Producto> productos){
 		Comanda comanda = new Comanda(productos, idMesa, idCamarero);
 		comandasMesas.añadirComandaPorMesa(idMesa, comanda);
