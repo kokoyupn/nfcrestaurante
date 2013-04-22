@@ -1,9 +1,11 @@
 package sockets;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class MensajeEstadoMesa {
+@SuppressWarnings("serial")
+public class MensajeEstadoMesa implements Serializable{
 	/*
 	public MensajeEstadoMesa(String nombreFichero, String sql, String idMesa, String idCamarero, int numPersonas, int estado, ArrayList<InetAddress> ips){
 		this.nombreFichero = nombreFichero;
