@@ -387,9 +387,22 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		
 	//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
 		Iterator<Byte> itPlatos = mensaje.iterator();
-		
+		Iterator<Byte> iteradorAux = mensaje.iterator();
+		boolean correcto=false;
 		boolean parar=false;
+		int numRestaurante;
+		while(iteradorAux.hasNext()){
+		  {int n = decodificaByte(iteradorAux.next());
+		   correcto= n==255;
+		  }
+		  
+			
 		
+		
+		if (correcto){
+		numRestaurante = decodificaByte(itPlatos.next());
+		if(numeroRestaurante==numRestaurante )
+		{
 		while(itPlatos.hasNext() && !parar){
 			
 			// id
@@ -415,8 +428,15 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 				añadirPlatos(restaurante,abreviatura+id,extras,comentario);
 			}		
 		}
-		
-		
+		}
+	
+	else{Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
+	}
+		}
+		else {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos (-1)", Toast.LENGTH_LONG).show();
+		}
+		}
+	
 	}
 	
 	/**Metodo que se encargar de convertir un byte dado por parametro a un tipo int
