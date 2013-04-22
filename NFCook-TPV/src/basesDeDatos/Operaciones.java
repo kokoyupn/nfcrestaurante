@@ -209,6 +209,7 @@ public class Operaciones extends Conexion{
 		insertar(consulta, false);
 		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+		VentanaLogin.getRestaurante().refrescaInterfazPlatos();
 	}
 	
 	public void actualizaVisitadoMesa(String idMesa, boolean visitada){
