@@ -159,6 +159,11 @@ public class Mesa {
 
 	public void eliminaTodasLasVisitas() {
 		this.visitada = new ArrayList<Boolean>();
+		numeroPersonas = 0;
+	}
+
+	public void eliminaTodosLosPedidos() {
+		productosEnMesa = new ArrayList<TuplaProdEnv>();
 	}
 
 }

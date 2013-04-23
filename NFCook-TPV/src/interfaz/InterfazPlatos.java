@@ -956,6 +956,11 @@ public class InterfazPlatos extends JFrame {
 		operacionSQlite.actualizarMesaBD(idMesa, "-", 0, 0);
 		operacionSQlite.cerrarBaseDeDatos();
 		
+		//Decimos a los demas tpv que tienen que cerrar la mesa.
+		operacionSQlite = new Operaciones("InfoMesas.db");
+		operacionSQlite.eliminarPlatosDeMesa(idMesa);
+		operacionSQlite.cerrarBaseDeDatos();
+		
 		//Dejamos de tener visitada esta mesa.
 		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 		operacion.actualizaVisitadoMesaCobrar(idMesa);

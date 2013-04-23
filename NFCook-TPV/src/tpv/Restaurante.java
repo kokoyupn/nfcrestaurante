@@ -528,6 +528,10 @@ public class Restaurante {
 	public Iterator<TuplaProdEnv> getIteratorProductosEnMesa(String idMesa){
 		return mesasRestaurante.get(idMesa).getIteratorProductosEnMesa();
 	}
+
+	public void eliminaTodosLosPedidosDeMesa(String idMesa) {
+		mesasRestaurante.get(idMesa).eliminaTodosLosPedidos();
+	}
 	
 }
 

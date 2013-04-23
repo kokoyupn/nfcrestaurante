@@ -162,9 +162,22 @@ public class Operaciones extends Conexion{
     	}
 	}
 
-	/*
-	 * FIXME si una consilt tiene un plato con ' (hamburguesa director la consulta se corrompe porque espera cada campo entre ' ')
-	 */
+	
+	public void eliminarPlatosDeMesa(String idMesa){
+		FechaYHora dia = new FechaYHora();
+		String consulta = "delete from infoMesas where dia='" + dia.getDia() + "',"+
+														"idMesa='" + idMesa +"'";
+		
+		insertar(consulta, false);	
+	}
+	
+	public void eliminarPlatosDeMesaLLegadaExterna(String idMesa, String consulta){
+
+		insertar(consulta, false);
+		VentanaLogin.getRestaurante().eliminaTodosLosPedidosDeMesa(idMesa);
+	}
+	
+	
 	public void introducirComandaBD(ArrayList<String> arrayConsultas) {
 		
 		// Enviamos el array de consultas al servidor y a los otros clientes
@@ -177,9 +190,7 @@ public class Operaciones extends Conexion{
 		}
 	}
 	
-	/*
-	 * FIXME si una consilt tiene un plato con ' (hamburguesa director la consulta se corrompe porque espera cada campo entre ' ')
-	 */
+	
 	public void introducirComandaBDLLegadaExterna(ArrayList<String> arrayConsultas){
 		Iterator<String> itConsultas = arrayConsultas.iterator();
 		while(itConsultas.hasNext()){
