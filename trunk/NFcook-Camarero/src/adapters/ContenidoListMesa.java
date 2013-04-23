@@ -2,6 +2,21 @@ package adapters;
 
 import java.util.ArrayList;
 
+/**
+ * Contenido del adapter de la pantalla que contiene los platos de cada mesa.
+ * 
+ *  -Atributos-
+ * nombre, extras y observaciones: Nombre, extras y observaciones de cada plato.
+ * id: Identificador unico de ese plato. 
+ * idPlato: Udentificador de ese tipo de plato en un restaurante concreto.
+ * precio: Precio por unidad del plato.
+ * cantidad: Numero de elementos de ese plato que hay en en pedido de una mesa concreta.
+ * repetidos: Conjunto de ids de los platos que son exactamente iguales.
+ 
+ * @author Rober
+ *
+ */
+
 public class ContenidoListMesa {
 	
 	private String nombre, extras, observaciones;
@@ -75,6 +90,11 @@ public class ContenidoListMesa {
 
 	public void aniadeId(int id) {
 		repetidos.add(id);
+		
+	}
+	
+	public int getIdRepetido() {
+		return repetidos.get(0);
 		
 	}
 

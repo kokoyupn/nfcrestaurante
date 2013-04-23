@@ -18,7 +18,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-
+/**
+ * Configura el adapter de la List de la pantalla del pedido de la mesa.
+ * 
+ * -Atributos-
+ * activity: Actividad que lo lanza.
+ * contenido : ArrayList con los platos que tiene pedidos la mesa en concreto.
+ * 
+ * @author Rober
+ *
+ */
 
 public class MiListAdapterMesa extends BaseAdapter {
 	 private Activity activity;
@@ -100,7 +109,7 @@ public class MiListAdapterMesa extends BaseAdapter {
 	
 	public void deletePosicion(int posicion){
 		contenido.get(posicion).restaCantidad();
-		contenido.get(posicion).eliminaId();//FIXME no se si bien
+		contenido.get(posicion).eliminaId();
 		if(contenido.get(posicion).getCantidad()==0)
 			contenido.remove(posicion);
 	}

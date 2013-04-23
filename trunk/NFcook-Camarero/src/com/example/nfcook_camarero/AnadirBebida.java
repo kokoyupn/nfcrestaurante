@@ -32,7 +32,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
-//import baseDatos.HandlerDB;
+
 
 /**
  * Clase en la que el camarero puede añadir o eliminar bebidas al pedido del usuario
@@ -62,16 +62,8 @@ public class AnadirBebida extends Activity{
     private static TextView textViewTotalPagarBebidas;
     
     private static Button validar;
+    private String restaurante;
     
-    /*public static void setRestaurante(String res){
-    	restaurante = res;
-    }*/
-    
-    /*public static void setTipoTab(String tipo){
-    	tipoTab = tipo;
-    }*/
-    
-    //???
     public static double getTotal(){
 		return Math.rint(total*100)/100;
     }
@@ -94,37 +86,13 @@ public class AnadirBebida extends Activity{
 		numMesa = bundle.getString("NumMesa");
 		personasMesa = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
-		
-		
-		//vistaTabCategoriaBebida = inflater.inflate(R.layout.tab_superior_categoria_bebidas, container, false);
+		restaurante = bundle.getString("Restaurante");
 		
 		cargarBebidas(this);//ya se importa dentro la base de datos
 					
-		/*
-		 * Este if se encarga de que el usaurio no pierda las bebidas una vez haya ya entrado
-		 * en la pestaña bebidas e incluso haber seleccionado alguna. Si entra por el if 
-		 * quiere decir que no ha seleccionado ninguna bebida o bien ha sincronizado ya
-		 * las bebidas que quería.
-		 * 
-		 * Sirve para reiniciar las unidades de las bebidas a 0.
-		 */
-		/*if(bebidas == null){
-			// Cargamos las bebidas que haya en la base de datos
-			cargarBebidas(getActivity());
-			total = 0;
-			
-			// Precargamos la pantalla bebida si hubiera ya seleccionado bebidas en pedido
-			hayBebidasEnPedido(getActivity());
-		}*/
-		
-		// Aplicamos el adapater que hemos creado sobre el gridView
 		aplicarAdapter();
 		
 		validar();
-		
-		//Hasta qki tb llega
-		
-    	//return vistaTabCategoriaBebida;
 	}
     
     public void validar(){
@@ -164,7 +132,8 @@ public class AnadirBebida extends Activity{
 			importarBaseDatos();
 			
 			String[] bebidasBaseDatos = new String[]{"Id","Nombre","Foto","Precio"};
-	  		Cursor cursorBaseDatosBebidas = dbRestaurante.query("Restaurantes", bebidasBaseDatos, "Restaurante = 'Foster' AND Categoria = 'Bebidas'",null,null, null,null);
+			String[] rest = new String[]{restaurante};
+	  		Cursor cursorBaseDatosBebidas = dbRestaurante.query("Restaurantes", bebidasBaseDatos, "Restaurante =? AND Categoria = 'Bebidas'",rest,null, null,null);
 	  		
     	    // Recorremos todos los registros
     	    while(cursorBaseDatosBebidas.moveToNext()){
@@ -191,9 +160,6 @@ public class AnadirBebida extends Activity{
         adapterGridViewBebidas = new MiGridViewBebidasAdapter(this, bebidas);
         
         gridViewBebidas.setAdapter(adapterGridViewBebidas);
-        
-        
-        //AKI LLEGA!!!!!!
 	}	
 	
 	public static  void anyadirBebidas(){
@@ -213,8 +179,7 @@ public class AnadirBebida extends Activity{
 				    double precio = bebida.getPrecioUnidad();
 					String[] fechaHora = fechaYHora(); 
 					String nombreBebida = bebida.getNombre();
-					//String pb = nombrePrecioId[1];
-					//double precioBebida = Double.parseDouble(pb);
+					
 					String idBebida = bebida.getIdPlato();
 					int idUnico = PantallaMesasFragment.getIdUnico();//ya suma 1 dentro
 				    
@@ -246,18 +211,8 @@ public class AnadirBebida extends Activity{
 			
 			actualizaGridView();
         	
-	    	//plato.put("IdHijo", DescripcionPlato.getIdentificadorUnicoHijoPedido() + "");
-	    	
-	    	
-	    	// Aumentamos el identificador único de pedido
-	    	//DescripcionPlato.sumaIdentificadorUnicoHijoPedido();
-	    		    	
 	    	// Cerramos la base de datos de pedido
 			sql.close();
-			
-			// Aumentamos el precio total de bebidas y el número de unidades de bebida
-			/*bebidas.get(pos).anyadeUnidad();
-			sumarTotal(pos);*/
 			
 	    }catch(SQLiteException e){
 	         Toast.makeText(vistaTabCategoriaBebida.getContext(),"ERROR AL ABRIR LA BD DE PEDIDO A LA HORA DE INSERTAR UNA BEBIDA EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
@@ -282,47 +237,7 @@ public class AnadirBebida extends Activity{
        return horaFecha;
 	}
 	
-	
-	public void eliminarBebida(int pos){
-		/*if(bebidas.get(pos).getUnidades() > 0){
-			try{
-				// Abrimos la base de datos de pedido
-				sql = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Mesas.db"); 
-				dbPedido = sql.open();
-				
-			 	// Cargamos la info del plato
-				String[] bebidasBaseDatos = new String[]{"Id","Nombre","Foto","Precio"};
-		  		
-				
-			    PadreGridViewBebidas bebida = bebidas.get(pos);
-			 	String[] camposSacar = new String[]{"IdHijo"};
-				String[] datosQueCondicionan = new String[]{restaurante,bebida.getIdPlato()};
-				Cursor cursorBaseDatosBebidas = dbRestaurante.query("Restaurantes", bebidasBaseDatos, "Restaurante = 'Foster' AND Categoria = 'Bebidas'",null,null, null,null);
-		  		
-				Cursor cP = dbRestaurante.query("Pedido", camposSacar, "Id=?",datosQueCondicionan,null, null,null);
-		
-				// Miramos a ver si existe algun elemento, debe exisitir
-			    if(cP.moveToNext()){
-			    	String idBebida = cP.getString(0);
-			    	String[] camposDelete = {bebida.getIdPlato(),idBebida};
-					dbPedido.delete("Pedido", "Id = ? AND IdHijo =?", camposDelete);
-			    }
-				
-				sql.close();
-				// Disminuimos el precio total de bebidas y el número de unidades de esa bebida
-				restarTotal(pos);
-				bebidas.get(pos).eliminaUnidad();
-		    }catch(SQLiteException e){
-		         	Toast.makeText(vistaTabCategoriaBebida.getContext(),"ERROR AL ABRIR LA BD DE PEDIDO A LA HORA DE ELIMINAR UNA BEBIDA EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
-		    }
-		}*/
-	}
-	
 	public static void actualizaGridView(){
-		// Actualizamos cada componente del grid
-		//textViewTotalPagarBebidas.setText(getTotal() + " €");
-		
-		//Actualizamos precio total
 		double totalPagar = 0;
 		for(int i=0;i<bebidas.size();i++){
 			PadreGridViewBebidas elem = bebidas.get(i);
@@ -330,7 +245,6 @@ public class AnadirBebida extends Activity{
 		}
 		
 		textViewTotalPagarBebidas.setText(Double.toString(totalPagar) + " €");
-		
 		
 		// Actualizamos el adapter		
 		adapterGridViewBebidas.notifyDataSetChanged();
@@ -358,88 +272,5 @@ public class AnadirBebida extends Activity{
 		// Cargamos las bebidas que haya en la base de datos
 		cargarBebidas(this);
 	}
-	
-	/*public static void hayBebidasEnPedido(Activity activity){
-		boolean encontrado;
-		int numBebidas = bebidas.size();
-		int i;
-		try{
-			// Abrimos la base de datos de pedido
-			sqlPedido = new HandlerDB(activity,"Pedido.db"); 
-		 	dbPedido = sqlPedido.open();
-		 	
-		 	// Cargamos los id de todos los platos que hay por si hubiera alguna bebida
-		 	String[] camposSacarPedido = new String[]{"Id"};
-			String[] datosQueCondicionanPedido = new String[]{restaurante};
-			Cursor cP = dbPedido.query("Pedido", camposSacarPedido, "Restaurante=?", datosQueCondicionanPedido,null, null,null);
-	
-			// Abrimos la base de datos de los platos
-	    	sql = new HandlerDB(activity); 
-	     	db = sql.open();
-	     	
-			// Miramos para cada plato si es bebida
-		    while(cP.moveToNext()){		     	
-		     	String[] camposSacarPlato = new String[]{"Id","Nombre","Precio"};
-		    	String[] datosQueCondicionanPlato = new String[]{cP.getString(0),restaurante,tipoTab};
-	    		Cursor cPlato = db.query("Restaurantes", camposSacarPlato, "Id=? AND Restaurante=? AND Categoria=?",datosQueCondicionanPlato,null, null,null);
-	    		
-	    		// Miramos si efectivamente era una bebida
-	    		if(cPlato.moveToNext()){
-	    			// Miramos en que posición está la bebida para sumarle unidades
-	    			encontrado = false;
-	    			i = 0;
-	    			while(!encontrado && i<numBebidas){
-	    				if(bebidas.get(i).getIdPlato().equals(cPlato.getString(0))){
-	    					encontrado = true;
-	    				}else{
-	    					i++;
-	    				}
-	    			}
-	    			
-	    			// Salimos con la pos en dónde esta la bebida y actualizamos la misma
-	    			bebidas.get(i).anyadeUnidad();
-	    			sumarTotal(i);
-	    			
-	    		} // Fin if es bebida
-		    } // Fin platos cuenta
-		    
-		    // Cerramos las bases de datos de pedido y de platos
-		    sql.close();
-		    sqlPedido.close();
-		    
-	    }catch(SQLiteException e){
-	         	Toast.makeText(activity,"ERROR AL INTENTAR CARGAR BEBIDAS DE LA BD CUENTA EN LA PANTALLA BEBIDAS",Toast.LENGTH_SHORT).show();
-	    }
-	}*/
-	
-	/*public static void eliminarBebidaDesdePedido(String idPlato, Activity activity){
-		if(bebidas == null){
-			// Cargamos las bebidas que haya en la base de datos
-			cargarBebidas(activity);
-			total = 0;
-			
-			// Precargamos la pantalla bebida si hubiera ya seleccionado bebidas en pedido
-			hayBebidasEnPedido(activity);
-		}
-		
-		boolean encontrado = false;
-		int numBebidas = bebidas.size();
-		int i = 0;
-		
-		// Buscamos la bebida para quitarle una unidad
-		while(i<numBebidas && !encontrado){
-			if(bebidas.get(i).getIdPlato().equals(idPlato)){
-				encontrado = true;
-			}else{
-				i++;
-			}
-		}
-		
-		// Una vez encontrado le quitamos una unidad para que se vea luego reflejado
-		bebidas.get(i).eliminaUnidad();
-		
-		// Actualizamos el total gastado en bebidas
-		restarTotal(i);
-	}*/
 	
 }
