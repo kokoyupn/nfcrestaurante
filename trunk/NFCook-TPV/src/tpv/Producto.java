@@ -1,6 +1,6 @@
 package tpv;
 
-public class Producto implements Cloneable{
+public class Producto {
 	private String id;
 	private int idUnico;
 	private String categoria;

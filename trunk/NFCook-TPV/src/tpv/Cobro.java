@@ -47,14 +47,16 @@ public class Cobro {
 		Iterator<Producto> itProductos = cobro.iterator();
 		String comida = "";
 		String bebida = "";
+		String textoQR = restaurante.toUpperCase() + " NFCook";
+
 		while(itProductos.hasNext()){
 			Producto producto = itProductos.next();
 			if(producto instanceof Plato){
-//				comida +=  ((Plato) producto).toString() + " " + calculaPuntos(60,((Plato)producto).toString()+producto.getPrecio()+"€") + producto.getPrecio() + "€";
-				comida +=  ((Plato) producto).toString() + " -->" + "Precio: " + producto.getPrecio() + "€";
+				comida +=  "Nombre: " + ((Plato) producto).getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
+				textoQR += "Nombre: " + ((Plato) producto).getNombre() + " -->" + producto.getPrecio() + "€";
 			}else{
-//				bebida += ((Bebida) producto).toString() + calculaPuntos(60,((Bebida)producto).toString()+producto.getPrecio()+"€") + producto.getPrecio() + "€";
-				bebida += ((Bebida) producto).toString() + " -->" + "Precio: " + producto.getPrecio() + "€";
+				bebida += "Nombre: " + ((Bebida) producto).getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
+				textoQR += "Nombre: " + ((Bebida) producto).getNombre() + " -->" + producto.getPrecio() + "€";
 			}
 		}
 		boolean comidaBool = false;
@@ -68,9 +70,9 @@ public class Cobro {
 		
 		String textoAImprimir = "";
 		//cuando lea "Nombre: " saltara de linea
-		textoAImprimir = 	restaurante.toUpperCase() + "------- NFCook" +
+		textoAImprimir = 	restaurante.toUpperCase() + " ------ NFCook" +
 							"Nombre: " + "Mesa: " + idMesa +  ".  Le atendió " + idCamarero + 
-							"Nombre: " + "Fecha y hora: " + horaEnvioYFecha; 
+							"Nombre: " + "Fecha y hora: " + horaEnvioYFecha + "Nombre: ";
 		
 		if (comidaBool && bebidaBool){
 			textoAImprimir += comida + bebida; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
@@ -82,8 +84,11 @@ public class Cobro {
 		textoAImprimir += "Nombre: " + separador(80) +
 				"Nombre: " + "Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
 		
-		//TODO cambiar por imagen de codigo QR
-		Image img = loadImage("Imagenes/BotonesInterfazPlatos/warning.png");
+		textoQR += "Nombre: " + "Total: " + total + " €";
+		
+		QRCodeJava.generaQR(textoQR);//Crea el archivo en C:\\hlocal\\QR_Code.PNG
+		Image img = loadImage("C:\\hlocal\\QR_Code.PNG");
+		//Image img = loadImage("C:\\Archivos de Guillermo\\Uni\\IS\\QR_Code.PNG");
 		Imprimir.imprime(textoAImprimir,img);
 		
 	}
