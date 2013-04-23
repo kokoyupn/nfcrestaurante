@@ -377,7 +377,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters,null);
 		
 		if (!adapter.isEnabled())
-	        Toast.makeText(getApplicationContext(), "Por favor activa NFC", Toast.LENGTH_LONG).show();
+	        Toast.makeText(getApplicationContext(), "Por favor activa NFC.", Toast.LENGTH_LONG).show();
 	
 	}
 	
@@ -438,7 +438,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 			Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
 		}
 		}
-		else {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos (-1)", Toast.LENGTH_LONG).show();
+		else {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos.", Toast.LENGTH_LONG).show();
 		}
 		
 	

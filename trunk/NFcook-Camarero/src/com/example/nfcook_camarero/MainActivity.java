@@ -105,7 +105,7 @@ public void  onClickBotonEntrar(View boton)
 	  	   if (cont.equals(password.getText().toString()))//Si las contraseña que hay en la base de datos y la que a introducido el usuario son iguales
           
     	   {  
-    	   	  //abrir_ventanaEmergente("Bienvenido: "+usu,R.drawable.icono_usuario);
+    	   	  
            	  //Iniciamos la nueva actividad
     	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
