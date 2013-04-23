@@ -946,7 +946,7 @@ public class InterfazPlatos extends JFrame {
 		
 		//Decimos a los demas tpv que tienen que cerrar la mesa.
 		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
-		operacionSQlite.actualizarMesaBD(idMesa, idCam, getRestaurante().getNumeroPersonasMesa(idMesa), 0);
+		operacionSQlite.actualizarMesaBD(idMesa, "-", 0, 0);
 		operacionSQlite.cerrarBaseDeDatos();
 	 }
 	 
