@@ -2,15 +2,17 @@ package adapters;
 
 /**
  * Clase encargada de contener todos los campos necesarios para representar cada elemento del gridview
- * de la pantalla calculadora. En particular guardaremos la siguiente información:
+ * de la pantalla añadir bebidas.
  * 
- * - idPlato		- Se gurda el id del plato por razones de eficiencia para luego
- * - nombre			- Nombre de la bebida.
- * - foto			- Ruta de la foto.
- * - precioUnidad	- Precio de una sola unidad.
- * - unidades		- Unidades que ha seleccionado el usuario.
- * - precioTotal	- Precio de la bebida.
- * @author Abel
+ * -Atributos-
+ * idPlato: Se gurda el id del plato.
+ * nombre: Nombre de la bebida.
+ * foto: Ruta de la foto.
+ * precioUnidad: Precio de una sola unidad.
+ * unidades: Unidades que ha seleccionado el usuario.
+ * precioTotal: Precio de la bebida.
+ * 
+ * @author Rober
  *
  */
 public class PadreGridViewBebidas {

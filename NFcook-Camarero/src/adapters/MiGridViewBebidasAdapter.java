@@ -24,11 +24,11 @@ import com.example.nfcook_camarero.R;
  * Configura el adapter del gridview de la pantalla selección de bebidas.
  * 
  * -Atributos-
- * inflater             : necesario para poder recoger los XML pertenecientes a dichas listas.
- * context				: contexto de la actividad que lo crea
- * bebidas				: información de todas las bebidas que hay que mostrar. La información
- * 						  incluye el nombre, precio, número de unidades seleccionadas, etc.
- * @author abel
+ * activity: Actividad que llama a esta pantalla.
+ * context: Contexto de esta actividad.
+ * bebidas: Información de todas las bebidas que hay que mostrar. La información iluye el nombre, precio, número de unidades seleccionadas, etc.
+ * 
+ * @author Rober
  *
  */
 public class MiGridViewBebidasAdapter extends BaseAdapter{
@@ -36,7 +36,6 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 	
 	private ArrayList<PadreGridViewBebidas> bebidas;
 	
-	//private LayoutInflater l_Inflater;
 	private Context context;
 
 	public MiGridViewBebidasAdapter(Activity activity, ArrayList<PadreGridViewBebidas> bebidas) {
@@ -88,9 +87,7 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 		imagenAnyadirBebida.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
 				bebidas.get(pos).anyadeUnidad();
-				//AnadirBebida.anyadirBebida(pos);//no pq habra confirmar
-				AnadirBebida.actualizaGridView();
-				//setUltimoIdentificadorUnicoHijoPedido(DescripcionPlato.getIdentificadorUnicoHijoPedido());
+				AnadirBebida.actualizaGridView();				
 			}});
 		
 		// Hacemos oyente a la imagen de añadir bebida
@@ -101,8 +98,6 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 					bebidas.get(pos).eliminaUnidad();
 					AnadirBebida.actualizaGridView();
 				}
-				//ContenidoTabSuperiorCategoriaBebidas.eliminarBebida(pos);
-				//ContenidoTabSuperiorCategoriaBebidas.actualizaGridView();
 			}});
 		
 		return vista;
@@ -117,7 +112,7 @@ public class MiGridViewBebidasAdapter extends BaseAdapter{
 		SharedPreferences preferencia = context.getSharedPreferences("Identificador_Unico", 0);
 		SharedPreferences.Editor editor = preferencia.edit();
 		editor.putInt("identificadorUnicoHijoPedido", identificadorUnicoHijoPedido);
-		editor.commit(); //Para que surja efecto el cambio
+		editor.commit(); //Para que surta efecto el cambio
 	}
 	
 }

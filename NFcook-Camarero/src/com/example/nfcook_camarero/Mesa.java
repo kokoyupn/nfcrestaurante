@@ -83,6 +83,8 @@ public class Mesa extends Activity {
 	
 	private AutoCompleteTextView actwObservaciones;
 	private String restaurante;
+	private static String obsAntesEditar;
+	private static String extrasAntesEditar;
 	
 	
 	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
@@ -133,7 +135,7 @@ public class Mesa extends Activity {
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-	  	    		System.out.println("EDITAR");
+	  	    			System.out.println("EDITAR");
 	  	    			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
 		  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
 		  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
@@ -197,7 +199,8 @@ public class Mesa extends Activity {
 			            		        	//Entras si sigues con el dedo en la misma vista
 			            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
 			            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
-			            	    				String identificador = Integer.toString(platoSeleccionado.getId());
+			            		        		String identificador = Integer.toString(platoSeleccionado.getIdRepetido());
+			            	    				
 			            	    				try{
 			            	    					sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			            	    					dbMesas= sqlMesas.open();
@@ -352,7 +355,7 @@ public class Mesa extends Activity {
             		intent.putExtra("NumMesa", numMesa);
             		intent.putExtra("IdCamarero",idCamarero);
             		intent.putExtra("Personas", numPersonas);
-            		
+            		intent.putExtra("Restaurante", restaurante);
             		startActivity(intent);
             		
             	}catch(Exception e){
@@ -455,6 +458,9 @@ public class Mesa extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				importarBaseDatatosMesa();
 				String nuevosExtrasMarcados = null;
+				obsAntesEditar = adapter.getObservacionesPlato(posicion);//FIXME probar
+				extrasAntesEditar = adapter.getExtrasMarcados(posicion);//FIXME probar
+				
 				if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
 					nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
 				}
@@ -603,17 +609,32 @@ public class Mesa extends Activity {
 				(elemento.getExtras()).equals(extras) ){
 					
 					comunes = true;
+					
 					if(i<posicion){
 						elemento.sumaCantidad();
+						elemento.aniadeId(platoEditar.getId());
 						adapter.deletePosicion(posicion);
 					}else{
 						platoEditar.sumaCantidad();
+						platoEditar.aniadeId(elemento.getId());
 						adapter.deletePosicion(i);
 					}
 						
 				}
 			i++;
 		}
+		if(!comunes && platoEditar.getCantidad()>1){//Estaban agrupados y se han hecho diferentes
+			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(posicion);//FIXME no se
+			System.out.println("elem(pos): "+elemento.getExtras());
+			System.out.println("platoEditar: "+platoEditar.getExtras());
+			platoEditar.restaCantidad();
+			int idUnicoPlatoNuevo = platoEditar.getIdRepetido();
+			platoEditar.eliminaId();
+			
+			ContenidoListMesa nuevo = new ContenidoListMesa(platoEditar.getNombre(),extrasAntesEditar,obsAntesEditar,platoEditar.getPrecio(),idUnicoPlatoNuevo,platoEditar.getIdPlato());
+			adapter.addPlato(nuevo);
+		}
+		
 	}
 
 	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
