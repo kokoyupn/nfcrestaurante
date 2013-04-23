@@ -165,7 +165,7 @@ public class Operaciones extends Conexion{
 	public void eliminarPlatosDeMesa(String idMesa){
 		FechaYHora dia = new FechaYHora();
 		String fichero = "InfoMesas.db";
-		String consulta = "delete from infoMesas where dia='" + dia.getDia() + "' and"+
+		String consulta = "delete from infoMesas where dia='" + dia.getDia() + "' and "+
 														"idMesa='" + idMesa +"'";
 		
 		ClienteFichero.enviaConsultaEliminaPlatos(idMesa, fichero, consulta);
