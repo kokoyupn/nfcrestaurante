@@ -55,18 +55,20 @@
 
         <ImageView
             android:id="@+id/imageViewIzquierdaCalculadora"
-            android:layout_width="84dp"
+            android:layout_width="87dp"
             android:layout_height="50dp"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="bottom|left"
             android:background="#C0C0C0"
-            android:padding="2dp" />
+            android:padding="2dp"
+            android:src="@drawable/fh39" />
 
         <ImageView
             android:id="@+id/imageViewDerechaCalaculadora"
             android:layout_width="84dp"
             android:layout_height="50dp"
-            android:layout_gravity="right|center"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:background="#C0C0C0"
             android:padding="2dp" />
@@ -75,6 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:orientation="vertical" >
 
             <TextView
@@ -96,8 +99,8 @@
 
         <ImageView
             android:id="@+id/imageViewLogoDescRest"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="top|right"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"

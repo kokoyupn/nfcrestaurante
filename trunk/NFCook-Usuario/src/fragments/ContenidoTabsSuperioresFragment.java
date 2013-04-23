@@ -174,7 +174,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
     	    	unicoTipoPlato = true;
        			
        			listViewPlatosUnicoTipo = (ListView) vistaConListView.findViewById(R.id.listViewPlatosTabsSuperiores);
-       			miAdapterListTabsSuperioresCategorias = new MiListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), platos);
+       			miAdapterListTabsSuperioresCategorias = new MiListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), platos, restaurante);
        			listViewPlatosUnicoTipo.setAdapter(miAdapterListTabsSuperioresCategorias);
     	    
     	    	// Oyente de la lista
@@ -226,7 +226,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
     	    	}
     	    	
     	    	expandableListViewPlatosVariosTipo = (ExpandableListView) vistaConExpandableListView.findViewById(R.id.expandableListViewPlatos);
-    	    	miAdapterExpandableListTabsSuperioresCategorias = new MiExpandableListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), tiposPlatosConPlatos);
+    	    	miAdapterExpandableListTabsSuperioresCategorias = new MiExpandableListTabsSuperioresCategoriasAdapter(getActivity().getApplicationContext(), tiposPlatosConPlatos, restaurante);
     	    	expandableListViewPlatosVariosTipo.setAdapter(miAdapterExpandableListTabsSuperioresCategorias);
     	    
     	    	// Oyente de la lista expandible

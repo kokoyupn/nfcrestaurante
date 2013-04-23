@@ -25,10 +25,15 @@ public class MiListTabsSuperioresCategoriasAdapter extends BaseAdapter {
 
 	private LayoutInflater inflater;
 	private ArrayList<PadreListTabsSuperioresCategorias> informacionPlatosLista;
+	/*
+	 * FIXME Quitar cuando añadamos a la base de datos el campo oreintación de cada foto.
+	 */
+	private String restaurante;
 	
-	public MiListTabsSuperioresCategoriasAdapter(Context context, ArrayList<PadreListTabsSuperioresCategorias> informacionPlatosLista) {
+	public MiListTabsSuperioresCategoriasAdapter(Context context, ArrayList<PadreListTabsSuperioresCategorias> informacionPlatosLista, String restaurante) {
 		this.inflater = LayoutInflater.from(context);
 		this.informacionPlatosLista = informacionPlatosLista;
+		this.restaurante = restaurante;
 	}
 	
 	public int getCount() {
@@ -52,22 +57,48 @@ public class MiListTabsSuperioresCategoriasAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		PadreListTabsSuperioresCategorias infoPlato = informacionPlatosLista.get(position);
 		if (convertView == null) {
+			/*
+			 * FIXME Quitar cuando se introduzca el nuevo campo a la base de datos, orientación
+			 * imágen.
+			 */
 			if(infoPlato.getTieneImagen()){
-				convertView = inflater.inflate(R.layout.padre_lista_tabs_superiores_categorias_con_imagen, null);
+				if(restaurante.equals("Foster")){
+					convertView = inflater.inflate(R.layout.padre_lista_tabs_superiores_categorias_con_imagen_horizontal, null);
+				}else{
+					convertView = inflater.inflate(R.layout.padre_lista_tabs_superiores_categorias_con_imagen_vertical, null);
+				}
 			}else{
 				convertView = inflater.inflate(R.layout.padre_lista_tabs_superiores_categorias_sin_imagen, null);
 			}
 		}
 		
 		if(infoPlato.getTieneImagen()){
-			// Damos valor a los textview correspondientes del layout
-			TextView textViewNombrePlato = (TextView) convertView.findViewById(R.id.textViewNombrePlatoListaTabsSuperiorConImagen);
-			textViewNombrePlato.setText(infoPlato.getNombrePlato());
-			TextView textViewDescripcionPlato = (TextView) convertView.findViewById(R.id.textViewDescripcionPlatoListaTabsSuperiorConImagen);
-			textViewDescripcionPlato.setText(infoPlato.getDescripcionBreve());
-			ImageView imageViewPlato = (ImageView) convertView.findViewById(R.id.imageViewPlatoListaTabsSuperiorConImagen);
-			imageViewPlato.setImageResource(infoPlato.getImagenPlato());
-			
+			/*
+			 * FIXME Hay que añadir un campo extra a la base de datos de platos, para indicar
+			 * la posición de la foto (horizontal, vertical).
+			 */
+			ImageView imageViewPlatoFoster;
+			ImageView imageViewPlatoVips;
+			if(restaurante.equals("Foster")){
+				// Damos valor a los textview correspondientes del layout
+				TextView textViewNombrePlato = (TextView) convertView.findViewById(R.id.textViewNombrePlatoListaTabsSuperiorConImagenHorizontal);
+				textViewNombrePlato.setText(infoPlato.getNombrePlato());
+				TextView textViewDescripcionPlato = (TextView) convertView.findViewById(R.id.textViewDescripcionPlatoListaTabsSuperiorConImagenHorizontal);
+				textViewDescripcionPlato.setText(infoPlato.getDescripcionBreve());
+				
+				imageViewPlatoFoster = (ImageView) convertView.findViewById(R.id.imageViewPlatoListaTabsSuperiorConImagenHorizontal);
+				imageViewPlatoFoster.setImageResource(infoPlato.getImagenPlato());
+			}else{
+				// Damos valor a los textview correspondientes del layout
+				TextView textViewNombrePlato = (TextView) convertView.findViewById(R.id.textViewNombrePlatoListaTabsSuperiorConImagenVertical);
+				textViewNombrePlato.setText(infoPlato.getNombrePlato());
+				TextView textViewDescripcionPlato = (TextView) convertView.findViewById(R.id.textViewDescripcionPlatoListaTabsSuperiorConImagenVertical);
+				textViewDescripcionPlato.setText(infoPlato.getDescripcionBreve());
+				
+				imageViewPlatoVips = (ImageView) convertView.findViewById(R.id.imageViewPlatoListaTabsSuperiorConImagenVertical);
+				imageViewPlatoVips.setImageResource(infoPlato.getImagenPlato());
+			}
+			/*************************************************************************/
 		}else{
 			// Damos valor a los textview correspondientes del layout
 			TextView textViewNombrePlato = (TextView) convertView.findViewById(R.id.textViewNombrePlatoListaTabsSuperiorSinImagen);

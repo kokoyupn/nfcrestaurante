@@ -191,6 +191,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     		i++;
     	}
     	
+    	// Marcamos el tab primero para situar el foco en el primer tab
+    	actionbar.selectTab(actionbar.getTabAt(0));
+    	
     	// Ponemos el título a la actividad
     	actionbar.setTitle(" INICIO");
 	}
@@ -404,6 +407,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     				// Lanzamos la actividad de una forma específica para conocer cuando acaba
     				Intent intent = new Intent(getApplicationContext(), Calculadora.class);
 					intent.putExtra("numeroComensales", numComensales);
+					intent.putExtra("restaurante", restaurante);
 					startActivityForResult(intent, 0);
           		}else{
 		         	Toast.makeText(getApplicationContext(),"Introduce un número de comensales válido.",Toast.LENGTH_SHORT).show();
