@@ -37,10 +37,11 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     TextView mInfoText;
     private static final int MESSAGE_SENT = 1;
     Context context;
+    private String abreviaturaRest;
     
     //Variables para bases de datos
-    private HandlerDB sqlCuenta, sqlPedido;
-	private SQLiteDatabase dbCuenta, dbPedido;
+    private HandlerDB sqlCuenta, sqlPedido, sqlRestaurante;
+	private SQLiteDatabase dbCuenta, dbPedido, dbRestaurante;
     
 	//Variables para los pedidos
 	String restaurante;
@@ -87,24 +88,32 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     /**
 	 * Abre las bases de datos Cuenta y Pedido.
 	 */
-	private void abrirBasesDeDatos() {
+    private void abrirBasesDeDatos() {
 		sqlCuenta = null;
 		sqlPedido = null;
+		sqlRestaurante = null;
 		dbCuenta = null;
 		dbPedido = null;
-		
-		try{
+		dbRestaurante = null;
+
+		try {
 			sqlPedido = new HandlerDB(getApplicationContext(), "Pedido.db");
 			dbPedido = sqlPedido.open();
-		}catch(SQLiteException e){
-         	System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)");
+		} catch (SQLiteException e) {
+			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosPedido)");
 		}
-		try{
+		try {
 			sqlCuenta = new HandlerDB(getApplicationContext(), "Cuenta.db");
 			dbCuenta = sqlCuenta.open();
-		}catch(SQLiteException e){
+		} catch (SQLiteException e) {
 			System.out.println("NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)");
-		}	
+		}
+		try {
+			sqlRestaurante = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
+			dbRestaurante = sqlRestaurante.open();
+		} catch (SQLiteException e) {
+			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosResta)");
+		}
 	}
 	
 	/**
@@ -148,6 +157,7 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
 	private void cerrarBasesDeDatos(){
 		sqlCuenta.close();
 		sqlPedido.close();		
+		sqlRestaurante.close();
 	}
 		
 
@@ -160,7 +170,8 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
 	 * @return
 	 */
 	private String damePedidoStr() {
-		String listaPlatosStr = "";
+		
+		String listaPlatosStr = dameCodigoRestaurante();
 		String[] campos = new String[]{"Id","ExtrasBinarios","Observaciones","Restaurante"};//Campos que quieres recuperar
 		String[] datosRestaurante = new String[]{restaurante};	
 		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
@@ -168,10 +179,8 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     	while(cursorPedido.moveToNext()){
     		
     		// le quito fh o v para introducir solo el id numerico en la tag
-    		String idplato = ""; 
-    		if (restaurante.equals("Foster")) idplato = cursorPedido.getString(0).substring(2);
-    		else if (restaurante.equals("Vips")) idplato = cursorPedido.getString(0).substring(1);
-    		 
+    		String idplato = cursorPedido.getString(0).substring(abreviaturaRest.length());
+    		
         	// compruebo si hay extras y envio +Extras si hay y si no ""
     		String extrasBinarios = cursorPedido.getString(1);
     		if (extrasBinarios == null) extrasBinarios = "";
@@ -191,6 +200,19 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     	return listaPlatosStr;
 	}
 	
+	private String dameCodigoRestaurante(){
+		// Campos que quieres recuperar
+		String[] campos = new String[] { "Numero", "Abreviatura" };
+		String[] datos = new String[] { restaurante };
+		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
+
+		cursorPedido.moveToFirst();
+		String codigoRest = cursorPedido.getString(0) + "@";
+		abreviaturaRest = cursorPedido.getString(1);
+		
+		return codigoRest;
+		
+	}
 
     /**
      * Implementation for the OnNdefPushCompleteCallback interface
