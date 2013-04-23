@@ -160,7 +160,7 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case MESSAGE_SENT:
-                Toast.makeText(getApplicationContext(), "Pedido Sincronizado", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Pedido Sincronizado.", Toast.LENGTH_LONG).show();
                 cerrarVentana();
                 break;
             }
@@ -198,7 +198,7 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 	        // only one message sent during the beam
 	        NdefMessage msg = (NdefMessage) rawMsgs[0];
 	        
-	        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente", Toast.LENGTH_LONG).show();
+	        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente.", Toast.LENGTH_LONG).show();
 
 	        //--------Metodos para añadir a la base de datos mesas
 	        decodificar(new String(msg.getRecords()[0].getPayload()));
@@ -294,7 +294,7 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
                 	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-2);
               
     		}catch(SQLiteException e){
-    		 	System.out.println("Error lectura base de datos de MIBASE");
+    		 	System.out.println("Error lectura base de datos de MIBASE.");
     		}
     		
          

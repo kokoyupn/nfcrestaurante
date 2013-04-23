@@ -57,7 +57,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="5dp"
                     android:gravity="center"
-                    android:text="Recoge tu pedido en la tarjeta NFC" />
+                    android:text="Recoge tu pedido de la tarjeta NFC." />
 
             </LinearLayout>
 
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="Choca tu dispositivo con el del camarero para enviar tu pedido" />
+                    android:text="Choca tu dispositivo con el del usuario para recoger el pedido." />
 
             </LinearLayout>
 
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="Crea un código QR de tu pedido" />
+                    android:text="Lee el código QR con el pedido." />
 
             </LinearLayout>
 
