@@ -46,7 +46,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	private Tag mytag;
 	private ArrayList<Byte> pedidoCodificadoEnBytes;
 	private boolean dispositivoCompatible, cabeEnTag, leidoBienDeTag,
-			escritoBienEnTag, tagCorrupta, heEnviadoACuenta, heCalculadoTam;
+			escritoBienEnTag, tagCorrupta, heCalculadoTam;
 	private static boolean heSincronizadoMalAntes;
 	private static ArrayList<Byte> copiaSeguridad, copiaUltimoBloque;
 	private static int numBloqueComienzo;
@@ -55,6 +55,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
+	private String abreviaturaRest;
 	
 	private ArrayList<Boolean> bloquesDepuracion; 
 
@@ -125,8 +126,6 @@ public class SincronizarPedidoNFC extends Activity implements
 								heSincronizadoMalAntes = true;
 								e.printStackTrace();
 							}
-							if (escritoBienEnTag)
-								enviarPedidoACuenta();
 						}
 					}
 				}
@@ -144,7 +143,6 @@ public class SincronizarPedidoNFC extends Activity implements
 		 */
 		@Override
 		protected void onPostExecute(Void result) {
-			cerrarBasesDeDatos();
 			progressDialogSinc.dismiss();
 		}
 
@@ -211,7 +209,9 @@ public class SincronizarPedidoNFC extends Activity implements
 					Toast.makeText(this,"Pedido no sincronizado. (LECTURA BORRAR LUEGO)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 				} else {
 					if (restauranteCorrecto){
-						if (heEnviadoACuenta) {
+						
+						if (escritoBienEnTag){
+							enviarPedidoACuenta();
 							setResult(RESULT_OK, null);
 							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta.",Toast.LENGTH_LONG).show();
 						} else {
@@ -221,8 +221,6 @@ public class SincronizarPedidoNFC extends Activity implements
 									Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camaero o usa otro metodo de transmision.",Toast.LENGTH_LONG).show();
 								else if (heSincronizadoMalAntes)
 									Toast.makeText(this,"Pedido no sincronizado. (ESCRITURA BORRAR LUEGO)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-								else
-									Toast.makeText(this,"Pedido no sincronizado. (NO ENVIADO A CUETNA BORRAR LUEGO)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 							} else
 								Toast.makeText(this,"Pedido no sincronizado. (NO ENVIADO NO HE CALCULADO TAM)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 						}
@@ -234,6 +232,9 @@ public class SincronizarPedidoNFC extends Activity implements
 				}
 			}
 		}
+		
+		cerrarBasesDeDatos();
+		
 		
 		System.out.println("BLOQUE VALIDO: " + bloquesDepuracion);
 
@@ -367,18 +368,17 @@ public class SincronizarPedidoNFC extends Activity implements
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
 		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity) this);
 
-		heEnviadoACuenta = true;
-
 	}
 	
 	private boolean estoyEnRestauranteCorrecto(){
 		// Campos que quieres recuperar
-		String[] campos = new String[] { "Numero" };
+		String[] campos = new String[] { "Numero", "Abreviatura" };
 		String[] datos = new String[] { restaurante };
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
 
 		cursorPedido.moveToFirst();
 		byte idRest = (byte) Integer.parseInt(cursorPedido.getString(0));
+		abreviaturaRest = cursorPedido.getString(1);
 		restauranteCorrecto = (idRest == idRestauranteTag);
 		
 		return restauranteCorrecto;
@@ -416,11 +416,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		while (cursorPedido.moveToNext()) {
 
 			// le quito fh o v para introducir solo el id numerico en la tag
-			String idplato = "";
-			if (restaurante.equals("Foster"))
-				idplato = cursorPedido.getString(0).substring(2);
-			else if (restaurante.equals("Vips"))
-				idplato = cursorPedido.getString(0).substring(1);
+			String idplato = cursorPedido.getString(0).substring(abreviaturaRest.length());
 
 			// compruebo si hay extras y envio +Extras si hay y si no ""
 			String extrasBinarios = cursorPedido.getString(1);
@@ -630,7 +626,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		if (cabePedidoEnTag(pedidoCodificadoEnBytes, mfc)) {
 			cabeEnTag = true;
 			// recorro todos los bloques escribiendo el pedido. Cuando acabe escribo 0's en los que sobren
-			while (numBloque < mfc.getBlockCount()) {
+			while (numBloque < mfc.getBlockCount() && !escritoBienEnTag) {
 				// comprobamos si el bloque puede ser escrito o es un bloque prohibido
 				if (sePuedeEscribirEnBloque(numBloque)) {
 					// cada sector tiene 4 bloques
@@ -648,18 +644,14 @@ public class SincronizarPedidoNFC extends Activity implements
 							recorrerString += MifareClassic.BLOCK_SIZE;
 							// escribimos en el bloque
 							mfc.writeBlock(numBloque, datosAlBloque);
-						} 
-						/*else {
-							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
-							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
-							mfc.writeBlock(numBloque, ceros);
-						}*/
+						} else {
+							heSincronizadoMalAntes = false;
+							escritoBienEnTag = true;
+						}
 					}
 				}
 				numBloque++;
 			}
-			heSincronizadoMalAntes = false;
-			escritoBienEnTag = true;
 		}
 
 		// Cerramos la conexion
