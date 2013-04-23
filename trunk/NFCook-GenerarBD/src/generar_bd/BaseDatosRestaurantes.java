@@ -938,7 +938,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ContentValues batidosVips = new ContentValues();
      	batidosVips.put("Id", "V"+idVips);
      	batidosVips.put("Restaurante", "VIPS");
-     	batidosVips.put("Categoria", "Batidos y/n helados");
+     	batidosVips.put("Categoria", "Batidos y\nhelados");
      	batidosVips.put("TipoPlato", "Batido");
      	batidosVips.put("Nombre", "Batido con Oreo");
      	batidosVips.put("Breve", "Delicioso batido de chocolate blanco y galletas Oreo.");
@@ -952,7 +952,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips = new ContentValues();
      	batidosVips.put("Id", "V"+idVips);
      	batidosVips.put("Restaurante", "VIPS");
-     	batidosVips.put("Categoria", "Batidos y/n helados");
+     	batidosVips.put("Categoria", "Batidos y\nhelados");
      	batidosVips.put("TipoPlato", "Batido");
      	batidosVips.put("Nombre", "Batidos VIPS con Nata y Sirope");
      	batidosVips.put("Breve", "¡Disfruta del nuevo sabor de dulce de leche!");
@@ -966,7 +966,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips = new ContentValues();
      	batidosVips.put("Id", "V"+idVips);
      	batidosVips.put("Restaurante", "VIPS");
-     	batidosVips.put("Categoria", "Batidos y helados");
+     	batidosVips.put("Categoria", "Batidos y\nhelados");
      	batidosVips.put("TipoPlato", "Helado");
      	batidosVips.put("Nombre", "Copa dulce de leche");
      	batidosVips.put("Breve", "Descubre la irresistible combinación de sabores de esta nueva Copa.");
@@ -980,7 +980,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips = new ContentValues();
      	batidosVips.put("Id", "V"+idVips);
      	batidosVips.put("Restaurante", "VIPS");
-     	batidosVips.put("Categoria", "Batidos y helados");
+     	batidosVips.put("Categoria", "Batidos y\nhelados");
      	batidosVips.put("TipoPlato", "Helado");
      	batidosVips.put("Nombre", "Copa homenaje al chocolate");
      	batidosVips.put("Breve", "Un homenaje para los amantes del chocolate.");
@@ -997,7 +997,7 @@ public class BaseDatosRestaurantes extends Activity {
      	ContentValues cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Cafe");
      	cafesChocolatesVips.put("Nombre", "Café Bombón");
      	cafesChocolatesVips.put("Breve", "Leche condensada y café Espresso.");
@@ -1011,7 +1011,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Cafe");
      	cafesChocolatesVips.put("Nombre", "Café Irlandés");
      	cafesChocolatesVips.put("Breve", "Café con un chorrito de whisky, azúcar moreno y nata batida.");
@@ -1025,7 +1025,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Cafe");
      	cafesChocolatesVips.put("Nombre", "Café Macchiato");
      	cafesChocolatesVips.put("Breve", "Espuma de leche y sirope de caramelo.");
@@ -1039,7 +1039,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Cafe");
      	cafesChocolatesVips.put("Nombre", "Café Mocca");
      	cafesChocolatesVips.put("Breve", "Sirope y mousse de chocolate con espuma de leche.");
@@ -1053,7 +1053,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Cafe");
      	cafesChocolatesVips.put("Nombre", "Café Vienés");
      	cafesChocolatesVips.put("Breve", "Nata batida y sirope de chocolate.");
@@ -1067,7 +1067,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Cafe");
      	cafesChocolatesVips.put("Nombre", "Cappuccino");
      	cafesChocolatesVips.put("Breve", "Espresso con leche y canela.");
@@ -1081,7 +1081,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Chocolate");
      	cafesChocolatesVips.put("Nombre", "Chocolate a la taza");
      	cafesChocolatesVips.put("Breve", "El mejor chocolate a la taza elaborado de forma tradicional.");
@@ -1095,7 +1095,7 @@ public class BaseDatosRestaurantes extends Activity {
      	cafesChocolatesVips = new ContentValues();
      	cafesChocolatesVips.put("Id", "V"+idVips);
      	cafesChocolatesVips.put("Restaurante", "VIPS");
-     	cafesChocolatesVips.put("Categoria", "Cafes y/n chocolates");
+     	cafesChocolatesVips.put("Categoria", "Cafes y\nchocolates");
      	cafesChocolatesVips.put("TipoPlato", "Chocolate");
      	cafesChocolatesVips.put("Nombre", "Chocolate Praliné");
      	cafesChocolatesVips.put("Breve", "Chocolate a la taza, con crema de avellanas, nata montada y virutas de chocolate.");
