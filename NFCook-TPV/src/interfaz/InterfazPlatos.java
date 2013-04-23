@@ -42,9 +42,10 @@ import sockets.OperacionesSocketsSinBD;
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
 import tpv.Cobro;
-import tpv.Mesa;
+import tpv.Mesa; 
 import tpv.Plato;
 import tpv.Producto;
+import tpv.QRCodeJava; 
 import tpv.Restaurante;
 import tpv.TuplaProdEnv;
 
@@ -123,13 +124,14 @@ public class InterfazPlatos extends JFrame {
 		dinero = 0;
 		esExtras = false;
 		esObs = false;
+		hashExtras = new HashMap<String,String>();
 
 ///////////////GRUPO TOTAL PRECIO////////////////////	
 		
 		dinero = calculaDineroTotal();
-		total = new JLabel("Total: " + dinero + " €");
-		total.setBounds((int)(((ancho/11) +30 + (ancho - ((ancho/11) + (ancho/4) + 40))-10)/2)
-			,20,310,60);
+		total = new JLabel("Mesa: " + idMesa +"   Total: " + dinero + " €");
+		total.setBounds((int)(((ancho-((ancho/11)+(ancho/4)))-60)/2)
+			,20,410,60);
 		contentPaneGlobal.add(total);
 		total.setFont(new Font(total.getFont().getName(), total.getFont().getStyle(), 30));
 
@@ -163,7 +165,7 @@ public class InterfazPlatos extends JFrame {
 								auxiliarDeshacer.add(new AuxDeshacerRehacer(false, productosEnMesa.get(row).getProd()));
 								deshacer.setEnabled(true);
 								dinero = Math.rint((dinero - productosEnMesa.get(row).getProd().getPrecio())*100)/100;
-								total.setText("Total: " + dinero + " €");
+								total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 								productosEnMesa.remove(row);
 								dtm.removeRow(row);
 								
@@ -201,14 +203,20 @@ public class InterfazPlatos extends JFrame {
 						
 						//cobramos solo los platos que han sido enviados a cocina
 						ArrayList<Producto> aCobrar = platosACobrar();
-						//Pasamos los parametros necesarios para imprimir el tiket
-						Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante());
-						//Borramos la tabla, el array y el precio
-						reseteaTablaYPrecio();
-						//mostramos mensaje de acción realizada con éxito
-						JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
-								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
-					}else{
+						if (aCobrar.size()>0){
+							//Pasamos los parametros necesarios para imprimir el tiket
+							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante());
+							//Borramos la tabla, el array y el precio
+							reseteaTablaYPrecio();
+							//mostramos mensaje de acción realizada con éxito
+							JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
+									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
+							}else{
+								//mostramos mensaje indicando que no hay platos por cobrar
+								JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos para cobrar",null,JOptionPane.YES_NO_CANCEL_OPTION,
+										JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
+							}
+						}else{
 						//mostramos mensaje de acción realizada sin éxito
 						JOptionPane.showOptionDialog(contentPaneGlobal ,"No se ha realizado la acción",null,JOptionPane.YES_NO_CANCEL_OPTION,
 								JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
@@ -218,7 +226,7 @@ public class InterfazPlatos extends JFrame {
 					JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos para cobrar",null,JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 				}
-			}
+			} 
 		});
 
 ////////////////////////////BOTON ENVIAR A COCINA/////////////////////
@@ -366,7 +374,7 @@ public class InterfazPlatos extends JFrame {
 					}
 					//Actualizamos el dinero y sacamos los valores para las filas
 					dinero = Math.rint((dinero + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
-					total.setText("Total: " + dinero + " €");
+					total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 					nombre = productosEnMesa.get(i).getProd().getNombre();
 					observaciones = productosEnMesa.get(i).getProd().getObservaciones();
 					precio = productosEnMesa.get(i).getProd().getPrecio();
@@ -427,7 +435,7 @@ public class InterfazPlatos extends JFrame {
 							tablaAux.setValueAt(((TecladoNumerico)tecladoNum).getPrecio(),tablaAux.getSelectedRow(),tablaAux.getSelectedColumn());
 							productosEnMesa.get(tablaAux.getSelectedRow()).getProd().setPrecio(((TecladoNumerico)tecladoNum).getPrecio());
 							dinero = calculaDineroTotal();
-							total.setText("Total: " + dinero + " €");
+							total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 						}
 					}else if (comlumnaPinchada == 2){ //Extras
 							//miramos que no sea bebida
@@ -496,7 +504,7 @@ public class InterfazPlatos extends JFrame {
 					dinero = Math.rint((dinero - auxiliarDeshacer.get(auxiliarDeshacer.size()-1).getProd().getPrecio())*100)/100;
 					auxiliarDeshacer.remove(auxiliarDeshacer.size()-1);
 					productosEnMesa.remove(linea);
-					total.setText("Total: " + dinero + " €");
+					total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 				}
 				contDeshacer ++;
 				rehacer.setEnabled(true);
@@ -535,7 +543,7 @@ public class InterfazPlatos extends JFrame {
 					dtm.removeRow(linea);
 					auxiliarDeshacer.add(auxiliarRehacer.get(auxiliarRehacer.size()-1));
 					dinero = Math.rint((dinero - auxiliarRehacer.get(auxiliarRehacer.size()-1).getProd().getPrecio())*100)/100;
-					total.setText("Total: " + dinero + " €");
+					total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 					auxiliarRehacer.remove(auxiliarRehacer.size()-1);
 					productosEnMesa.remove(linea);
 				}	
@@ -649,7 +657,7 @@ public class InterfazPlatos extends JFrame {
 		productosEnMesa.add(prod);
 		//Actualizamos el dinero
 		dinero = Math.rint((dinero + prod.getProd().getPrecio())*100)/100;
-		total.setText("Total: " + dinero + " €");
+		total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 		
 		if (prod.getProd() instanceof Bebida){ 
 			//Si es bebida no tiene configuración
@@ -911,7 +919,7 @@ public class InterfazPlatos extends JFrame {
 	 public void reseteaTablaYPrecio(){
 		productosEnMesa = new ArrayList<TuplaProdEnv>();
 		dinero = 0;
-		total.setText("Total: " + dinero + " €");
+		total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 		
 		auxiliarDeshacer = new ArrayList<AuxDeshacerRehacer>();
 		auxiliarRehacer = new ArrayList<AuxDeshacerRehacer>();
@@ -1034,7 +1042,7 @@ public class InterfazPlatos extends JFrame {
 							configuracion = ((Plato)productosEnMesa.get(i).getProd()).getExtrasMarcados(); 
 						}
 						dinero = Math.rint((dinero + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
-						total.setText("Total: " + dinero + " €");
+						total.setText("Mesa: " + idMesa +"   Total: " + dinero + " €");
 						nombre = productosEnMesa.get(i).getProd().getNombre();
 						observaciones = productosEnMesa.get(i).getProd().getObservaciones();
 						precio = productosEnMesa.get(i).getProd().getPrecio();
