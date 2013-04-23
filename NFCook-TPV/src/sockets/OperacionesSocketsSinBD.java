@@ -13,4 +13,13 @@ public class OperacionesSocketsSinBD {
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 	}
 
+	public void actualizaVisitadoMesaCobrar(String idMesa) {
+		ClienteFichero.enviaMesaVisitadaCobrar(idMesa);
+	}
+	
+	public void actualizaVisitadoMesaCobrarLLegadaExterna(String idMesa){
+		VentanaLogin.getRestaurante().actualizaMesaEstaVisitadaCobrarLLegadaExterna(idMesa);
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+	}
+
 }

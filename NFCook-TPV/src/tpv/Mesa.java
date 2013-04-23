@@ -16,7 +16,7 @@ public class Mesa {
 	private String idCamarero;
 	private estadoMesa estado;
 	private double dineroTotalEnMesa;
-	private boolean visitada;
+	private ArrayList<Boolean> visitada;
 	
 	
 	public Mesa(String idMesa, int numeroPersonas, String idCamarero, int estadoBD) {
@@ -28,6 +28,7 @@ public class Mesa {
 		}
 		setEstado(estadoBD);
 		dineroTotalEnMesa = 0;
+		visitada = new ArrayList<Boolean>();
 	}
 
 	public ArrayList<TuplaProdEnv> getProductosEnMesa() {
@@ -114,12 +115,16 @@ public class Mesa {
 		return estado == estadoMesa.CERRADA;
 	}
 
-	public void setVisitada(boolean visitada) {
-		this.visitada = visitada;
+	public void setVisitada(Boolean visitada) {
+		if(visitada){
+			this.visitada.add(visitada);
+		}else{
+			this.visitada.remove(0);
+		}
 	}
 	
 	public boolean isVisitada(){
-		return visitada;
+		return this.visitada.size() != 0;
 	}
 
 	public void setEstado(int estado) {
@@ -150,6 +155,10 @@ public class Mesa {
 
 	public Iterator<TuplaProdEnv> getIteratorProductosEnMesa() {
 		return productosEnMesa.iterator();
+	}
+
+	public void eliminaTodasLasVisitas() {
+		this.visitada = new ArrayList<Boolean>();
 	}
 
 }
