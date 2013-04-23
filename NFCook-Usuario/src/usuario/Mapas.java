@@ -200,7 +200,7 @@ public class Mapas extends FragmentActivity
 	//--------------------- MÉTODOS -----------------------------------
 	//-----------------------------------------------------------------
 	public void getMiPosicion(Location ubicacion) {
-		if(ubicacion == null)
+		if(map.getMyLocation() == null)
 		{
 			//Si no hay señal de GPS mostramos la Puerta del Sol de Madrid por defecto
 			ubicacion = new Location("gps");
@@ -211,6 +211,7 @@ public class Mapas extends FragmentActivity
 			//Toast.makeText(getApplicationContext(), "Mostrando ubicación actual", Toast.LENGTH_SHORT).show();
 			if(restaurantes != null)
 				ordenaRestaurantes();
+			ubicacion = map.getMyLocation();
 		}
 		miUbicacion = ubicacion;
 	}
@@ -261,15 +262,26 @@ public class Mapas extends FragmentActivity
 		//recorremos todas las mesas buscando la que tiene menor numero de mesa
     	Restaurante restMasCercano = restaurantes.get(0);//Pongo el primero
 		int i = 1;
-		while (i < restaurantes.size())
-		{
-			double distMin = calcularDistanciaEnKm(miUbicacion,new LatLng(restMasCercano.getMarcador().getPosition().latitude,restMasCercano.getMarcador().getPosition().longitude));
-			double distActual = calcularDistanciaEnKm(miUbicacion, new LatLng(restaurantes.get(i).getMarcador().getPosition().latitude,restaurantes.get(i).getMarcador().getPosition().longitude));
-			if(distActual < distMin) {
-				restMasCercano = restaurantes.get(i);
+		if (map.getMyLocation() == null)
+			while (i < restaurantes.size())
+			{
+				double distMin = calcularDistanciaEnKm(miUbicacion,new LatLng(restMasCercano.getMarcador().getPosition().latitude,restMasCercano.getMarcador().getPosition().longitude));
+				double distActual = calcularDistanciaEnKm(miUbicacion, new LatLng(restaurantes.get(i).getMarcador().getPosition().latitude,restaurantes.get(i).getMarcador().getPosition().longitude));
+				if(distActual < distMin) {
+					restMasCercano = restaurantes.get(i);
+				}
+				i++;
 			}
-			i++;
-		}
+		else
+			while (i < restaurantes.size())
+			{
+				double distMin = calcularDistanciaEnKm(map.getMyLocation(),new LatLng(restMasCercano.getMarcador().getPosition().latitude,restMasCercano.getMarcador().getPosition().longitude));
+				double distActual = calcularDistanciaEnKm(map.getMyLocation(), new LatLng(restaurantes.get(i).getMarcador().getPosition().latitude,restaurantes.get(i).getMarcador().getPosition().longitude));
+				if(distActual < distMin) {
+					restMasCercano = restaurantes.get(i);
+				}
+				i++;
+			}
 		return restMasCercano;
 	}
     
@@ -605,8 +617,6 @@ public class Mapas extends FragmentActivity
     	startActivity(intent);
 	}
 	public boolean onMarkerClick(final Marker marker) {
-		//Puesto aquí de prueba
-		getMiPosicion(miUbicacion);
 		// Ya hay una ruta mostrándose
 		if(puntosRuta.size()==2){
 			  puntosRuta.clear();
@@ -616,9 +626,11 @@ public class Mapas extends FragmentActivity
         // añadimos el punto origen (mi ubicación) y el destino (el marcador)
 		if (map.getMyLocation() == null)
 			puntosRuta.add(new LatLng(miUbicacion.getLatitude(),miUbicacion.getLongitude()));
-		else
+		else{
 			puntosRuta.add(new LatLng(map.getMyLocation().getLatitude(),map.getMyLocation().getLongitude()));
-        puntosRuta.add(marker.getPosition());
+			miUbicacion = map.getMyLocation();
+		}
+		puntosRuta.add(marker.getPosition());
         
         // Borramos una polilinea sólo si existe
         if (polilyneActual != null)
