@@ -1045,7 +1045,7 @@ public class InterfazPlatos extends JFrame {
 	 }
 	 
 	 public void mostrarAvisoYcerrar(String idMesa) {
-		 if(this.idMesa == idMesa){
+		 if(this.idMesa.equals(idMesa)){
 			 JOptionPane.showInternalConfirmDialog(new JFrame(), "Esta mesa ha sido cobrada desde otro TPV, se va ha cerrar.");
 			 dispose();
 			 VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
