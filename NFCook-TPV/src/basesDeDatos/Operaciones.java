@@ -195,7 +195,7 @@ public class Operaciones extends Conexion{
 	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, int estado) {
 		String fichero = "MesasRestaurante.db";
 		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
-														"estadoMesa='" + numeroPersonas + "' "+
+														"estadoMesa='" + estado + "', "+
 														"numeroPersonas='" + numeroPersonas + "' "+
 														"where idMesa='" + idMesa + "'";
 		
