@@ -2,10 +2,12 @@ package usuario;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import baseDatos.HandlerDB;
 import com.example.nfcook.R;
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -53,6 +55,8 @@ public class SincronizarPedidoNFC extends Activity implements
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
+	
+	private ArrayList<Boolean> bloquesDepuracion; 
 
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas
@@ -90,8 +94,13 @@ public class SincronizarPedidoNFC extends Activity implements
 						leerTagNFC();
 					else
 						leidoBienDeTag = true;
-					System.out.println("COPIA: " + copiaSeguridad);
-					System.out.println("ULT BLOQUE: " + copiaUltimoBloque);
+					
+					System.out.println("COPIA TRAS LEER: " + copiaSeguridad);
+					System.out.println("ULT BLOQUE TRAS LEER: " + copiaUltimoBloque);
+					System.out.println("BLOQUE COM TRAS LEER : " + numBloqueComienzo);
+
+					System.out.println("\n");
+					
 				} catch (IOException e1) {
 					leidoBienDeTag = false;
 					e1.printStackTrace();
@@ -103,11 +112,10 @@ public class SincronizarPedidoNFC extends Activity implements
 				if (leidoBienDeTag) {
 					
 					if (estoyEnRestauranteCorrecto()){
-					
-						if (heSincronizadoMalAntes || !tagCorrupta) {
+						// si ha sincronizado mal entra xq para el la tag no esta corrupta
+						if (!tagCorrupta) {
 							codificarPedido(damePedidoActual());
-							System.out.println("PEDIDO A CODIFICAR: "
-									+ pedidoCodificadoEnBytes);
+							System.out.println("PEDIDO A CODIFICAR: "+ pedidoCodificadoEnBytes);
 							try {
 								escribirEnTagNFC();
 							} catch (IOException e) {
@@ -146,6 +154,11 @@ public class SincronizarPedidoNFC extends Activity implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.sincronizar_pedido_nfc);
+		
+		// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" SINCRONIZAR PEDIDO");
 
 		// El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
@@ -168,11 +181,11 @@ public class SincronizarPedidoNFC extends Activity implements
 		// mortrar aviso inicial
 		mostrarAvisoInicial();
 
-		System.out.println("heSincronizadoMalAntes 1: "
-				+ heSincronizadoMalAntes);
-		System.out.println("copiaSeguridad 1: " + copiaSeguridad);
-		System.out.println("copiaUltimoBloque 1: " + copiaUltimoBloque);
-		System.out.println("numBloqueComienzo 1: " + numBloqueComienzo);
+		System.out.println("SINC MAL ANTES LEER: "+ heSincronizadoMalAntes);
+		System.out.println("COPIA ANTES LEER: : " + copiaSeguridad);
+		System.out.println("ULT ANTES LEER : " + copiaUltimoBloque);
+		System.out.println("BLOQUE COM ANTES LEER : " + numBloqueComienzo);
+		System.out.println("\n");
 	}
 
 	/**
@@ -221,14 +234,31 @@ public class SincronizarPedidoNFC extends Activity implements
 				}
 			}
 		}
+		
+		System.out.println("BLOQUE VALIDO: " + bloquesDepuracion);
 
-		System.out.println("heSincronizadoMalAntes 2: "+ heSincronizadoMalAntes);
-		System.out.println("copiaSeguridad 2: " + copiaSeguridad);
-		System.out.println("copiaUltimoBloque 2: " + copiaUltimoBloque);
-		System.out.println("numBloqueComienzo 2: " + numBloqueComienzo);
+		System.out.println("SINC MAL FINAL: "+ heSincronizadoMalAntes);
+		System.out.println("COPIA FINAL : " + copiaSeguridad);
+		System.out.println("ULT FINAL : " + copiaUltimoBloque);
+		System.out.println("BLOQUE COM FINAL : " + numBloqueComienzo);
 		System.out.println("\n");
 
-		finish();
+		// finish();
+		//creo el alert dialog que se mostrara al pulsar en el boton back
+	    	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(this);
+			View vistaAviso = LayoutInflater.from(this).inflate(R.layout.aviso_continuar_pedido, null);
+			//modifico el texto a mostrar
+			TextView textoAMostar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
+			
+			String text ="";
+			Iterator<Boolean> it = bloquesDepuracion.iterator();
+			while(it.hasNext())
+				text += it.next() + ", ";
+			textoAMostar.setText(text);
+			ventanaEmergente.setView(vistaAviso);
+			ventanaEmergente.show();
+  
+    
 	}
 
 	/**
@@ -579,14 +609,11 @@ public class SincronizarPedidoNFC extends Activity implements
 		mfc.connect();
 
 		escritoBienEnTag = false;
+		heSincronizadoMalAntes = true;
 
 		boolean sectorValido = false;
 		// para avanzar los bloques (en el 0 no se puede escribir)
-		int numBloque;
-		if (heSincronizadoMalAntes)
-			numBloque = 0;
-		else
-			numBloque = numBloqueComienzo;		
+		int numBloque = numBloqueComienzo;		
 		
 		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
 		int recorrerString = 0;
@@ -602,8 +629,7 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		if (cabePedidoEnTag(pedidoCodificadoEnBytes, mfc)) {
 			cabeEnTag = true;
-			// recorro todos los bloques escribiendo el pedido. Cuando acabe
-			// escribo 0's en los que sobren
+			// recorro todos los bloques escribiendo el pedido. Cuando acabe escribo 0's en los que sobren
 			while (numBloque < mfc.getBlockCount()) {
 				// comprobamos si el bloque puede ser escrito o es un bloque prohibido
 				if (sePuedeEscribirEnBloque(numBloque)) {
@@ -622,19 +648,19 @@ public class SincronizarPedidoNFC extends Activity implements
 							recorrerString += MifareClassic.BLOCK_SIZE;
 							// escribimos en el bloque
 							mfc.writeBlock(numBloque, datosAlBloque);
-						} else {
+						} 
+						/*else {
 							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
 							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
 							mfc.writeBlock(numBloque, ceros);
-						}
+						}*/
 					}
 				}
 				numBloque++;
 			}
 			heSincronizadoMalAntes = false;
 			escritoBienEnTag = true;
-		} else
-			cabeEnTag = false;
+		}
 
 		// Cerramos la conexion
 		mfc.close();
@@ -654,8 +680,8 @@ public class SincronizarPedidoNFC extends Activity implements
 		int bytesProhibidosTag = (mfc.getSectorCount() + 1) * 16;
 		int bytesLibresTag = bytesTag - bytesProhibidosTag;
 		heCalculadoTam = true;
-
-		return (copiaSeguridad.size() + pedidoCodificadoEnBytes.size() < bytesLibresTag);
+		cabeEnTag = copiaSeguridad.size() + pedidoCodificadoEnBytes.size() < bytesLibresTag;
+		return cabeEnTag;
 		
 	}
 
@@ -731,6 +757,9 @@ public class SincronizarPedidoNFC extends Activity implements
 		// para copia de seguridad
 		copiaSeguridad = new ArrayList<Byte>();
 		copiaUltimoBloque = new ArrayList<Byte>();
+		
+		//depurar
+		bloquesDepuracion = new ArrayList<Boolean>();
 
 		// Obtiene la instacia de la tarjeta nfc
 		MifareClassic mfc = MifareClassic.get(mytag);
@@ -740,7 +769,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		boolean sectorValido = false;
 		leidoBienDeTag = true;
 		// Variable usada para saber por el bloque que vamos
-		int numBloque = numBloqueComienzo;
+		int numBloque = 0;
 		// el texto que ha escrito el usuario
 		byte[] textoByte = null;
 		// para copiaSeguridad
@@ -755,47 +784,34 @@ public class SincronizarPedidoNFC extends Activity implements
 				int numSector = numBloque / 4;
 				// Validamos el sector con la A porque las tarjetas que tenemos usan el bit A en vez del B
 				sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
+				bloquesDepuracion.add(sectorValido);
 				if (sectorValido) {// Si es un sector valido
-					textoByte = mfc.readBlock(numBloque); // leemos un bloqueentero
+					textoByte = mfc.readBlock(numBloque); // leemos un bloque entero
 
 					if (!esPrimerBloque){
 						idRestauranteTag = textoByte[0];
 						esPrimerBloque = true;
 					}
 					
+					// copia ultimo bloque bloque
+					copiaUltimoBloque = new ArrayList<Byte>();
 					int i = 0;
-					// copia seguridad
 					while (i < MifareClassic.BLOCK_SIZE && !menosUnoEncontrado) {
-						if (textoByte[i] != menosUno)
-							copiaSeguridad.add(textoByte[i]);
-						else {
-							menosUnoEncontrado = true;
-							numBloqueComienzo = numBloque;
-						}
+						if (textoByte[i] != menosUno) copiaUltimoBloque.add(textoByte[i]);
+						else menosUnoEncontrado = true;
+						numBloqueComienzo = numBloque;
 						i++;
 					}
-
-					// ultimo bloque
-					if (menosUnoEncontrado) {
-						menosUnoEncontrado = false;
-						i = 0;
-						while (i < MifareClassic.BLOCK_SIZE && !menosUnoEncontrado) {
-							if (textoByte[i] != menosUno)
-								copiaUltimoBloque.add(textoByte[i]);
-							else
-								menosUnoEncontrado = true;
-							i++;
-						}
-					}
+					
+					//copia seguridad
+					copiaSeguridad.addAll(copiaUltimoBloque);
 				}
 			}
 			numBloque++;
 		}
 		leidoBienDeTag = true;
-		if (!menosUnoEncontrado)
-			tagCorrupta = true;
-		else
-			tagCorrupta = false;
+		if (!menosUnoEncontrado) tagCorrupta = true;
+		else tagCorrupta = false;
 
 		// Cerramos la conexion
 		mfc.close();

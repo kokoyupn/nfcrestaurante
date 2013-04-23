@@ -2,7 +2,7 @@
     android:id="@+id/FrameLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/blanco" >
+    android:background="#ffdd8d" >
 
     <ImageView
         android:id="@+id/imageViewQR"

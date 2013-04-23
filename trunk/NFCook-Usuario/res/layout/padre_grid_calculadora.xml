@@ -40,9 +40,8 @@
             android:ems="10"
             android:textColor="@color/blanco"
             android:textSize="15sp" 
-            android:inputType="text">
-            <requestFocus />
-        </EditText>       
+            android:inputType="text"
+            android:imeOptions="actionDone"/>       
 
     </FrameLayout>
 
