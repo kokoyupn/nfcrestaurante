@@ -966,7 +966,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips = new ContentValues();
      	batidosVips.put("Id", "V"+idVips);
      	batidosVips.put("Restaurante", "VIPS");
-     	batidosVips.put("Categoria", "Principal");
+     	batidosVips.put("Categoria", "Batidos y helados");
      	batidosVips.put("TipoPlato", "Helado");
      	batidosVips.put("Nombre", "Copa dulce de leche");
      	batidosVips.put("Breve", "Descubre la irresistible combinación de sabores de esta nueva Copa.");
@@ -980,7 +980,7 @@ public class BaseDatosRestaurantes extends Activity {
      	batidosVips = new ContentValues();
      	batidosVips.put("Id", "V"+idVips);
      	batidosVips.put("Restaurante", "VIPS");
-     	batidosVips.put("Categoria", "Principal");
+     	batidosVips.put("Categoria", "Batidos y helados");
      	batidosVips.put("TipoPlato", "Helado");
      	batidosVips.put("Nombre", "Copa homenaje al chocolate");
      	batidosVips.put("Breve", "Un homenaje para los amantes del chocolate.");
