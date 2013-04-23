@@ -17,16 +17,14 @@ import java.util.ArrayList;
  *
  */
 @SuppressWarnings("serial")
-public class MensajeDameFichero implements Serializable
+public class MensajeDameFichero extends Mensaje implements Serializable
 {
-	/*
-	public MensajeDameFichero (String nombreFichero, ArrayList<InetAddress> ips){
-		this.nombreFichero = nombreFichero;
-		this.ips = ips;
-	}*/
 	
     /** path completo del fichero que se pide */
     public String nombreFichero;
     
-    public ArrayList<InetAddress> ips;
+    public MensajeDameFichero (String nombreFichero, ArrayList<InetAddress> ips){
+		super(ips);
+		this.nombreFichero = nombreFichero;
+	}
 }

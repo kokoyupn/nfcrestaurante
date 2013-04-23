@@ -10,21 +10,19 @@ import java.util.ArrayList;
  *  
  */
 @SuppressWarnings("serial")
-public class MensajeArrayConsultas implements Serializable
+public class MensajeArrayConsultas extends Mensaje implements Serializable
 {
-	/*
-	public MensajeArrayConsultas(String nombreFichero, ArrayList<String> consultas, ArrayList<InetAddress> ips){
-		this.nombreFichero = nombreFichero;
-		this.consultas = consultas;
-		this.ips = ips;
-	}*/
 	
     /** Nombre del fichero que se transmite. Por defecto "" */
-    public String nombreFichero = "";
+    public String nombreFichero;
     
     /** ArrayList con todas las consultas de platos enviadas para un pedido **/
     public ArrayList<String> consultas;
     
-    /** ArrayList con las direcciones IP de los clientes que se han conectado al servidor **/
-    public ArrayList<InetAddress> ips;
+    public MensajeArrayConsultas(String nombreFichero, ArrayList<String> consultas, ArrayList<InetAddress> ips){
+		super(ips);
+		this.nombreFichero = nombreFichero;
+		this.consultas = consultas;
+	}
+ 
 }

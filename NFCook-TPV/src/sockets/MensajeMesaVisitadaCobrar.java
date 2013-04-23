@@ -5,16 +5,13 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class MensajeMesaVisitadaCobrar implements Serializable{
+public class MensajeMesaVisitadaCobrar extends Mensaje implements Serializable{
 	
 	/** Identificador de la mesa **/
 	public String idMesa;
 	
-	/** ArrayList con las direcciones IP de los clientes que se han conectado al servidor **/
-    public ArrayList<InetAddress> ips;
-	
 	public MensajeMesaVisitadaCobrar (String idMesa, ArrayList<InetAddress> ips){
+		super(ips);
 		this.idMesa = idMesa;
-		this.ips = ips;
 	}
 }
