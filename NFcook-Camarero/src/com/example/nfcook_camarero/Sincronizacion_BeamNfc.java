@@ -215,9 +215,11 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 		boolean parar=false;
 		// separamos por platos
 				StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr,"@");
-				//int n= Integer.parseInt(stPlatos.nextToken());
-				//if (n==numeroRestaurante)
-				//{
+				String a= stPlatos.nextToken();
+				int numero= Integer.parseInt(a);
+				// Compruebo si el pedido que hemos leido corresponde a este restaurate.
+				if (numeroRestaurante==numero)
+				{
 				while(stPlatos.hasMoreElements()){
 					//Para cada plato lo decodificamos y lo añadimos a la base de datos
 					String plato = stPlatos.nextToken();
@@ -241,11 +243,11 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 						añadirPlatos(restaurante,abreviatura+id,extras,comentario);
 					}			
 				}
-				//}
-			/*	else{
-					Toast.makeText(this,"Los platos de ese pedido no coinciden este con restaurante ",Toast.LENGTH_SHORT).show();
-
-				}*/
+				}
+				else {
+					Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
+					
+				}
 	}
 	
 
