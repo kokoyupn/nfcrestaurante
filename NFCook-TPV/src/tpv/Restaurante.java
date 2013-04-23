@@ -529,7 +529,7 @@ public class Restaurante {
 		return mesasRestaurante.get(idMesa).getIteratorProductosEnMesa();
 	}
 
-	public void eliminaTodosLosPedidosDeMesa(String idMesa) {
+	public void eliminaProductosDeMesa(String idMesa) {
 		mesasRestaurante.get(idMesa).eliminaTodosLosPedidos();
 	}
 	
