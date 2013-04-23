@@ -19,6 +19,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,7 +47,6 @@ public class DescripcionPlato extends Activity {
 	public HandlerDB sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
 	
-	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -56,7 +56,7 @@ public class DescripcionPlato extends Activity {
     	actionbar.setTitle(" SELECCIÓN DE PLATO");
     	//	Variables expandir
     	pulsado=false;
-        
+    	
     	setContentView(R.layout.descripcion_del_plato);
                
         cargarUltimoIdentificadorUnicoHijoPedido();
@@ -266,17 +266,27 @@ public class DescripcionPlato extends Activity {
     {
 		
 		TextView t=(TextView)findViewById(R.id.descripcionPlato);
+		ImageView image=(ImageView) findViewById(R.id.imageflecha);
+		
+    	ancho=t.getLayoutParams().width;
+		largo=t.getLayoutParams().height;
 		
 		if (!pulsado){
 			pulsado=true;
-			ancho=t.getLayoutParams().width;
-			largo=t.getLayoutParams().height;
-			t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT));
-				
-		}
+			//ancho=t.getLayoutParams().width;
+			//largo=t.getLayoutParams().height;
+			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
+			a.setMargins(52, 0, 5, 0);
+			t.setLayoutParams(a);
+			image.setImageResource(R.drawable.flecha_arriba);
+			
+			}
 		else{
 			//t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50));
-			t.setLayoutParams(new FrameLayout.LayoutParams(ancho,largo));
+			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50);//ancho,largo);
+			a.setMargins(52, 0, 5, 0);
+			t.setLayoutParams(a);
+			image.setImageResource(R.drawable.flecha_abajo);
 			pulsado= false;
 		}
 		
