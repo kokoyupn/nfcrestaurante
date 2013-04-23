@@ -138,9 +138,9 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
         sonido=sonidoManager.load(R.raw.confirm);
 		
         //Obtengo el resturante
-  		/*Bundle bundle = getIntent().getExtras();
-  		restaurante = bundle.getString("restaurante");*/
-  		restaurante="Foster";
+  		Bundle bundle = getIntent().getExtras();
+  		restaurante = bundle.getString("Restaurante");
+  		//restaurante="Foster";
   		
   		 try{ //Abrimos la base de datos para consultarla
  	       	sql = new HandlerGenerico(getApplicationContext(),ruta,"Equivalencia_Restaurantes.db"); 

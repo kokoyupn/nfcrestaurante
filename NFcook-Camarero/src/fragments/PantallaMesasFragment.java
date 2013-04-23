@@ -456,6 +456,7 @@ public class PantallaMesasFragment extends Fragment {
 				    	} //fin else item 4
 				    	else if (item == 5){
 				    		intent = new Intent(ctx,Borrar_tarjeta.class);
+				    		intent.putExtra("Restaurante",restaurante);
 				    		startActivity(intent);
 				    	}//fin else item5
 				    }
