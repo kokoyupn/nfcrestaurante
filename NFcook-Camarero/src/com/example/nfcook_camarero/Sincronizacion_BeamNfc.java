@@ -251,12 +251,13 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 	}
 	
 
-	public void añadirPlatos(String restaurante,String id,String extras,String observaciones)
+	public void añadirPlatos(String restaurantes,String id,String extras,String observaciones)
 	{
 		
     		
             Cursor cursor = null;
             String extrasFinal="";
+            String  restaurante = PantallaMesasFragment.dameRestaurante();
             
           try{
     			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
