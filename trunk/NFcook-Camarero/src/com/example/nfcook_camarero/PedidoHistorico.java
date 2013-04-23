@@ -70,7 +70,7 @@ public class PedidoHistorico extends Activity {
 			dbHistorico= sqlHistorico.open();
 			
 			//Añadir platos a la ListView----------------------------------------------------
-	  	  	platos = (ListView)findViewById(R.id.listaPlatosHistorico);
+	  	  	platos = (ListView)findViewById(R.id.listaPlatosHistorico); 
 		    elemLista = obtenerElementos();
 	         
 	  	    adapter = new MiListAdapterPedidoHistorico(this, elemLista);
