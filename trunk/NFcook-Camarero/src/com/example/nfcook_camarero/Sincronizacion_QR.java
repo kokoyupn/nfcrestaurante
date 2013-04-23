@@ -119,6 +119,12 @@ public class Sincronizacion_QR extends Activity {
 		// separamos por platos
 		StringTokenizer stPlatos = new StringTokenizer(pedidoQR,"@");
 		
+		String a= stPlatos.nextToken();
+		int numero= Integer.parseInt(a);
+		// Compruebo si el pedido que hemos leido corresponde a este restaurate.
+		if (numeroRestaurante==numero)
+		{
+		
 		while(stPlatos.hasMoreElements()){
 			
 			String plato = stPlatos.nextToken();
@@ -139,6 +145,11 @@ public class Sincronizacion_QR extends Activity {
 					
 			anadirPlatos(restaurante, abreviatura+id, extras, observaciones);
 		}	
+		}
+		else {
+			Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
+			
+		}
 	}
 	
 	public void anadirPlatos(String restaurante,String id,String extras,String observaciones){

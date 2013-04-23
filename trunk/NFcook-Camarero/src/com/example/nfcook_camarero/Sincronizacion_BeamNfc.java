@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
-
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -216,7 +215,9 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 		boolean parar=false;
 		// separamos por platos
 				StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr,"@");
-				
+				//int n= Integer.parseInt(stPlatos.nextToken());
+				//if (n==numeroRestaurante)
+				//{
 				while(stPlatos.hasMoreElements()){
 					//Para cada plato lo decodificamos y lo añadimos a la base de datos
 					String plato = stPlatos.nextToken();
@@ -240,7 +241,11 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 						añadirPlatos(restaurante,abreviatura+id,extras,comentario);
 					}			
 				}
-				
+				//}
+			/*	else{
+					Toast.makeText(this,"Los platos de ese pedido no coinciden este con restaurante ",Toast.LENGTH_SHORT).show();
+
+				}*/
 	}
 	
 
