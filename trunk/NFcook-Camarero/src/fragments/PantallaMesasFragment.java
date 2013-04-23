@@ -70,7 +70,7 @@ public class PantallaMesasFragment extends Fragment {
     private HandlerGenerico sqlMesas, sqlMiBase;
 	private SQLiteDatabase dbMesas, dbMiBase;
 	
-	private String restaurante;
+	private static String restaurante;
     /*NFC*/
 	Context ctx;
 	Intent intent;
@@ -797,6 +797,10 @@ public class PantallaMesasFragment extends Fragment {
     	return numeroPersonas;
     }
 
+    public static String dameRestaurante()
+    {
+    	return restaurante;
+    }
 	public static PantallaMesasFragment getInstanciaClase() {
 		return propiaInstancia;
 	}

@@ -399,9 +399,6 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 			   n = decodificaByte(iteradorAux.next());
 			    correcto= n==255;
 			  }
-			  
-			
-		
 		
 	if (correcto){
 		numRestaurante = decodificaByte(itPlatos.next());
