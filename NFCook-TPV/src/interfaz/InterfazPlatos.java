@@ -206,11 +206,11 @@ public class InterfazPlatos extends JFrame {
 						if (aCobrar.size()>0){
 							//Pasamos los parametros necesarios para imprimir el tiket
 							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante());
-							//Borramos la tabla, el array y el precio
-							reseteaTablaYPrecio();
 							//mostramos mensaje de acción realizada con éxito
 							JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
 									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
+							//Borramos la tabla, el array y el precio
+							reseteaTablaYPrecio();
 							}else{
 								//mostramos mensaje indicando que no hay platos por cobrar
 								JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos para cobrar",null,JOptionPane.YES_NO_CANCEL_OPTION,
@@ -948,18 +948,22 @@ public class InterfazPlatos extends JFrame {
 				enc = true;
 				}
 		}
-		//Dejamos de tener visitada esta mesa.
-		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
-		operacion.actualizaVisitadoMesaCobrar(idMesa);
+		
+		getRestaurante().actualizaMesaEstaVisitadaCobrarLLegadaExterna(idMesa);
 		
 		//Decimos a los demas tpv que tienen que cerrar la mesa.
 		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
 		operacionSQlite.actualizarMesaBD(idMesa, "-", 0, 0);
 		operacionSQlite.cerrarBaseDeDatos();
 		
+		//Dejamos de tener visitada esta mesa.
+		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
+		operacion.actualizaVisitadoMesaCobrar(idMesa);
+		
 		dispose();
 		VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 		ventanaMesa.setVisible(true);
+		
 	 }
 	 
 	 /**
