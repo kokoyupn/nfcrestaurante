@@ -211,6 +211,7 @@ public class Operaciones extends Conexion{
 		insertar(consulta, false);
 		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+		VentanaLogin.getRestaurante().cerrarInterfazPlatosSiAbierta(idMesa, estado);
 	}
 /* 
  * 							-EJEMPLOS-

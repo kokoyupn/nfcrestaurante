@@ -145,6 +145,12 @@ public class Restaurante {
 		}
 	}
 	
+	public void cerrarInterfazPlatosSiAbierta(String idMesa, int estado) {
+		if(ventanaPlatos!=null && estado == 0){
+			ventanaPlatos.mostrarAvisoYcerrar(idMesa);
+		}
+	}
+	
 	public void añadirProductoEnMesa(String idMesa, Producto producto, String extrasMarcados, String observaciones){
 		
 		if(producto instanceof Plato){
@@ -393,7 +399,7 @@ public class Restaurante {
 			return conComillas;
 		}else if(conComillas.contains(")")){
 			if(conComillas.charAt(0) == '\''){
-				conComillas.replaceFirst("'", "");
+				conComillas = conComillas.replaceFirst("'", "");
 			}
 			return conComillas.replace("')", "");
 		}

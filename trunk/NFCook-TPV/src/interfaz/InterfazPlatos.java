@@ -1038,10 +1038,14 @@ public class InterfazPlatos extends JFrame {
 			tablaPlatos.validate();
 			tablaPlatos.repaint();
 	 }
-
-	 public void cargarTablaPlatos() {
-		 // TODO guille. Carga la tabla con los productos de la mesa y a poder ser no te cargues si han metido alguna nuevo y no esta enviado.
-		 // He hecho un metodo en el Restaurante que devuelve Iterator<TuplaProdEnv> si le pasas el idMesa para que sea mas limpio el codigo =D.
+	 
+	 public void mostrarAvisoYcerrar(String idMesa) {
+		 if(this.idMesa == idMesa){
+			 JOptionPane.showInternalConfirmDialog(new JFrame(), "Esta mesa ha sido cobrada desde otro TPV, se va ha cerrar.");
+			 dispose();
+			 VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
+			 ventanaMesa.setVisible(true);
+		 }
 	 }
 
 private class TecladoAlfaNumerico extends JPanel{
