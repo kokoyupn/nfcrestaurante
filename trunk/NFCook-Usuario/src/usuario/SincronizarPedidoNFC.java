@@ -206,10 +206,9 @@ public class SincronizarPedidoNFC extends Activity implements
 			} else {
 				if (!leidoBienDeTag) {
 					setResult(RESULT_CANCELED, null);
-					Toast.makeText(this,"Pedido no sincronizado. (LECTURA BORRAR LUEGO)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+					Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 				} else {
 					if (restauranteCorrecto){
-						
 						if (escritoBienEnTag){
 							enviarPedidoACuenta();
 							setResult(RESULT_OK, null);
@@ -218,11 +217,11 @@ public class SincronizarPedidoNFC extends Activity implements
 							setResult(RESULT_CANCELED, null);
 							if (heCalculadoTam) {
 								if (!cabeEnTag)
-									Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camaero o usa otro metodo de transmision.",Toast.LENGTH_LONG).show();
+									Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision.",Toast.LENGTH_LONG).show();
 								else if (heSincronizadoMalAntes)
-									Toast.makeText(this,"Pedido no sincronizado. (ESCRITURA BORRAR LUEGO)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+									Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar.",Toast.LENGTH_LONG).show();
 							} else
-								Toast.makeText(this,"Pedido no sincronizado. (NO ENVIADO NO HE CALCULADO TAM)"+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+								Toast.makeText(this,"Pedido no sincronizado. Has levantado el dispositivo antes de tiempo."+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 						}
 					} else {
 						setResult(RESULT_CANCELED, null);
@@ -237,28 +236,13 @@ public class SincronizarPedidoNFC extends Activity implements
 		
 		
 		System.out.println("BLOQUE VALIDO: " + bloquesDepuracion);
-
 		System.out.println("SINC MAL FINAL: "+ heSincronizadoMalAntes);
 		System.out.println("COPIA FINAL : " + copiaSeguridad);
 		System.out.println("ULT FINAL : " + copiaUltimoBloque);
 		System.out.println("BLOQUE COM FINAL : " + numBloqueComienzo);
 		System.out.println("\n");
 
-		// finish();
-		//creo el alert dialog que se mostrara al pulsar en el boton back
-	    	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(this);
-			View vistaAviso = LayoutInflater.from(this).inflate(R.layout.aviso_continuar_pedido, null);
-			//modifico el texto a mostrar
-			TextView textoAMostar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
-			
-			String text ="";
-			Iterator<Boolean> it = bloquesDepuracion.iterator();
-			while(it.hasNext())
-				text += it.next() + ", ";
-			textoAMostar.setText(text);
-			ventanaEmergente.setView(vistaAviso);
-			ventanaEmergente.show();
-  
+		finish();
     
 	}
 
@@ -645,7 +629,6 @@ public class SincronizarPedidoNFC extends Activity implements
 							// escribimos en el bloque
 							mfc.writeBlock(numBloque, datosAlBloque);
 						} else {
-							heSincronizadoMalAntes = false;
 							escritoBienEnTag = true;
 						}
 					}
