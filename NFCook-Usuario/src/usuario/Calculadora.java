@@ -57,6 +57,7 @@ public class Calculadora extends Activity{
 	private static GridView gridViewPersonas;
 	private static MiGridViewCalculadoraAdapter adapterGridViewCalculadora;
     private static ArrayList<PadreGridViewCalculadora> personas;
+    private String restaurante;
     
     private ArrayList<InfomacionPlatoPantallaReparto> platos;
     
@@ -77,6 +78,7 @@ public class Calculadora extends Activity{
         // Recogemos el número de comensales que vendrá de la ventana emergente anterior
         Bundle bundle = getIntent().getExtras();
 		numPersonas = bundle.getInt("numeroComensales");
+		restaurante = bundle.getString("restaurante");
 
 		// Incializamos el numero de persona a 0
 		numPersonaActual = 1;
@@ -154,8 +156,8 @@ public class Calculadora extends Activity{
         	
         	// Sacamos el id de todos los platos de cuenta
         	String[] camposSacar = new String[]{"Id","Restaurante", "IdHijo"};
-	    	//String[] datosQueCondicionan = new String[]{restaurante};
-    		Cursor cP = dbCuenta.query("Cuenta", camposSacar, null, null, null, null,null);
+	    	String[] datosQueCondicionan = new String[]{restaurante};
+    		Cursor cP = dbCuenta.query("Cuenta", camposSacar, "Restaurante = ?", datosQueCondicionan, null, null,null);
 	    	
 	    	// Importamos la base de datos de los platos
         	HandlerDB sqlPlatos = new HandlerDB(this.getApplicationContext()); 

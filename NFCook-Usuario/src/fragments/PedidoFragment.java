@@ -292,7 +292,7 @@ public class PedidoFragment extends Fragment{
 
 	public static void actualizaExpandableList() {
 		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandaleList.findViewById(R.id.textViewTotalPedido);
-		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + "€");
+		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + " €");
 		adapterExpandableListPedido.notifyDataSetChanged();
 	}
 

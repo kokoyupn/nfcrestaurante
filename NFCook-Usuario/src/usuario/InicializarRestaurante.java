@@ -14,7 +14,6 @@ import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -486,13 +485,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	public static void setPosTabSuperior(int posTab){
 		postabSuperiorPulsado = posTab;
 	}
-	
-	public static void seleccionaTabSuperior(ActionBar.Tab tab){
-		marcaTab(0);
-		//actionbar.selectTab(tab);
-		//getActionBar().selectTab(getActionBar().getTabAt(0));
-	}
-	
+		
 	public static void marcaTab(int pos){
 		actionbar.selectTab(actionbar.getTabAt(0));
 	}

@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="60dp" >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
+    <ExpandableListView
+        android:id="@+id/expandableListPedido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:orientation="vertical" >
+        android:layout_marginBottom="111dp"
+        android:childDivider="?android:attr/listDivider"
+        android:divider="?android:attr/listDividerAlertDialog" >
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <ExpandableListView
-                android:id="@+id/expandableListPedido"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:childDivider="?android:attr/listDivider"
-                android:divider="?android:attr/listDividerAlertDialog" >
-            </ExpandableListView>
-        </FrameLayout>
-    </LinearLayout>
+    </ExpandableListView>
 
     <FrameLayout
         android:id="@+id/FrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" >
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="52dp"
+        android:background="#eeeeee" >
 
         <ImageView
             android:id="@+id/imageSincronizar"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/sincronizar_icono" />
 
         <LinearLayout
@@ -47,6 +40,7 @@
                 android:id="@+id/imageViewMonedas"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/total" />
 
@@ -55,8 +49,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
+                android:layout_marginBottom="5dp"
                 android:layout_marginRight="10dp"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
