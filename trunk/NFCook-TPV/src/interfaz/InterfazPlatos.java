@@ -948,11 +948,6 @@ public class InterfazPlatos extends JFrame {
 				enc = true;
 				}
 		}
-		dispose();
-		VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
-		ventanaMesa.setVisible(true);
-		
-		
 		//Dejamos de tener visitada esta mesa.
 		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 		operacion.actualizaVisitadoMesaCobrar(idMesa);
@@ -961,6 +956,10 @@ public class InterfazPlatos extends JFrame {
 		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
 		operacionSQlite.actualizarMesaBD(idMesa, "-", 0, 0);
 		operacionSQlite.cerrarBaseDeDatos();
+		
+		dispose();
+		VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
+		ventanaMesa.setVisible(true);
 	 }
 	 
 	 /**
