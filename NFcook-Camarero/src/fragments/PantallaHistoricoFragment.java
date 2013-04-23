@@ -38,7 +38,6 @@ public class PantallaHistoricoFragment extends Fragment {
 
 	private static ExpandableListView ExpandableListHistorico;
 	private MiExpandableListAdapterHistorico AdapterHistorico; 
-	//private static View vistaConExpandaleList;
 	@Override  
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		importarBaseDatatos();

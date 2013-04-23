@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import adapters.ContenidoListPedidoHistorico;
 import adapters.MiListAdapterPedidoHistorico;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -48,9 +49,6 @@ public class PedidoHistorico extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
 		setContentView(R.layout.pedidohistorico);
 		//Necesario para actualizar la lista de las mesas al añadir un plato
 		context = PedidoHistorico.this;
@@ -60,8 +58,12 @@ public class PedidoHistorico extends Activity {
 		numMesa = bundle.getString("mesa");
 		hora = bundle.getString("hora");
 		
-		TextView mesa = (TextView)findViewById(R.id.tituloPedidoHistorico);
-		mesa.setText("Pedido " + hora.substring(hora.indexOf(" ")+1));
+		// Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" MESA "+ numMesa);
+		
+		TextView mesa = (TextView)findViewById(R.id.textViewFechaHora);
+		mesa.setText("Fecha: " + hora.substring(0, 11) + " a las " + hora.substring(hora.indexOf(" ")+1));
 		
 		try{
 			sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
@@ -81,7 +83,7 @@ public class PedidoHistorico extends Activity {
 	  	 
 	    
 		}catch(Exception e){
-			System.out.println("Error lectura base de datos de Pedido");
+			System.out.println("Error lectura base de datos de Historico");
 		}
 		
 

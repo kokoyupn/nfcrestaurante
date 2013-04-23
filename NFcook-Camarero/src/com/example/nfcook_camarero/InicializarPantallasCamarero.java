@@ -2,6 +2,7 @@ package com.example.nfcook_camarero;
 
 import fragments.PantallaHistoricoFragment;
 import fragments.PantallaMesasFragment;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -25,6 +26,10 @@ public class InicializarPantallasCamarero extends Activity implements TabContent
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs);
+        
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" MENÚ PRINCIPAL");
         
         inicializarTabs();
 		cargarTabs();

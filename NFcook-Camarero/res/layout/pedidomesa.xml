@@ -11,26 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="60dp"
+        android:background="#BFEFFF"
         android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="2dp"
-            android:background="#BFE4F2" >
-
-            <TextView
-                android:id="@+id/numeroDeMesa"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:gravity="center"
-		        android:paddingBottom="10dp"
-		        android:paddingTop="10dp"
-		        android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-		        android:textSize="30sp">
-			</TextView>
-		</LinearLayout>
 
         <ListView
             android:id="@+id/listaPlatos"
@@ -40,7 +22,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp" >
-
         </ListView>
     </LinearLayout>
 
@@ -49,69 +30,68 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="60dp"
-        android:layout_marginRight="60dp"
-        android:src="@drawable/totalprecio" />
+        android:layout_marginBottom="75dp"
+        android:layout_marginRight="100dp"
+        android:src="@drawable/total" />
 
     <TextView
         android:id="@+id/precioTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="75dp"
         android:layout_marginRight="10dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp" >
+        android:layout_height="70dp"
+        android:layout_gravity="bottom" >
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/boton_anadir_eliminar_mesa"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/aniadirPlato"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/iconomas" />
+
+            <ImageView
+                android:id="@+id/imagenComida"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/iconocomida" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/boton_anadir_eliminar_mesa"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/aniadirBebida"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/iconomas" />
+
+            <ImageView
+                android:id="@+id/imagenBebida"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/iconobebida1" />
+
+        </LinearLayout>
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="5dp" >
-
-        <Button
-            android:id="@+id/aniadirPlato"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="90dp"
-            android:background="@drawable/iconomas" />
-
-        <ImageView
-            android:id="@+id/imagenComida"
-            android:layout_width="57dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginRight="40dp"
-            android:src="@drawable/iconocomida" />
-
-        <Button
-            android:id="@+id/aniadirBebida"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="40dp"
-            android:background="@drawable/iconomas" />
-
-        <ImageView
-            android:id="@+id/imagenBebida"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="80dp"
-            android:src="@drawable/iconobebida1" />
-
-    </FrameLayout>
 
 </FrameLayout>

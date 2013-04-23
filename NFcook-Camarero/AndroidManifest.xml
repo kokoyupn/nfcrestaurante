@@ -65,10 +65,6 @@
             android:screenOrientation="portrait">
 
         </activity>      
-        <activity
-            android:name=".Historico"
-            android:screenOrientation="portrait">
-        </activity>  
          <activity
             android:name=".Sincronizacion_LecturaNfc"
             android:screenOrientation="portrait">

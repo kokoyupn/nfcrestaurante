@@ -5,7 +5,8 @@
     android:layout_marginBottom="0dp"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    android:layout_marginTop="0dp" >
+    android:layout_marginTop="0dp"
+    android:background="#BFEFFF" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,31 +14,28 @@
         android:layout_marginBottom="60dp"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textViewFechaHora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:text="Hora y fecha"
+            android:textColor="@color/negro"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="2dp"
-            android:background="#BFE4F2" >
-
-            <ImageView
-                android:id="@+id/relojpedidohistorico"
-                android:layout_width="35dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/relojpedidohistorico" />
-
-            <TextView
-                android:id="@+id/tituloPedidoHistorico"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="Pedido"
-                android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-                android:textSize="30sp" />
-
-		</LinearLayout>
+            android:layout_gravity="center"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/linea_azul_horizontal_larga" />
 
         <ListView
             android:id="@+id/listaPlatosHistorico"
@@ -49,6 +47,7 @@
             android:layout_marginTop="5dp" >
 
         </ListView>
+
     </LinearLayout>
 
     <ImageView
@@ -56,17 +55,20 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="60dp"
-        android:layout_marginRight="60dp"
-        android:src="@drawable/totalprecio" />
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="90dp"
+        android:src="@drawable/total" />
 
     <TextView
         android:id="@+id/precioTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginRight="10dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textColor="@color/negro"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </FrameLayout>
