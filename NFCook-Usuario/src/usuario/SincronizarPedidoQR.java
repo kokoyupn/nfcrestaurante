@@ -8,6 +8,7 @@ import com.google.zxing.client.android.encode.QRCodeEncoder;
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -40,6 +41,11 @@ public class SincronizarPedidoQR extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sincronizar_pedido_qr);   
+        
+     // Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" SINCRONIZAR PEDIDO");
         
         // El numero de la mesa se obtiene de la pantalla anterior
   		Bundle bundle = getIntent().getExtras();

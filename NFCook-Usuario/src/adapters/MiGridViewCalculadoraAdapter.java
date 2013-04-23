@@ -10,17 +10,22 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 /**
@@ -129,6 +134,34 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 					edit = pos;
 				}
 			}
+		});
+		
+		//oyente para cuando se pulse el boton Ok
+		editTextNombrePersona.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					editTextNombrePersona.clearFocus();
+					InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+				    imm.hideSoftInputFromWindow(editTextNombrePersona.getWindowToken(), 0);
+					return true;
+	            }
+	            return false;
+				
+				
+			}
+		});
+		
+		editTextNombrePersona.setOnKeyListener(new OnKeyListener() {
+		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+		       if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_BACK)) {
+		    	   editTextNombrePersona.clearFocus();
+					InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+				    imm.hideSoftInputFromWindow(editTextNombrePersona.getWindowToken(), 0);
+		          return true;
+		       }
+		       return false;
+		    }
 		});
 		
 		//Limitamos a 11 el máximo caracteres para el nombre de la persona

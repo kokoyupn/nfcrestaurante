@@ -6,6 +6,7 @@ import com.example.nfcook.R;
 
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -52,6 +53,11 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
         setContentView(R.layout.sincronizar_pedido_beam_nfc);
         context= this;
                      	
+        // Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+        
         Bundle bundle = getIntent().getExtras();
       	restaurante = bundle.getString("Restaurante");
       		
@@ -59,7 +65,6 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
       	abrirBasesDeDatos();
       	//Obtengo el pedido que quiero enviar
         pedido = damePedidoStr();
-      	
       	     	    	
       	// Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);

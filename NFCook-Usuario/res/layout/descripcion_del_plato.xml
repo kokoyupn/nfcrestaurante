@@ -3,7 +3,7 @@
     android:id="@+id/FrameLayoutBienvenida"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFC" >
+    android:background="#ffdd8d" >
     
     <AutoCompleteTextView
         android:id="@+id/AutoCompleteTextViewOpciones"
