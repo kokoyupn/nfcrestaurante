@@ -87,7 +87,7 @@ public class Cobro {
 		textoQR += "Nombre: " + "Total: " + total + " €";
 		
 		QRCodeJava.generaQR(textoQR);//Crea el archivo en C:\\hlocal\\QR_Code.PNG
-		Image img = loadImage("C:\\hlocal\\QR_Code.PNG");
+		Image img = loadImage("ArchivoQR/QR_Code.PNG");
 		//Image img = loadImage("C:\\Archivos de Guillermo\\Uni\\IS\\QR_Code.PNG");
 		Imprimir.imprime(textoAImprimir,img);
 		
