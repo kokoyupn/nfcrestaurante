@@ -392,6 +392,9 @@ public class Restaurante {
 		if(!conComillas.contains("'")){
 			return conComillas;
 		}else if(conComillas.contains(")")){
+			if(conComillas.charAt(0) == '\''){
+				conComillas.replaceFirst("'", "");
+			}
 			return conComillas.replace("')", "");
 		}
 		int posChar = 0;
