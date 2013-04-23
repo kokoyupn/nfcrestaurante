@@ -10,12 +10,14 @@ import java.util.GregorianCalendar;
 //import usuario.DescripcionPlato;
 
 
+
 import com.example.nfcook_camarero.R;
 
 import fragments.PantallaMesasFragment;
 import adapters.ContenidoListMesa;
 import adapters.MiGridViewBebidasAdapter;
 import adapters.PadreGridViewBebidas;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
@@ -73,8 +75,9 @@ public class AnadirBebida extends Activity{
     	super.onCreate(savedInstanceState);
     	contexto = this.getApplicationContext();
 		
-		//Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	// Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" AÑADIR BEBIDA");
         
 		setContentView(R.layout.tab_superior_categoria_bebidas);
 		
@@ -102,6 +105,7 @@ public class AnadirBebida extends Activity{
             public void onClick(View view) {
             	try{
             		anyadirBebidas();
+            		finish();
             		
             	}catch(Exception e){
             		System.out.println("Localizacion: "+e.getLocalizedMessage()+

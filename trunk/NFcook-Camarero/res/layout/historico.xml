@@ -5,13 +5,14 @@
     android:layout_marginBottom="0dp"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    android:layout_marginTop="0dp" >
+    android:layout_marginTop="48dp"
+    android:background="#BFEFFF" >
 
     <ExpandableListView
         android:id="@+id/expandableListHistorico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp" >
+        android:background="#5CACEE" >
 
     </ExpandableListView>
 

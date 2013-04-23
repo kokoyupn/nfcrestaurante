@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#BFEFFF" >
 
     <GridView
         android:id="@+id/gridViewBebidas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
-        android:layout_marginBottom="108dp"
+        android:layout_marginBottom="70dp"
         android:numColumns="3" >
 
     </GridView>
@@ -17,13 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/s_redondeados_usuarios_calculadora"
         android:orientation="vertical" >
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:background="#5CACEE" >
 
             <Button
                 android:id="@+id/validar"
@@ -41,7 +42,9 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:text="18e"
-                android:textSize="16sp" />
+                android:textColor="@color/blanco"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/imageViewMonedasBebidas"

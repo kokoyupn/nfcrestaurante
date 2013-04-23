@@ -7,6 +7,7 @@ import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
 import adapters.MiListAdapterMesa;
 import adapters.PadreExpandableListEditar;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -97,9 +98,6 @@ public class Mesa extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
 		setContentView(R.layout.pedidomesa);
 		actividad = this;
 		
@@ -113,8 +111,9 @@ public class Mesa extends Activity {
 		idCamarero = bundle.getString("IdCamarero");
 		restaurante = bundle.getString("Restaurante");
 		
-		TextView mesa = (TextView)findViewById(R.id.numeroDeMesa);
-		mesa.setText("Mesa "+ String.valueOf(numMesa) );
+		// Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" MESA " + numMesa + ": PEDIDO ACTUAL");
 		
 		try{
 			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
@@ -443,13 +442,6 @@ public class Mesa extends Activity {
 		}
 		return listaDeMesas;
 	}*/
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
 	
 	protected void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,final int posicion) {
 		

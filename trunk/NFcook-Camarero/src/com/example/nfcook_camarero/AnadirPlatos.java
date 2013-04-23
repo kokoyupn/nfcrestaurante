@@ -13,6 +13,7 @@ import adapters.HijoExpandableListEditar;
 import adapters.MiCursorAdapterBuscadorPlatos;
 import adapters.MiExpandableListAdapterEditar;
 import adapters.PadreExpandableListEditar;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -59,12 +60,13 @@ public class AnadirPlatos extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		noSeleccionadoAutoCompleteTextView = false;
-        super.onCreate(savedInstanceState);  
-        
-      //Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstanceState);
         
         setContentView(R.layout.expandable_list_anadir_plato);
+        
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" AÑADIR PLATO");
         
         Bundle bundle = getIntent().getExtras();
 		numMesa = bundle.getString("NumMesa");

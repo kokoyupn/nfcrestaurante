@@ -9,7 +9,7 @@
         android:id="@+id/LinearLayoutEliminarMesa"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="48dp"
         android:orientation="vertical" >
 
         <GridView
@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/bordes_redondeados_anadir_mesa"
+                android:background="@drawable/boton_anadir_eliminar_mesa"
                 android:gravity="center"
                 android:onClick="onAniadirClick" >
 
@@ -50,7 +50,7 @@
                     android:layout_height="40dp"
                     android:layout_marginRight="5dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/boton_anadir_mesa" />
+                    android:src="@drawable/iconomas" />
 
                 <TextView
                     android:id="@+id/textViewAnadirMesa"
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bordes_redondeados_anadir_mesa"
+                android:background="@drawable/boton_anadir_eliminar_mesa"
                 android:gravity="center" >
 
                 <ImageView
