@@ -14,18 +14,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * Añade los componentes de cada pedido a la mesa
+ * Muestra los platos de un pedido concreto en el histórico.
  * 
  * -Atributos-
- * numMesa : Indica el numero de la mesa actual.
- * dbPedido : Base de datos con todos los pedidos de todas las mesas.
+ * numMesa : Indica el numero de la mesa seleccionada.
  * dbHistorico : Base de datos donde se almacenan todos los platos pedidos una vez cobrada esa mesa.
- * platos : Componente ListView que mostrará los platos de la mesa actual.
- * elemLista : ArrayList con los platos de la mesa actual, que se utiliza para crear el adapter del componente ListView.
+ * platos : Componente ListView que mostrará los platos del pedido seleccionado.
+ * elemLista : ArrayList con los platos del pedido seleccionado, que se utiliza para crear el adapter del componente ListView.
  * adapter : Objeto de la clase ListaMesaAdapter.
- * precioTotal : TextView que contiene el precio total de los pedidos de la mesa actual.
+ * precioTotal : TextView que contiene el precio total del pedido.
+ * hora: Indica la hora del pedido a mostrar.
  * 
- * @author Rober  ESTO ES UN COPIA Y PEGA Y HAY QUE CAMBIARLO
+ * @author Juan Diego y Álvaro
  */
 
 
@@ -61,7 +61,7 @@ public class PedidoHistorico extends Activity {
 		hora = bundle.getString("hora");
 		
 		TextView mesa = (TextView)findViewById(R.id.tituloPedidoHistorico);
-		mesa.setText("Mesa "+ numMesa+"\n" +"Pedido " + hora.substring(hora.indexOf(" ")+1));
+		mesa.setText("Pedido " + hora.substring(hora.indexOf(" ")+1));
 		
 		try{
 			sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
