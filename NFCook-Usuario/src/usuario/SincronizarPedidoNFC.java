@@ -283,8 +283,8 @@ public class SincronizarPedidoNFC extends Activity implements
 				});
 		View vistaAviso = LayoutInflater.from(this).inflate(R.layout.aviso_continuar_pedido, null);
 		TextView textoAMostrar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
-		textoAMostrar.setText("ATENCIÓN. \nUna vez puesto el dispositivo sobre la tarjeta espere hasta que termine de sincronizar. "
-						+ "\nNo lo levante hasta que se cierre el mensaje y suene un pitido.");
+		textoAMostrar.setText("ATENCIÓN. Una vez puesto el dispositivo sobre la tarjeta espere hasta que termine de sincronizar. "
+						+ "\n\nNo lo levante hasta que se cierre el mensaje y suene un pitido.");
 		avisoInicial.setView(vistaAviso);
 		avisoInicial.show();
 

@@ -10,6 +10,7 @@ import baseDatos.HandlerDB;
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
 import adapters.PadreExpandableListEditar;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -17,13 +18,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,11 +42,11 @@ public class DescripcionPlatoEditar extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        //Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //Quitamos barra de notificaciones
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
+        // Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" EDICIÓN DE PLATO");
+    	
         setContentView(R.layout.descripcion_del_plato_editar);
        
         TextView textViewNombrePlato= (TextView) findViewById(R.id.nombrePlato);

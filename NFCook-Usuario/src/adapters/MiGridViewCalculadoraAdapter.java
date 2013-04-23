@@ -152,18 +152,6 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 			}
 		});
 		
-		editTextNombrePersona.setOnKeyListener(new OnKeyListener() {
-		    public boolean onKey(View v, int keyCode, KeyEvent event) {
-		       if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_BACK)) {
-		    	   editTextNombrePersona.clearFocus();
-					InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-				    imm.hideSoftInputFromWindow(editTextNombrePersona.getWindowToken(), 0);
-		          return true;
-		       }
-		       return false;
-		    }
-		});
-		
 		//Limitamos a 11 el máximo caracteres para el nombre de la persona
 		InputFilter[] filterArray = new InputFilter[1];
 		filterArray[0] = new InputFilter.LengthFilter(11);
