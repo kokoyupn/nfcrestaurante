@@ -516,6 +516,10 @@ public class Restaurante {
 	public void actualizaMesaEstaVisitadaLLegadaExterna(String idMesa, boolean visitada){
 		mesasRestaurante.get(idMesa).setVisitada(visitada);
 	}
+	
+	public void actualizaMesaEstaVisitadaCobrarLLegadaExterna(String idMesa) {	
+		mesasRestaurante.get(idMesa).eliminaTodasLasVisitas();
+	}
 
 	public boolean mesaVisitada(String idMesa) {
 		return mesasRestaurante.get(idMesa).isVisitada();
@@ -526,3 +530,4 @@ public class Restaurante {
 	}
 	
 }
+

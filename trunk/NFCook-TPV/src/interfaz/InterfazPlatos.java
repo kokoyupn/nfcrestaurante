@@ -944,6 +944,11 @@ public class InterfazPlatos extends JFrame {
 		VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 		ventanaMesa.setVisible(true);
 		
+		
+		//Dejamos de tener visitada esta mesa.
+		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
+		operacion.actualizaVisitadoMesaCobrar(idMesa);
+		
 		//Decimos a los demas tpv que tienen que cerrar la mesa.
 		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
 		operacionSQlite.actualizarMesaBD(idMesa, "-", 0, 0);
@@ -1046,7 +1051,8 @@ public class InterfazPlatos extends JFrame {
 	 
 	 public void mostrarAvisoYcerrar(String idMesa) {
 		 if(this.idMesa.equals(idMesa)){
-			 JOptionPane.showInternalConfirmDialog(new JFrame(), "Esta mesa ha sido cobrada desde otro TPV, se va ha cerrar.");
+			 JFrame marco = new JFrame();
+			 JOptionPane.showMessageDialog(marco, "Esta mesa ha sido cobrada desde otro TPV y se va ha cerrar.");
 			 dispose();
 			 VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 			 ventanaMesa.setVisible(true);
