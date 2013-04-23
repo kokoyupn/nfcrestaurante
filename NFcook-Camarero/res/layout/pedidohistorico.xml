@@ -20,17 +20,23 @@
             android:layout_marginBottom="2dp"
             android:background="#BFE4F2" >
 
+            <ImageView
+                android:id="@+id/relojpedidohistorico"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/relojpedidohistorico" />
+
             <TextView
                 android:id="@+id/tituloPedidoHistorico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="left|center"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
+                android:text="Pedido"
                 android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-                android:textSize="30sp" >
+                android:textSize="30sp" />
 
-			</TextView>
 		</LinearLayout>
 
         <ListView
