@@ -14,6 +14,7 @@ import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -60,12 +61,16 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private SQLiteDatabase db;
 	
 	// Actionbar para los tabs superiores con las categrías de los platos
-	private ActionBar actionbar;
+	private static ActionBar actionbar;
 	
 	// Tabs inferiores con las funcionalidades de la aplicacion
 	private TabHost tabs;
 	// Vista de los tabs inferiores
 	private View tabInferiorContentView;
+	
+	// Para volver cuando lanzamos una actividad
+	private static boolean seleccionadoTabSuperior;
+	private static int postabSuperiorPulsado;
 	
 	private int numComensales;
 		
@@ -160,6 +165,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	
     	// Vamos añadiendo cada categoría a los tabs
     	String tipoTab="";
+    	int i = 0;
     	while (!pilaTipos.isEmpty()){
     		// Sacamos el nombre de la categoría
     		tipoTab = pilaTipos.pop();
@@ -172,16 +178,17 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	    		ContenidoTabSuperiorCategoriaBebidas.setTipoTab(tipoTab);
 	    		ContenidoTabSuperiorCategoriaBebidas.setRestaurante(restaurante);
 	    		// Hacemos oyente al tab
-	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment, tipoTab, this));
+	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment, tipoTab, this, i));
     		}else{
 	    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setcategoriaTab(tipoTab);
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
 	    		// Hacemos oyente al tab
-	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab, this));
+	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab, this, i));
     		}
     		// Añadimos dicha categoría como tab
-    		actionbar.addTab(tab);
+    		actionbar.addTab(tab, i, true);
+    		i++;
     	}
     	
     	// Ponemos el título a la actividad
@@ -292,6 +299,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
+            // Marcamos a falso selccionado tabSuperior
+            seleccionadoTabSuperior = false;
 
     		/*
 			 * TODO Completar funcionalidad de la pantalla de bienvenida
@@ -307,6 +316,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
+            // Marcamos a falso selccionado tabSuperior
+            seleccionadoTabSuperior = false;
 
 			Fragment fragmentPedido = new PedidoFragment();
 			PedidoFragment.setRestaurante(restaurante);
@@ -319,6 +330,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
+            // Marcamos a falso selccionado tabSuperior
+            seleccionadoTabSuperior = false;
             
 			Fragment fragmentCuenta = new CuentaFragment();
 			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
@@ -388,9 +401,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     				// Descamarcamos el tab superior activado para evitar confusiones
     				desmarcarTabSuperiorActivo();
     				
-	    	      	Intent intent = new Intent(getApplicationContext(),Calculadora.class);
-	    	      	intent.putExtra("numeroComensales", numComensales);
-	    	    	startActivity(intent);
+    				// Lanzamos la actividad de una forma específica para conocer cuando acaba
+    				Intent intent = new Intent(getApplicationContext(), Calculadora.class);
+					intent.putExtra("numeroComensales", numComensales);
+					startActivityForResult(intent, 0);
           		}else{
 		         	Toast.makeText(getApplicationContext(),"Introduce un número de comensales válido.",Toast.LENGTH_SHORT).show();
           		}
@@ -400,6 +414,18 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         // Aplicamos la vista y la mostramos
 		ventanaEmergente.setView(vistaVentanaEmergente);
 		ventanaEmergente.show();
+	}
+	
+	/*
+	 * Metodo encargado de implementar la acción correspondiente de cuando la calculadora
+	 * termine. En nuestro caso si antes estuviese marcado un tab superior lo marcamos, para
+	 * no liar al usuario.
+	 */
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(seleccionadoTabSuperior){
+			actionbar.selectTab(actionbar.getTabAt(postabSuperiorPulsado));
+		}	
 	}
 	
 	// Metodo encargado de decirnos si se ha sincronizado algún pedido o no
@@ -447,5 +473,23 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 				t.cancel(); 
 			}
 		}, 3500);	
+	}
+	
+	public static void setSeleccionadoTabSuperior(boolean seleccionado){
+		seleccionadoTabSuperior = seleccionado;
+	}
+	
+	public static void setPosTabSuperior(int posTab){
+		postabSuperiorPulsado = posTab;
+	}
+	
+	public static void seleccionaTabSuperior(ActionBar.Tab tab){
+		marcaTab(0);
+		//actionbar.selectTab(tab);
+		//getActionBar().selectTab(getActionBar().getTabAt(0));
+	}
+	
+	public static void marcaTab(int pos){
+		actionbar.selectTab(actionbar.getTabAt(0));
 	}
 }
