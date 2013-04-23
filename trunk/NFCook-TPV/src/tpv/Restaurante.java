@@ -108,9 +108,10 @@ public class Restaurante {
 				String idMesa = resultados.getString("idMesa");
 				int numeroPersonas = resultados.getInt("numeroPersonas");
 				String idCamarero = resultados.getString("idCamarero");
+				int estadoMesa = resultados.getInt("estadoMesa");
 				
 				
-				Mesa nuevaMesa = new Mesa(idMesa, numeroPersonas, idCamarero);
+				Mesa nuevaMesa = new Mesa(idMesa, numeroPersonas, idCamarero, estadoMesa);
 				mesasRestaurante.put(idMesa, nuevaMesa);
 			}
 			operacion.cerrarBaseDeDatos();

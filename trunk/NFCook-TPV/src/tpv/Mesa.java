@@ -19,14 +19,14 @@ public class Mesa {
 	private boolean visitada;
 	
 	
-	public Mesa(String idMesa, int numeroPersonas, String idCamarero) {
+	public Mesa(String idMesa, int numeroPersonas, String idCamarero, int estadoBD) {
 		productosEnMesa = new ArrayList<TuplaProdEnv>();
 		this.idMesa = idMesa;
 		this.numeroPersonas = numeroPersonas;
 		if(!idCamarero.equals("-")){
 			this.idCamarero = idCamarero;
 		}
-		estado = estadoMesa.CERRADA;
+		setEstado(estadoBD);
 		dineroTotalEnMesa = 0;
 	}
 
