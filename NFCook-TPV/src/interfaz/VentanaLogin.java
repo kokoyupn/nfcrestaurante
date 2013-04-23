@@ -2,41 +2,28 @@ package interfaz;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Iterator;
 
-import javax.swing.AbstractButton;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
 
 import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
-import tpv.Mesa;
+import sockets.EscuchaCliente2;
 import tpv.Restaurante;
 
 public class VentanaLogin extends JFrame implements ActionListener{
@@ -296,12 +283,14 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		ClienteFichero.pide("login.db");
 		ClienteFichero.pide("FichaCamareros.db");
 		ClienteFichero.pide("InfoMesas.db");
-		
+				
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		ventanaLogin.pack();
 		ventanaLogin.setVisible(true);
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
+        EscuchaCliente2 threadSecundario = new EscuchaCliente2(); // lanzamos el thread de escucha secundario
+        threadSecundario.start();
   	}
 }
