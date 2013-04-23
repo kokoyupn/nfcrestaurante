@@ -189,11 +189,13 @@ public class Operaciones extends Conexion{
 		}
 		
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+		VentanaLogin.getRestaurante().refrescaInterfazPlatos();
 	}
 
 	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, int estado) {
 		String fichero = "MesasRestaurante.db";
 		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
+														"estadoMesa='" + numeroPersonas + "' "+
 														"numeroPersonas='" + numeroPersonas + "' "+
 														"where idMesa='" + idMesa + "'";
 		
@@ -209,7 +211,6 @@ public class Operaciones extends Conexion{
 		insertar(consulta, false);
 		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
-		VentanaLogin.getRestaurante().refrescaInterfazPlatos();
 	}
 /* 
  * 							-EJEMPLOS-
