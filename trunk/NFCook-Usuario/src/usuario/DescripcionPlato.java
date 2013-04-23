@@ -23,6 +23,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +41,8 @@ public class DescripcionPlato extends Activity {
 	private EditText editTextUnidades;
 	private static ExpandableListView expandableListExtras;
 	private static MiExpandableListAdapterEditar adapterExpandableListExtras;
-	
+	private static boolean pulsado;
+	private static int ancho, largo;
 	public HandlerDB sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
 	
@@ -51,8 +54,10 @@ public class DescripcionPlato extends Activity {
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" SELECCIÓN DE PLATO");
-    	
-        setContentView(R.layout.descripcion_del_plato);
+    	//	Variables expandir
+    	pulsado=false;
+        
+    	setContentView(R.layout.descripcion_del_plato);
                
         cargarUltimoIdentificadorUnicoHijoPedido();
 
@@ -256,5 +261,25 @@ public class DescripcionPlato extends Activity {
 		editor.commit(); //Para que surja efecto el cambio
 	}
     
+	
+	public void onClickDescripcion(View v)
+    {
+		
+		TextView t=(TextView)findViewById(R.id.descripcionPlato);
+		
+		if (!pulsado){
+			pulsado=true;
+			ancho=t.getLayoutParams().width;
+			largo=t.getLayoutParams().height;
+			t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT));
+				
+		}
+		else{
+			//t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50));
+			t.setLayoutParams(new FrameLayout.LayoutParams(ancho,largo));
+			pulsado= false;
+		}
+		
+    }
 }
  
