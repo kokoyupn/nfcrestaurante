@@ -23,7 +23,6 @@ import javax.swing.border.EmptyBorder;
 
 import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
-import sockets.EscuchaCliente2;
 import tpv.Restaurante;
 
 public class VentanaLogin extends JFrame implements ActionListener{
@@ -290,7 +289,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
-        EscuchaCliente2 threadSecundario = new EscuchaCliente2(); // lanzamos el thread de escucha secundario
+        EscuchaCliente threadSecundario = new EscuchaCliente(); // lanzamos el thread de escucha secundario
         threadSecundario.start();
   	}
 }
