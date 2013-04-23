@@ -62,7 +62,7 @@ public class Calculadora extends Activity{
     private static int numPersonas;
     
     private int numPersonaActual;
-
+    
 	public void onCreate(Bundle savedInstanceState) {   
        
         super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class Calculadora extends Activity{
         // Recogemos el número de comensales que vendrá de la ventana emergente anterior
         Bundle bundle = getIntent().getExtras();
 		numPersonas = bundle.getInt("numeroComensales");
-		
+
 		// Incializamos el numero de persona a 0
 		numPersonaActual = 1;
         
@@ -307,23 +307,29 @@ public class Calculadora extends Activity{
 	
 	@Override
     public void onBackPressed() {
-        // Creamos y lanzamos la ventana emergente para conocer el nº de comensales
-		AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Calculadora.this); 
-        // Creamos su vista, aprovechando un layout existente
-        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.aviso_continuar_pedido, null); 
-        // Sacamos el campo texto informativo y le damos valor
-        TextView textViewInformacion = (TextView) vistaVentanaEmergente.findViewById(R.id.textViewInformacionAviso);
-        textViewInformacion.setText("Está seguro que desea cerrar la calculadora?. Se perderá toda la configuración realizada.");
-        ventanaEmergente.setNegativeButton("Cancelar", null);
-        // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
-        ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
-          	public void onClick(DialogInterface dialog, int whichButton) {
-          		finish();
-          	}
-        });
-        // Aplicamos la vista y la mostramos
-		ventanaEmergente.setView(vistaVentanaEmergente);
-		ventanaEmergente.show();
+		// Si está la ayuda lanzada la quitamos
+		ImageView imageViewInfoAyuda = (ImageView) findViewById(R.id.imageViewInfoAyuda);
+		if(imageViewInfoAyuda.getVisibility() == 0){
+			imageViewInfoAyuda.performClick();
+		}else{
+	        // Creamos y lanzamos la ventana emergente para conocer el nº de comensales
+			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Calculadora.this); 
+	        // Creamos su vista, aprovechando un layout existente
+	        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.aviso_continuar_pedido, null); 
+	        // Sacamos el campo texto informativo y le damos valor
+	        TextView textViewInformacion = (TextView) vistaVentanaEmergente.findViewById(R.id.textViewInformacionAviso);
+	        textViewInformacion.setText("Está seguro que desea cerrar la calculadora?. Se perderá toda la configuración realizada.");
+	        ventanaEmergente.setNegativeButton("Cancelar", null);
+	        // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
+	        ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
+	          	public void onClick(DialogInterface dialog, int whichButton) {
+	          		finish();
+	          	}
+	        });
+	        // Aplicamos la vista y la mostramos
+			ventanaEmergente.setView(vistaVentanaEmergente);
+			ventanaEmergente.show();
+		}
 
         return;
     } 
