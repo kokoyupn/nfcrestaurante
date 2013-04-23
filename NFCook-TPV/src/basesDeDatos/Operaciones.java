@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 
 import sockets.ClienteFichero;
 import tpv.FechaYHora;
-import tpv.Mesa.estadoMesa;
 
 public class Operaciones extends Conexion{
 	private String nombreDB;
@@ -165,9 +164,11 @@ public class Operaciones extends Conexion{
 	
 	public void eliminarPlatosDeMesa(String idMesa){
 		FechaYHora dia = new FechaYHora();
+		String fichero = "InfoMesas.db";
 		String consulta = "delete from infoMesas where dia='" + dia.getDia() + "',"+
 														"idMesa='" + idMesa +"'";
 		
+		ClienteFichero.enviaConsultaEliminaPlatos(idMesa, fichero, consulta);
 		insertar(consulta, false);	
 	}
 	
