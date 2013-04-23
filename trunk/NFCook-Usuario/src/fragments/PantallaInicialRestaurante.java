@@ -87,6 +87,8 @@ public class PantallaInicialRestaurante extends Fragment{
 			
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(),InicializarMapas.class);
+				Bundle bundle = getActivity().getIntent().getExtras();
+				intent.putExtra("nombreRestaurante", bundle.getString("nombreRestaurante"));
 		    	startActivity(intent);
 			}
 		});

@@ -73,6 +73,8 @@ public class InicializarMapas extends TabActivity{
         spec.setIndicator("Mapas",null);
         // Creamos su funcionalidad
         Intent intent = new Intent().setClass(this, Mapas.class);
+        Bundle bundle = getIntent().getExtras();
+        intent.putExtra("nombreRestaurante", bundle.getString("nombreRestaurante"));
         spec.setContent(intent);
         // Lo añadimos
         tabs.addTab(spec);

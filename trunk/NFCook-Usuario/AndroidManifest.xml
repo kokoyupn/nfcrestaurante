@@ -34,12 +34,12 @@
        >
        <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDxsWmqdrsG3yeOHecjiMVZGF86C2n_cxU" />
+            android:value="AIzaSyAE35_svl1Pt8PuVZ-7UkkNNvCjsgUoihc" />
        <!-- El debug mode se utiliza al emular la aplicación desde eclipse -->
        <!-- El release mode se utiliza al instalar el .apk en el dispositivo (firma la aplicación) -->
        <!-- La API key del debug mode no funciona en release mode -->
        <!-- La API key del release mode no funciona en debug mode -->
-       <!-- API key debug mode = "AIzaSyDxsWmqdrsG3yeOHecjiMVZGF86C2n_cxU" -->
+       <!-- API key debug mode = "AIzaSyAE35_svl1Pt8PuVZ-7UkkNNvCjsgUoihc" -->
        <!-- API key release mode = "AIzaSyDTk2-IaVFWUtfskFhEJem5tabdLu3K1-E" -->
         <activity
             android:name="usuario.MainActivity"

@@ -1,6 +1,7 @@
 package usuario;
 
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,6 +55,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+	/**
+	 * Clase encargada de generar, mostrar y gestionar Google Maps
+	 * 
+	 * @author Alejandro V.
+	 *
+	 **/
+
 public class Mapas extends FragmentActivity
 					implements LocationListener, OnMarkerClickListener, 
 							OnInfoWindowClickListener, OnMapClickListener{
@@ -63,7 +71,7 @@ public class Mapas extends FragmentActivity
      * 
      * @author Alejandro V.
      *
-     */
+     **/
     class VentanaMarcadorMapaAdapter implements InfoWindowAdapter {
 
     	private final View mContents;
@@ -121,8 +129,6 @@ public class Mapas extends FragmentActivity
     }
 	
 	public void inicializarMapa() {
-		if(restaurantes == null)
-			restaurantes = new ArrayList<Restaurante>();
 	    
 		textViewInfoRuta = (TextView) findViewById(R.id.textViewMapas);
 		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener +info");
@@ -134,6 +140,7 @@ public class Mapas extends FragmentActivity
 	    FragmentManager fragManager = getSupportFragmentManager();
 	    SupportMapFragment fm = (SupportMapFragment) fragManager.findFragmentById(R.id.map);
         map = fm.getMap();
+        map.clear();
         map.setMyLocationEnabled(true);
         getMiPosicion(miUbicacion);
        	
@@ -202,15 +209,18 @@ public class Mapas extends FragmentActivity
 		    Toast.makeText(getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
 		}else{
 			//Toast.makeText(getApplicationContext(), "Mostrando ubicación actual", Toast.LENGTH_SHORT).show();
-			ordenaRestaurantes();
+			if(restaurantes != null)
+				ordenaRestaurantes();
 		}
 		miUbicacion = ubicacion;
 	}
 	
-	private void mostrarMarcadores(GoogleMap mapa) {		
-		mapa.addMarker(restaurantes.get(0).getMarcador());
-		mapa.addMarker(restaurantes.get(1).getMarcador());
-		mapa.addMarker(restaurantes.get(2).getMarcador());
+	private void mostrarMarcadores(GoogleMap mapa) {	
+			mapa.addMarker(restaurantes.get(0).getMarcador());
+			mapa.addMarker(restaurantes.get(1).getMarcador());
+			mapa.addMarker(restaurantes.get(2).getMarcador());
+			mapa.addMarker(restaurantes.get(3).getMarcador());
+			mapa.addMarker(restaurantes.get(4).getMarcador());
 	}
     
     //Métodos para calcular la distancia a cada marcador y para generar la lista ordenada de restaurantes
@@ -265,45 +275,137 @@ public class Mapas extends FragmentActivity
     
     //-------------------------------------------------------------------------------------------------
     public void inicializarListaRestaurantes() {
+    	restaurantes = new ArrayList<Restaurante>();
     	//Salto de línea en TextView = Html.fromHtml("<br />")
-		BitmapDescriptor marcadorFoster = BitmapDescriptorFactory.fromResource(R.drawable.foster_mapa);
+    	Bundle bundle = getIntent().getExtras();
+    	if (bundle.getString("nombreRestaurante").equals("Foster")){
+			BitmapDescriptor marcadorFoster = BitmapDescriptorFactory.fromResource(R.drawable.foster_mapa);
+	
+	    	if(restaurantes.size() == 0){
+				Restaurante rest1 = new Restaurante("Foster's Hollywood Albufera Plaza", 
+						new MarkerOptions()
+							.position(new LatLng(40.391862, -3.656012))
+							.title("Foster's Hollywood Albufera Plaza")
+							.icon(marcadorFoster),
+						calcularDistanciaEnKm(miUbicacion,new LatLng(40.391862,-3.656012)),
+						"CC La Albufera Plaza"+ Html.fromHtml("<br />") +"Av. de la Albufera 153 Locales 13 y 14" + Html.fromHtml("<br />") + "28038 Madrid",
+						"91 478 97 84",
+						"D a J 13:00 a 17:00 y  20:00 a 24:00 V, S y Vísperas 13:00 a 17:00 y 20:00 a 1:00" + Html.fromHtml("<br />") + "Delivery: D-J de 13:00 a 17:00 y de 20:30 a 00:00. V-S Vísperas y Festivos hasta 00:30",
+						"www.fostershollywood.es/albuferaplaza", true, true, true, false, false);
+				restaurantes.add(rest1);
+				
+				Restaurante rest2 = new Restaurante("Foster's Hollywood Alcalá 230", 
+						new MarkerOptions()
+							.position(new LatLng(40.432216, -3.658168))
+							.title("Foster's Hollywood Alcalá 230")
+							.icon(marcadorFoster),
+						calcularDistanciaEnKm(miUbicacion,new LatLng(40.432216, -3.658168)),
+						"C/ Alcalá, 230"+ Html.fromHtml("<br />") +"28027 Madrid",
+						"91 356 54 88",
+						"D-J y festivos de 13.00 a 17.00 y de 20.00 a 00.00. V, S y vísperas de festivo de 13.00 a 17.00 y de 20.00 a 01.00.",
+						"www.fostershollywood.es/alcala230", true, true, true, false, false);
+				restaurantes.add(rest2);
+				
+				Restaurante rest3 = new Restaurante("Foster's Hollywood Alcalá 90", 
+						new MarkerOptions()
+							.position(new LatLng(40.427382, -3.678703))
+							.title("Foster's Hollywood Alcalá 90")
+							.icon(marcadorFoster),
+						calcularDistanciaEnKm(miUbicacion,new LatLng(40.427382, -3.678703)),
+						"C/ Alcalá, 90"+ Html.fromHtml("<br />") +"28009 Madrid",
+						"91 781 06 26",
+						"L-D de 13:00 a 17:00 y  20:00 a 24:00"+ Html.fromHtml("<br />") +"Delivery: de 13:00 a 17:00 y de 20:00 a 00:00",
+						"www.fostershollywood.es/alcala90", true, true, true, true, false);
+				restaurantes.add(rest3);
+				
+				Restaurante rest4 = new Restaurante("Foster's Hollywood Princesa", 
+						new MarkerOptions()
+							.position(new LatLng(40.425813,-3.712558))
+							.title("Foster's Hollywood Princesa")
+							.icon(marcadorFoster),
+						calcularDistanciaEnKm(miUbicacion,new LatLng(40.425813,-3.712558)),
+						"C/ Princesa, 13"+ Html.fromHtml("<br />") +"28013 Madrid",
+						"91 559 19 14",
+						"L-D de 13:00 a 17:00 y 20:00 a 00:00"+ Html.fromHtml("<br />") +"Delivery: de 13:00 a 17:00 y de 20:00 a 00:00",
+						"www.fostershollywood.es/princesa", true, true, true, false, false);
+				restaurantes.add(rest4);
+				
+				Restaurante rest5 = new Restaurante("Foster's Hollywood Av. Europa", 
+						new MarkerOptions()
+							.position(new LatLng(40.438927,-3.793313))
+							.title("Foster's Hollywood Avenida de Europa")
+							.icon(marcadorFoster),
+						calcularDistanciaEnKm(miUbicacion,new LatLng(40.438927,-3.793313)),
+						"Avda. Comunidad de Madrid, 3"+ Html.fromHtml("<br />") +"28223 Pozuelo de Alarcón",
+						"91 351 66 97",
+						"D-J de 13.00 a 17.00 y 20.00 a 00.30, V y S de 13.00 a 17.00 y 20.00 a 1.00"+ Html.fromHtml("<br />") +"Delivery: de 13:00 a 17:00 y de 20:00 a 00:00",
+						"www.fostershollywood.es/alcala90", true, true, true, true, false);
+				restaurantes.add(rest5);
+	    	}
+    	}else{
+			BitmapDescriptor marcadorVIPS = BitmapDescriptorFactory.fromResource(R.drawable.vips_mapa);
 
-    	if(restaurantes.size() == 0){
-			Restaurante rest1 = new Restaurante("Foster's Hollywood Albufera Plaza", 
+    		Restaurante rest1 = new Restaurante("VIPS Gran Vía", 
 					new MarkerOptions()
-						.position(new LatLng(40.391862, -3.656012))
-						.title("Foster's Hollywood Albufera Plaza")
-						.icon(marcadorFoster),
-					calcularDistanciaEnKm(miUbicacion,new LatLng(40.391862,-3.656012)),
-					"CC La Albufera Plaza"+ Html.fromHtml("<br />") +"Av. de la Albufera 153 Locales 13 y 14" + Html.fromHtml("<br />") + "28038 Madrid",
-					"91 478 97 84",
-					"D a J 13:00 a 17:00 y  20:00 a 24:00 V, S y Vísperas 13:00 a 17:00 y 20:00 a 1:00" + Html.fromHtml("<br />") + "Delivery: D-J de 13:00 a 17:00 y de 20:30 a 00:00. V-S Vísperas y Festivos hasta 00:30",
-					"www.fostershollywood.es/albuferaplaza", true, true, true, false, false);
+						.position(new LatLng(40.422644,-3.709955))
+						.title("VIPS Gran Vía")
+						.icon(marcadorVIPS),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.422644,-3.709955)),
+					"Gran Vía, 65"+ Html.fromHtml("<br />") +"28013 Madrid",
+					"91 275 95 11",
+					"L a J de 08:00 a 01:30 V a 02:00"+ Html.fromHtml("<br />") +"S de 09:00 a 02:00 D a 01:30",
+					"www.vips.es/restaurantes/vips-plaza-espana-gran-65", false, false, false, false, false);
 			restaurantes.add(rest1);
 			
-			Restaurante rest2 = new Restaurante("Foster's Hollywood Alcalá 230", 
+			Restaurante rest2 = new Restaurante("VIPS Ática", 
 					new MarkerOptions()
-						.position(new LatLng(40.432216, -3.658168))
-						.title("Foster's Hollywood Alcalá 230")
-						.icon(marcadorFoster),
-					calcularDistanciaEnKm(miUbicacion,new LatLng(40.432216, -3.658168)),
-					"C/ Alcalá, 230"+ Html.fromHtml("<br />") +"28027 Madrid",
-					"91 356 54 88",
-					"D-J y festivos de 13.00 a 17.00 y de 20.00 a 00.00. V, S y vísperas de festivo de 13.00 a 17.00 y de 20.00 a 01.00.",
-					"www.fostershollywood.es/alcala230", true, true, true, false, false);
+						.position(new LatLng(40.440086,-3.786162))
+						.title("VIPS Ática")
+						.icon(marcadorVIPS),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.440086,-3.786162)),
+					"Vía de las Dos Castillas, 33 Edif. Ática nº 3 "+ Html.fromHtml("<br />") +"28224 Pozuelo de Alarcón",
+					"91 275 96 81",
+					"D a J de 09:00 a 00:00 V y S 01:00",
+					"www.vips.es/restaurantes/vips-atica-de-las-dos-castillas-33-edif-atica-nº-3", false, false, false, false, false);
 			restaurantes.add(rest2);
 			
-			Restaurante rest3 = new Restaurante("Foster's Hollywood Alcalá 90", 
+
+			Restaurante rest3 = new Restaurante("VIPS Méndez Álvaro", 
 					new MarkerOptions()
-						.position(new LatLng(40.427382, -3.678703))
-						.title("Foster's Hollywood Alcalá 90")
-						.icon(marcadorFoster),
-					calcularDistanciaEnKm(miUbicacion,new LatLng(40.427382, -3.678703)),
-					"C/ Alcalá, 90"+ Html.fromHtml("<br />") +"28009 Madrid",
-					"91 781 06 26",
-					"L-D de 13:00 a 17:00 y  20:00 a 24:00"+ Html.fromHtml("<br />") +"Delivery: de 13:00 a 17:00 y de 20:00 a 00:00",
-					"www.fostershollywood.es/alcala90", true, true, true, true, false);
+						.position(new LatLng(40.393061,-3.67777))
+						.title("VIPS Méndez Álvaro")
+						.icon(marcadorVIPS),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.393061,-3.67777)),
+					"C/ Méndez Álvaro, 72"+ Html.fromHtml("<br />") +"28045 Madrid",
+					"91 275 92 25",
+					"D a J de 9:00 a 00:30 V y S a 1:30",
+					"www.vips.es/restaurantes/vips-mendez-alvaro", false, false, false, false, false);
 			restaurantes.add(rest3);
+			
+			Restaurante rest4 = new Restaurante("VIPS Diagonal Mar 3", 
+					new MarkerOptions()
+						.position(new LatLng(41.409617,2.216547))
+						.title("VIPS Diagonal Mar 3")
+						.icon(marcadorVIPS),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(41.409617,2.216547)),
+					"Avda. Diagonal, 3"+ Html.fromHtml("<br />") +"08019 Barcelona",
+					"93 521 90 82",
+					"D a J de 12:30 a 23:30 V y S a 00:30",
+					"www.vips.es/restaurantes/vips-diagonal-mar-3", false, false, false, false, false);
+			restaurantes.add(rest4);
+			
+			Restaurante rest5 = new Restaurante("VIPS Azca", 
+					new MarkerOptions()
+						.position(new LatLng(40.449743,-3.695025))
+						.title("VIPS Azca")
+						.icon(marcadorVIPS),
+					calcularDistanciaEnKm(miUbicacion,new LatLng(40.449743,-3.695025)),
+					"C/ Orense, 16"+ Html.fromHtml("<br />") +"28020 Madrid",
+					"91 275 21 03",
+					" L a J de 08:00 a 00:30 V a 01:30" + Html.fromHtml("<br />") +"S de 09:00 a 01:30 D a 00:30",
+					"www.vips.es/restaurantes/vips-azca-orense-16", false, false, false, false, false);
+			restaurantes.add(rest5);
+			
     	}
     }
     
@@ -503,6 +605,8 @@ public class Mapas extends FragmentActivity
     	startActivity(intent);
 	}
 	public boolean onMarkerClick(final Marker marker) {
+		//Puesto aquí de prueba
+		getMiPosicion(miUbicacion);
 		// Ya hay una ruta mostrándose
 		if(puntosRuta.size()==2){
 			  puntosRuta.clear();
