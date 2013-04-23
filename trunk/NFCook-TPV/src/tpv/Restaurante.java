@@ -224,6 +224,10 @@ public class Restaurante {
 		return nombreRestaurante;
 	}
 	
+	public int getNumeroPersonasMesa(String idMesa){
+		return mesasRestaurante.get(idMesa).getNumeroPersonas();
+	}
+	
 
 	/**
 	 * Añadimos la comanda, la enviamos a cocina y por Red local para los demas tpv

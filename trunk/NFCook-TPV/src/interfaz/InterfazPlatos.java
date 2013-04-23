@@ -943,6 +943,11 @@ public class InterfazPlatos extends JFrame {
 		dispose();
 		VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 		ventanaMesa.setVisible(true);
+		
+		//Decimos a los demas tpv que tienen que cerrar la mesa.
+		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
+		operacionSQlite.actualizarMesaBD(idMesa, idCam, getRestaurante().getNumeroPersonasMesa(idMesa), 0);
+		operacionSQlite.cerrarBaseDeDatos();
 	 }
 	 
 	 /**
