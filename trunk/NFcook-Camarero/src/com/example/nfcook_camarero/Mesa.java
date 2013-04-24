@@ -652,7 +652,7 @@ public class Mesa extends Activity {
 			int idUnicoPlatoNuevo = platoEditar.getIdRepetido();
 			platoEditar.eliminaId();
 			platoEditar.restaCantidad();
-			ContenidoListMesa nuevo = new ContenidoListMesa(platoEditar.getNombre(),extrasNuevo,obsNuevas,platoEditar.getPrecio(),idUnicoPlatoNuevo,platoEditar.getIdPlato());
+			ContenidoListMesa nuevo = new ContenidoListMesa(platoEditar.getNombre(),extrasNuevo,obsNuevas,platoEditar.getPrecioUnidad(),idUnicoPlatoNuevo,platoEditar.getIdPlato());
 			
 			String nombre = nuevo.getNombre();
 			String observaciones = nuevo.getObservaciones();
