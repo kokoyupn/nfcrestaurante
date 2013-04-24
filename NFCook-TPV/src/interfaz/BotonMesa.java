@@ -75,7 +75,7 @@ class BotonMesa extends JPanel {
 		// Creamos el label que contiene el icono de las personas. 
 		JLabel jLabelIconoPersonas = new JLabel();
 		// Asignamos el icono al label.
-		jLabelIconoPersonas.setIcon(new ImageIcon("Imagenes/iconoPersonas.png"));
+		jLabelIconoPersonas.setIcon(new ImageIcon("Imagenes/Botones/iconoPersonas.png"));
 		
 		// Creamos el label que contiene el numero de personas.
 		jLabelNumeroPersonas = new JLabel();
