@@ -54,7 +54,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
-	private String abreviaturaRest;
+	private static String abreviaturaRest;
 	
 	private ArrayList<Boolean> bloquesDepuracion; 
 
@@ -207,26 +207,23 @@ public class SincronizarPedidoNFC extends Activity implements
 					setResult(RESULT_CANCELED, null);
 					Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 				} else {
-					if (restauranteCorrecto){
-						if (escritoBienEnTag){
-							enviarPedidoACuenta();
-							setResult(RESULT_OK, null);
-							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta.",Toast.LENGTH_LONG).show();
-						} else {
-							setResult(RESULT_CANCELED, null);
-							if (heCalculadoTam) {
-								if (!cabeEnTag)
-									Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision.",Toast.LENGTH_LONG).show();
-								else if (heSincronizadoMalAntes)
-									Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar.",Toast.LENGTH_LONG).show();
-							} else
-								Toast.makeText(this,"Pedido no sincronizado. Has levantado el dispositivo antes de tiempo."+ this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-						}
+					if (escritoBienEnTag){
+						enviarPedidoACuenta();
+						setResult(RESULT_OK, null);
+						Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta.",Toast.LENGTH_LONG).show();
 					} else {
 						setResult(RESULT_CANCELED, null);
-						Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto.",Toast.LENGTH_LONG).show();
-						
-					}
+						if (heCalculadoTam) {
+							if (!cabeEnTag)
+								Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision.",Toast.LENGTH_LONG).show();
+							else if (heSincronizadoMalAntes)
+								Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar.",Toast.LENGTH_LONG).show();
+						} 
+						else if (!restauranteCorrecto)
+							Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto.",Toast.LENGTH_LONG).show();
+						else
+							Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+						}
 				}
 			}
 		}
@@ -241,7 +238,8 @@ public class SincronizarPedidoNFC extends Activity implements
 		System.out.println("BLOQUE COM FINAL : " + numBloqueComienzo);
 		System.out.println("\n");
 
-		finish();
+		if (!heSincronizadoMalAntes)
+			finish();
     
 	}
 
@@ -588,7 +586,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		mfc.connect();
 
 		escritoBienEnTag = false;
-		heSincronizadoMalAntes = true;
+		heSincronizadoMalAntes = false;
 
 		boolean sectorValido = false;
 		// para avanzar los bloques (en el 0 no se puede escribir)
@@ -607,7 +605,6 @@ public class SincronizarPedidoNFC extends Activity implements
 		}
 
 		if (cabePedidoEnTag(pedidoCodificadoEnBytes, mfc)) {
-			cabeEnTag = true;
 			// recorro todos los bloques escribiendo el pedido. Cuando acabe escribo 0's en los que sobren
 			while (numBloque < mfc.getBlockCount() && !escritoBienEnTag) {
 				// comprobamos si el bloque puede ser escrito o es un bloque prohibido
