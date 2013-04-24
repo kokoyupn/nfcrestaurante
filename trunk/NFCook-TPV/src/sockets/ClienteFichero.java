@@ -246,7 +246,7 @@ public class ClienteFichero
     			if(!mensaje.ips.get(ultimaPos).equals(hostLocal)){
 
     				Socket socket = new Socket(mensaje.ips.get(ultimaPos), puertoClientes);
-    				socket.setSoTimeout(1000); // timeout del socket a 1 segundo
+    				socket.setSoTimeout(2000); // timeout del socket a 1 segundo
 
     		    	ObjectOutputStream oos;
     				System.out.println("Aceptado servidor");
