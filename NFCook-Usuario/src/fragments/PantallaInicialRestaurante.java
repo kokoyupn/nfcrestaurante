@@ -30,6 +30,7 @@ public class PantallaInicialRestaurante extends Fragment{
 	private View vista;
 	private ImageView logo;
 	private String restaurante;
+	private static boolean imagenActiva;
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -70,10 +71,15 @@ public class PantallaInicialRestaurante extends Fragment{
         	// Lanzamos la ayuda
 			ImageView imageViewAyuda = (ImageView) vista.findViewById(R.id.imageViewAyudaPantallaInicial);
 			imageViewAyuda.performClick();
-        }
-		
+			imagenActiva = true;
+        } else imagenActiva = false;
+        
 		return vista;
     }
+	
+	public boolean comprobarImagenActiva(){
+		return imagenActiva;
+	}	
 
 	public void setRestaurante(String restaurante){
 		this.restaurante = restaurante;
@@ -117,9 +123,6 @@ public class PantallaInicialRestaurante extends Fragment{
 		    	actionbar.setTitle(" AYUDA");
 		    	
 				FrameLayout frameLayoutBienvenida = (FrameLayout) vista.findViewById(R.id.FrameLayoutBienvenida);
-
-				ImageView imageViewAyuda = (ImageView) vista.findViewById(R.id.imageViewAyudaPantallaInicial);
-				imageViewAyuda.setVisibility(ImageView.INVISIBLE);
 						
 				FrameLayout.MarginLayoutParams params = (MarginLayoutParams) frameLayoutBienvenida.getLayoutParams();
 				params.setMargins(0, 0, 0, 0);
@@ -127,6 +130,8 @@ public class PantallaInicialRestaurante extends Fragment{
 				
 				ImageView imagenInfoAyuda = (ImageView) vista.findViewById(R.id.imageViewInformacionAyuda);
 				imagenInfoAyuda.setVisibility(ImageView.VISIBLE);
+				
+				imagenActiva = true;
 			}
 		});
 	}
@@ -136,6 +141,9 @@ public class PantallaInicialRestaurante extends Fragment{
 		informacionAyuda.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				
+				imagenActiva = false;
+				
 				// Cargamos en el fragment la pantalla de bienvenida del restaurante
 				Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
 				((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);

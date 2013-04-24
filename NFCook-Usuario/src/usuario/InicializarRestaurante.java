@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -71,6 +72,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private static boolean seleccionadoTabSuperior;
 	private static int postabSuperiorPulsado;
 	
+	// global para poder acceder a el y trabajar con la ayuda
+	private Fragment fragmentPantallaInicioRes;
+	private String anteriorTabPulsado;
+	
 	private int numComensales;
 		
     @Override
@@ -110,9 +115,21 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Si pulsamos el botón back
     	if (keyCode == KeyEvent.KEYCODE_BACK) {
-           finish();
+    		if(anteriorTabPulsado.equals("tabInicio")){
+    			if (((PantallaInicialRestaurante) fragmentPantallaInicioRes).comprobarImagenActiva()){
+    				// Cargamos en el fragment la pantalla de bienvenida del restaurante
+    				fragmentPantallaInicioRes = new PantallaInicialRestaurante();
+    				((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
+    				FragmentTransaction m = getFragmentManager().beginTransaction();
+    				m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
+    				m.commit();
+    				return false;
+    			}
+    			else finish();
+    		} else finish();
         }
-        return super.onKeyDown(keyCode, event);
+		return super.onKeyDown(keyCode, event);
+ 
     }
      
     // Importamos la base de datos
@@ -266,6 +283,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         tabs.setCurrentTabByTag("tabFalso");
         // Lo ocultamos, consiguiendo que esté pero no lo veamos, justo lo que queremos
         tabs.getCurrentTabView().setVisibility(View.GONE);
+        
+        // para ayuda
+        anteriorTabPulsado = "tabInicio";
     }
     
     // Metodo encargado de preparar las vistas de cada tab inferior
@@ -303,12 +323,15 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
             tabs.setCurrentTabByTag("tabFalso");
             // Marcamos a falso selccionado tabSuperior
             seleccionadoTabSuperior = false;
+            
+            //anterior tab pulsado
+            anteriorTabPulsado = "tabInicio";
 
     		/*
 			 * TODO Completar funcionalidad de la pantalla de bienvenida
 			 */
 			// Cargamos en el fragment la pantalla de bienvenida del restaurante
-			Fragment fragmentPantallaInicioRes = new PantallaInicialRestaurante();
+			fragmentPantallaInicioRes = new PantallaInicialRestaurante();
 			((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
@@ -321,6 +344,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
             // Marcamos a falso selccionado tabSuperior
             seleccionadoTabSuperior = false;
 
+            //anterior tab pulsado
+            anteriorTabPulsado = "tabPedidoSincronizar";
+            
 			Fragment fragmentPedido = new PedidoFragment();
 			PedidoFragment.setRestaurante(restaurante);
 	        FragmentTransaction m = getFragmentManager().beginTransaction();
@@ -334,6 +360,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
             tabs.setCurrentTabByTag("tabFalso");
             // Marcamos a falso selccionado tabSuperior
             seleccionadoTabSuperior = false;
+            
+            //anterior tab pulsado
+            anteriorTabPulsado = "tabCuenta";
             
 			Fragment fragmentCuenta = new CuentaFragment();
 			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
