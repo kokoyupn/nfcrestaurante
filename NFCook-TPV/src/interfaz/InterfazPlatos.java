@@ -342,6 +342,7 @@ public class InterfazPlatos extends JFrame {
 				
 				//Lanzamos VentanaMesas
 				dispose();
+				getRestaurante().setIterfazPlatos(null);
 				VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 				ventanaMesa.setVisible(true);
 				
@@ -958,6 +959,7 @@ public class InterfazPlatos extends JFrame {
 		VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 		ventanaMesa.setVisible(true);
 		dispose();
+		getRestaurante().setIterfazPlatos(null);
 		
 	 }
 	 
@@ -1060,6 +1062,7 @@ public class InterfazPlatos extends JFrame {
 			 JFrame marco = new JFrame();
 			 JOptionPane.showMessageDialog(marco, "Esta mesa ha sido cobrada desde otro TPV y se va ha cerrar.");
 			 dispose();
+			 getRestaurante().setIterfazPlatos(null);
 			 VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
 			 ventanaMesa.setVisible(true);
 		 }
