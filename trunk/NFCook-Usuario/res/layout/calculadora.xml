@@ -58,8 +58,8 @@
             android:layout_width="87dp"
             android:layout_height="50dp"
             android:layout_gravity="bottom|left"
-            android:background="#C0C0C0"
-            android:padding="2dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/fh39" />
 
         <ImageView
@@ -69,9 +69,7 @@
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp"
-            android:background="#C0C0C0"
-            android:padding="2dp" />
+            android:layout_marginTop="20dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"

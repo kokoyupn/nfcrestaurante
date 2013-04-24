@@ -131,7 +131,7 @@ public class Mapas extends FragmentActivity
 	public void inicializarMapa() {
 	    
 		textViewInfoRuta = (TextView) findViewById(R.id.textViewMapas);
-		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener +info");
+		textViewInfoRuta.setText("Pulsa en tu restaurante para obtener + info");
 		 
 		// Tomamos el location manager
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

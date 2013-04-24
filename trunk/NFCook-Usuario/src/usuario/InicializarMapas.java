@@ -17,13 +17,17 @@ import fragments.ListaMapasFragment;
 @SuppressWarnings("deprecation")
 public class InicializarMapas extends TabActivity{
 	// Tabs con las distintas categorías de mapas
-	private TabHost tabs;
+	private static TabHost tabs;
 	private Fragment fragmentListaMapas;
+	private String restaurante;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs_mapas);
+        
+        Bundle bundle = getIntent().getExtras();
+		restaurante = bundle.getString("nombreRestaurante");
         
      	// Ponemos el título a la actividad
         // Recogemos ActionBar
@@ -54,14 +58,19 @@ public class InicializarMapas extends TabActivity{
         	        	m.remove(fragmentListaMapas);
         	        	m.commit();
         	        }
-           		}else if(tabId.equals("tabListaMapa")){
+           		}else if(tabs.getCurrentTabTag().equals("tabListaMapa")){
            			fragmentListaMapas = new ListaMapasFragment();
+           			((ListaMapasFragment)fragmentListaMapas).setRestaurante(restaurante);
         	        FragmentTransaction m = getFragmentManager().beginTransaction();
         	        m.replace(R.id.FrameLayoutMapas, fragmentListaMapas);
         	        m.commit();
            		}
            	}
+           	
 		});
+
+        
+       
         tabs.setup();
     }
     
@@ -94,5 +103,9 @@ public class InicializarMapas extends TabActivity{
         	TextView textViewTituloTab = (TextView) tabs.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
         	textViewTituloTab.setTextColor(Color.parseColor("#FFFFFF"));
         }
+    }
+    
+    public static void marcarTab(int pos){
+        tabs.setCurrentTab(pos);
     }
 }

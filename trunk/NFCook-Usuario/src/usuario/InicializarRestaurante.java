@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -322,14 +321,10 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
             // Marcamos a falso selccionado tabSuperior
-            seleccionadoTabSuperior = false;
-            
+            seleccionadoTabSuperior = false;  
             //anterior tab pulsado
             anteriorTabPulsado = "tabInicio";
 
-    		/*
-			 * TODO Completar funcionalidad de la pantalla de bienvenida
-			 */
 			// Cargamos en el fragment la pantalla de bienvenida del restaurante
 			fragmentPantallaInicioRes = new PantallaInicialRestaurante();
 			((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
@@ -466,8 +461,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			// Importamos la base de datos de cuenta
 			HandlerDB sqlCuenta = new HandlerDB(getApplicationContext(),"Cuenta.db"); 
 			SQLiteDatabase dbCuenta = sqlCuenta.open();
-			String[] camposCuenta = new String[]{"Id"};//Campos que quieres recuperar
-			Cursor cursorCuenta = dbCuenta.query("Cuenta", camposCuenta, null, null,null, null,null);
+			String[] camposCuenta = new String[]{"Id"};
+	    	String[] datos = new String[]{restaurante};
+			Cursor cursorCuenta = dbCuenta.query("Cuenta", camposCuenta, "Restaurante = ?", datos, null, null, null);
 			// Miramos a ver si tiene al menos algún elemento
 			if(cursorCuenta.moveToFirst()){
 				return true;
@@ -513,9 +509,5 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	
 	public static void setPosTabSuperior(int posTab){
 		postabSuperiorPulsado = posTab;
-	}
-		
-	public static void marcaTab(int pos){
-		actionbar.selectTab(actionbar.getTabAt(0));
 	}
 }

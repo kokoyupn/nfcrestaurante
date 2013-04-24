@@ -1,29 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FrameLayout1"
     android:layout_width="fill_parent"
     android:layout_height="50dp" >
+
+    <ImageView
+        android:id="@+id/imageViewLogoRestaurantePadreListaMapasCuadrado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/foster_mapa" />
+
+    <ImageView
+        android:id="@+id/imageViewLogoRestaurantePadreListaMapasRectagulo"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/vips_mapa" />
 
     <TextView
         android:id="@+id/textViewListaMapaNombre"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|center_vertical"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Nombre Restaurante"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="15dp"
+        android:text="Nombre Restauranteeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textViewListaMapaDistancia"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|center_vertical"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="215dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
         android:gravity="right"
         android:text="Distancia"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
-</LinearLayout>
+</FrameLayout>

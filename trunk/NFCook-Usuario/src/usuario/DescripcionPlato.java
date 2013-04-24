@@ -58,6 +58,11 @@ public class DescripcionPlato extends Activity {
     	pulsado=false;
     	
     	setContentView(R.layout.descripcion_del_plato);
+    	
+    	TextView t=(TextView)findViewById(R.id.descripcionPlatoeditar);
+		LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,t.getLineHeight()*2);//ancho,largo);
+		a.setMargins(52, 0, 5, 0);
+		t.setLayoutParams(a);
                
         cargarUltimoIdentificadorUnicoHijoPedido();
 
@@ -279,7 +284,8 @@ public class DescripcionPlato extends Activity {
 			}
 		else{
 			//t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50));
-			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50);//ancho,largo);
+			
+			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,t.getLineHeight()*2);//ancho,largo);
 			a.setMargins(52, 0, 5, 0);
 			t.setLayoutParams(a);
 			image.setImageResource(R.drawable.flecha_abajo);
