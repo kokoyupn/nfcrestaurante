@@ -45,7 +45,7 @@
             android:name="usuario.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            >
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
