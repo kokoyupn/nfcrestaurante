@@ -313,9 +313,8 @@ class BotonMesa extends JPanel {
 		jLabelNumeroPersonas.setText(numeroPersonas+"");
 		miRestaurante.actualizarNumeroPersonasMesa(idMesa, numeroPersonas);
 		
-		Operaciones operacionSQlite = new Operaciones("MesasRestaurante.db");
-		operacionSQlite.actualizarMesaBD(idMesa, idCamarero, numeroPersonas, Mesa.getIntDadoEstado(estado));
-		operacionSQlite.cerrarBaseDeDatos();
+		OperacionesSocketsSinBD operacionActulizaNumeroPersonas = new OperacionesSocketsSinBD();
+		operacionActulizaNumeroPersonas.actualizarMesaBD(idMesa, idCamarero, numeroPersonas, Mesa.getIntDadoEstado(estado));
 		
 	}
 	

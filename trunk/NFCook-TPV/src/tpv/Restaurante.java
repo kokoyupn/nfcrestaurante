@@ -3,20 +3,17 @@ package tpv;
 import interfaz.InterfazPlatos;
 import interfaz.VentanaMesas;
 
-import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
+import sockets.OperacionesSocketsSinBD;
 import tpv.Mesa.estadoMesa;
-
 import basesDeDatos.Operaciones;
 
 public class Restaurante {
@@ -242,9 +239,8 @@ public class Restaurante {
 		mesasRestaurante.get(idMesa).activarComanda();
 		
 		ArrayList<String> arrayConsultas = creaArrayConsultasInfoMesa(idMesa, idCamarero, productos);
-		Operaciones operacionSQlite = new Operaciones("InfoMesas.db");
-		operacionSQlite.introducirComandaBD(arrayConsultas);
-		operacionSQlite.cerrarBaseDeDatos();
+		OperacionesSocketsSinBD operacionIntroducirComandaBD = new OperacionesSocketsSinBD();
+		operacionIntroducirComandaBD.introducirComandaBD(arrayConsultas);
 	}
 	
 	public boolean existeCamarero(String idCamarero){
@@ -324,7 +320,8 @@ public class Restaurante {
 	public void cargarConsultaARestaurante(String consulta) {
 		StringTokenizer consultaTokenizada = new StringTokenizer(consulta , ",");		
 		
-		String fecha = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		//Eliminamos la fecha
+		consultaTokenizada.nextToken();
 		
 		String idMesa = devuelveStringSinComillas(consultaTokenizada.nextToken());
 		//Eliminamos el idCamarero
@@ -430,7 +427,6 @@ public class Restaurante {
 		 */
 		posChar = 0;
 		String sinComillas = "";
-		int a  = conComillasAux.length();
 		while(posChar< conComillasAux.length()){
 			if((conComillasAux.charAt(posChar) == '\'' || conComillasAux.charAt(posChar) == ')') && (posChar == 0 || posChar == (conComillasAux.length()-1))){
 				posChar++;

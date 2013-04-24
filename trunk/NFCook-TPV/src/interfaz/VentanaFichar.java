@@ -106,21 +106,21 @@ public class VentanaFichar extends JFrame implements ActionListener{
 	
 	private boolean camareroYaFichadoEntrar(){
 		Operaciones operacionSQlite = new Operaciones("FichaCamareros.db");
-		boolean aFichado = operacionSQlite.camararoFichadoEntrar(idCamarero, new FechaYHora());
+		boolean aFichado = operacionSQlite.camareroFichadoEntrar(idCamarero, new FechaYHora());
 		operacionSQlite.cerrarBaseDeDatos();
 		return aFichado;
 	}
 
 	private boolean camareroYaFichadoParada() {
 		Operaciones operacionSQlite = new Operaciones("FichaCamareros.db");
-		boolean aFichado = operacionSQlite.camararoFichadoParada(idCamarero, new FechaYHora());
+		boolean aFichado = operacionSQlite.camareroFichadoParada(idCamarero, new FechaYHora());
 		operacionSQlite.cerrarBaseDeDatos();
 		return aFichado;
 	}
 
 	private boolean camareroYaFichadoSalir() {
 		Operaciones operacionSQlite = new Operaciones("FichaCamareros.db");
-		boolean aFichado = operacionSQlite.camararoFichadoSalir(idCamarero, new FechaYHora());
+		boolean aFichado = operacionSQlite.camareroFichadoSalir(idCamarero, new FechaYHora());
 		operacionSQlite.cerrarBaseDeDatos();
 		return aFichado;
 	}
