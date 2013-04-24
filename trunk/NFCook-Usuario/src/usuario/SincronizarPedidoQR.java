@@ -75,7 +75,7 @@ public class SincronizarPedidoQR extends Activity {
 			//modifico el texto a mostrar
 			TextView textoAMostar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
 			textoAMostar.setText("¿Está seguro que desa salir?. \n\nSu pedido será trasnferido a Cuenta y el código QR desaparecerá." +
-					"\n\n Antes de salir asegurese de que el camarero haya leido su código QR. ");
+					"\n\nAntes de salir asegurese de que el camarero haya leido su código QR. ");
 			ventanaEmergente.setView(vistaAviso);
 			ventanaEmergente.show();
     	} else {
