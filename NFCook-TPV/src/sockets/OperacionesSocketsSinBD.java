@@ -52,5 +52,28 @@ public class OperacionesSocketsSinBD {
 		
 		ClienteFichero.enviaCobrarMesa(idMesa, ficheroMesasRestaurante, consultaMesasRestaurante, ficheroInfoMesas, consultaInfoMesas);
 	}
+	
+	public void operacionCobrarMesaLLegadaExterna(String idMesa, String ficheroMesasRestaurante, 
+												  String consultaMesasRestaurante, String ficheroInfoMesas, 
+												  String consultaInfoMesas){
+		
+		//Decimos a los demas tpv que tienen que cerrar la mesa.
+		Operaciones operacionSQlite = new Operaciones(ficheroMesasRestaurante);
+		operacionSQlite.insertar(consultaMesasRestaurante, false);
+		operacionSQlite.cerrarBaseDeDatos();
+		
+		//Eliminamos los platos de la base de datos en local.
+		operacionSQlite = new Operaciones(ficheroInfoMesas);
+		operacionSQlite.insertar(consultaInfoMesas, false);
+		operacionSQlite.cerrarBaseDeDatos();
+		
+		//Eliminamos todas las visitas de esta mesa.
+		VentanaLogin.getRestaurante().eliminaProductosDeMesa(idMesa);
+		VentanaLogin.getRestaurante().actualizaMesaEstaVisitadaCobrarLLegadaExterna(idMesa);
+		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, "-", 0, 0);
+		VentanaLogin.getRestaurante().cerrarInterfazPlatosSiAbierta(idMesa, 0);
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+		
+	}
 
 }
