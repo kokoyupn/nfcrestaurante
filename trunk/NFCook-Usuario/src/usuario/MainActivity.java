@@ -9,6 +9,8 @@ import java.util.TimerTask;
 
 import com.example.nfcook.R;
 
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
+
 import baseDatos.HandlerDB;
 
 import adapters.MiListImagenesRestaurantesAdapter;
@@ -139,6 +141,9 @@ public class MainActivity extends Activity{
 				i++;
 			}
 			nombreRestaurante = it.next();
+			
+			// Si entramos a un restaurante disitinto al anterior
+			ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidasCambioRestaurante();			
 	    	
 			//Almacenamos la posición en la lista del ultimo restaurante selecionado para que al abrir la aplicación podamos cargarlo
 			setUltimoRestaurante(posicion);

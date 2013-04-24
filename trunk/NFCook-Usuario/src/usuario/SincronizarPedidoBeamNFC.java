@@ -24,12 +24,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.text.format.Time;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 
 public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMessageCallback,OnNdefPushCompleteCallback{ 
 
@@ -146,7 +142,7 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
 		}
 		
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
-		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity)this);
+		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
 		
 	}	
 	

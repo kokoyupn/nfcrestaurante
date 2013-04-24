@@ -2,8 +2,6 @@ package adapters;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import usuario.DescripcionPlato;
 import usuario.DescripcionPlatoEditar;
 
 
@@ -155,7 +153,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	    		if(cPlato.moveToNext()){
 	    			// Miramos si efectivamente era una bebida
 	    			if(cPlato.getString(1).toLowerCase().equals("bebidas")){
-	    				ContenidoTabSuperiorCategoriaBebidas.eliminarBebidaDesdePedido(idPadre, fragmentLista.getActivity());	
+	    				ContenidoTabSuperiorCategoriaBebidas.eliminarBebidaDesdePedido(idPadre);	
 	    			}
 	    		}
 	    		

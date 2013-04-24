@@ -2,7 +2,6 @@ package usuario;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 import baseDatos.HandlerDB;
 import com.example.nfcook.R;
@@ -350,7 +349,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		}
 
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
-		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity) this);
+		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
 
 	}
 	

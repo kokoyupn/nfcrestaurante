@@ -78,7 +78,6 @@ public class DescripcionPlatoEditar extends Activity {
     	expandableListPedidoEditar = (ExpandableListView) findViewById(R.id.expandableExtras);
     	        
     	cursor.moveToFirst();
-		double precio = cursor.getDouble(1);
         String nombreImagen = cursor.getString(2);
         String descripcion = cursor.getString(3);
         nombrePlato = cursor.getString(4);
