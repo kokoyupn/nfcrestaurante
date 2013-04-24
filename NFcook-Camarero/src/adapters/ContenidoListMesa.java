@@ -67,6 +67,10 @@ public class ContenidoListMesa {
 	public double getPrecio() {
 		return precio*cantidad;
 	}
+	
+	public double getPrecioUnidad() {
+		return precio;
+	}
 
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
