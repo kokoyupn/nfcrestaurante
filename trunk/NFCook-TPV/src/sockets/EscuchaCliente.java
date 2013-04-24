@@ -32,16 +32,15 @@ public class EscuchaCliente extends Thread {
 	            if (mensaje instanceof MensajeConsulta){
 	            	// ejecutamos la consulta de insercion en la base de datos
 	            	Operaciones operacion = new Operaciones(((MensajeConsulta) mensaje).nombreFichero);
-		            operacion.insertar(((MensajeConsulta) mensaje).sql, false); // false para que no se vuelva a enviar por socket
 					System.out.println(((MensajeConsulta) mensaje).sql);
 
 	            }else if (mensaje instanceof MensajeArrayConsultas){
-	            	Operaciones operacion = new Operaciones(((MensajeArrayConsultas) mensaje).nombreFichero);
+	            	OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 	            	operacion.introducirComandaBDLLegadaExterna(((MensajeArrayConsultas) mensaje).consultas);
 	            
 	            }else if (mensaje instanceof MensajeEstadoMesa){
 	            	MensajeEstadoMesa mensajeUtilizar = (MensajeEstadoMesa)mensaje;
-	            	Operaciones operacion = new Operaciones(mensajeUtilizar.nombreFichero);
+	            	OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 	            	operacion.actualizarMesaBDLLegadaExterna(mensajeUtilizar.sql, mensajeUtilizar.idMesa, mensajeUtilizar.idCamarero, mensajeUtilizar.numPersonas, mensajeUtilizar.estado);
 	            
 	            }else if (mensaje instanceof MensajeMesaVisitada){
@@ -53,11 +52,6 @@ public class EscuchaCliente extends Thread {
 	            	MensajeMesaVisitadaCobrar mensajeUtilizar = (MensajeMesaVisitadaCobrar)mensaje;
 	            	OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 	            	operacion.actualizaVisitadoMesaCobrarLLegadaExterna(mensajeUtilizar.idMesa);
-	            
-	            }else if (mensaje instanceof MensajeConsultaEliminaPlatos){
-	            	MensajeConsultaEliminaPlatos mensajeUtilizar = (MensajeConsultaEliminaPlatos)mensaje;
-	            	Operaciones operacion = new Operaciones(mensajeUtilizar.nombreFichero);
-	            	operacion.eliminarPlatosDeMesaLLegadaExterna(mensajeUtilizar.idMesa, mensajeUtilizar.sql);
 	            
 	            }else if (mensaje instanceof MensajeCobrarMesa){
 	            	MensajeCobrarMesa mensajeUtilizar = (MensajeCobrarMesa)mensaje;
