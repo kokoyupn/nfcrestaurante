@@ -50,7 +50,7 @@ public class OperacionesSocketsSinBD {
 		operacionSQlite.insertar(consultaInfoMesas, false);
 		operacionSQlite.cerrarBaseDeDatos();
 		
-		//TODO ALEX enviar
+		ClienteFichero.enviaCobrarMesa(idMesa, ficheroMesasRestaurante, consultaMesasRestaurante, ficheroInfoMesas, consultaInfoMesas);
 	}
 
 }

@@ -62,7 +62,7 @@ public class EscuchaCliente extends Thread {
 	            }else if (mensaje instanceof MensajeCobrarMesa){
 	            	MensajeCobrarMesa mensajeUtilizar = (MensajeCobrarMesa)mensaje;
 	            	OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
-	            	operacion.operacionCobrarMesaLLegadaExterna(mensajeUtilizar.idMesa);
+	            	operacion.operacionCobrarMesaLLegadaExterna(mensajeUtilizar.idMesa, mensajeUtilizar.nombreFichero, mensajeUtilizar.sql, mensajeUtilizar.nombreFichero2, mensajeUtilizar.sql2);
 	            
 	            }
 			
