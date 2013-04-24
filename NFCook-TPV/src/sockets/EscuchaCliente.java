@@ -32,7 +32,8 @@ public class EscuchaCliente extends Thread {
 	            if (mensaje instanceof MensajeConsulta){
 	            	// ejecutamos la consulta de insercion en la base de datos
 	            	Operaciones operacion = new Operaciones(((MensajeConsulta) mensaje).nombreFichero);
-					System.out.println(((MensajeConsulta) mensaje).sql);
+					operacion.insertar(((MensajeConsulta) mensaje).sql, false);
+	            	System.out.println(((MensajeConsulta) mensaje).sql);
 
 	            }else if (mensaje instanceof MensajeArrayConsultas){
 	            	OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();

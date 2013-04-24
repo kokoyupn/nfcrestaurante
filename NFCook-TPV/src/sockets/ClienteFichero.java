@@ -203,42 +203,6 @@ public class ClienteFichero
 	}
 	
 	/**
-	 * Establece comunicacion con el servidor en el puerto indicado. Envia el id de la mesa y la consulta sql
-	 * junto con el fichero que habra que actualizar en el Servidor.
-	**/
-	public static void enviaConsultaEliminaPlatos(String idMesa, String fichero, String sql){
-
-		try{
-			// Se abre el socket.
-            Socket socket = new Socket(servidor, puerto);
-
-            hostLocal = socket.getLocalAddress();
-            
-            // Se envía un mensaje de petición de fichero.
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-           	ArrayList<InetAddress> ips = new ArrayList<InetAddress>();
-           	ips.add(socket.getLocalAddress());
-           	MensajeConsultaEliminaPlatos mensajeConsultaElimina = new MensajeConsultaEliminaPlatos(idMesa, fichero, sql, ips);
-
-            oos.writeObject(mensajeConsultaElimina);
-            
-            // recibir las IP internas de todos los clientes y enviar esta misma info
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
-            
-            // cerramos el socket
-            socket.close();
-            oos.close();
-            ois.close();
-            
-		}catch(Exception excepcionEnviaConsulta){
-			System.err.println("Fallo al enviar consulta elimina platos al Servidor");
-		}
-		
-	}
-	
-	/**
 	 * Establece comunicacion con el servidor en el puerto indicado. Enviara el mensaje correspondiente a cobrar una mesa
 	 * junto con el id de la mesa, las consultas sql y los ficheros que habra que actualizar en el Servidor.
 	**/
