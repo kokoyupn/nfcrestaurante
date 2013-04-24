@@ -37,6 +37,8 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	
 	private static String tipoTab, restaurante;
 	
+	private static Activity activity;
+	
 	private static GridView gridViewBebidas;
 	private static MiGridViewBebidasAdapter adapterGridViewBebidas;
     private static ArrayList<PadreGridViewBebidas> bebidas;
@@ -46,6 +48,10 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
     
     public static void setRestaurante(String res){
     	restaurante = res;
+    }
+    
+    public static String getRestaurante(){
+    	return restaurante;
     }
     
     public static void setTipoTab(String tipo){
@@ -59,7 +65,9 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vistaTabCategoriaBebida = inflater.inflate(R.layout.tab_superior_categoria_bebidas, container, false);
-					
+			
+		activity = getActivity();
+		
 		/*
 		 * Este if se encarga de que el usaurio no pierda las bebidas una vez haya ya entrado
 		 * en la pestaña bebidas e incluso haber seleccionado alguna. Si entra por el if 
@@ -70,11 +78,11 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 		 */
 		if(bebidas == null){
 			// Cargamos las bebidas que haya en la base de datos
-			cargarBebidas(getActivity());
+			cargarBebidas();
 			total = 0;
 			
 			// Precargamos la pantalla bebida si hubiera ya seleccionado bebidas en pedido
-			hayBebidasEnPedido(getActivity());
+			hayBebidasEnPedido();
 		}
 		
 		// Aplicamos el adapater que hemos creado sobre el gridView
@@ -84,7 +92,7 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	}
     
 	// Importamos la base de datos de los restaurantes
-    public static void importarBaseDatos(Activity activity) {
+    public static void importarBaseDatos() {
         try{
      	   sql = new HandlerDB(activity); 
      	   db = sql.open();
@@ -93,14 +101,14 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
          }
 	}
 
-	public static void cargarBebidas(Activity activity){
+	public static void cargarBebidas(){
 		try{
 			// Creamos el arrayList de bebidas
 			bebidas = new ArrayList<PadreGridViewBebidas>();
 			PadreGridViewBebidas bebida;
 			
 			// Importamos la base de datos
-			importarBaseDatos(activity);
+			importarBaseDatos();
 			
     		String[] camposSacar = new String[]{"Id","Nombre","Foto","Precio"};
 	    	String[] datosQueCondicionan = new String[]{restaurante,tipoTab};
@@ -219,15 +227,20 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	 * Este método se llamará en el momento en que se produzca la sincronización, mientras
 	 * tanto las undiades de bebidas que hemos seleccionado permanecerán intactas.
 	 */
-	public static void reiniciarPantallaBebidas(Activity activity){
+	public static void reiniciarPantallaBebidas(){
 		bebidas = null;
 		total = 0;
 					
 		// Cargamos las bebidas que haya en la base de datos
-		cargarBebidas(activity);
+		cargarBebidas();
 	}
 	
-	public static void hayBebidasEnPedido(Activity activity){
+	public static void reiniciarPantallaBebidasCambioRestaurante(){
+		bebidas = null;
+		total = 0;
+	}
+	
+	public static void hayBebidasEnPedido(){
 		boolean encontrado;
 		int numBebidas = bebidas.size();
 		int i;
@@ -280,14 +293,14 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	    }
 	}
 	
-	public static void eliminarBebidaDesdePedido(String idPlato, Activity activity){
+	public static void eliminarBebidaDesdePedido(String idPlato){
 		if(bebidas == null){
 			// Cargamos las bebidas que haya en la base de datos
-			cargarBebidas(activity);
+			cargarBebidas();
 			total = 0;
 			
 			// Precargamos la pantalla bebida si hubiera ya seleccionado bebidas en pedido
-			hayBebidasEnPedido(activity);
+			hayBebidasEnPedido();
 		}
 		
 		boolean encontrado = false;

@@ -227,7 +227,7 @@ public class SincronizarPedidoQR extends Activity {
 		}
 		
 		// Reinciamos la pantalla bebidas, porque ya hemos sincronizado el pedido
-		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas((Activity)this);
+		ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
 		
 	}	
 	

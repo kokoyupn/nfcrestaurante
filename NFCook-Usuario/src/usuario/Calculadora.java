@@ -19,7 +19,6 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -321,7 +320,7 @@ public class Calculadora extends Activity{
 	        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.aviso_continuar_pedido, null); 
 	        // Sacamos el campo texto informativo y le damos valor
 	        TextView textViewInformacion = (TextView) vistaVentanaEmergente.findViewById(R.id.textViewInformacionAviso);
-	        textViewInformacion.setText("Está seguro que desea cerrar la calculadora?. Se perderá toda la configuración realizada.");
+	        textViewInformacion.setText("¿Está seguro que desea cerrar la calculadora?. Se perderá toda la configuración realizada.");
 	        ventanaEmergente.setNegativeButton("Cancelar", null);
 	        // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
 	        ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
