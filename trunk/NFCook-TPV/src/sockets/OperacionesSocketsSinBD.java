@@ -37,10 +37,6 @@ public class OperacionesSocketsSinBD {
 		operacionSQlite.insertar(consultaMesasRestaurante, false);
 		operacionSQlite.cerrarBaseDeDatos();
 		
-		//Dejamos de tener visitada esta mesa. TODO en el llegada externa
-//		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
-//		operacion.actualizaVisitadoMesaCobrar(idMesa);
-		
 		operacionSQlite = new Operaciones("InfoMesas.db");
 		
 		String ficheroInfoMesas = "InfoMesas.db";

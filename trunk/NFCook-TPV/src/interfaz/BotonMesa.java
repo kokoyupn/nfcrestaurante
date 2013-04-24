@@ -424,6 +424,7 @@ class BotonMesa extends JPanel {
 				InterfazPlatos platosMesa = new InterfazPlatos(idMesa, miRestaurante, idCamarero);
 				platosMesa.setVisible(true);
 				ventanaMesas.dispose();
+				miRestaurante.setVentanaMesas(null);
 				
 				OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
 				operacion.actualizaVisitadoMesa(idMesa, true);
