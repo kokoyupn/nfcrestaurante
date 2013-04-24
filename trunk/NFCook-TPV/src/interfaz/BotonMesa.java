@@ -117,6 +117,9 @@ class BotonMesa extends JPanel {
 		Font fuentePopupMenuItem = propiedadesMesa.getFont();
 		
 		JMenuItem abrirMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonAbrirMesa.png"));
+		if(estado != tpv.Mesa.estadoMesa.CERRADA){
+			abrirMesa.setEnabled(false);
+		}
 		// Cambiamos el tamaño de la letra, mantenemos el estilo y el tipo de letra.
 		abrirMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
 		// Añadimos oyente para cuando pulsemos en el.
@@ -140,12 +143,13 @@ class BotonMesa extends JPanel {
 					actualizaNumeroPersonas(((TecladoParaNumeroPersonas)teclado).getNumeroPersonas());
 					cargarMesasCamareroYRestaurante();
 					break;
-				}				
+				}
 			}
 		});
-		JMenuItem cobrarMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonCobrarMesa.png"));
-		cobrarMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
+//		JMenuItem cobrarMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonCobrarMesa.png"));
+//		cobrarMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
 		JMenuItem sincronizarMesa = new JMenuItem(new ImageIcon("Imagenes/Botones/botonSincronizarMesa.png"));
+		sincronizarMesa.setEnabled(false);
 		sincronizarMesa.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
 		cambiarNumeroPersonas =  new JMenuItem(new ImageIcon("Imagenes/Botones/botonEditarPersonas.png"));
 		cambiarNumeroPersonas.setFont(new Font(fuentePopupMenuItem.getFontName(), fuentePopupMenuItem.getStyle(), 35));
@@ -202,8 +206,8 @@ class BotonMesa extends JPanel {
 		propiedadesMesa.addSeparator();
 		propiedadesMesa.add(cerrarMesa);
 		propiedadesMesa.addSeparator();
-		propiedadesMesa.add(cobrarMesa);
-		propiedadesMesa.addSeparator();
+		//propiedadesMesa.add(cobrarMesa);
+		//propiedadesMesa.addSeparator();
 		propiedadesMesa.add(sincronizarMesa);
 		propiedadesMesa.addSeparator();
 		propiedadesMesa.add(cambiarNumeroPersonas);
@@ -553,7 +557,11 @@ class BotonMesa extends JPanel {
 						
 						@Override
 						public void actionPerformed(ActionEvent boton) {
-							textFieldnumero.setText(textFieldnumero.getText() + ((JButton) boton.getSource()).getText());
+							if(textFieldnumero.getText().toString().length()<3){
+								textFieldnumero.setText(textFieldnumero.getText() + ((JButton) boton.getSource()).getText());
+							}else{
+								JOptionPane.showMessageDialog(new JFrame(), "No se puede introducir un numero de mas de 3 cifras.");
+							}
 						}
 					});
 				}
@@ -569,7 +577,11 @@ class BotonMesa extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent boton) {
-					textFieldnumero.setText(textFieldnumero.getText() + ((JButton) boton.getSource()).getText());
+					if(textFieldnumero.getText().toString().length()<3){
+						textFieldnumero.setText(textFieldnumero.getText() + ((JButton) boton.getSource()).getText());
+					}else{
+						JOptionPane.showMessageDialog(new JFrame(), "No se puede introducir un numero de mas de 3 cifras.");
+					}
 				}
 			});
 			
