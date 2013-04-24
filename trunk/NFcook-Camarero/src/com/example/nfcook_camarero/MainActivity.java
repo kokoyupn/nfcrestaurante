@@ -59,14 +59,14 @@ public class MainActivity extends Activity {
      * Metodo para el boton invisible que usamos para probar la aplicacion mas rapido
      * @param boton
      */
-	  public void onClickBotonInvisible(View boton)
+	/*  public void onClickBotonInvisible(View boton)
 	  {
 		  //Iniciamos la nueva actividad
 	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
        	  intent.putExtra("usuario", "Foster");
        	  intent.putExtra("Restaurante","Foster");
        	  startActivity(intent); 
-	  }  
+	  }*/  
  /**
   * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
   * esta en la base de datos de camareros 
