@@ -186,7 +186,8 @@ public class AnadirBebida extends Activity{
 					
 					String idBebida = bebida.getIdPlato();
 					int idUnico = PantallaMesasFragment.getIdUnico();//ya suma 1 dentro
-				    
+					PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
+		        	
 					System.out.println("LEga");
 					
 				    ContentValues nuevaBebida = new ContentValues();
@@ -200,6 +201,7 @@ public class AnadirBebida extends Activity{
 		        	nuevaBebida.put("Precio", Double.toString(precio));
 		        	nuevaBebida.put("Personas", personasMesa);
 		        	nuevaBebida.put("IdUnico", idUnico);
+		        	System.out.println(idUnico);
 				    
 		        	System.out.println("LEga1");
 		        	
