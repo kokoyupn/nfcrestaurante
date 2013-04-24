@@ -13,16 +13,18 @@
             android:id="@+id/imageViewLogoDescRest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:src="@drawable/foster_mapa" />
 
         <TextView
             android:id="@+id/textViewNombreRest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginTop="15dp"
             android:text="Nombre Restaurante"
             android:textColor="@color/negro"
             android:textSize="20sp" />
+
     </LinearLayout>
 
     <ImageView
@@ -38,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="2dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/senal_direccion" />
 
     <FrameLayout
@@ -55,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="3dp"
             android:text="Dirección del restaurante"
@@ -70,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="2dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="10dp"
         android:background="@color/blanco"
         android:src="@drawable/marco_horario" />
 
@@ -87,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="3dp"
             android:text="Horario del restaurante"
@@ -125,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:text="Servicios:"
         android:textColor="@color/negro"
@@ -137,6 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:gravity="center"
         android:numColumns="3"
         android:verticalSpacing="5dp" >
 
