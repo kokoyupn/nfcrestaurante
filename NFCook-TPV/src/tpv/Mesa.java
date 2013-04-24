@@ -3,8 +3,6 @@ package tpv;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import tpv.Mesa.estadoMesa;
-
 
 public class Mesa {
 

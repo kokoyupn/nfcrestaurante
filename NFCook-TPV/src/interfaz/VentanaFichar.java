@@ -8,15 +8,15 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import tpv.FechaYHora;
-
 import basesDeDatos.Operaciones;
 
 public class VentanaFichar extends JFrame implements ActionListener{
 	
+
+	private static final long serialVersionUID = 1L;
 	private String idCamarero;
 	private JButton botonEntrar;
 	private JButton botonParada;

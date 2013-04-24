@@ -3,7 +3,6 @@ package interfaz;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -13,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -27,8 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.Timer;
-
-import basesDeDatos.Operaciones;
 
 import sockets.OperacionesSocketsSinBD;
 import tpv.Mesa;
@@ -46,7 +42,6 @@ class BotonMesa extends JPanel {
 	private static boolean mesasRecienActivadas = false;
 
 	private String idMesa, idCamarero;
-	private int numeroPersonas;
 	private Restaurante miRestaurante;
 	private tpv.Mesa.estadoMesa estado;
 	
@@ -64,7 +59,6 @@ class BotonMesa extends JPanel {
 		this.miRestaurante = miRestaurante;
 		this.idMesa = idMesa;
 		this.idCamarero = idCamarero;
-		this.numeroPersonas = numeroPersonas;
 		estado = miRestaurante.dameEstadoMesa(idMesa);
 		this.ventanaMesas = ventanaMesas;
 		//Creamos el manejador de eventos de raton para el boton de la mesa.
@@ -309,7 +303,6 @@ class BotonMesa extends JPanel {
 	 */
 
 	protected void actualizaNumeroPersonas(int numeroPersonas) {
-		this.numeroPersonas = numeroPersonas;
 		jLabelNumeroPersonas.setText(numeroPersonas+"");
 		miRestaurante.actualizarNumeroPersonasMesa(idMesa, numeroPersonas);
 		

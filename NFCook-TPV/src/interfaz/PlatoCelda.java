@@ -1,21 +1,17 @@
 package interfaz;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
 
 public class PlatoCelda extends JPanel{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private JLabel lblNewLabel ;
 	private JLabel lblNewLabelLinea2 ;
