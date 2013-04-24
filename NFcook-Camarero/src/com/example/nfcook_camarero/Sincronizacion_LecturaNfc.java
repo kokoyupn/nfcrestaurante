@@ -70,6 +70,8 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	//Fecha y hora
 	String formatteHour;
     String formatteDate;
+    
+    boolean datosMalos,restauranteIncorrecto;
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas (decodificacion de pedido, lectura NFC y 
 	 * añadir a la base de datos Mesas) mientras se muestra un progress dialog. 
@@ -103,10 +105,10 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 					sonidoManager.play(sonido);
 					}
 				 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
-					Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
+					//Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
 					e.printStackTrace();
 				} catch (FormatException e) {
-					Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
+					//Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
 					e.printStackTrace();
 				}
 			 }
@@ -141,7 +143,8 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
 		restaurante=bundle.getString("Restaurante");
-		
+		datosMalos=false;
+		restauranteIncorrecto=false;
 		ctx=this;
 		
 		adapter = NfcAdapter.getDefaultAdapter(this);
@@ -221,12 +224,22 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 			Toast.makeText(this, "Pedido no sincronizado. La tag no es Mifare Classic.", Toast.LENGTH_LONG ).show();		
 		}
 		else {
-			if (leidoBienEnTag) {
-			 Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
-			}
-			else {
-				Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
-			}
+
+			 if(restauranteIncorrecto){	
+				  Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();}
+			  else{	if(datosMalos) 
+					  {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos.", Toast.LENGTH_LONG).show();}
+			
+			        else {
+			        	if (leidoBienEnTag) {
+			        		Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
+			        	   }
+			
+			        	else {
+			        			Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
+			        		}
+			        }
+			 }
 		}
 		finish();	
 	}
@@ -437,10 +450,13 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		}//if
 	
 		else{
-			Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
+					
+			restauranteIncorrecto=true;
 		}
 		}
-		else {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos.", Toast.LENGTH_LONG).show();
+		else { 
+			datosMalos=true;
+			
 		}
 		
 	
@@ -522,6 +538,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
                 String elemento = "";
                 
                 int numExtras=0;
+                if(!extras.equals("")){
                 //Recorrro cada uno de los elementos que se me han generado en el sring tokenizer que son de la forma Guarnicion:PatatasAsada,Ensalada
                 while (auxExtras.hasMoreElements())
                 	{auxExtras2= new StringTokenizer((String) auxExtras.nextElement(),":");
@@ -542,6 +559,7 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
                 //Le quito la ultima coma al extra final para que quede estetico
                 if (extrasFinal!= "")
                 	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-2);
+                }
     		}catch(SQLiteException e){
     		 	System.out.println("Error lectura base de datos de MIBASE");
     		}
