@@ -112,7 +112,7 @@ public class Restaurante {
 
 				Mesa nuevaMesa = new Mesa(idMesa, numeroPersonas, idCamarero, estadoMesa);
 				int visitas = getVisitasMesas(mesasVisitadas, idMesa);
-				while (visitas < 0){
+				while (visitas > 0){
 					nuevaMesa.setVisitada(true);
 					visitas--;
 				}
