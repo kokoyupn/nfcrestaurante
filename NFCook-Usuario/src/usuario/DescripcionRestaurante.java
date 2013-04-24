@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.example.nfcook.R;
 
 import adapters.ServiciosRestauranteAdapter;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,9 +20,13 @@ public class DescripcionRestaurante extends Activity {
 	private ArrayList<Restaurante> restaurantes;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.descripcion_del_restaurante);
+		
+		// Ponemos el título a la actividad
+        // Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle(" INFORMACIÓN RESTAURANTE");
 
 		Bundle bundle = getIntent().getExtras();
 		String restABuscar = bundle.getString("nombreRestaurante");
