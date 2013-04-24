@@ -4,6 +4,8 @@ import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
+
+
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -36,14 +38,21 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     private String abreviaturaRest;
     
     //Variables para bases de datos
-    private HandlerDB sqlCuenta, sqlPedido, sqlRestaurante;
+    private HandlerDB sqlCuenta, sqlPedido, sqlRestaurante ;
 	private SQLiteDatabase dbCuenta, dbPedido, dbRestaurante;
     
 	//Variables para los pedidos
 	String restaurante;
     String pedido;
     
-    @SuppressLint("NewApi")
+    
+    int numeroRestaurante;
+	String abreviatura;
+	/*Variables para obtener el valor equivalente del restaurante*/
+	String ruta="/data/data/com.example.nfcook_camarero/databases/";
+	
+    
+	@SuppressLint("NewApi")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +67,7 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
         Bundle bundle = getIntent().getExtras();
       	restaurante = bundle.getString("Restaurante");
       		
+     
       	//Abro las base de datos parq procesarlas
       	abrirBasesDeDatos();
       	//Obtengo el pedido que quiero enviar
@@ -168,7 +178,7 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
 	private String damePedidoStr() {
 		
 		String listaPlatosStr = dameCodigoRestaurante();
-		String[] campos = new String[]{"Id","ExtrasBinarios","Observaciones","Restaurante"};//Campos que quieres recuperar
+				String[] campos = new String[]{"Id","ExtrasBinarios","Observaciones","Restaurante"};//Campos que quieres recuperar
 		String[] datosRestaurante = new String[]{restaurante};	
 		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
     	

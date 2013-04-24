@@ -43,7 +43,7 @@ public class DescripcionPlato extends Activity {
 	private static ExpandableListView expandableListExtras;
 	private static MiExpandableListAdapterEditar adapterExpandableListExtras;
 	private static boolean pulsado;
-	private static int ancho, largo;
+
 	public HandlerDB sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
 	
@@ -64,7 +64,7 @@ public class DescripcionPlato extends Activity {
         editTextUnidades = (EditText) findViewById(R.id.editTextunidades);
         textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
         TextView textViewNombre= (TextView) findViewById(R.id.nombrePlato);
-        TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlato);
+        TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlatoeditar);
         ImageView imageViewPlato = (ImageView) findViewById(R.id.imagenPlato);
         actwObservaciones = (AutoCompleteTextView)findViewById(R.id.AutoCompleteTextViewOpciones);
         
@@ -265,16 +265,12 @@ public class DescripcionPlato extends Activity {
 	public void onClickDescripcion(View v)
     {
 		
-		TextView t=(TextView)findViewById(R.id.descripcionPlato);
+		TextView t=(TextView)findViewById(R.id.descripcionPlatoeditar);
 		ImageView image=(ImageView) findViewById(R.id.imageflecha);
 		
-    	ancho=t.getLayoutParams().width;
-		largo=t.getLayoutParams().height;
-		
-		if (!pulsado){
+      if (!pulsado){
 			pulsado=true;
-			//ancho=t.getLayoutParams().width;
-			//largo=t.getLayoutParams().height;
+
 			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
 			a.setMargins(52, 0, 5, 0);
 			t.setLayoutParams(a);

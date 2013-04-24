@@ -82,18 +82,26 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/framelayoutplatoeditar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="5dp"
+        android:onClick="onclickLayout" >
+
+        <ImageView
+            android:id="@+id/imageViewEditar"
+            android:layout_width="26dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flecha_abajo" />
 
         <TextView
-            android:id="@+id/descripcionPlato"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:id="@+id/descripcionEditar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="5dp"
             android:text="Descripcion detallada"
-            android:textSize="14dp" />
+            android:textSize="20sp" />
 
     </FrameLayout>
 

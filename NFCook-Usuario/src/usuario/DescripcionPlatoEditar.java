@@ -21,9 +21,11 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.FrameLayout.LayoutParams;
 
 public class DescripcionPlatoEditar extends Activity {
 		
@@ -38,6 +40,9 @@ public class DescripcionPlatoEditar extends Activity {
 	public HandlerDB sql,sqlPedido;
 	public SQLiteDatabase db,dbPedido;
 	
+	private static boolean pulsado;
+
+
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +52,12 @@ public class DescripcionPlatoEditar extends Activity {
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" EDICIÓN DE PLATO");
     	
+    	pulsado=false;
+    	
         setContentView(R.layout.descripcion_del_plato_editar);
        
         TextView textViewNombrePlato= (TextView) findViewById(R.id.nombrePlato);
-        TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlato);
+        TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionEditar);
         ImageView imgeViewPlato = (ImageView) findViewById(R.id.imagenPlato);
         Button botonConfirmar = (Button) findViewById(R.id.botonOpcion);
         Button botonEditar = (Button) findViewById(R.id.botonOpcionEditar);
@@ -199,4 +206,31 @@ public class DescripcionPlatoEditar extends Activity {
 		
 	}
     
+    public void onclickLayout(View v)
+    {
+		
+		TextView t=(TextView)findViewById(R.id.descripcionEditar);
+		ImageView image=(ImageView) findViewById(R.id.imageViewEditar);
+		
+    	
+		
+		if (!pulsado){
+			pulsado=true;
+		
+			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
+			a.setMargins(52, 0, 5, 0);
+			t.setLayoutParams(a);
+			image.setImageResource(R.drawable.flecha_arriba);
+			
+			}
+		else{
+			//t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50));
+			LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,50);//ancho,largo);
+			a.setMargins(52, 0, 5, 0);
+			t.setLayoutParams(a);
+			image.setImageResource(R.drawable.flecha_abajo);
+			pulsado= false;
+		}
+		
+    }
 }
