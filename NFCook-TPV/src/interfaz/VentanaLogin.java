@@ -23,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
+import sockets.ShutdownHook;
 import tpv.Restaurante;
 
 public class VentanaLogin extends JFrame implements ActionListener{
@@ -34,6 +35,10 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	
 	public VentanaLogin(){
 		
+		// ShutdownHook nos permite gestionar cuando cerramos la aplicacion (para enviar al servidor la IP del TPV a eliminar)
+		ShutdownHook shutdownHook = new ShutdownHook();
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//Eliminamos los bordes de la ventana.
