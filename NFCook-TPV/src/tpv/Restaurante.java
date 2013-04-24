@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
+import sockets.ClienteFichero;
 import sockets.OperacionesSocketsSinBD;
 import tpv.Mesa.estadoMesa;
 import basesDeDatos.Operaciones;
@@ -101,15 +102,20 @@ public class Restaurante {
 		try{
 			Operaciones operacion = new Operaciones("MesasRestaurante.db");
 			ResultSet resultados = operacion.consultar("select * from mesasRestaurante");
-			
+			ArrayList<ArrayList<String>> mesasVisitadas = ClienteFichero.pideMesasVisitadas();
 			while(resultados.next()){
 				String idMesa = resultados.getString("idMesa");
 				int numeroPersonas = resultados.getInt("numeroPersonas");
 				String idCamarero = resultados.getString("idCamarero");
 				int estadoMesa = resultados.getInt("estadoMesa");
 				
-				
+
 				Mesa nuevaMesa = new Mesa(idMesa, numeroPersonas, idCamarero, estadoMesa);
+				int visitas = getVisitasMesas(mesasVisitadas, idMesa);
+				while (visitas < 0){
+					nuevaMesa.setVisitada(true);
+					visitas--;
+				}
 				mesasRestaurante.put(idMesa, nuevaMesa);
 			}
 			operacion.cerrarBaseDeDatos();
@@ -120,7 +126,17 @@ public class Restaurante {
             System.out.println("Codigo del error:"+e.getErrorCode());
             JOptionPane.showMessageDialog(null, ""+e.getMessage());
         }
-		
+	}
+
+	public static int getVisitasMesas(ArrayList<ArrayList<String>> mesas, String idMesa){
+		Iterator<ArrayList<String>> itMesas = mesas.iterator();
+		while (itMesas.hasNext()){
+			ArrayList<String> mesa = itMesas.next();
+			if(mesa.get(0).contentEquals(idMesa)){
+				return Integer.parseInt(mesa.get(1));
+			}
+		}
+		return 0;
 	}
 	
 	public void setVentanaMesas(VentanaMesas ventanaMesas){

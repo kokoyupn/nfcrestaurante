@@ -345,6 +345,44 @@ public class ClienteFichero
     }
 
     
+    public static ArrayList<ArrayList<String>> pideMesasVisitadas(){
+    	
+    	ArrayList<ArrayList<String>> mesas = null;
+		try{
+    		
+	    	// Se abre el socket.
+	        Socket socket = new Socket(servidor, puerto);
+	       
+	        // Se envía un mensaje de petición mesas visitadas.
+	        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+	        ArrayList<InetAddress> ips = new ArrayList<InetAddress>();
+	       	ips.add(socket.getLocalAddress());
+	        MensajeMesasVisitadas mensajeMesasVisitadas = new MensajeMesasVisitadas(ips);
+
+	        oos.writeObject(mensajeMesasVisitadas);
+	  
+	        // Se crea un ObjectInputStream del socket para leer el mensaje
+	        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+	        Object mensaje = ois.readObject();
+	        MensajeMesasVisitadas m = (MensajeMesasVisitadas)mensaje;
+	        mesas = m.mesasVisitadas;
+	        
+	        // Cerramos el socket y los stream
+	        socket.close();
+	        oos.close();
+	        ois.close();
+	        
+    	}catch(SocketException e){
+    		System.err.println("Fallo al pedir las mesas visitadas al servidor, repidiendo...");
+    		mesas = pideMesasVisitadas();
+    	
+    	}catch(Exception e){
+    		System.err.println("Fallo al pedir las mesas visitadas al servidor.");
+    	}
+    	
+    	return mesas;
+    }
+    
     /**
      * Metodo que envia la IP del TPV para eliminarlo del servidor al cerrarse el programa.
      * Envia un objeto de tipo MensajeConsulta pero con el nombre de fichero vacio, 
