@@ -804,4 +804,25 @@ public class PantallaMesasFragment extends Fragment {
 	public static PantallaMesasFragment getInstanciaClase() {
 		return propiaInstancia;
 	}
+	public static String dameHora()
+	{
+		//Fecha y hora
+ 		String formatteHour;
+ 	    //Sacamos la hora a la que el camarero ha introducido la mesa
+ 	    Date dt = new Date();
+ 	    SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+ 	    formatteHour = dtf.format(dt.getTime());
+ 	    
+ 	    return formatteHour;
+ 	    
+	}
+	public static String dameFecha()
+	{ String formatteDate;	
+		//Sacamos la fecha a la que el camarero ha introducido la mesa
+	    	Calendar cal = new GregorianCalendar();
+	        Date date = cal.getTime();
+	        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	        formatteDate = df.format(date);
+	   return formatteDate;
+	}
 }

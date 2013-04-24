@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -130,6 +131,10 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_lecturanfc);
 
+		// Recogemos ActionBar
+        ActionBar actionbar = getActionBar();
+    	actionbar.setTitle("SINCRONIZAR PEDIDO");
+    	
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
 		numMesa = bundle.getString("NumMesa");

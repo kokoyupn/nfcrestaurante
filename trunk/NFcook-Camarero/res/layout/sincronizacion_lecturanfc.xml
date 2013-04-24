@@ -6,25 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#BFEFFF"
         android:orientation="vertical" >
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:background="@color/azul" >
-
-            <TextView
-                android:id="@+id/textViewTituloSincronizarPedido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Sincronizar Pedido"
-                android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
-                android:textSize="30sp" />
-
-        </FrameLayout>
 
         <ImageView
             android:id="@+id/imageViewSincronizarPedido"
