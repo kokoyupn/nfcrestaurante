@@ -24,6 +24,7 @@ public class MensajeCobrarMesa extends Mensaje implements Serializable{
 		this.idMesa = idMesa;
 		this.nombreFichero = nombreFichero;
 		this.nombreFichero2 = nombreFichero2;
+		this.sql = sql;
 		this.sql2 = sql2;
 	}
 }

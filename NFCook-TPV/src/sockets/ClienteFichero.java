@@ -369,9 +369,12 @@ public class ClienteFichero
             oos.close();
             socket.close();
            
-        } catch (Exception e){
+        } catch (SocketException e){
         	System.err.println("Fallo al pedir el fichero("+fichero+")al servidor, reintentando...");
         	pide(fichero);
+        
+        }catch (Exception e){
+        	System.err.println("Fallo al pedir el fichero("+fichero+")al servidor");
         
         }
     }
