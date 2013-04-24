@@ -289,7 +289,5 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
-        EscuchaCliente threadSecundario = new EscuchaCliente(); // lanzamos el thread de escucha secundario
-        threadSecundario.start();
   	}
 }
