@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +22,7 @@ public class ClienteFichero
 	private static InetAddress hostLocal;
 	private final static int puerto = 5000;
 	private final static int puertoClientes = 5002;
-	private final static String servidor = "nfcook.no-ip.org";
+	private final static String servidor = "192.168.1.54";//"nfcook.no-ip.org";
 
     /**
 	 * Establece comunicacion con el servidor en el puerto indicado. Envia la consulta sql
@@ -91,7 +92,7 @@ public class ClienteFichero
             ois.close();
             
 		}catch(Exception excepcionEnviaConsulta){
-			System.err.println("Fallo al enviar consulta al Servidor");
+			System.err.println("Fallo al enviar array consultas al Servidor");
 		}
 	}
 	
@@ -231,10 +232,46 @@ public class ClienteFichero
             ois.close();
             
 		}catch(Exception excepcionEnviaConsulta){
-			System.err.println("Fallo al enviar consulta al Servidor");
+			System.err.println("Fallo al enviar consulta elimina platos al Servidor");
 		}
 		
 	}
+	
+	/**
+	 * Establece comunicacion con el servidor en el puerto indicado. Enviara el mensaje correspondiente a cobrar una mesa
+	 * junto con el id de la mesa, las consultas sql y los ficheros que habra que actualizar en el Servidor.
+	**/
+	public static void enviaCobrarMesa(String idMesa, String fichero, String sql, String fichero2, String sql2){
+
+		try{
+			// Se abre el socket.
+            Socket socket = new Socket(servidor, puerto);
+
+            hostLocal = socket.getLocalAddress();
+            
+            // Se envía un mensaje de petición de fichero.
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+           	ArrayList<InetAddress> ips = new ArrayList<InetAddress>();
+           	ips.add(socket.getLocalAddress());
+           	MensajeCobrarMesa mensajeCobrarMesa = new MensajeCobrarMesa(idMesa, fichero, sql, fichero2, sql2, ips);
+
+            oos.writeObject(mensajeCobrarMesa);
+            
+            // recibir las IP internas de todos los clientes y enviar esta misma info
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Object mensajeConIPs = ois.readObject();
+            transmiteLocal((Mensaje)mensajeConIPs);
+            
+            // cerramos el socket
+            socket.close();
+            oos.close();
+            ois.close();
+            
+		}catch(Exception excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar consulta cobrar mesa al Servidor");
+		}
+	}
+
 	
 	private static void transmiteLocal(Mensaje mensaje){
 		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
@@ -259,7 +296,7 @@ public class ClienteFichero
     			}
     		
     	}catch (IOException e) {
-			System.err.println("Error al enviar transmitir a los Clientes");
+			System.err.println("Error al transmitir a los Clientes");
     		//e.printStackTrace();
     	}
 	}
@@ -277,7 +314,7 @@ public class ClienteFichero
      */
     public static void pide(String fichero)
     {
-        try
+      try
         {
             // Se abre el socket.
             Socket socket = new Socket(servidor, puerto);
@@ -294,7 +331,7 @@ public class ClienteFichero
 
             // Se abre un fichero para empezar a copiar lo que se reciba.
             FileOutputStream fos = new FileOutputStream(ruta);
-
+            
             // Se crea un ObjectInputStream del socket para leer los mensajes
             // que contienen el fichero.
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
@@ -305,7 +342,7 @@ public class ClienteFichero
             {
                 // Se lee el mensaje en una variabla auxiliar
                 mensajeAux = ois.readObject();
-            	
+
                 // Si es del tipo esperado, se trata
                 if (mensajeAux instanceof MensajeTomaFichero)
                 {
@@ -328,13 +365,14 @@ public class ClienteFichero
             
             // Se cierra socket y fichero
             fos.close();
-            ois.close();            
+            ois.close();
             oos.close();
             socket.close();
-
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+           
+        } catch (Exception e){
+        	System.err.println("Fallo al pedir el fichero("+fichero+")al servidor, reintentando...");
+        	pide(fichero);
+        
         }
     }
 
