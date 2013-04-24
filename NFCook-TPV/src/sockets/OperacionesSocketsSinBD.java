@@ -1,5 +1,8 @@
 package sockets;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import tpv.FechaYHora;
 import basesDeDatos.Operaciones;
 import interfaz.VentanaLogin;
@@ -70,6 +73,47 @@ public class OperacionesSocketsSinBD {
 		VentanaLogin.getRestaurante().cerrarInterfazPlatosSiAbierta(idMesa, 0);
 		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 		
+	}
+	
+	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, int estado) {
+		
+		String fichero = "MesasRestaurante.db";
+		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
+														"estadoMesa='" + estado + "', "+
+														"numeroPersonas='" + numeroPersonas + "' "+
+														"where idMesa='" + idMesa + "'";
+		
+		// Enviamos el estado de la mesa al servidor y los clientes
+		ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
+				
+	}
+	
+	public void actualizarMesaBDLLegadaExterna(String consulta, String idMesa, String idCamarero,int numeroPersonas, int estado) {
+		
+		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
+		VentanaLogin.getRestaurante().cerrarInterfazPlatosSiAbierta(idMesa, estado);
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
+		
+	}
+	
+	public void introducirComandaBD(ArrayList<String> arrayConsultas) {
+		
+		// Enviamos el array de consultas al servidor y a los otros clientes
+        ClienteFichero.enviaArrayConsultas("InfoMesas.db", arrayConsultas);
+        
+	}
+	
+	public void introducirComandaBDLLegadaExterna(ArrayList<String> arrayConsultas){
+		
+		//Cargamos los platos en la mesa del restaurante parseando las consultas en los metodos internos
+		Iterator<String> itConsultas = arrayConsultas.iterator();
+		while(itConsultas.hasNext()){
+			String consulta = itConsultas.next();
+			VentanaLogin.getRestaurante().cargarConsultaARestaurante(consulta);
+		}
+		
+		VentanaLogin.getRestaurante().refrescaInterfazPlatos();
+		VentanaLogin.getRestaurante().refrescaVentanaMesas();
 	}
 
 }
