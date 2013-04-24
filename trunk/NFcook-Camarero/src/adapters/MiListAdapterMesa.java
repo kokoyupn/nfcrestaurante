@@ -67,7 +67,8 @@ public class MiListAdapterMesa extends BaseAdapter {
 	    unidades.setText("Uds: " + lista.getCantidad());
 	    
 	    TextView precio = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.precio);
-	    precio.setText(Double.toString(lista.getPrecio())+" "+"€");
+	    double aux = lista.getPrecio();
+	    precio.setText(Double.toString( Math.rint(aux*100)/100 )+" "+"€");
 
 	    TextView extras = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.extras);
 	    extras.setText(lista.getExtras());

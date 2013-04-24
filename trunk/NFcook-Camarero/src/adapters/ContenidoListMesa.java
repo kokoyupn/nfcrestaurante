@@ -45,7 +45,7 @@ public class ContenidoListMesa {
 	}
 	
 	public int getId() {
-		return id;
+		return repetidos.get(0);//FIXME
 	}
 	
 	public String getNombre() {

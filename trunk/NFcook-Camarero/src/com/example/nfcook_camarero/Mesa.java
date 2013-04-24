@@ -180,6 +180,7 @@ public class Mesa extends Activity {
         		        	break;
 	        	        	
 	            		case MotionEvent.ACTION_UP:
+	            			
 	            			System.out.println("UP");
 	            			if(mueves){
 		            			if(!noBorrar){
@@ -197,6 +198,7 @@ public class Mesa extends Activity {
 			            		        	
 			            		        	//Entras si sigues con el dedo en la misma vista
 			            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
+			            		        		try{//FIXME
 			            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
 			            		        		String identificador = Integer.toString(platoSeleccionado.getIdRepetido());
 			            	    				
@@ -209,8 +211,10 @@ public class Mesa extends Activity {
 			            	    					System.out.println("Error borrar de la base pedido en ondrag");
 			            	    				}
 			            	    				
+			            	    				
 			            	    				//Resta 1 a la cantidad de esa posicion del adapter
 			            	    				adapter.deletePosicion(itemId);//FIXME probar esto bien
+			            	    				
 			            	    				
 			            	    				
 			            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
@@ -221,7 +225,9 @@ public class Mesa extends Activity {
 			            	    				
 			            	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
 			            	    				precioTotal.setText(Double.toString( Math.rint( adapter.getPrecio()*100 )/100) +" €");
-			            	            		
+			            		        	}catch(Exception e){
+			            	    				System.out.println("Acceso fuera de rango");
+			            		        	}  
 			            	            		}
 				            		     }else{
 				            		    	 //Si no se ha borrado, se devuelve a su sitio
@@ -237,7 +243,7 @@ public class Mesa extends Activity {
 		                        return false;
 	            			
 	            			break;
-	                        
+	            		  
 	            		case MotionEvent.ACTION_MOVE:
 	            			System.out.println("MOVE");
 	            			mueves=true;
@@ -397,10 +403,16 @@ public class Mesa extends Activity {
 		    		boolean repetido = false;
 		    		while(i<elementos.size() && !repetido){
 		    			System.out.println("Entra");
-	    				
-			    		if( (elementos.get(i).getNombre()).equals(c.getString(0)) &&
-			    			(elementos.get(i).getExtras()).equals(c.getString(2)) &&
-			    			(elementos.get(i).getObservaciones()).equals(c.getString(1)) ){
+	    				String n = elementos.get(i).getNombre();
+	    				String e = elementos.get(i).getExtras();
+	    				//if(e==null)
+	    					//e="";
+	    				String o = elementos.get(i).getObservaciones();
+	    				//if(o==null)
+	    					//o="";
+			    		if( n.equals(c.getString(0)) &&
+			    			e.equals(c.getString(2)) &&
+			    			o.equals(c.getString(1)) ){
 			    				System.out.println("Repes: "+c.getString(0));
 			    				repetido = true;
 			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
@@ -471,19 +483,33 @@ public class Mesa extends Activity {
 		        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
 				sqlMesas.close();
 				
+				/*/PRUEBAS--------------
+				sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+				dbMesas= sqlMesas.open();
+				elemLista = obtenerElementos();
+				sqlMesas.close();*/
+				//PRUEBA--------------
 				
-				adapter.setExtras(posicion,nuevosExtrasMarcados);
-				adapter.setObservaciones(posicion,observacionesNuevas);
+				//sddsfsdf
+				ContenidoListMesa aux = (ContenidoListMesa)adapter.getItem(posicion);
+				if(nuevosExtrasMarcados==null)
+					nuevosExtrasMarcados="";
+				if(observacionesNuevas==null)
+					observacionesNuevas="";
+				
+				if(aux.getCantidad()==1){//Si solo hay un elemento(no hay varios iguales), cambia extras y observaciones
+					adapter.setExtras(posicion,nuevosExtrasMarcados);
+					adapter.setObservaciones(posicion,observacionesNuevas);
+				}
+				
 				
 				//mirar si qeda igual q otro------------
-				ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(posicion);
-				
 				//Si se ha modificado uno y queda igual que algun otro, esta funcion se encarga 
 				//ya de buscar y borrar el que mas a la derecha este y de sumar 1 al de la 
 				//izquierda
-				buscaComunesEditar(elemento,posicion);
+				buscaComunesEditar(aux,posicion,nuevosExtrasMarcados,observacionesNuevas);
 				//----------------------------------	
-					
+				adapter = new MiListAdapterMesa(actividad, elemLista);	
 				platos.setAdapter(adapter);
 			}
 		});
@@ -586,45 +612,68 @@ public class Mesa extends Activity {
 		return comunes;
 	}
 	
-	public static void buscaComunesEditar(ContenidoListMesa platoEditar,int posicion){
+	public static void buscaComunesEditar(ContenidoListMesa platoEditar,int posicion,String extrasNuevo,String obsNuevas){
 		boolean comunes = false;
 		
-		String nombre = platoEditar.getNombre();
-		String observaciones = platoEditar.getObservaciones();
-		String extras = platoEditar.getExtras();
-		int i = 0;
-		while(i<adapter.getCount() && !comunes){
-			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
-			if( i!=posicion &&
-				(elemento.getNombre()).equals(nombre) && 
-				(elemento.getObservaciones()).equals(observaciones) && 
-				(elemento.getExtras()).equals(extras) ){
-					
-					comunes = true;
-					
-					if(i<posicion){
-						elemento.sumaCantidad();
-						elemento.aniadeId(platoEditar.getId());
-						adapter.deletePosicion(posicion);
-					}else{
-						platoEditar.sumaCantidad();
-						platoEditar.aniadeId(elemento.getId());
-						adapter.deletePosicion(i);
-					}
+		
+		
+		if(platoEditar.getCantidad()==1){
+			String nombre = platoEditar.getNombre();
+			String observaciones = platoEditar.getObservaciones();
+			String extras = platoEditar.getExtras();
+			int i = 0;
+			while(i<adapter.getCount() && !comunes){
+				ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
+				if( i!=posicion &&
+					(elemento.getNombre()).equals(nombre) && 
+					(elemento.getObservaciones()).equals(observaciones) && 
+					(elemento.getExtras()).equals(extras) ){
 						
-				}
-			i++;
-		}
-		if(!comunes && platoEditar.getCantidad()>1){//Estaban agrupados y se han hecho diferentes
-			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(posicion);//FIXME no se
-			System.out.println("elem(pos): "+elemento.getExtras());
-			System.out.println("platoEditar: "+platoEditar.getExtras());
-			platoEditar.restaCantidad();
+						comunes = true;
+						
+						if(i<posicion){
+							elemento.sumaCantidad();
+							elemento.aniadeId(platoEditar.getId());
+							adapter.deletePosicion(posicion);
+						}else{
+							platoEditar.sumaCantidad();
+							platoEditar.aniadeId(elemento.getId());
+							adapter.deletePosicion(i);
+						}
+							
+					}
+				i++;
+			}
+		}else if(platoEditar.getCantidad()>1){//Estaban agrupados y se han hecho diferentes
+			//ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(posicion);//FIXME no se
+			//System.out.println("elem(pos): "+elemento.getExtras());
+			//System.out.println("platoEditar: "+platoEditar.getExtras());
+			
 			int idUnicoPlatoNuevo = platoEditar.getIdRepetido();
 			platoEditar.eliminaId();
+			platoEditar.restaCantidad();
+			ContenidoListMesa nuevo = new ContenidoListMesa(platoEditar.getNombre(),extrasNuevo,obsNuevas,platoEditar.getPrecio(),idUnicoPlatoNuevo,platoEditar.getIdPlato());
 			
-			ContenidoListMesa nuevo = new ContenidoListMesa(platoEditar.getNombre(),extrasAntesEditar,obsAntesEditar,platoEditar.getPrecio(),idUnicoPlatoNuevo,platoEditar.getIdPlato());
-			adapter.addPlato(nuevo);
+			String nombre = nuevo.getNombre();
+			String observaciones = nuevo.getObservaciones();
+			String extras = nuevo.getExtras();
+			int i=0;
+			boolean comun=false;
+			while(i<adapter.getCount() && !comun){
+				ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
+				if( i!=posicion &&
+					(elemento.getNombre()).equals(nombre) && 
+					(elemento.getObservaciones()).equals(observaciones) && 
+					(elemento.getExtras()).equals(extras) ){
+						
+						comun = true;
+						elemento.sumaCantidad();
+						elemento.aniadeId(nuevo.getId());
+					}
+				i++;
+			}
+			if(!comun)
+				adapter.addPlato(nuevo);
 		}
 		
 	}
