@@ -39,6 +39,7 @@ public class Restaurante {
 		cargarMesas();
 		cargarProductos();
 		cargarCamareros();
+		
 	}
 	
 	private void cargarCamareros() {
@@ -331,7 +332,28 @@ public class Restaurante {
 		String tipo = devuelveStringSinComillas(consultaTokenizada.nextToken());
 		String nombreProducto = devuelveStringSinComillas(consultaTokenizada.nextToken());
 		double precio = Double.parseDouble(devuelveStringSinComillas(consultaTokenizada.nextToken()));
-		String observaciones = devuelveStringSinComillas(consultaTokenizada.nextToken());
+		
+		String tokenObservaciones = consultaTokenizada.nextToken();
+		String observaciones = "";
+		if(empiezaPorComilla(tokenObservaciones) && terminaPorComilla(tokenObservaciones)){
+			observaciones = devuelveStringSinComillas(tokenObservaciones);
+		}else if(empiezaPorComilla(tokenObservaciones)){
+			boolean primero = true;
+			while(!terminaPorComilla(tokenObservaciones)){
+				if(primero){
+					observaciones += devuelveStringSinComillas(tokenObservaciones);
+					primero = false;
+				}else{
+					observaciones += "," + devuelveStringSinComillas(tokenObservaciones);
+				}
+				tokenObservaciones = consultaTokenizada.nextToken();
+			}
+			if(primero){
+				observaciones += devuelveStringSinComillas(tokenObservaciones);
+			}else{
+				observaciones += "," + devuelveStringSinComillas(tokenObservaciones);
+			}
+		}
 		
 		String tokenExtras = consultaTokenizada.nextToken();
 		String extras = "";
@@ -403,6 +425,8 @@ public class Restaurante {
 				conComillas = conComillas.replaceFirst("'", "");
 			}
 			return conComillas.replace("')", "");
+		}else if(conComillas.charAt(0) != '\'' && conComillas.charAt(conComillas.length()-1) == '\''){
+			return conComillas = conComillas.replaceFirst("'", "");
 		}
 		int posChar = 0;
 		String conComillasAux = "";
