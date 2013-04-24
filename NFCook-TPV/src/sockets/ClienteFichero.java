@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +23,7 @@ public class ClienteFichero
 	private static InetAddress hostLocal;
 	private final static int puerto = 5000;
 	private final static int puertoClientes = 5002;
-	private final static String servidor = "nfcook.no-ip.org";
+	private final static String servidor = "192.168.1.54";//"nfcook.no-ip.org";
 
 
     /**
@@ -48,7 +49,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
+            transmiteLocal((Mensaje)mensajeConIPs, 0);
             
             // cerramos el socket
             socket.close();
@@ -85,7 +86,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
+            transmiteLocal((Mensaje)mensajeConIPs, 0);
             
             // cerramos el socket
             socket.close();
@@ -120,7 +121,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
+            transmiteLocal((Mensaje)mensajeConIPs, 0);
             
             // cerramos el socket
             socket.close();
@@ -155,7 +156,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
+            transmiteLocal((Mensaje)mensajeConIPs, 0);
             
             // cerramos el socket
             socket.close();
@@ -190,7 +191,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
+            transmiteLocal((Mensaje)mensajeConIPs, 0);
             
             // cerramos el socket
             socket.close();
@@ -225,7 +226,7 @@ public class ClienteFichero
             // recibir las IP internas de todos los clientes y enviar esta misma info
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Object mensajeConIPs = ois.readObject();
-            transmiteLocal((Mensaje)mensajeConIPs);
+            transmiteLocal((Mensaje)mensajeConIPs, 0);
             
             // cerramos el socket
             socket.close();
@@ -238,18 +239,19 @@ public class ClienteFichero
 	}
 
 	
-	private static void transmiteLocal(Mensaje mensaje){
+	private static void transmiteLocal(Mensaje mensaje, int ultimaPos){
 		// recorremos todos los clientes salvo el actual para enviarles la consulta sql
-    	try {
-    		int i = 0;
-    		while(i<mensaje.ips.size()){
-    			if(!mensaje.ips.get(i).equals(hostLocal)){
+		try {
+    		while(ultimaPos < mensaje.ips.size()){
+    			if(!mensaje.ips.get(ultimaPos).equals(hostLocal)){
 
-    				Socket socket = new Socket(mensaje.ips.get(i), puertoClientes);
+    				Socket socket = new Socket(mensaje.ips.get(ultimaPos), puertoClientes);
+    				socket.setSoTimeout(1000); // timeout del socket a 1 segundo
+
     		    	ObjectOutputStream oos;
     				System.out.println("Aceptado servidor");
     				oos = new ObjectOutputStream(socket.getOutputStream());
-    				 
+
     				oos.writeObject(mensaje);
     		    
     		        // cerramos el socket
@@ -257,12 +259,16 @@ public class ClienteFichero
     				oos.close();
 
     			}
-    			i++;
+    			ultimaPos++;
     			}
     		
+    	}catch (SocketTimeoutException e) {
+    		System.err.println("Error al transmitir a los Clientes, reintentando...");
+			transmiteLocal(mensaje, ultimaPos);
+
     	}catch (IOException e) {
 			System.err.println("Error al transmitir a los Clientes");
-    		//e.printStackTrace();
+
     	}
 	}
 	
@@ -283,7 +289,7 @@ public class ClienteFichero
         {
             // Se abre el socket.
             Socket socket = new Socket(servidor, puerto);
-           
+			
             // Se envía un mensaje de petición de fichero.
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ArrayList<InetAddress> ips = new ArrayList<InetAddress>();
@@ -340,7 +346,6 @@ public class ClienteFichero
         
         }catch (Exception e){
         	System.err.println("Fallo al pedir el fichero("+fichero+")al servidor");
-        
         }
     }
 
