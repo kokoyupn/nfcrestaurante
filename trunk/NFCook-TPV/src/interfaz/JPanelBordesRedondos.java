@@ -6,9 +6,9 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.RenderingHints; import java.awt.geom.RoundRectangle2D;
+import java.awt.RenderingHints;
+import java.awt.geom.RoundRectangle2D;
 
-import javax.print.attribute.AttributeSetUtilities;
 import javax.swing.JPanel;
 
 public class JPanelBordesRedondos extends JPanel{

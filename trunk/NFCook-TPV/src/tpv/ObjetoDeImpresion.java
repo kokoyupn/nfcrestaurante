@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
-import java.lang.Character.Subset;
 
 class ObjetoDeImpresion implements Printable{
 	

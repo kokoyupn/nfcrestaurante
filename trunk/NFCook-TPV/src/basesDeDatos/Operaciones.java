@@ -4,12 +4,8 @@
  */
 package basesDeDatos;
 
-import interfaz.VentanaLogin;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
@@ -107,7 +103,7 @@ public class Operaciones extends Conexion{
 
 
 
-	public boolean camararoFichadoEntrar(String idCamarero, FechaYHora fechaYHora) {
+	public boolean camareroFichadoEntrar(String idCamarero, FechaYHora fechaYHora) {
     	try{
 			ResultSet resultados = consultar("select dia from Ficha where dia='" + fechaYHora.getDia() + "' and idCamarero='" + idCamarero + "'");
 	    	if(resultados.next()){
@@ -123,7 +119,7 @@ public class Operaciones extends Conexion{
 
 
 
-	public boolean camararoFichadoSalir(String idCamarero, FechaYHora fechaYHora) {
+	public boolean camareroFichadoSalir(String idCamarero, FechaYHora fechaYHora) {
 		try{
 			ResultSet resultados = consultar("select horaSalida from Ficha where dia='" + fechaYHora.getDia() + "' and idCamarero='" + idCamarero + "'");
 	    	if(resultados.next()){
@@ -143,7 +139,7 @@ public class Operaciones extends Conexion{
 
 
 
-	public boolean camararoFichadoParada(String idCamarero, FechaYHora fechaYHora) {
+	public boolean camareroFichadoParada(String idCamarero, FechaYHora fechaYHora) {
 		try{
 			ResultSet resultados = consultar("select horaParada from Ficha where dia='" + fechaYHora.getDia() + "' and idCamarero='" + idCamarero + "'");
 	    	if(resultados.next()){
@@ -160,71 +156,7 @@ public class Operaciones extends Conexion{
     		return true;
     	}
 	}
-
 	
-	public void eliminarPlatosDeMesa(String idMesa){
-		FechaYHora dia = new FechaYHora();
-		String fichero = "InfoMesas.db";
-		String consulta = "delete from infoMesas where dia='" + dia.getDia() + "' and "+
-														"idMesa='" + idMesa +"'";
-		
-		ClienteFichero.enviaConsultaEliminaPlatos(idMesa, fichero, consulta);
-		insertar(consulta, false);	
-	}
-	
-	public void eliminarPlatosDeMesaLLegadaExterna(String idMesa, String consulta){
-
-		insertar(consulta, false);
-		VentanaLogin.getRestaurante().eliminaProductosDeMesa(idMesa);
-	}
-	
-	
-	public void introducirComandaBD(ArrayList<String> arrayConsultas) {
-		
-		// Enviamos el array de consultas al servidor y a los otros clientes
-        ClienteFichero.enviaArrayConsultas(nombreDB, arrayConsultas);
-        
-        // Insertamos las consutlas en la base de datos local
-		Iterator<String> itConsultas = arrayConsultas.iterator();
-		while(itConsultas.hasNext()){
-			insertar(itConsultas.next(), false);
-		}
-	}
-	
-	
-	public void introducirComandaBDLLegadaExterna(ArrayList<String> arrayConsultas){
-		Iterator<String> itConsultas = arrayConsultas.iterator();
-		while(itConsultas.hasNext()){
-			String consulta = itConsultas.next();
-			VentanaLogin.getRestaurante().cargarConsultaARestaurante(consulta);
-			insertar(consulta, false);
-		}
-		
-		VentanaLogin.getRestaurante().refrescaVentanaMesas();
-		VentanaLogin.getRestaurante().refrescaInterfazPlatos();
-	}
-
-	public void actualizarMesaBD(String idMesa, String idCamarero,int numeroPersonas, int estado) {
-		String fichero = "MesasRestaurante.db";
-		String consulta = "UPDATE mesasRestaurante SET idCamarero ='" + idCamarero + "',"+
-														"estadoMesa='" + estado + "', "+
-														"numeroPersonas='" + numeroPersonas + "' "+
-														"where idMesa='" + idMesa + "'";
-		
-		// Enviamos el estado de la mesa al servidor y los clientes
-		ClienteFichero.enviaEstadoMesa(idMesa, idCamarero, numeroPersonas, estado, fichero, consulta);
-		
-		// Modificamos base de datos local.
-		insertar(consulta, false);
-		
-	}
-	
-	public void actualizarMesaBDLLegadaExterna(String consulta, String idMesa, String idCamarero,int numeroPersonas, int estado) {
-		insertar(consulta, false);
-		VentanaLogin.getRestaurante().actualizaMesaLLegadaExtarna(idMesa, idCamarero, numeroPersonas, estado);
-		VentanaLogin.getRestaurante().refrescaVentanaMesas();
-		VentanaLogin.getRestaurante().cerrarInterfazPlatosSiAbierta(idMesa, estado);
-	}
 /* 
  * 							-EJEMPLOS-
  * 

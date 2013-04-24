@@ -36,21 +36,19 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-import basesDeDatos.Operaciones;
-
 import sockets.OperacionesSocketsSinBD;
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
 import tpv.Cobro;
-import tpv.Mesa; 
+import tpv.Mesa;
 import tpv.Plato;
 import tpv.Producto;
-import tpv.QRCodeJava; 
 import tpv.Restaurante;
 import tpv.TuplaProdEnv;
 
 public class InterfazPlatos extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPaneGlobal, panelPlatos, menuConfig, cobrar, eliminar, enviar, aceptar, promociones;
 	private JTable tablaPlatos;
 	private JButton rehacer, deshacer;
