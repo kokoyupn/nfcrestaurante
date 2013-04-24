@@ -185,7 +185,13 @@ public class Mesa extends Activity {
 	            			if(mueves){
 		            			if(!noBorrar){
 			            			if(moviendose){
-			            				
+			            				//PINTARADAPTER------------
+			            				for(int i=0;i<adapter.getCount();i++){
+			            					ContenidoListMesa aux=(ContenidoListMesa)adapter.getItem(i);
+			            					System.out.println(aux.getCantidad()+" " +aux.getNombre());
+			            				}
+			            				//PINTARADAPTER------------
+			            							            				
 			            				WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 			            				Display display = wm.getDefaultDisplay();
 			            				int ancho = display.getWidth()/4*3;
@@ -211,7 +217,8 @@ public class Mesa extends Activity {
 			            	    					System.out.println("Error borrar de la base pedido en ondrag");
 			            	    				}
 			            	    				
-			            	    				
+			            	    				System.out.println("rrr");
+			            	    				System.out.println(itemId);
 			            	    				//Resta 1 a la cantidad de esa posicion del adapter
 			            	    				adapter.deletePosicion(itemId);//FIXME probar esto bien
 			            	    				
@@ -416,6 +423,7 @@ public class Mesa extends Activity {
 			    				System.out.println("Repes: "+c.getString(0));
 			    				repetido = true;
 			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
+			    				elementos.get(i).aniadeId(Integer.parseInt(c.getString(4)));
 			    		}else
 			    			i++;
 		    		}
@@ -476,22 +484,58 @@ public class Mesa extends Activity {
 		    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
 		    	}
 		    	
+		    	if(nuevosExtrasMarcados==null)
+					nuevosExtrasMarcados="";
+				if(observacionesNuevas==null)
+					observacionesNuevas="";
+				
 		    	ContentValues platoEditado = new ContentValues();
 		    	platoEditado.put("Extras", nuevosExtrasMarcados);
 		    	platoEditado.put("Observaciones", observacionesNuevas);
 		        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
 		        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
-				sqlMesas.close();
 				
-				/*/PRUEBAS--------------
+		        //ASI queda despues de la actualizacion------------------
+		        try{
+		        	String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
+		        	System.out.println("a");
+		        	String[] numeroDeMesa = new String[]{numMesa};
+		        	System.out.println("a");
+		        	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
+		        	System.out.println("a");
+				    while(c.moveToNext()){
+				    	System.out.println("b");
+				    	System.out.println(c.getString(0));
+				    	String extras=c.getString(2);
+				    	if (extras==null)
+				    		System.out.println("era null");
+				    	else
+				    		System.out.println(c.getString(2));
+				    	System.out.println(c.getString(1));
+				    	System.out.println(c.getString(4));
+				    }
+				}catch(Exception e){
+					System.out.println(e.getCause()+" "+e.getLocalizedMessage()+" "+e.getStackTrace());
+				}
+		        
+			    //ASI queda despues de la actualizacion------------------
+		        sqlMesas.close();
+				
+				//PRUEBAS--------------
 				sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 				dbMesas= sqlMesas.open();
 				elemLista = obtenerElementos();
-				sqlMesas.close();*/
+	         
+	  	    	adapter = new MiListAdapterMesa(actividad, elemLista);
+	  	    	platos.setAdapter(adapter);
+	  	    	System.out.println("EL ADAPTER TIENE: "+adapter.getCount());
+				sqlMesas.close();
+		        
 				//PRUEBA--------------
+		        
 				
 				//sddsfsdf
-				ContenidoListMesa aux = (ContenidoListMesa)adapter.getItem(posicion);
+				/*ContenidoListMesa aux = (ContenidoListMesa)adapter.getItem(posicion);
 				if(nuevosExtrasMarcados==null)
 					nuevosExtrasMarcados="";
 				if(observacionesNuevas==null)
@@ -500,17 +544,17 @@ public class Mesa extends Activity {
 				if(aux.getCantidad()==1){//Si solo hay un elemento(no hay varios iguales), cambia extras y observaciones
 					adapter.setExtras(posicion,nuevosExtrasMarcados);
 					adapter.setObservaciones(posicion,observacionesNuevas);
-				}
+				}*/
 				
 				
 				//mirar si qeda igual q otro------------
 				//Si se ha modificado uno y queda igual que algun otro, esta funcion se encarga 
 				//ya de buscar y borrar el que mas a la derecha este y de sumar 1 al de la 
 				//izquierda
-				buscaComunesEditar(aux,posicion,nuevosExtrasMarcados,observacionesNuevas);
+				//buscaComunesEditar(aux,posicion,nuevosExtrasMarcados,observacionesNuevas);
 				//----------------------------------	
-				adapter = new MiListAdapterMesa(actividad, elemLista);	
-				platos.setAdapter(adapter);
+				//adapter = new MiListAdapterMesa(actividad, elemLista);	
+				//platos.setAdapter(adapter);
 			}
 		});
 		
