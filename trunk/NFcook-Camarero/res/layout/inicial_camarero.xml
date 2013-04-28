@@ -9,24 +9,31 @@
         android:id="@+id/LinearLayoutEliminarMesa"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
         android:orientation="vertical" >
 
-        <GridView
-            android:id="@+id/gridViewInicial"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="366dp"
-            android:layout_weight="0.80"
-            android:background="#BFEFFF"
-            android:columnWidth="100dp"
-            android:horizontalSpacing="15dp"
-            android:numColumns="auto_fit"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="20dp"
-            android:verticalSpacing="15dp" >
-        </GridView>
+            android:layout_weight="0.8"
+            android:background="@drawable/logo_foster_azul"
+            android:orientation="vertical" >
+
+            <GridView
+                android:id="@+id/gridViewInicial"
+                android:layout_width="match_parent"
+                android:layout_height="366dp"
+                android:layout_weight="0.80"
+                android:columnWidth="100dp"
+                android:horizontalSpacing="15dp"
+                android:numColumns="auto_fit"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp"
+                android:verticalSpacing="15dp" >
+            </GridView>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,6 +95,7 @@
 
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

@@ -15,17 +15,20 @@ import com.example.nfcook_camarero.R;
 import adapters.HijoExpandableListHistorico;
 import adapters.MiExpandableListAdapterHistorico;
 import adapters.PadreExpandableListHistorico;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
@@ -42,6 +45,8 @@ public class PantallaHistoricoFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		importarBaseDatatos();
 		vista = inflater.inflate(R.layout.historico, container, false);
+		LinearLayout fl = (LinearLayout) vista.findViewById(R.id.LinearLayoutHist);
+		fl.setBackgroundColor(Color.rgb(191, 239, 255));
 		crearExpandableList();
 		return vista;
 	}
