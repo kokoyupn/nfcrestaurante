@@ -3,18 +3,14 @@ package adapters;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.example.nfcook_camarero.R;
+
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnDragListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 
@@ -55,25 +51,25 @@ public class MiListAdapterMesa extends BaseAdapter {
         
 	    if(convertView == null) {
 	      LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	      vista = inflater.inflate(com.example.nfcook_camarero.R.layout.contenido_lista_mesa, null);
+	      vista = inflater.inflate(R.layout.contenido_lista_mesa, null);
 	    }
 	             
 	    ContenidoListMesa lista = contenido.get(posicion);
 	         
-	    TextView nombre = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.nombrePlato);
+	    TextView nombre = (TextView) vista.findViewById(R.id.nombrePlato);
 	    nombre.setText(lista.getNombre());
 	    
-	    TextView unidades = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.unidades);
+	    TextView unidades = (TextView) vista.findViewById(R.id.unidades);
 	    unidades.setText("Uds: " + lista.getCantidad());
 	    
-	    TextView precio = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.precio);
+	    TextView precio = (TextView) vista.findViewById(R.id.precio);
 	    double aux = lista.getPrecio();
 	    precio.setText(Double.toString( Math.rint(aux*100)/100 )+" "+"€");
 
-	    TextView extras = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.extras);
+	    TextView extras = (TextView) vista.findViewById(R.id.extras);
 	    extras.setText(lista.getExtras());
 	         
-	    TextView observaciones = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.observaciones);
+	    TextView observaciones = (TextView) vista.findViewById(R.id.observaciones);
 	    observaciones.setText(lista.getObservaciones());    
 	    
 	    return vista;

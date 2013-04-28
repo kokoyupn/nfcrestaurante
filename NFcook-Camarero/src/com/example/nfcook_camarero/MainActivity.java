@@ -1,11 +1,7 @@
 package com.example.nfcook_camarero;
 
-import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 
@@ -59,14 +55,14 @@ public class MainActivity extends Activity {
      * Metodo para el boton invisible que usamos para probar la aplicacion mas rapido
      * @param boton
      */
-	/*  public void onClickBotonInvisible(View boton)
+	  public void onClickBotonInvisible(View boton)
 	  {
 		  //Iniciamos la nueva actividad
 	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
        	  intent.putExtra("usuario", "Foster");
        	  intent.putExtra("Restaurante","Foster");
        	  startActivity(intent); 
-	  }*/  
+	  }  
  /**
   * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
   * esta en la base de datos de camareros 
@@ -99,7 +95,7 @@ public void  onClickBotonEntrar(View boton)
 		   	  	   
 	  	   c.moveToFirst();
        	 
-	  	   String usu = c.getString(0);
+	  	   //String usu = c.getString(0);
 	  	   String cont = c.getString(1);
        		
 	  	   if (cont.equals(password.getText().toString()))//Si las contraseña que hay en la base de datos y la que a introducido el usuario son iguales

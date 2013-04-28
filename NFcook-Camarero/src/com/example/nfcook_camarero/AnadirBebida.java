@@ -49,7 +49,6 @@ public class AnadirBebida extends Activity{
 	private static SQLiteDatabase dbRestaurante, dbPedido;
 	
 	private static String numMesa, idCamarero, personasMesa;  
-	
 	boolean eliminarBebidas, anadirBebidas;
 	
 	private static GridView gridViewBebidas;
