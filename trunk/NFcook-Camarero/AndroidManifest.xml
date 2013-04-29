@@ -29,6 +29,7 @@
         
         <activity
             android:name=".InicializarPantallasCamarero"
+            android:windowSoftInputMode="adjustResize|adjustPan"
             android:screenOrientation="portrait">
 
         </activity>
