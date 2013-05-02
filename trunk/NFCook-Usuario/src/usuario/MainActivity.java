@@ -40,6 +40,8 @@ public class MainActivity extends Activity{
 	
 	public AlertDialog ventanaEmergente;
 	
+	private long anteriorPulsacion;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	//Quitamos barra de titulo de la aplicacion
@@ -58,6 +60,17 @@ public class MainActivity extends Activity{
     	
     	cargarPedidoAnterior();
     }
+    
+    /** Para salir si la segunda pulsacion se hace antes de 2 seg*/
+    public void onBackPressed() {
+	    long tiempoActual = System.currentTimeMillis();
+	    if(tiempoActual - anteriorPulsacion > 2000){
+	    	Toast.makeText(getApplicationContext(),"Pulse de nuevo para salir",Toast.LENGTH_SHORT).show();	
+	    	anteriorPulsacion = tiempoActual;
+	    } else{
+	        super.onBackPressed();
+	    }
+	}
     
     private void crearRestaurantesListView() {	
     	// Vemos cuantos restaurantes hay en la base de datos para cargar sus logos de forma generica
