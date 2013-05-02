@@ -14,6 +14,7 @@ import adapters.PadreExpandableListPedido;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -64,6 +65,7 @@ public class PedidoFragment extends Fragment{
         crearExpandableList();
         actualizarPrecioPedido();
         crearVentanaEmergenteElegirSincronizacion();
+        ponerOnClickPapelera();
         ponerOnClickSincronizar();
         ponerOnClickSincronizarPedidoNFC();
         ponerOnClickSincronizarPedidoBeam();
@@ -176,6 +178,69 @@ public class PedidoFragment extends Fragment{
 	}
 	
 	/**
+	 * Crea el onClick la papelera para borrar todo el pedido.
+	 */
+	private void ponerOnClickPapelera() {
+		ImageView botonPapelera = (ImageView) vistaConExpandaleList.findViewById(R.id.imagePapelera);
+		
+		botonPapelera.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				//creo el alert dialog que se mostrara al pulsar en el boton back
+		    	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(vistaConExpandaleList.getContext());
+				onClickBotonAceptarAlertDialog(ventanaEmergente);
+				onClickBotonCancelarAlertDialog(ventanaEmergente);
+				View vistaAviso = LayoutInflater.from(vistaConExpandaleList.getContext()).inflate(R.layout.aviso_continuar_pedido, null);
+				//modifico el texto a mostrar
+				TextView textoAMostar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
+				textoAMostar.setText("¿Desea eliminar todo su pedido?");
+				ventanaEmergente.setView(vistaAviso);
+				ventanaEmergente.show();
+			}
+		});
+	}
+
+	/**
+	 * boton NO del alert dialog. No hace nada pero por debajo cierra el dialog.
+	 * @param ventanaEmergente
+	 */
+	private void onClickBotonCancelarAlertDialog(Builder ventanaEmergente) {
+		ventanaEmergente.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+			public void onClick(DialogInterface dialog, int which) {
+					
+			}
+		});
+	}
+			
+	/**
+	* boton SI del alert dialog. Finaliza la actividad y cierra el dialog por debajo. 
+	* @param ventanaEmergente
+	*/
+	private void onClickBotonAceptarAlertDialog(Builder ventanaEmergente) {
+		ventanaEmergente.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+					
+			public void onClick(DialogInterface dialog, int which) {
+				try{
+					HandlerDB sqlPedido = new HandlerDB(vistaConExpandaleList.getContext(),"Pedido.db"); 
+					SQLiteDatabase dbPedido = sqlPedido.open();
+					dbPedido.delete("Pedido", null, null);
+					sqlPedido.close();
+					
+					importarBaseDatatos();
+			        crearExpandableList();
+			        actualizarPrecioPedido();
+			        ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
+					
+				}catch(SQLiteException e){
+		         	Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
+		        }		
+			}
+		});
+	}
+
+	
+	/**
 	 * Crea el onClick la la imagen botonSincronizar.
 	 * Compruena si las bases de datos estan vacias para permitir o no sincronizar.
 	 * Si se puede abre una ventana emergente para elegir el metodo de sincronizacion.
@@ -183,7 +248,6 @@ public class PedidoFragment extends Fragment{
 	private void ponerOnClickSincronizar() {
 		ImageView botonSincronizar = (ImageView) vistaConExpandaleList.findViewById(R.id.imageSincronizar);
 		
-		//OnClick boton borrar de cada hijo.
 		botonSincronizar.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -205,7 +269,6 @@ public class PedidoFragment extends Fragment{
 	private void ponerOnClickSincronizarPedidoNFC() {
 		ImageView botonNFC = (ImageView) vistaVentanaEmergenteElegirSincronizacion.findViewById(R.id.imageNFCSincronizar);
 		
-		//OnClick boton borrar de cada hijo.
 		botonNFC.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -242,7 +305,6 @@ public class PedidoFragment extends Fragment{
 	private void ponerOnClickSincronizarPedidoBeam() {
 		ImageView botonBeam = (ImageView) vistaVentanaEmergenteElegirSincronizacion.findViewById(R.id.imageBeamSincronizar);
 		
-		//OnClick boton borrar de cada hijo.
 		botonBeam.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -266,7 +328,6 @@ public class PedidoFragment extends Fragment{
 	private void ponerOnClickSincronizarPedidoQR() {
 		ImageView botonQR = (ImageView) vistaVentanaEmergenteElegirSincronizacion.findViewById(R.id.imageQRSincronizar);
 		
-		//OnClick boton borrar de cada hijo.
 		botonQR.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
