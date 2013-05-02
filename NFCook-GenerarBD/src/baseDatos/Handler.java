@@ -126,7 +126,7 @@ public class Handler extends SQLiteOpenHelper {
 											//getWritable si no existe la base aun, y se crea
 		if(DB_NAME=="MiBase.db"){
 		String query="CREATE TABLE Restaurantes(Id TEXT,Restaurante TEXT,Categoria TEXT," +
-		"TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER)";
+		"TipoPlato TEXT,Nombre TEXT,Descripcion TEXT,Breve TEXT,Foto TEXT,Extras TEXT,Precio INTEGER, Favorito TEXT)";
 			db.execSQL(query);
 		}else if(DB_NAME=="Login.db"){
 			String query="CREATE TABLE Camareros(Nombre TEXT,Contraseña TEXT)";
