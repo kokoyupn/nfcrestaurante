@@ -18,6 +18,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AutoCompleteTextView;
@@ -170,6 +172,30 @@ public class DescripcionPlato extends Activity {
 				
 			}
 		});
+        
+        editTextUnidades.addTextChangedListener(new TextWatcher() {
+			
+			public void afterTextChanged(Editable s) {
+				try{
+					cantidad = Integer.parseInt(editTextUnidades.getText().toString());
+					textViewPrecio.setText(Math.rint(cantidad*precioPlato*100)/100 + " €");
+				}catch(Exception e){
+					cantidad = 1;
+		         	Toast.makeText(getApplicationContext(),"Introduce una cantidad valida.",Toast.LENGTH_SHORT).show();
+				}
+				
+				
+	        }
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				  
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				  
+			}
+		});
+        
         textViewPrecio.setText(precioPlato +" €");
         textViewNombre.setText(nombrePlato);
         textViewDescripcion.setText(descripcionPlato);
