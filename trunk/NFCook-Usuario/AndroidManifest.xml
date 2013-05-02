@@ -81,7 +81,7 @@
         </activity>
         <activity
             android:name="usuario.DescripcionPlato"
-            android:windowSoftInputMode="stateHidden"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/descripcion_plato"  >
         </activity>
          <activity
