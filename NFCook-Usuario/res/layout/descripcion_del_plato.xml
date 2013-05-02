@@ -109,9 +109,28 @@
         android:layout_marginTop="5dp" >
 
         <ImageView
+            android:id="@+id/imageViewStarNo"
+            android:layout_width="34dp"
+            android:layout_height="34dp"            
+            android:layout_gravity="left"
+            android:layout_marginLeft="15dp"
+            android:onClick="onClickStarNo"
+            android:src="@drawable/star_no" />
+        
+        <ImageView
+            android:id="@+id/imageViewStarSi"
+            android:layout_width="34dp"
+            android:layout_height="34dp"            
+            android:layout_gravity="left"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/star_si"
+            android:onClick="onClickStarSi"
+            android:visibility="invisible" />
+        
+        <ImageView
             android:id="@+id/imageViewMas"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="36dp"
             android:onClick="onClickBotonMas"

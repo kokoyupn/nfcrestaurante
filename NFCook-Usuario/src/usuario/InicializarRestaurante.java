@@ -160,6 +160,8 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	    	String[] datos = new String[]{restaurante};
 	    	Cursor c = db.query("Restaurantes", campos, "Restaurante=?", datos,null, null,null);
 	    	
+	    	tipos.add("       Mis\nFavoritos");
+	    	
 	    	// Recorremos todos los registros
 	    	while(c.moveToNext()){
 	    		String tipo = c.getString(0);
