@@ -31,6 +31,7 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
 	private ViewPager miViewPager;
 	private PagerAdapter miPagerAdapter;
 	private View tabContentView;
+	private long anteriorPulsacion;
 	
 	 /**
      * A simple factory that returns dummy views to the Tabhost
@@ -78,6 +79,18 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
         else 
         	tabs.setCurrentTab(0); 
 	}
+	
+	
+	public void onBackPressed() {
+	    long tiempoActual = System.currentTimeMillis();
+	    if(tiempoActual - anteriorPulsacion > 2000){
+	    	Toast.makeText(getApplicationContext(),"Pulse de nuevo para salir",Toast.LENGTH_SHORT).show();	
+	    	anteriorPulsacion = tiempoActual;
+	    } else{
+	        super.onBackPressed();
+	    }
+	}
+	
 	
 	// Metodo encargado de inicializar los tabs inferiores
     private void inicializarTabs(){

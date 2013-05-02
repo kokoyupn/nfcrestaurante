@@ -61,8 +61,18 @@ public class MainActivity extends Activity {
 	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
        	  intent.putExtra("usuario", "Foster");
        	  intent.putExtra("Restaurante","Foster");
-       	  startActivity(intent); 
+       	  startActivityForResult(intent,0); 
 	  }  
+	  
+	  /**Para reiniciar los campos de los textview cuando vuelve con back*/
+	  @Override
+	  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  usuario = (EditText) findViewById(R.id.editTextUsuario);
+		  password = (EditText) findViewById(R.id.editTextPass);	
+		  usuario.setText("");
+		  password.setText("");
+	  }   
+	  
  /**
   * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
   * esta en la base de datos de camareros 
@@ -110,7 +120,7 @@ public void  onClickBotonEntrar(View boton)
            		  intent.putExtra("Restaurante","Foster");
            	  else
            		 intent.putExtra("Restaurante","VIPS");
-           	  	 startActivity(intent);
+           	  startActivityForResult(intent,0);
     	   }
     	   else{
     		   //La contraseña no es la misma que la guardada en la base de datos
