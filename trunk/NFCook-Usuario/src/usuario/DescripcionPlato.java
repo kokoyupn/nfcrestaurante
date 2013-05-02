@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,8 +45,8 @@ public class DescripcionPlato extends Activity {
 	private static MiExpandableListAdapterEditar adapterExpandableListExtras;
 	private static boolean pulsado;
 
-	public HandlerDB sql,sqlPedido;
-	public SQLiteDatabase db,dbPedido;
+	public HandlerDB sql,sqlPedido, sqlMiBase;
+	public SQLiteDatabase db,dbPedido, dbMiBase;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +69,7 @@ public class DescripcionPlato extends Activity {
 
         editTextUnidades = (EditText) findViewById(R.id.editTextunidades);
         textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
-        TextView textViewNombre= (TextView) findViewById(R.id.nombrePlato);
+        TextView textViewNombre = (TextView) findViewById(R.id.nombrePlato);
         TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlatoeditar);
         ImageView imageViewPlato = (ImageView) findViewById(R.id.imagenPlato);
         actwObservaciones = (AutoCompleteTextView)findViewById(R.id.AutoCompleteTextViewOpciones);
@@ -200,6 +199,8 @@ public class DescripcionPlato extends Activity {
         textViewNombre.setText(nombrePlato);
         textViewDescripcion.setText(descripcionPlato);
         
+        cargarEstrella();
+        
 	}
 
 	public void onClickBotonMenos(View v){
@@ -208,13 +209,69 @@ public class DescripcionPlato extends Activity {
 			editTextUnidades.setText(cantidad + "");
 			textViewPrecio.setText(Math.rint(cantidad*precioPlato*100)/100 + " €");
 		}
-		
 	}
 	
 	public void onClickBotonMas(View v){
 		cantidad++;
 		editTextUnidades.setText(cantidad + "");
 		textViewPrecio.setText(Math.rint(cantidad*precioPlato*100)/100 + " €");
+	}
+	
+	private void cargarEstrella() {
+		sqlMiBase = new HandlerDB(getApplicationContext(),"MiBase.db"); 
+     	dbMiBase=sqlMiBase.open();
+		
+     	String[] camposSacar = new String[]{"Favorito"};
+    	String[] camposCondicionanConsulta = new String[]{restaurante, idPlato};
+		Cursor cP = dbMiBase.query("Restaurantes", camposSacar, "Restaurante=? AND Id=?", camposCondicionanConsulta,null, null,null);
+		
+		if (cP.moveToNext()){
+			if (cP.getString(0).equals("star_si")){
+				ImageView imagenStarSi = (ImageView) findViewById(R.id.imageViewStarSi);
+				imagenStarSi.setVisibility(ImageView.VISIBLE);
+				ImageView imagenStarNo = (ImageView) findViewById(R.id.imageViewStarNo);
+				imagenStarNo.setVisibility(ImageView.INVISIBLE);
+			} 
+		}
+		
+        dbMiBase.close();
+		
+	}
+	
+	public void onClickStarNo(View v){
+		ImageView imagenStarSi = (ImageView) findViewById(R.id.imageViewStarSi);
+		imagenStarSi.setVisibility(ImageView.VISIBLE);
+		ImageView imagenStarNo = (ImageView) findViewById(R.id.imageViewStarNo);
+		imagenStarNo.setVisibility(ImageView.INVISIBLE);
+		Toast.makeText(getApplicationContext(),"Plato añadido a Mis Favoritos", Toast.LENGTH_SHORT).show();
+		
+		sqlMiBase = new HandlerDB(getApplicationContext(),"MiBase.db"); 
+     	dbMiBase=sqlMiBase.open();
+		
+     	ContentValues platoEditado = new ContentValues();
+    	platoEditado.put("Favorito", "star_si");
+		String[] camposUpdate = {restaurante, idPlato};
+		int i = dbMiBase.update("Restaurantes", platoEditado, "Restaurante=? AND Id=?", camposUpdate);
+		
+        dbMiBase.close();
+	}
+	
+	public void onClickStarSi(View v){
+		ImageView imagenStarSi = (ImageView) findViewById(R.id.imageViewStarSi);
+		imagenStarSi.setVisibility(ImageView.INVISIBLE);
+		ImageView imagenStarNo = (ImageView) findViewById(R.id.imageViewStarNo);
+		imagenStarNo.setVisibility(ImageView.VISIBLE);
+		Toast.makeText(getApplicationContext(),"Plato eliminado de Mis Favoritos", Toast.LENGTH_SHORT).show();
+	
+		sqlMiBase = new HandlerDB(getApplicationContext(),"MiBase.db"); 
+     	dbMiBase=sqlMiBase.open();
+		
+     	ContentValues platoEditado = new ContentValues();
+    	platoEditado.put("Favorito", "star_no");
+		String[] camposUpdate = {restaurante, idPlato};
+		dbMiBase.update("Restaurantes", platoEditado, "Restaurante=? AND Id=?", camposUpdate);
+		
+        dbMiBase.close();
 	}
 	 
     public void onClickConfirmar(View boton){
@@ -254,11 +311,11 @@ public class DescripcionPlato extends Activity {
     		}
     		dbPedido.close();
     		setUltimoIdentificadorUnicoHijoPedido();
-    		Toast.makeText(getApplicationContext(),"Todos sus platos han sido confirmados.", Toast.LENGTH_SHORT).show();
+    		Toast.makeText(getApplicationContext(),"Todos sus platos han sido confirmados", Toast.LENGTH_SHORT).show();
     		this.finish();
     	}else{
     		adapterExpandableListExtras.expandeTodosLosPadres();
-    		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes.", Toast.LENGTH_SHORT).show();
+    		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes", Toast.LENGTH_SHORT).show();
     	}
     }
 
