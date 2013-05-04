@@ -317,6 +317,10 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 	        	plato.put("IdUnico", PantallaMesasFragment.getIdUnico());
 	        	dbMesas.insert("Mesas", null, plato);
 	        	dbMesas.close();
+	        	
+	        	//FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
+	        	Mesa.actualizarNumeroVecesPlatoPedido(id);
+	        	Mesa.pintarBaseDatosMiFav();
 	              	
       		}catch(Exception e){
     		

@@ -18,31 +18,35 @@
             android:id="@+id/listaPlatos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="33dp"
+            android:layout_marginBottom="47dp"
             android:layout_marginLeft="5dp" >
 
         </ListView>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imagenPrecio"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="75dp"
-        android:layout_marginRight="100dp"
-        android:src="@drawable/total" />
-
-    <TextView
-        android:id="@+id/precioTotal"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="75dp"
-        android:layout_marginRight="10dp"
-        android:layout_weight="1"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/imagenPrecio"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/totalprecio" />
+
+        <TextView
+            android:id="@+id/precioTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/LinearLayout1"

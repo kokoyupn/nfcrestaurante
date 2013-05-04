@@ -40,10 +40,10 @@ public class AnadirPlatos extends Activity{
 	 * poder actualizar la lista desde otras clases*/
 	private static MiExpandableListAdapterAnadirPlato  adapterExpandableListAnadirPlato;
 	private static ExpandableListView expandableListAnadirPlato;
-	private HandlerGenerico sqlMiBase, sqlBuscador;
+	private HandlerGenerico sqlMiBase, sqlBuscador,sqlMiBaseFav;
 	private AutoCompleteTextView buscador;
 	private boolean noSeleccionadoAutoCompleteTextView;
-	private SQLiteDatabase dbMiBase, dbBuscador;
+	private SQLiteDatabase dbMiBase, dbBuscador,dbMiBaseFav;
 	
 	private static String numMesa;
 	private static String idCamarero;
@@ -101,6 +101,11 @@ public class AnadirPlatos extends Activity{
    		
    		ArrayList<String> tipoSinRepe = new ArrayList<String>();//arrayList para meter los tipos sin repeticion
    		ArrayList<String> categoriaSinRepe = new ArrayList<String>();//arrayList para meter las categorias sin repeticion
+   		
+   		//FIXME Rober 2/5/2013 --------------------------
+   		generarTopPedidos(padres);
+   		//Rober 2/5/2013 --------------------------
+   		
    		while(cPMiBase.moveToNext()){
    			String tipoPlato = cPMiBase.getString(0);
    			
@@ -177,7 +182,86 @@ public class AnadirPlatos extends Activity{
 	}
 	
 	
-	 public void cargarBarraDeBusqueda(){
+	 private void generarTopPedidos(ArrayList<PadreExpandableListAnadirPlato> padres) {
+		 try{
+			sqlMiBaseFav = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
+			dbMiBaseFav = sqlMiBaseFav.open();
+			
+			String[] campos = new String[]{"Id","Foto","Nombre","Precio","VecesPedido"};
+	    	String[] restricciones = new String[]{restaurante};
+	    	
+	    	Cursor platosVeces = dbMiBaseFav.query("Restaurantes", campos, "Restaurante=?",restricciones,null, null,null);
+	   		
+	    	ArrayList<String> idHijos= new ArrayList<String>();
+	   		ArrayList<String> numImags= new ArrayList<String>();
+	   		ArrayList<String> nombrePlatos= new ArrayList<String>();
+	   		ArrayList<Double> precio= new ArrayList<Double>();
+	   		
+	   		ArrayList<Integer> vecesPedidoLosTops= new ArrayList<Integer>();//Array que guarda el numero de veces que se han pedido los mas pedidos
+	    	
+	   		while(platosVeces.moveToNext()){
+	    		
+	    		String veces = platosVeces.getString(4);
+	    		if( veces == null )//Si ese plato no ha sido pedido nunca, no habra nada y sera null y petará
+	    			veces = "0";
+	    		
+	    		boolean seguir=true;
+	    		int i=0;
+	    		while(seguir && i<6){
+	    				//Rellenas cuando aun hay nulls en el array de los mas pedidos y el valor de la DB es >0
+	    				if(vecesPedidoLosTops.size() < 6){
+			    			if( Integer.parseInt(veces)>0 ){//Compruebo solo el idHijos porque si este es null, los demas tambien lo seran
+			    				idHijos.add(platosVeces.getString(0));
+					   			numImags.add(platosVeces.getString(1));
+					   			nombrePlatos.add(platosVeces.getString(2));
+					   			precio.add(platosVeces.getDouble(3));
+					   			
+					   			vecesPedidoLosTops.add( Integer.parseInt(veces) );//Vas añadiendo en las mismas posiciones que es los otros arrays
+					   		}	
+					   		//En caso de que la posicion sea vacia, lo añadas o no, tienes que cambiar de elemento de la DB	
+			    			seguir=false;
+			    			
+			    		//Aqui ya es cuando tienes que comparar
+			    		}else{
+			    			
+			    			//Calculo el minimo
+		    				int minimo = Integer.MAX_VALUE;
+		    				int posMin = 0;
+		    				for (int j=0;j<vecesPedidoLosTops.size();j++){
+		    					System.out.println("LLEGA");
+		    					if(vecesPedidoLosTops.get(j) < minimo){
+		    						System.out.println("vecesPedidoLosTops de: "+j+" "+vecesPedidoLosTops.get(j));
+		    						minimo = vecesPedidoLosTops.get(j);
+		    						posMin = j;
+		    					}
+		    				}
+		    				
+			    			if( Integer.parseInt(veces)>minimo ){
+			    				idHijos.set(posMin, platosVeces.getString(0));
+					   			numImags.set(posMin,platosVeces.getString(1));
+					   			nombrePlatos.set(posMin,platosVeces.getString(2));
+					   			precio.set(posMin,platosVeces.getDouble(3));
+					   			
+					   			vecesPedidoLosTops.set(posMin, Integer.parseInt(veces) );//Vas añadiendo en las mismas posiciones que es los otros arrays
+					   		}
+			    			
+			    			seguir=false;
+			    		}
+	    		}
+	   		}
+	    	
+	   	platosVeces.close();//Se cierra el cursor para que no de problemas
+	  
+		HijoExpandableListAnadirPlato hijosTop = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
+   		PadreExpandableListAnadirPlato top = new PadreExpandableListAnadirPlato("TOP Pedidos", hijosTop);
+   		padres.add(top);
+	   	
+		}catch(Exception e){
+			 System.out.println("Error en generarTopPedidos");
+		}
+	}
+
+	public void cargarBarraDeBusqueda(){
 		 try{
 				sqlBuscador=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
 				dbBuscador= sqlBuscador.open();
@@ -329,7 +413,6 @@ public class AnadirPlatos extends Activity{
 		    		}
 		    		
 		    		String[] campos = new String[]{"Id","Precio"};
-		    		
 		    		String[] datos = new String[]{restaurante, nombrePlato};
 		    		
 		      		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Nombre=?",datos,null,null,null); 
@@ -360,8 +443,15 @@ public class AnadirPlatos extends Activity{
 		        	plato.put("IdUnico", idUnico);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
-		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(nombrePlato,nuevosExtrasMarcados, observaciones, cursor.getDouble(1),idUnico,cursor.getString(0));
-		        	Mesa.actualizaListPlatos(platoNuevo);
+		        	
+		        	//Añadimos una unidad a las veces que se ha pedido el plato
+		        	Mesa.actualizarNumeroVecesPlatoPedido(cursor.getString(0));
+		        	//FIXME 
+		        	Mesa.pintarBaseDatosMiFav();
+		        	
+		        	Mesa.actualizaListPlatos();
+		        	
+		        	
 		    	}else{
 		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
 					Toast.makeText(getApplicationContext(),"¡Plato mal configurado!", Toast.LENGTH_SHORT).show();

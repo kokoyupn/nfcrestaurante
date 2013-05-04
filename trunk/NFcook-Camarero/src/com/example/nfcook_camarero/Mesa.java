@@ -11,7 +11,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,22 +18,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.DragShadowBuilder;
-import android.view.View.OnDragListener;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -60,17 +51,17 @@ import android.widget.Toast;
 
 public class Mesa extends Activity {
 
-	private HandlerGenerico sqlMesas,sqlHistorico;
-	private String numMesa;
+	private static HandlerGenerico sqlMesas,sqlMiBaseFav;
+	private static String numMesa;
 	private String idCamarero;
 	private String numPersonas; 
-	private SQLiteDatabase dbMesas,dbHistorico;
+	private static SQLiteDatabase dbMesas,dbMiBaseFav;
+	private SQLiteDatabase dbLogin;
 	private static ListView platos;
-	private ArrayList<ContenidoListMesa> elemLista;
+	private static ArrayList<ContenidoListMesa> elemLista;
 	private static MiListAdapterMesa adapter;
 	private static TextView precioTotal;
-	private ArrayList<MesaView> listaDeMesas;
-	private Activity actividad;
+	private static Activity actividad;
 	
 	private View.OnTouchListener tocuhListener;
 	private boolean moviendose;
@@ -83,9 +74,7 @@ public class Mesa extends Activity {
 	
 	
 	private AutoCompleteTextView actwObservaciones;
-	private String restaurante;
-	private static String obsAntesEditar;
-	private static String extrasAntesEditar;
+	private static String restaurante;
 	
 	
 	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
@@ -116,6 +105,7 @@ public class Mesa extends Activity {
     	actionbar.setTitle(" MESA " + numMesa + ": PEDIDO ACTUAL");
 		
 		try{
+			//antes del 4/5/2013
 			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			dbMesas= sqlMesas.open();
 			
@@ -134,7 +124,6 @@ public class Mesa extends Activity {
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-	  	    			System.out.println("EDITAR");
 	  	    			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
 		  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
 		  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
@@ -166,8 +155,6 @@ public class Mesa extends Activity {
 	            			XinicialEvento=(int) event.getRawX();
 	            			YinicialEvento=(int) event.getRawY();
 	            			
-	            			System.out.println("YRawinicial"+YinicialEvento);
-	            			
 	            			itemId = platos.pointToPosition((int) event.getX(), (int) event.getY());
 	        	        	int pos=itemId-platos.getFirstVisiblePosition();
 	        	        	vista= platos.getChildAt(pos);
@@ -185,6 +172,7 @@ public class Mesa extends Activity {
 	            			if(mueves){
 		            			if(!noBorrar){
 			            			if(moviendose){
+			            				
 			            				//PINTARADAPTER------------
 			            				for(int i=0;i<adapter.getCount();i++){
 			            					ContenidoListMesa aux=(ContenidoListMesa)adapter.getItem(i);
@@ -194,7 +182,7 @@ public class Mesa extends Activity {
 			            							            				
 			            				WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 			            				Display display = wm.getDefaultDisplay();
-			            				int ancho = display.getWidth()/4*3;
+			            				int ancho = display.getWidth()/2;
 				            			if (event.getX()>inicial && event.getX() - XinicialEvento > ancho && event.getX() > XinicialEvento){
 				            				//Calculas para ver si donde levantas el dedo es la misma vista de donde empezaste
 			            		        	int altoVista=vista.getHeight();
@@ -204,25 +192,22 @@ public class Mesa extends Activity {
 			            		        	
 			            		        	//Entras si sigues con el dedo en la misma vista
 			            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
-			            		        		try{//FIXME
-			            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
-			            		        		String identificador = Integer.toString(platoSeleccionado.getIdRepetido());
+			            		        		try{
+				            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
+				            		        		String identificador = Integer.toString(platoSeleccionado.getIdRepetido());
 			            	    				
-			            	    				try{
-			            	    					sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-			            	    					dbMesas= sqlMesas.open();
-			            	    					
-			            	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
-			            	    				}catch(Exception e){
-			            	    					System.out.println("Error borrar de la base pedido en ondrag");
-			            	    				}
+				            	    				try{
+				            	    					sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+				            	    					dbMesas= sqlMesas.open();
+				            	    					
+				            	    					dbMesas.delete("Mesas", "IdUnico=?",new String[]{identificador});
+				            	    				}catch(Exception e){
+				            	    					System.out.println("Error borrar de la base pedido en up");
+				            	    				}
 			            	    				
-			            	    				System.out.println("rrr");
-			            	    				System.out.println(itemId);
+			            	    				
 			            	    				//Resta 1 a la cantidad de esa posicion del adapter
-			            	    				adapter.deletePosicion(itemId);//FIXME probar esto bien
-			            	    				
-			            	    				
+			            	    				adapter.deletePosicion(itemId);
 			            	    				
 			            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
 			            	    				//siguiente vista la coloca con el margen de donde estuviera el raton al levantar
@@ -233,7 +218,7 @@ public class Mesa extends Activity {
 			            	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
 			            	    				precioTotal.setText(Double.toString( Math.rint( adapter.getPrecio()*100 )/100) +" €");
 			            		        	}catch(Exception e){
-			            	    				System.out.println("Acceso fuera de rango");
+			            	    				System.out.println("Acceso fuera de rango, al borrar con deletePosicion(itemId) ");
 			            		        	}  
 			            	            		}
 				            		     }else{
@@ -255,12 +240,11 @@ public class Mesa extends Activity {
 	            			System.out.println("MOVE");
 	            			mueves=true;
 	            			if(primeraVez){
-	            				System.out.println("yRAWEvento"+event.getRawY());
+	            				
 	            				int x,y;
 	            				y = (int) Math.abs(event.getRawY()-YinicialEvento);
-	            				System.out.println("y"+y);
 	            				x = (int) Math.abs(event.getRawX()-XinicialEvento);
-	            				System.out.println("x"+x);
+	            				
 	            				if(y>x)
 	            					entrar = false;//No hacerlo
 	            				else
@@ -286,7 +270,7 @@ public class Mesa extends Activity {
 			            				
 			            				if(desplazamiento<0){//Si mueves el dedo a la derecha
 				            				vista.setTranslationX(event.getRawX()-XinicialEvento);
-				            				System.out.println("primera vez que desplaza1");
+				            				
 				            				
 				            			}
 				            			else if(desplazamiento>0 && vista.getTranslationX()==0)
@@ -386,7 +370,7 @@ public class Mesa extends Activity {
 	 * 
 	 * @return un ArrayList con los elementos de la mesa actual.
 	 */
-	private ArrayList<ContenidoListMesa> obtenerElementos() {
+	private static ArrayList<ContenidoListMesa> obtenerElementos() {
 		ArrayList<ContenidoListMesa> elementos=null;
 		try{
 			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
@@ -398,6 +382,7 @@ public class Mesa extends Activity {
 		    
 		    boolean primero = true;
 		    int numElems=0;
+		    
 		    while(c.moveToNext()){
 		    	numElems++;
 		    	System.out.println("Elems: "+numElems);
@@ -409,7 +394,7 @@ public class Mesa extends Activity {
 		    		int i = 0;
 		    		boolean repetido = false;
 		    		while(i<elementos.size() && !repetido){
-		    			System.out.println("Entra");
+		    			System.out.println("Elemento del adapter numero: "+" "+(i+1));
 	    				String n = elementos.get(i).getNombre();
 	    				String e = elementos.get(i).getExtras();
 	    				//if(e==null)
@@ -420,7 +405,7 @@ public class Mesa extends Activity {
 			    		if( n.equals(c.getString(0)) &&
 			    			e.equals(c.getString(2)) &&
 			    			o.equals(c.getString(1)) ){
-			    				System.out.println("Repes: "+c.getString(0));
+			    				System.out.println("Repetido: "+c.getString(0));
 			    				repetido = true;
 			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
 			    				elementos.get(i).aniadeId(Integer.parseInt(c.getString(4)));
@@ -443,26 +428,6 @@ public class Mesa extends Activity {
 		}
 	}
 	
-	/*private ArrayList<MesaView> borrarMesaActual(){
-		System.out.println("llega");
-		Iterator<MesaView> it = listaDeMesas.iterator();
-		boolean encontrado=false;
-		int i=0;
-		
-		System.out.println("llega");
-		while(it.hasNext() && !encontrado){
-			MesaView actual = it.next();
-			System.out.println("Numero de mesa actual "+actual.getNumMesa());
-			if(actual.getNumMesa().equals(numMesa)){
-				System.out.println("Borra la mesa: "+actual.getNumMesa());
-				listaDeMesas.remove(i);
-				encontrado = true;
-			}
-			i++;
-		}
-		return listaDeMesas;
-	}*/
-	
 	protected void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,final int posicion) {
 		
 		ventanaEmergente.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
@@ -470,8 +435,6 @@ public class Mesa extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				importarBaseDatatosMesa();
 				String nuevosExtrasMarcados = null;
-				obsAntesEditar = adapter.getObservacionesPlato(posicion);//FIXME probar
-				extrasAntesEditar = adapter.getExtrasMarcados(posicion);//FIXME probar
 				
 				if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
 					nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
@@ -486,80 +449,51 @@ public class Mesa extends Activity {
 		    	
 		    	if(nuevosExtrasMarcados==null)
 					nuevosExtrasMarcados="";
-				if(observacionesNuevas==null)
-					observacionesNuevas="";
 				
 		    	ContentValues platoEditado = new ContentValues();
 		    	platoEditado.put("Extras", nuevosExtrasMarcados);
 		    	platoEditado.put("Observaciones", observacionesNuevas);
 		        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
+		        
 		        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
 				
+		        //FIXME borrar. ASI queda la DB despues de la actualizacion------------------
+		        pintarBaseDatosMesa();
 		        //ASI queda despues de la actualizacion------------------
-		        try{
-		        	String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
-		        	System.out.println("a");
-		        	String[] numeroDeMesa = new String[]{numMesa};
-		        	System.out.println("a");
-		        	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
-		        	System.out.println("a");
-				    while(c.moveToNext()){
-				    	System.out.println("b");
-				    	System.out.println(c.getString(0));
-				    	String extras=c.getString(2);
-				    	if (extras==null)
-				    		System.out.println("era null");
-				    	else
-				    		System.out.println(c.getString(2));
-				    	System.out.println(c.getString(1));
-				    	System.out.println(c.getString(4));
-				    }
-				}catch(Exception e){
-					System.out.println(e.getCause()+" "+e.getLocalizedMessage()+" "+e.getStackTrace());
-				}
 		        
-			    //ASI queda despues de la actualizacion------------------
 		        sqlMesas.close();
 				
-				//PRUEBAS--------------
-				sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-				dbMesas= sqlMesas.open();
-				elemLista = obtenerElementos();
-	         
-	  	    	adapter = new MiListAdapterMesa(actividad, elemLista);
-	  	    	platos.setAdapter(adapter);
-	  	    	System.out.println("EL ADAPTER TIENE: "+adapter.getCount());
-				sqlMesas.close();
-		        
-				//PRUEBA--------------
-		        
-				
-				//sddsfsdf
-				/*ContenidoListMesa aux = (ContenidoListMesa)adapter.getItem(posicion);
-				if(nuevosExtrasMarcados==null)
-					nuevosExtrasMarcados="";
-				if(observacionesNuevas==null)
-					observacionesNuevas="";
-				
-				if(aux.getCantidad()==1){//Si solo hay un elemento(no hay varios iguales), cambia extras y observaciones
-					adapter.setExtras(posicion,nuevosExtrasMarcados);
-					adapter.setObservaciones(posicion,observacionesNuevas);
-				}*/
-				
-				
-				//mirar si qeda igual q otro------------
-				//Si se ha modificado uno y queda igual que algun otro, esta funcion se encarga 
-				//ya de buscar y borrar el que mas a la derecha este y de sumar 1 al de la 
-				//izquierda
-				//buscaComunesEditar(aux,posicion,nuevosExtrasMarcados,observacionesNuevas);
-				//----------------------------------	
-				//adapter = new MiListAdapterMesa(actividad, elemLista);	
-				//platos.setAdapter(adapter);
-			}
+		        actualizaListPlatos();
+		   }
 		});
 		
 	}
 	
+	public void pintarBaseDatosMesa() {
+		try{
+			importarBaseDatatosMesa();
+        	
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
+        	
+        	String[] numeroDeMesa = new String[]{numMesa};
+        	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
+        	
+        	while(c.moveToNext()){
+		    	System.out.println(c.getString(0));
+		    	String extras=c.getString(2);
+		    	if (extras==null)
+		    		System.out.println("era null");
+		    	else
+		    		System.out.println(c.getString(2));
+		    	
+		    	System.out.println(c.getString(1));
+		    	System.out.println(c.getString(4));
+		    }
+		}catch(Exception e){
+			System.out.println("Error en pintarBaseDatosMesa"+e.getCause()+" "+e.getLocalizedMessage()+" "+e.getStackTrace());
+		}
+				
+			}
 	
 	private void importarBaseDatatosMesa(){
 		try{
@@ -634,102 +568,21 @@ public class Mesa extends Activity {
   		}
 	}
 	
-	public static boolean buscaComunes(ContenidoListMesa platoNuevo){
-		boolean comunes = false;
-		String nombre = platoNuevo.getNombre();
-		String observaciones = platoNuevo.getObservaciones();
-		String extras = platoNuevo.getExtras();
-		int i = 0;
-		while(i<adapter.getCount() && !comunes){
-			ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
-			System.out.println("PlatoNuevo: "+platoNuevo.getNombre()+"Elemento: "+elemento.getNombre());
-			if( (elemento.getNombre()).equals(nombre) && 
-				(elemento.getObservaciones()).equals(observaciones) && 
-				(elemento.getExtras()).equals(extras) ){
-					elemento.sumaCantidad();
-					elemento.aniadeId(platoNuevo.getId());
-					System.out.println("CantidadElemento: "+elemento.getCantidad());
-					comunes = true;
-				}
-			i++;
-		}
-		return comunes;
-	}
-	
-	public static void buscaComunesEditar(ContenidoListMesa platoEditar,int posicion,String extrasNuevo,String obsNuevas){
-		boolean comunes = false;
-		
-		
-		
-		if(platoEditar.getCantidad()==1){
-			String nombre = platoEditar.getNombre();
-			String observaciones = platoEditar.getObservaciones();
-			String extras = platoEditar.getExtras();
-			int i = 0;
-			while(i<adapter.getCount() && !comunes){
-				ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
-				if( i!=posicion &&
-					(elemento.getNombre()).equals(nombre) && 
-					(elemento.getObservaciones()).equals(observaciones) && 
-					(elemento.getExtras()).equals(extras) ){
-						
-						comunes = true;
-						
-						if(i<posicion){
-							elemento.sumaCantidad();
-							elemento.aniadeId(platoEditar.getId());
-							adapter.deletePosicion(posicion);
-						}else{
-							platoEditar.sumaCantidad();
-							platoEditar.aniadeId(elemento.getId());
-							adapter.deletePosicion(i);
-						}
-							
-					}
-				i++;
-			}
-		}else if(platoEditar.getCantidad()>1){//Estaban agrupados y se han hecho diferentes
-			//ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(posicion);//FIXME no se
-			//System.out.println("elem(pos): "+elemento.getExtras());
-			//System.out.println("platoEditar: "+platoEditar.getExtras());
+	public static void actualizaListPlatos(){
+		try{
+			sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();
 			
-			int idUnicoPlatoNuevo = platoEditar.getIdRepetido();
-			platoEditar.eliminaId();
-			platoEditar.restaCantidad();
-			ContenidoListMesa nuevo = new ContenidoListMesa(platoEditar.getNombre(),extrasNuevo,obsNuevas,platoEditar.getPrecioUnidad(),idUnicoPlatoNuevo,platoEditar.getIdPlato());
+			elemLista = obtenerElementos();
+	        adapter = new MiListAdapterMesa(actividad, elemLista);
+		    platos.setAdapter(adapter);
+		    
+			sqlMesas.close();
 			
-			String nombre = nuevo.getNombre();
-			String observaciones = nuevo.getObservaciones();
-			String extras = nuevo.getExtras();
-			int i=0;
-			boolean comun=false;
-			while(i<adapter.getCount() && !comun){
-				ContenidoListMesa elemento = (ContenidoListMesa) adapter.getItem(i);
-				if( i!=posicion &&
-					(elemento.getNombre()).equals(nombre) && 
-					(elemento.getObservaciones()).equals(observaciones) && 
-					(elemento.getExtras()).equals(extras) ){
-						
-						comun = true;
-						elemento.sumaCantidad();
-						elemento.aniadeId(nuevo.getId());
-					}
-				i++;
-			}
-			if(!comun)
-				adapter.addPlato(nuevo);
+			precioTotal.setText( Math.rint(adapter.getPrecio()*100)/100 +" €");
+		}catch(Exception e){
+			System.out.println("Error en actualizaListPlatos al leer la base dbMesas");
 		}
-		
-	}
-
-	public static void actualizaListPlatos(ContenidoListMesa platoNuevo){
-		System.out.println("actualizaListPlatos");
-		
-		if(!buscaComunes(platoNuevo))
-			adapter.addPlato(platoNuevo);
-		
-		platos.setAdapter(adapter);
-		precioTotal.setText( Math.rint(adapter.getPrecio()*100)/100 +" €");
 	}
 
 	public static void actualizaExpandableList() {
@@ -755,5 +608,59 @@ public class Mesa extends Activity {
 	public static Context getContext() {
 		return context;
 	}
+
+	public static void actualizarNumeroVecesPlatoPedido(String id) {
+		try{
+    		sqlMiBaseFav = new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
+			dbMiBaseFav = sqlMiBaseFav.open();
+			
+			String[] campo = new String[]{"VecesPedido"};//Consultas el numero de veces que ya se ha pedido
+    		String[] info = new String[]{restaurante, id};//En un restaurante concreto y con un IdPlato 
+    		
+      		Cursor campoVeces = dbMiBaseFav.query("Restaurantes",campo,"Restaurante=? AND Id=?",info,null,null,null); 
+      		campoVeces.moveToFirst();
+			
+      		String veces = campoVeces.getString(0);
+      		if(veces==null)
+      			veces=Integer.toString(0);
+      		String nuevoVeces = Integer.toString( Integer.parseInt(veces) + 1 );
+			
+      		ContentValues platoAumentarVeces = new ContentValues();
+      		platoAumentarVeces.put("VecesPedido", nuevoVeces);
+      		String[] camposUpdate = {restaurante,id};
+      		dbMiBaseFav.update("Restaurantes", platoAumentarVeces, "Restaurante=? AND Id=?", camposUpdate);
+				
+      		dbMiBaseFav.close();
+      		
+			
+		}catch(SQLiteException e){
+			System.out.println("CATCH abrir MiBaseFav en AñadirPlatos.java");
+			Toast.makeText(actividad,"NO EXISTE LA BASE DE DATOS",Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
+	public static void pintarBaseDatosMiFav() {
+		try{
+			sqlMiBaseFav = new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
+			dbMiBaseFav = sqlMiBaseFav.open();
+        	
+			String[] campos = new String[]{"Nombre","VecesPedido"};
+        	
+        	String[] restau = new String[]{restaurante};
+        	Cursor c = dbMiBaseFav.query("Restaurantes",campos, "Restaurante=?",restau, null,null, null);
+        	
+        	while(c.moveToNext()){
+		    	
+		    	String v=c.getString(1);
+		    	if (v==null)
+		    		v="0";
+		    	System.out.println("Id: " + c.getString(0) + " VecesPedida: " + v);
+		    }
+		}catch(Exception e){
+			System.out.println("Error en pintarBaseDatosMesaFav"+e.getCause()+" "+e.getLocalizedMessage()+" "+e.getStackTrace());
+		}
+				
+			}
 	
 }
