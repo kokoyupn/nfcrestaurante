@@ -315,8 +315,15 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 		        	plato.put("IdUnico", idUnico);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
-		        	ContenidoListMesa platoNuevo = new ContenidoListMesa(nombrePlato, nuevosExtrasMarcados, observaciones, precioPlato, idUnico, idPlato);
-		        	Mesa.actualizaListPlatos(platoNuevo);
+		        	
+		        	
+		        	//Añadimos una unidad a las veces que se ha pedido el plato
+		        	Mesa.actualizarNumeroVecesPlatoPedido(idPlato);
+		        	//FIXME 
+		        	Mesa.pintarBaseDatosMiFav();
+		        	
+		        	Mesa.actualizaListPlatos();
+		        	
 		    	}else{
 		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
 					Toast.makeText(context,"¡Plato mal configurado!", Toast.LENGTH_SHORT).show();

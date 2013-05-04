@@ -228,6 +228,10 @@ public class Sincronizacion_QR extends Activity {
 	        plato.put("IdUnico", idUnico);
 	        dbMesas.insert("Mesas", null, plato);
 	        dbMesas.close();
+	        
+	        //FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
+        	Mesa.actualizarNumeroVecesPlatoPedido(id);
+        	Mesa.pintarBaseDatosMiFav();
         	
       	}catch(Exception e){
     		//System.out.println("Error lectura base de datos de Mesas");

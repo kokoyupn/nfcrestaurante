@@ -205,8 +205,8 @@ public class AnadirBebida extends Activity{
 		        	System.out.println("LEga1");
 		        	
 		        	dbPedido.insert("Mesas", null, nuevaBebida);
-					ContenidoListMesa platoNuevo = new ContenidoListMesa(nombreBebida,"", "", precio,idUnico,idBebida);
-		        	Mesa.actualizaListPlatos(platoNuevo);
+		        	
+		        	Mesa.actualizaListPlatos();
 					
 		        	uds--;
 		        	bebida.eliminaUnidad();

@@ -586,6 +586,10 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
 	        	dbMesas.insert("Mesas", null, plato);
 	        	dbMesas.close();
 	        	System.out.println("Añadido");
+	        	
+	        	//FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
+	        	Mesa.actualizarNumeroVecesPlatoPedido(id);
+	        	Mesa.pintarBaseDatosMiFav();
         	
       		}catch(Exception e){
     			//System.out.println("Error lectura base de datos de Mesas");
