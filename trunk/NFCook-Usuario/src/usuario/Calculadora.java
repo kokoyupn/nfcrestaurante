@@ -56,14 +56,13 @@ public class Calculadora extends Activity{
 	private static GridView gridViewPersonas;
 	private static MiGridViewCalculadoraAdapter adapterGridViewCalculadora;
     private static ArrayList<PadreGridViewCalculadora> personas;
+    public static ArrayList<Boolean> nombresPersona;
     private String restaurante;
     
     private ArrayList<InfomacionPlatoPantallaReparto> platos;
     
     private static int numPersonas;
-    
-    private int numPersonaActual;
-    
+        
 	public void onCreate(Bundle savedInstanceState) {   
        
         super.onCreate(savedInstanceState);
@@ -78,9 +77,6 @@ public class Calculadora extends Activity{
         Bundle bundle = getIntent().getExtras();
 		numPersonas = bundle.getInt("numeroComensales");
 		restaurante = bundle.getString("restaurante");
-
-		// Incializamos el numero de persona a 0
-		numPersonaActual = 1;
         
         // creamos el arraylist de las imagenes
     	platos = new ArrayList<InfomacionPlatoPantallaReparto>();
@@ -114,12 +110,17 @@ public class Calculadora extends Activity{
     	// Implementamos el oyente
     	imageViewAnyadirPersona.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// Aumentamos el numero de personas
-				numPersonas++;
 				// Creamos y añadimos la persona
-				PadreGridViewCalculadora persona = new PadreGridViewCalculadora(numPersonaActual);
-				numPersonaActual++;
-	        	personas.add(persona);
+				int huecoLibre = buscaPrimeraPosPersonaLibre();
+				PadreGridViewCalculadora persona = new PadreGridViewCalculadora(buscaPrimeraPosPersonaLibre(), huecoLibre - 1);
+        		personas.add(persona);
+				if(huecoLibre == nombresPersona.size() + 1){
+		        	nombresPersona.add(true);
+	        	}else{
+	        		nombresPersona.set(huecoLibre-1, true);
+	        	}
+	        	// Aumentamos el numero de personas
+				numPersonas++;
 	        	// Aplicamos el adapter para que aparezca la persona
 	        	actualizaGridViewPersonas();
 	        	// Actualizamos el adapter del viewpager
@@ -131,18 +132,19 @@ public class Calculadora extends Activity{
         /********************************CARGAR PERSONA********************************/
         // Creamos la lista personas
         personas = new ArrayList<PadreGridViewCalculadora>();
+        nombresPersona = new ArrayList<Boolean>();
         gridViewPersonas = (GridView) findViewById(R.id.gridViewCalculadora);
         
         // Creamos las personas
         PadreGridViewCalculadora persona;
         for(int i=0; i<numPersonas; i++){
-        	persona = new PadreGridViewCalculadora(i+1);
-        	numPersonaActual++;
+        	persona = new PadreGridViewCalculadora(i+1, i);
+        	nombresPersona.add(true);
         	personas.add(persona);
         }
         
 		// Creamos el adapater del gridView para que se muestren las personas
-        adapterGridViewCalculadora = new MiGridViewCalculadoraAdapter(this, personas);
+        adapterGridViewCalculadora = new MiGridViewCalculadoraAdapter(this, personas, nombresPersona);
         gridViewPersonas.setAdapter(adapterGridViewCalculadora);
         
         /**************************INFORMACION DE LOS PLATOS******************************/
@@ -348,5 +350,20 @@ public class Calculadora extends Activity{
 		SharedPreferences.Editor editor = preferencia.edit();
 		editor.putInt("Iniciada", 0);
 		editor.commit();
+	}
+	
+	public int buscaPrimeraPosPersonaLibre(){
+		boolean encontradoHueco = false;
+		int i = 0;
+		int num = nombresPersona.size();
+		while(i<num && !encontradoHueco){
+			// Vemos si hay alguna persona en esa posicion
+			if(nombresPersona.get(i)){
+				i++;
+			}else{
+				encontradoHueco = true;
+			}
+		}
+		return i + 1;
 	}
 }

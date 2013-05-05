@@ -14,14 +14,16 @@ import java.util.ArrayList;
  *
  */
 public class PadreGridViewCalculadora {
+	private int pos;
 	private String nombre;
 	private double total;
 	private ArrayList<InfomacionPlatoPantallaReparto> platos;
 	
-	public PadreGridViewCalculadora(int i){
+	public PadreGridViewCalculadora(int i, int pos){
 		nombre = "Persona " + i;
 		total = 0;
 		platos = new ArrayList<InfomacionPlatoPantallaReparto>();
+		this.pos = pos;
 	}
 	
 	public String getNombre() {
@@ -34,6 +36,10 @@ public class PadreGridViewCalculadora {
 
 	public double getTotal() {
 		return Math.rint(total*100)/100;
+	}
+	
+	public int getPos(){
+		return pos;
 	}
 	
 	/*
