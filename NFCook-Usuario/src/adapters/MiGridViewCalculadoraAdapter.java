@@ -49,14 +49,16 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 	private LayoutInflater l_Inflater;
 	private Context context;
 	private ArrayList<InformacionPlatoCantidad> platos;
+	private ArrayList<Boolean> nombresPersona;
 	
 	// Atributo para evitar conflictos en los edittext de los nombres de usuario
 	private int edit = -1;
 	
-	public MiGridViewCalculadoraAdapter(Context context, ArrayList<PadreGridViewCalculadora> pers) {
+	public MiGridViewCalculadoraAdapter(Context context, ArrayList<PadreGridViewCalculadora> pers, ArrayList<Boolean> nombresPersona) {
 		personas = pers;
 		this.l_Inflater = LayoutInflater.from(context);
 		this.context = context;
+		this.nombresPersona = nombresPersona;
 	}
 	
 	public static ArrayList<PadreGridViewCalculadora> getPersonas(){
@@ -198,6 +200,7 @@ public class MiGridViewCalculadoraAdapter extends BaseAdapter{
 				// Actualizamos la información de los comensales que compartían plato con él
 				actualizaInfoPersonasCompartianPlatos(pos);
 				// Eliminamos a la persona
+				nombresPersona.set(personas.get(pos).getPos(), false);
 				personas.remove(pos);
 				// Aplicamos el adapeter del gridview personas para que se vea actualizada la información
 				Calculadora.actualizaGridViewPersonas();
