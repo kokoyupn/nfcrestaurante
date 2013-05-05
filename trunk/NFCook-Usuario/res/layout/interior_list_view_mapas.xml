@@ -29,7 +29,7 @@
         android:layout_gravity="left|center_vertical"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="75dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginRight="110dp"
         android:layout_marginTop="15dp"
         android:text="Nombre Restauranteeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
         android:textColor="@android:color/black"

@@ -63,7 +63,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private static ActionBar actionbar;
 	
 	// Tabs inferiores con las funcionalidades de la aplicacion
-	private TabHost tabs;
+	private static TabHost tabs;
 	// Vista de los tabs inferiores
 	private View tabInferiorContentView;
 	
@@ -74,6 +74,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	// global para poder acceder a el y trabajar con la ayuda
 	private Fragment fragmentPantallaInicioRes;
 	private String anteriorTabPulsado;
+	private static int tabInferiorSeleccionado;
 	
 	private int numComensales;
 		
@@ -90,20 +91,24 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		
 		// Importamos la base de datos
 		importarBaseDatatos();
+		
+		// Inicializamos y cargamos Tabs inferiores
+		inicializarTabsInferiores();
+		cargarTabsInferiores();
 	 
 		// Inicializamos y cargamos Tabs superiores que contendrá el actionBar
 		inicializarActionBarConTab();
 		cargarTabsSuperiores();
 		
-		// Descamarcamos el tab superior activado para evitar confusiones
-		desmarcarTabSuperiorActivo();
-		
 		// Cerramos la base de datos
 		sql.close();
 		
-		// Inicializamos y cargamos Tabs inferiores
-		inicializarTabsInferiores();
-		cargarTabsInferiores();
+		// Descamarcamos el tab superior activado para evitar confusiones
+		desmarcarTabSuperiorActivo();
+		
+		// Seleccionamos el tab inicio para que salga una vez selecciones el restaurante
+        tabs.setCurrentTabByTag("tabInicio");
+	    tabInferiorSeleccionado = 0;
     }
     
     /* Metodo encargado de implementar el botón back.
@@ -318,6 +323,18 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
 		if(tabs.getCurrentTabTag().equals("tabInicio")){
+			/*
+			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+			 * ya no lo esté.
+			 */
+		    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#c38838"));
+		    /*
+		     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+		     * usuario vea cual está seleccionado.
+		     */
+		    tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#906d35"));
+		    tabInferiorSeleccionado = 0;
+		    
 			// Descamarcamos el tab superior activado para evitar confusiones
 			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
@@ -334,6 +351,18 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        m.commit();
 		}else if(tabId.equals("tabPedidoSincronizar")){
+			/*
+			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+			 * ya no lo esté.
+			 */
+		    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#c38838"));
+		    /*
+		     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+		     * usuario vea cual está seleccionado.
+		     */
+		    tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#906d35"));
+		    tabInferiorSeleccionado = 1;
+		    
 			// Descamarcamos el tab superior activado para evitar confusiones
 			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
@@ -351,6 +380,18 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.addToBackStack("Pedido");
 	        m.commit();
 		}else if(tabId.equals("tabCuenta")){
+			/*
+			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+			 * ya no lo esté.
+			 */
+		    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#c38838"));
+		    /*
+		     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+		     * usuario vea cual está seleccionado.
+		     */
+		    tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#906d35"));
+		    tabInferiorSeleccionado = 2;
+		    
 			// Descamarcamos el tab superior activado para evitar confusiones
 			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
@@ -367,11 +408,21 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        m.addToBackStack("Cuenta");
 	        m.commit();
-		}else if(tabId.equals("tabCalculadora")){
+		}else if(tabId.equals("tabCalculadora")){			
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
 			// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
-			if(hayAlgunPedidoSincronizado()){				
+			if(hayAlgunPedidoSincronizado()){
+				/*
+				 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+				 * ya no lo esté.
+				 */
+			    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#c38838"));
+			    /*
+			     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+			     * usuario vea cual está seleccionado.
+			     */
+			    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#906d35"));
 				lanzarVentanaEmergenteParaIndicarNumeroComensales();
 			}else{
 				lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido();
@@ -421,7 +472,22 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		filterArray[0] = new InputFilter.LengthFilter(2);
 		editTextNumeroPersonas.setFilters(filterArray);
         
-        ventanaEmergente.setNegativeButton("Cancelar", null);
+        ventanaEmergente.setNegativeButton("Cancelar", new  DialogInterface.OnClickListener() { // si le das al aceptar
+          	public void onClick(DialogInterface dialog, int whichButton) {
+          		/*
+				 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+				 * ya no lo esté.
+				 */
+			    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
+			    /*
+			     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+			     * usuario vea cual está seleccionado.
+			     */
+			    if(!seleccionadoTabSuperior){
+			    	tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+			    }
+          	}
+        });
         // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
         ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
           	public void onClick(DialogInterface dialog, int whichButton) {
@@ -452,9 +518,16 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
 		if(seleccionadoTabSuperior){
 			actionbar.selectTab(actionbar.getTabAt(postabSuperiorPulsado));
-		}	
+		}else{
+		    /*
+		     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+		     * usuario vea cual está seleccionado.
+		     */
+		    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+		}
 	}
 	
 	// Metodo encargado de decirnos si se ha sincronizado algún pedido o no
@@ -511,5 +584,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	
 	public static void setPosTabSuperior(int posTab){
 		postabSuperiorPulsado = posTab;
+	}
+	
+	public static int getTabInferiorSeleccionado(){
+		return tabInferiorSeleccionado;
 	}
 }
