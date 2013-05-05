@@ -10,9 +10,7 @@ import adapters.MiExpandableListTabsSuperioresCategoriasAdapter;
 import adapters.MiListTabsSuperioresCategoriasAdapter;
 import adapters.PadreExpandableListTabsSuperioresCategorias;
 import adapters.PadreListTabsSuperioresCategorias;
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -87,7 +85,7 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 		    	}
 		    	
 	    		cargado = true;
-	    	} else if (categoriaTab.toLowerCase().endsWith("mis\nfavoritos")){
+	    	}else if (categoriaTab.toLowerCase().endsWith("mis\nfavoritos")){
 	    		// actualizamos los platos
 		    	cargarPlatosFavoritos();
 	    	}

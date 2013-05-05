@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DescripcionRestaurante extends Activity {
 	private Restaurante restaurante;
 	private ArrayList<Restaurante> restaurantes;
+	private String nombreRestaurante;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,19 +32,32 @@ public class DescripcionRestaurante extends Activity {
     	actionbar.setTitle(" INFORMACIÓN RESTAURANTE");
 
 		Bundle bundle = getIntent().getExtras();
-		String restABuscar = bundle.getString("nombreRestaurante");
+		nombreRestaurante = bundle.getString("nombreRestaurante");
+		
 		restaurantes = Mapas.getRestaurantes();
 		boolean enc=false;
 		Iterator<Restaurante> it = restaurantes.iterator();
 	    while(!enc && it.hasNext())
 	    {
 	    	Restaurante restAct = it.next();
-	    	if(restABuscar.equals(restAct.getNombre()))
+	    	if(nombreRestaurante.equals(restAct.getNombre()))
 	    	{
 	    		enc=true;
 	    		restaurante = restAct;
 	    	}
 	    }
+	    
+	    /*
+	     * FIXME
+	     */
+	    ImageView logoRestaurante = (ImageView) findViewById(R.id.imageViewLogoDescRest);
+	    String ruta;
+	    if(nombreRestaurante.contains("Foster")){
+	    	 ruta = "foster_mapa";
+	    }else{
+	    	ruta = "vips_mapa";
+	    }
+	    logoRestaurante.setImageResource(getResources().getIdentifier(ruta,"drawable",getPackageName()));
 	    
 	    TextView tituloRest = (TextView) findViewById(R.id.textViewNombreRest);
 	    tituloRest.setText(restaurante.getNombre());

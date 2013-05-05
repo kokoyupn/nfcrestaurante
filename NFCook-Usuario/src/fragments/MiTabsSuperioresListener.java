@@ -9,6 +9,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
+import android.widget.TabHost;
 
 public class MiTabsSuperioresListener  implements TabListener{
 	private Fragment fragment;
@@ -39,7 +41,14 @@ public class MiTabsSuperioresListener  implements TabListener{
     	InicializarRestaurante.setSeleccionadoTabSuperior(true);
         // Guardamos la pos del tab por si seleccionamos la calculadora
     	InicializarRestaurante.setPosTabSuperior(posTab);
-	}
+    	
+    	/*
+		 *  Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+		 *  ya no lo esté.
+		 */
+    	TabHost tabs = ((TabHost) activity.findViewById(android.R.id.tabhost));
+        tabs.getTabWidget().getChildAt(InicializarRestaurante.getTabInferiorSeleccionado()).setBackgroundColor(Color.parseColor("#c38838"));
+   	}
  
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		ft.remove(fragment);
