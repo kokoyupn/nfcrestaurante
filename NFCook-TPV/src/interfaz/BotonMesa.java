@@ -246,7 +246,7 @@ class BotonMesa extends JPanel {
 		}
 		
 		// Creamos el panel que contiene el label con el idMesa y de esta forma podremos verlo centrado.
-		JPanel jPanelIdMesa = new JPanelBordesRedondos();
+		JPanel jPanelIdMesa = new JPanelBordesRedondos(false);
 		//jPanelIdMesa.setBackground(Color.BLACK);
 		// Creamos el label contenedor del idMesa.
 		JLabel jLabelIdMesa = new JLabel(idMesa);

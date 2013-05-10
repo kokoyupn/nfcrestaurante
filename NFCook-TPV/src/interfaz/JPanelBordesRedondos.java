@@ -17,13 +17,15 @@ public class JPanelBordesRedondos extends JPanel{
 	private Color colorPrimario = new Color(0x666f7f);
     private Color colorSecundario = new Color(0x262d3d);
     private Color colorContorno = new Color(0x262d3d);
+    private boolean esMenuConfig;
     
     private int arcw=20;
     private int arch=20;
    
-    public JPanelBordesRedondos() {
+    public JPanelBordesRedondos(boolean esMenuConfig) {
         super();
         setOpaque(false);
+        this.esMenuConfig = esMenuConfig;
     }
     
     @Override
@@ -37,11 +39,17 @@ public class JPanelBordesRedondos extends JPanel{
          g2.setPaint(new GradientPaint(0.0f, 0.0f,getColorPrimario().darker(),
                     0.0f, getHeight(),getColorSecundario().darker()));
          g2.fillRect(0,0,getWidth(),getHeight());
-           
-         g2.setStroke(new BasicStroke(4f));
+        
+         if(!esMenuConfig) {
+        	 g2.setStroke(new BasicStroke(4f));
+         }
+         
          g2.setPaint(new GradientPaint(0.0f, 0.0f,getColorContorno(),
                     0.0f, getHeight(), getColorContorno()));
-         g2.drawRoundRect(0, 0, getWidth()-2 , getHeight() -2, 18, 18);
+         if(!esMenuConfig) {
+        	 g2.drawRoundRect(0, 0, getWidth()-2 , getHeight() -2, 18, 18);
+         }else 
+        	 g2.drawRoundRect(0, 0, getWidth()-2 , getHeight() -2, 30, 30);
          g2.setPaint(oldPaint);
          super.paintComponent(g);
     }
