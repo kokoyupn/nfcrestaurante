@@ -11,6 +11,7 @@ public class Producto {
 	private double precio;
 	private String observaciones;
 	
+	
 	public Producto(String id, String categoria, String tipo, String nombre,
 			String descripción, String foto, double precio, String observaciones) {
 		this.id = id;

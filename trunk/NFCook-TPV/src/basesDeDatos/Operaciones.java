@@ -157,6 +157,18 @@ public class Operaciones extends Conexion{
     	}
 	}
 	
+	
+	
+	
+	public void actualizaFav(String idProd, int cantidadNueva){
+		insertar("UPDATE Restaurantes SET CantidadPedido='"+
+				cantidadNueva +
+				"' where Id='" +
+				idProd + "'" , true);
+    }
+	
+	
+	
 /* 
  * 							-EJEMPLOS-
  * 

@@ -6,8 +6,10 @@ import interfaz.VentanaMesas;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
@@ -21,6 +23,7 @@ public class Restaurante {
 	
 	private HashMap<String,Mesa> mesasRestaurante; // La clave es el id de la mesa.
 	private HashMap<String,Producto> productosRestaurante; //La clave es el id del producto.
+	private static PriorityQueue<Producto> productosFavoritos;
 	private ArrayList<String> idsCamareros;
 	private HistoricoComandasMesas comandasMesas;
 	
@@ -34,11 +37,13 @@ public class Restaurante {
 
 	public Restaurante(){
 		productosRestaurante = new HashMap<String,Producto>();
+		productosFavoritos = new PriorityQueue<Producto>(3,new MiComparator());
 		mesasRestaurante = new HashMap<String,Mesa>();
 		comandasMesas = new HistoricoComandasMesas();
 		idsCamareros = new ArrayList<String>();
 		cargarMesas();
 		cargarProductos();
+		cargarProductosFavoritos();
 		cargarCamareros();
 		
 	}
@@ -82,10 +87,47 @@ public class Restaurante {
 				if(categoria.equals("Bebidas")){
 					nuevoProducto = new Bebida(id, categoria, tipo, nombre, descripcion, foto, precio, null);
 				}else{
-					nuevoProducto = new Plato(id, categoria, tipo, nombre, descripcion, foto, precio, null, extras);
+					nuevoProducto = new Plato(id, categoria, tipo, nombre, descripcion, foto, precio, null, extras,0);
 				}
 				
 				productosRestaurante.put(id, nuevoProducto);
+			}
+			operacion.cerrarBaseDeDatos();
+			
+        }catch (SQLException e) {
+            System.out.println("Mensaje:"+e.getMessage());
+            System.out.println("Estado:"+e.getSQLState());
+            System.out.println("Codigo del error:"+e.getErrorCode());
+            JOptionPane.showMessageDialog(null, ""+e.getMessage());
+        }
+		
+	}
+	
+	private void cargarProductosFavoritos(){
+		try{
+			Operaciones operacion = new Operaciones("MiBaseFav.db");
+			ResultSet resultados = operacion.consultar("select * from Restaurantes where Restaurante=" + nombreRestaurante);
+			
+			while(resultados.next()){
+				String id = resultados.getString("Id");
+				String categoria = resultados.getString("Categoria");
+				String tipo = resultados.getString("TipoPlato");
+				String nombre = resultados.getString("Nombre");
+				String descripcion = resultados.getString("Descripcion");
+				String foto = resultados.getString("Foto");
+				String extras = resultados.getString("Extras");
+				double precio = resultados.getDouble("Precio");
+				int cant = resultados.getInt("CantidadPedido");
+				
+				Producto nuevoProducto;
+				
+				if(categoria.equals("Bebidas")){
+					nuevoProducto = new Bebida(id, categoria, tipo, nombre, descripcion, foto, precio, null);
+				}else{
+					nuevoProducto = new Plato(id, categoria, tipo, nombre, descripcion, foto, precio, null, extras,cant);
+				}
+				
+				productosFavoritos.add(nuevoProducto);
 			}
 			operacion.cerrarBaseDeDatos();
 			
@@ -420,7 +462,7 @@ public class Restaurante {
 			if(categoria.equals("Bebidas")){
 				nuevoProducto = new Bebida(idProducto, categoria, tipo, nombreProducto, resultados.getString("Descripcion"), resultados.getString("Foto"), precio, observaciones);
 			}else{
-				nuevoProducto = new Plato(idProducto, categoria, tipo, nombreProducto, resultados.getString("Descripcion"), resultados.getString("Foto"), precio, observaciones, extras, extrasMarcados);
+				nuevoProducto = new Plato(idProducto, categoria, tipo, nombreProducto, resultados.getString("Descripcion"), resultados.getString("Foto"), precio, observaciones, extras, extrasMarcados,0);
 			}
 			
 			mesasRestaurante.get(idMesa).añadirProducto(new TuplaProdEnv(nuevoProducto, true));
@@ -515,7 +557,7 @@ public class Restaurante {
 					if(categoria.equals("Bebidas")){
 						nuevoProducto = new Bebida(idProducto, categoria, tipo, nombreProducto, resultadosMiBase.getString("Descripcion"), resultadosMiBase.getString("Foto"), precio, observaciones);
 					}else{
-						nuevoProducto = new Plato(idProducto, categoria, tipo, nombreProducto, resultadosMiBase.getString("Descripcion"), resultadosMiBase.getString("Foto"), precio, observaciones, extras, extrasMarcados);
+						nuevoProducto = new Plato(idProducto, categoria, tipo, nombreProducto, resultadosMiBase.getString("Descripcion"), resultadosMiBase.getString("Foto"), precio, observaciones, extras, extrasMarcados,0);
 					}
 					
 					mesasRestaurante.get(idMesa).añadirProducto(new TuplaProdEnv(nuevoProducto, true));
@@ -564,10 +606,78 @@ public class Restaurante {
 	public Iterator<TuplaProdEnv> getIteratorProductosEnMesa(String idMesa){
 		return mesasRestaurante.get(idMesa).getIteratorProductosEnMesa();
 	}
+	
+	public Iterator<Producto> getIteratorFavoritos(){
+		return productosFavoritos.iterator();
+	}
+	
+	public PriorityQueue<Producto> getCopiaFavoritos(){
+		return copiaFavoritos();
+	}
+	
+	public PriorityQueue<Producto> getFavoritos(){
+		return productosFavoritos;
+	}
+
+	public void setProductosFavoritos(PriorityQueue<Producto> productosFavoritos) {
+		Restaurante.productosFavoritos = productosFavoritos;
+	}
 
 	public void eliminaProductosDeMesa(String idMesa) {
 		mesasRestaurante.get(idMesa).eliminaTodosLosPedidos();
 	}
 	
+	public PriorityQueue<Producto> copiaFavoritos(){
+		PriorityQueue<Producto> result = new PriorityQueue<Producto>(3,new MiComparator());
+		Iterator<Producto> itFavs = productosFavoritos.iterator();
+		while(itFavs.hasNext()){
+			result.add(itFavs.next());
+		}
+		return result;
+	}
+	
+	/**
+	 * Busca en favoritos el producto prod y le pone la catidad a la cantidad de prod
+	 * @param prod
+	 */
+	public static void actualizaFavs(Producto prod) {
+		boolean enc = false;
+		Iterator<Producto> itFavs = productosFavoritos.iterator();
+		while(itFavs.hasNext() && !enc){
+			Producto p = itFavs.next();
+			if(p.getId() == prod.getId() && (p instanceof Plato)){
+				((Plato)p).setCantiadPedido(((Plato)prod).getCantiadPedido());
+				enc = true;
+			}
+		}
+
+		Operaciones operacionSQlite = new Operaciones("MiBaseFav.db");
+		operacionSQlite.actualizaFav(prod.getId(), ((Plato)prod).getCantiadPedido());
+		operacionSQlite.cerrarBaseDeDatos();
+		
+	}
+	
+	public static class MiComparator implements Comparator<Object>{
+
+		@Override
+		public int compare(Object arg0, Object arg1) {
+			if(arg0 instanceof Plato && arg1 instanceof Plato){
+				if (((Plato)arg0).getCantiadPedido() < ((Plato)arg1).getCantiadPedido()){
+					return 1;
+				}
+				if (((Plato)arg0).getCantiadPedido() > ((Plato)arg1).getCantiadPedido()){
+					return -1;
+				}
+				return 0;
+			}
+			//Es bebida
+			return 0;
+		}
+		
+	}
+
+	
 }
+
+
 
