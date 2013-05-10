@@ -1,8 +1,12 @@
+SE HA TENIDO QUE CAMBIAR LA LIBRERIA AL INTRODUCIR EN USUARIO LECTURA DE QR.
+PARA LEER HAY QUE PONER UNAS LINEAS DE CODIGO CON LA RUTA DEL PROYECTO (com.example.nfcook) 
+Y COMO USUARIO Y CAMARERO LEEN ES NECESARIO TENER DOS LIBRERIAS PORQUE SI NO NO FUNCIONA.
+
 Para que funcione y compile QR es necesario enlazar una librería externa que esta subida en el repositorio.
 
 Para ello, sólo hay que seguir estos pasos:
 
-- Hacemos un checkout de la libreria ZXingLib del repositorio.
+- Hacemos un checkout de la libreria ZXingLibUsuario del repositorio.
 - Click derecho en la carpeta del proyecto en el Project Explorer
 - Una vez descargada, click derecho en la carpeta del proyecto en el Project Explorer->Properties
 - En resource->android abajo del todo pone "Library", le damos a Add..., Ok y listo.

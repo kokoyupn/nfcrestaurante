@@ -117,7 +117,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Si pulsamos el botón back
+        
+    	tabInferiorSeleccionado = 0;
+    	// Si pulsamos el botón back
     	if (keyCode == KeyEvent.KEYCODE_BACK) {
     		if(anteriorTabPulsado.equals("tabInicio")){
     			if (((PantallaInicialRestaurante) fragmentPantallaInicioRes).comprobarImagenActiva()){

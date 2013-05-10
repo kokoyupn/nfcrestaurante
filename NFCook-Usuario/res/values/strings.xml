@@ -29,4 +29,5 @@
     <string name="menu_mapa">Cambiar Vista</string>
     <string name="info_restaurante">Información detallada</string>
     <string name="contenido_tabs_mapas">Contenido tabs mapas</string>
+    <string name="recoger_cuenta">Recoger Cuenta</string>
 </resources>
