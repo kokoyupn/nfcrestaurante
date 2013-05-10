@@ -15,37 +15,57 @@
 
     </ListView>
     
-    <LinearLayout
-        android:id="@+id/LinearLayout1"
+    <FrameLayout
+        android:id="@+id/FrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="50dp"
-        android:background="#eeeeee"
-        android:gravity="bottom|right"
-        android:orientation="horizontal" >
+        android:background="#eeeeee" >
 
         <ImageView
-            android:id="@+id/imageViewMonedas"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/total" />
+            android:id="@+id/imagePagarPayPal"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/paypal" />
 
-        <TextView
-            android:id="@+id/textViewTotalCuenta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+        <ImageView
+            android:id="@+id/imageRecogerCuenta"
+            android:layout_width="166dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
-            android:gravity="bottom|right"
-            android:text="sdsd"
-            android:textSize="16sp" />
+            android:layout_marginTop="5dp"
+            android:src="@drawable/recoger_cuenta" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="5dp" >
+
+            <ImageView
+                android:id="@+id/imageViewMonedas"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/total" />
+
+            <TextView
+                android:id="@+id/textViewTotalCuenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="5dp"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+    
 
 </FrameLayout>

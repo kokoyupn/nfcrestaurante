@@ -2,6 +2,11 @@ package fragments;
 
 import java.util.ArrayList;
 
+import usuario.RecogerCuentaQR;
+import usuario.SincronizarPedidoBeamNFC;
+import usuario.SincronizarPedidoNFC;
+import usuario.SincronizarPedidoQR;
+
 import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
@@ -9,15 +14,23 @@ import com.example.nfcook.R;
 import adapters.MiListCuentaAdapter;
 import adapters.PadreListCuenta;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +45,11 @@ public class CuentaFragment extends Fragment{
 	
 	private ArrayList<PadreListCuenta> cuenta;
 	
+	private AlertDialog ventanaEmergenteElegirRecogerCuenta;
+	private View vistaVentanaEmergenteRecogerCuenta;
+	
+	private NfcAdapter adapter;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.cuenta, container, false);
@@ -45,7 +63,16 @@ public class CuentaFragment extends Fragment{
 		cargarCuenta();
 		// Creamos la listview y le aplicamos el adpater
 		crearListView();
+		
+		crearVentanaEmergenteElegirSincronizacion();
+	    ponerOnClickPayPal();
+	    ponerOnClickSincronizar();
+	    ponerOnClickSincronizarPedidoNFC();
+	    ponerOnClickSincronizarPedidoQR();
 
+	    // me devuelve null si no tiene NFC, si no, me devuelve el adapter nfc del dispositivo
+        adapter = NfcAdapter.getDefaultAdapter(vista.getContext());
+	    
 		return vista;
     }
 	
@@ -66,7 +93,7 @@ public class CuentaFragment extends Fragment{
 			 */
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3){
 				// Simplemente nos mostrará un mensaje con el precio unitario del producto
-				 Toast.makeText(getActivity().getApplicationContext(),"El precio unitario del producto es: " + cuenta.get(arg2).getPrecioUnidad() + " €",Toast.LENGTH_SHORT).show();	
+				 Toast.makeText(getActivity().getApplicationContext(),"El precio unitario del producto es: " + cuenta.get(arg2).getPrecioUnidad() + "€",Toast.LENGTH_SHORT).show();	
 			}
     	});	
 	}
@@ -133,5 +160,110 @@ public class CuentaFragment extends Fragment{
 	public void setRestaurante(String restaurante){
 		this.restaurante = restaurante;
 	}
+	
+	
+	/**
+	 * Crea una ventana emergente que muestra los tipos de sincronizacion de pedido
+	 * disponibles.
+	 */
+	private void crearVentanaEmergenteElegirSincronizacion(){
+		vistaVentanaEmergenteRecogerCuenta = LayoutInflater.from(vista.getContext()).inflate(R.layout.ventana_emergente_recoger_cuenta, null);
+		ventanaEmergenteElegirRecogerCuenta = new AlertDialog.Builder(vista.getContext()).create();
+		ventanaEmergenteElegirRecogerCuenta.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancelar", 
+				new DialogInterface.OnClickListener() {
+			
+					public void onClick(DialogInterface dialog, int which) {
+						ventanaEmergenteElegirRecogerCuenta.dismiss();
+					}
+		});
+		ventanaEmergenteElegirRecogerCuenta.setView(vistaVentanaEmergenteRecogerCuenta);
+	}
+	
+	/**
+	 * Crea el onClick la papelera para borrar todo el pedido.
+	 */
+	private void ponerOnClickPayPal() {
+		ImageView botonPayPal = (ImageView) vista.findViewById(R.id.imagePagarPayPal);
+		
+		botonPayPal.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Toast.makeText(vista.getContext(),"PAYPAL",Toast.LENGTH_LONG).show();
+				
+			}
+		});
+	}
+
+	/**
+	 * Crea el onClick la la imagen botonSincronizar.
+	 * Compruena si las bases de datos estan vacias para permitir o no sincronizar.
+	 * Si se puede abre una ventana emergente para elegir el metodo de sincronizacion.
+	 */
+	private void ponerOnClickSincronizar() {
+		ImageView botonRecogerCuenta = (ImageView) vista.findViewById(R.id.imageRecogerCuenta);
+		
+		botonRecogerCuenta.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				ventanaEmergenteElegirRecogerCuenta.show();	
+			}
+		});
+		
+	}
+	
+	/**
+	 * Crea el onClick la la imagen botonNFC.
+	 * Si el adapter es null significa que el dispositivo no tiene NFC, entonces no puede
+	 * sincronizar con este metodo y lanza un mensaje. Si no es null, se abre la ventana
+	 * para sincronizar por NFC.
+	 */
+	private void ponerOnClickSincronizarPedidoNFC() {
+		ImageView botonNFC = (ImageView) vistaVentanaEmergenteRecogerCuenta.findViewById(R.id.imageNFCSincronizar);
+		
+		botonNFC.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				// cierro la ventana emergente
+				ventanaEmergenteElegirRecogerCuenta.dismiss();
+				if (adapter != null) {					
+					// abro la ventana para sincronizar con NFC
+					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+					intent.putExtra("Restaurante", restaurante);
+					startActivityForResult(intent, 0);
+				} else Toast.makeText(vista.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
+			} 
+		});
+	}
+	
+	/**
+	 * Entra cuando regresa de una actividad lanzada con startActivityForResult (onClick de NFC y QR).
+	 */
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		cargarCuenta();
+		crearListView();
+	}
+	
+	/**
+	 * Crea el onClick la imagen botonQR
+	 */
+	private void ponerOnClickSincronizarPedidoQR() {
+		ImageView botonQR = (ImageView) vistaVentanaEmergenteRecogerCuenta.findViewById(R.id.imageQRSincronizar);
+		
+		botonQR.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				// abro ventana para sincronizar con QR
+				Intent intent = new Intent(getActivity(),RecogerCuentaQR.class);
+				intent.putExtra("Restaurante", restaurante);
+				startActivityForResult(intent,0);
+				// cierro la ventana emergente
+				ventanaEmergenteElegirRecogerCuenta.dismiss();
+				
+			}
+		});
+		
+	}
+
 	
 }
