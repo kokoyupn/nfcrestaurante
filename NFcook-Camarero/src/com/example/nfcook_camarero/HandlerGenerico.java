@@ -33,6 +33,14 @@ public class HandlerGenerico extends SQLiteOpenHelper {
     	 DB_NAME = nombre;
      }
      
+     public HandlerGenerico(Context context,String DB_NAME) {
+    	 //el uno corresponde a la version de la base de datos;
+    	 super(context, DB_NAME, null, 1);
+    	 this.DB_NAME = DB_NAME;
+    	 this.myContext = context;
+
+     }
+     
      
      private boolean checkDataBase(){
     	 SQLiteDatabase checkDB = null;
@@ -85,7 +93,7 @@ public class HandlerGenerico extends SQLiteOpenHelper {
 	    	 boolean dbExist = checkDataBase();
 	    	 if(dbExist){
 	    		 //la base de datos existe y no hacemos nada.
-	    		 Log.i("", "BASE DE DATOS  VERIFICADA");
+	    		 //Log.i("", "BASE DE DATOS  VERIFICADA");
 	    	 }else{
 	    		 	/*Llamando a este método se crea la base de datos vacía en la ruta por 
 	    		 	defecto del sistema de nuestra aplicación por lo que podremos 

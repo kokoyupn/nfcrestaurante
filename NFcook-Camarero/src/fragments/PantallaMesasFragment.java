@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import com.example.nfcook_camarero.Borrar_tarjeta;
+import com.example.nfcook_camarero.EscribirCuentaPorNFC;
 import com.example.nfcook_camarero.HandlerGenerico;
 import com.example.nfcook_camarero.InfoPlato;
 import com.example.nfcook_camarero.InicialCamareroAdapter;
@@ -170,7 +171,7 @@ public class PantallaMesasFragment extends Fragment {
 				numeroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
-				final CharSequence[] items = {"Cobrar","Sincronizacion","Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
+				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -185,8 +186,8 @@ public class PantallaMesasFragment extends Fragment {
 				            //alert.setMessage("¿Seguro que quieres cobrar y cerrar esta mesa? "); //mensaje            
 				    		TextView mensaje= (TextView) vistaAviso.findViewById(R.id.textViewMensaje);
 				    		mensaje.setText("¿Estas seguro que quieres cobrar y cerrar esta mesa?");
-				    		 alert.setNegativeButton("Cancelar", null);
-				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
+				    		alert.setNegativeButton("Cancelar", null);
+				            alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 				               	public void onClick(DialogInterface dialog, int whichButton) {
 				                	try{
 				                		HandlerGenerico sqlHistorico = new HandlerGenerico(getActivity().getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
@@ -244,8 +245,8 @@ public class PantallaMesasFragment extends Fragment {
 				             alert.show();
 				    		//Boton Cobrar--------------------------------------------------------------------
 				    		
-				    	//------------------ Sincronizar -----------------------------------
-				    	}else if (item == 1){
+				    	//------------------ Recoger Pedido -----------------------------------
+				    	} else if (item == 1){
 				    		//Sincronizacion
 				    		View vistaAviso = LayoutInflater.from(PantallaMesasFragment.this.getActivity()).inflate(R.layout.alert_sincronizacion, null);
 				    		ventanaEmergenteSincronizacion = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity()).create();
@@ -304,9 +305,15 @@ public class PantallaMesasFragment extends Fragment {
 				    				}
 				    				);
 	
-				    		
+				    	// ---------------- escribir cuenta	
+				    	} else if (item == 2){
+				    		intent = new Intent(ctx,EscribirCuentaPorNFC.class);
+				    		intent.putExtra("Restaurante",restaurante);
+				    		intent.putExtra("NumMesa", numeroMesaAEditar);
+				    		startActivity(intent);
+				    	}//fin else item5
 				    	//----------------- onClickListener de editar número de mesa --------------------------------
-				    	}else if(item == 2){
+				    	else if(item == 3){
 				    		LayoutInflater factory = LayoutInflater.from(PantallaMesasFragment.this.getActivity());
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
 				    		final TextView tituloVentana = (TextView) textEntryView.findViewById(R.id.textViewTituloEditar);
@@ -370,7 +377,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
 				    		//----------------- onClickListener de editar número de personas --------------------------------
-				    	}else if(item == 3){
+				    	} else if(item == 4){
 				    		LayoutInflater factory = LayoutInflater.from(PantallaMesasFragment.this.getActivity());
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
 				    		final TextView tituloVentana = (TextView) textEntryView.findViewById(R.id.textViewTituloEditar);
@@ -427,7 +434,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
 				    	//---------Eliminar Mesa------
-				    	}else if (item == 4){
+				    	}else if (item == 5){
 							 
 				    	    View vistaAviso = LayoutInflater.from(PantallaMesasFragment.this.getActivity()).inflate(R.layout.alert_dialog_cobrar, null);
 				    		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewCobrar);
@@ -460,12 +467,12 @@ public class PantallaMesasFragment extends Fragment {
 				             });//fin onclick aceptar
 				             alert.setView(vistaAviso);
 				             alert.show();
-				    	} //fin else item 4
-				    	else if (item == 5){
+				    	} // ----- borrar tag ---
+				    	else if (item == 6){
 				    		intent = new Intent(ctx,Borrar_tarjeta.class);
 				    		intent.putExtra("Restaurante",restaurante);
 				    		startActivity(intent);
-				    	}//fin else item5
+				    	}
 				    }
 				});
 			    ventEmergente.show();

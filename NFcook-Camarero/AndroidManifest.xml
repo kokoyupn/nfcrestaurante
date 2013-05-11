@@ -78,6 +78,10 @@
         <activity
             android:name=".Borrar_tarjeta"
             android:screenOrientation="portrait">
+        </activity>  
+         <activity
+            android:name=".EscribirCuentaPorNFC"
+            android:screenOrientation="portrait">
         </activity>   
         <activity
             android:name=".Sincronizacion_BeamNfc"
