@@ -122,19 +122,19 @@ public class RecogerCuentaQR extends Activity {
 			sqlMiBase = new HandlerDB(getApplicationContext(), "MiBase.db");
 			dbMiBase = sqlMiBase.open();
 		} catch (SQLiteException e) {
-			System.out.println("NO EXISTE BASE DE DATOS MI BASE: Recoger Cuenta QR (cargarBaseDeDatosPedido)");
+			System.out.println("NO EXISTE BASE DE DATOS MI BASE: Recoger Cuenta QR (abrirBasesDatos)");
 		}
 		try {
 			sqlCuenta = new HandlerDB(getApplicationContext(), "Cuenta.db");
 			dbCuenta = sqlCuenta.open();
 		} catch (SQLiteException e) {
-			System.out.println("NO EXISTE BASE DE DATOS CUENTA: Recoger Cuenta QR (cargarBaseDeDatosCuenta)");
+			System.out.println("NO EXISTE BASE DE DATOS CUENTA: Recoger Cuenta QR (abrirBasesDatos)");
 		}
 		try {
 			sqlRestaurante = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
 			dbRestaurante = sqlRestaurante.open();
 		} catch (SQLiteException e) {
-			System.out.println("NO EXISTE BASE DE DATOS DE EQUIVALENCIAS: Recoger Cuenta QR (cargarBaseDeDatosResta)");
+			System.out.println("NO EXISTE BASE DE DATOS DE EQUIVALENCIAS: Recoger Cuenta QR (abrirBasesDatos)");
 		}
 	}
 	
@@ -146,15 +146,15 @@ public class RecogerCuentaQR extends Activity {
 		//Campos que quieres recuperar
 		String[] campos = new String[]{"Id","Nombre","Precio"};
 		String[] datosRestaurante = new String[]{restaurante,id};	
-		Cursor cursorPedido = dbMiBase.query("Restaurantes", campos, "Restaurante=? AND Id=?", datosRestaurante,null, null,null);
+		Cursor cursorCuenta = dbMiBase.query("Restaurantes", campos, "Restaurante=? AND Id=?", datosRestaurante,null, null,null);
     	
-    	if (cursorPedido.moveToNext()){
+    	if (cursorCuenta.moveToNext()){
     		ContentValues platoCuenta = new ContentValues();
-    		platoCuenta.put("Id", cursorPedido.getString(0));
-        	platoCuenta.put("Plato", cursorPedido.getString(1));
+    		platoCuenta.put("Id", cursorCuenta.getString(0));
+        	platoCuenta.put("Plato", cursorCuenta.getString(1));
         	platoCuenta.put("Observaciones", "");
         	platoCuenta.put("Extras", "");
-        	platoCuenta.put("PrecioPlato",cursorPedido.getDouble(2));
+        	platoCuenta.put("PrecioPlato",cursorCuenta.getDouble(2));
         	platoCuenta.put("Restaurante",restaurante);
         	platoCuenta.put("IdHijo", 0);
     		dbCuenta.insert("Cuenta", null, platoCuenta);
@@ -168,6 +168,5 @@ public class RecogerCuentaQR extends Activity {
 	private void cerrarBasesDeDatos() {
 		sqlCuenta.close();
 		sqlRestaurante.close();
-		//sqlMiBase.close();
 	}
 }

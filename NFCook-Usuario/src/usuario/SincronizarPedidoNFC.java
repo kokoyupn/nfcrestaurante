@@ -44,13 +44,12 @@ public class SincronizarPedidoNFC extends Activity implements
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
 	private ArrayList<Byte> pedidoCodificadoEnBytes;
-	private boolean dispositivoCompatible, cabeEnTag, leidoBienDeTag,
-			escritoBienEnTag, tagCorrupta, heCalculadoTam;
+	private boolean dispositivoCompatible, cabeEnTag, leidoBienDeTag, escritoBienEnTag, tagCorrupta, 
+		heCalculadoTam, restauranteCorrecto, esCuenta;
 	private static boolean heSincronizadoMalAntes;
 	private static ArrayList<Byte> copiaSeguridad, copiaUltimoBloque;
 	private static int numBloqueComienzo;
-	private byte idRestauranteTag;
-	private boolean restauranteCorrecto;
+	private byte idRestaurante, idRestauranteTag;
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
@@ -70,18 +69,16 @@ public class SincronizarPedidoNFC extends Activity implements
 			AsyncTask<Void, Void, Void> {
 
 		/**
-		 * Se ejecuta antes de doInBackground. Abre las bases de datos y muestra
-		 * el progresDialog ya creado.
+		 * Se ejecuta antes de doInBackground. Muestra el progresDialog ya creado.
 		 */
 		@Override
 		protected void onPreExecute() {
-			abrirBasesDeDatos();
 			progressDialogSinc.show(); // Mostramos el diálogo antes de comenzar
 		}
 
 		/**
-		 * Ejecuta en segundo plano. Si la tag es Mifare Cassic codifica el
-		 * pedido, envia a NFC y transfiere los platos de pedido a cuenta.
+		 * Ejecuta en segundo plano. Si la tag es Mifare Cassic envia a NFC y transfiere 
+		 * los platos de pedido a cuenta.
 		 */
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -95,12 +92,6 @@ public class SincronizarPedidoNFC extends Activity implements
 					else
 						leidoBienDeTag = true;
 					
-					System.out.println("COPIA TRAS LEER: " + copiaSeguridad);
-					System.out.println("ULT BLOQUE TRAS LEER: " + copiaUltimoBloque);
-					System.out.println("BLOQUE COM TRAS LEER : " + numBloqueComienzo);
-
-					System.out.println("\n");
-					
 				} catch (IOException e1) {
 					leidoBienDeTag = false;
 					e1.printStackTrace();
@@ -109,13 +100,12 @@ public class SincronizarPedidoNFC extends Activity implements
 					e1.printStackTrace();
 				}
 				
-				if (leidoBienDeTag) {
+				if (leidoBienDeTag && !esCuenta) {
 					
 					if (estoyEnRestauranteCorrecto()){
 						// si ha sincronizado mal entra xq para el la tag no esta corrupta
 						if (!tagCorrupta) {
 							codificarPedido(damePedidoActual());
-							System.out.println("PEDIDO A CODIFICAR: "+ pedidoCodificadoEnBytes);
 							try {
 								escribirEnTagNFC();
 							} catch (IOException e) {
@@ -177,12 +167,10 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		// mortrar aviso inicial
 		mostrarAvisoInicial();
-
-		System.out.println("SINC MAL ANTES LEER: "+ heSincronizadoMalAntes);
-		System.out.println("COPIA ANTES LEER: : " + copiaSeguridad);
-		System.out.println("ULT ANTES LEER : " + copiaUltimoBloque);
-		System.out.println("BLOQUE COM ANTES LEER : " + numBloqueComienzo);
-		System.out.println("\n");
+		
+		// para reducir mas el tiempo y que no hay problemas en la escritura
+		abrirBasesDeDatos();
+		obtenerIdRestYAbreviatura();		
 	}
 
 	/**
@@ -195,52 +183,31 @@ public class SincronizarPedidoNFC extends Activity implements
 	 */
 	public void onDismiss(DialogInterface dialog) {
 
-		if (!dispositivoCompatible) {
-			setResult(RESULT_CANCELED, null);
-			Toast.makeText(this,"Pedido no sincronizado. Tu dispositivo no es compatible con esta tarjeta.",Toast.LENGTH_LONG).show();
-		} else {
-			if (tagCorrupta) {
-				setResult(RESULT_CANCELED, null);
-				Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizo mal.",Toast.LENGTH_LONG).show();
-			} else {
-				if (!leidoBienDeTag) {
-					setResult(RESULT_CANCELED, null);
-					Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-				} else {
-					if (escritoBienEnTag){
-						enviarPedidoACuenta();
-						setResult(RESULT_OK, null);
-						Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta.",Toast.LENGTH_LONG).show();
-					} else {
-						setResult(RESULT_CANCELED, null);
-						if (heCalculadoTam) {
-							if (!cabeEnTag)
-								Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision.",Toast.LENGTH_LONG).show();
-							else if (heSincronizadoMalAntes)
-								Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar.",Toast.LENGTH_LONG).show();
-						} 
-						else if (!restauranteCorrecto)
-							Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto.",Toast.LENGTH_LONG).show();
-						else
-							Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+		setResult(RESULT_CANCELED, null);
+		if (dispositivoCompatible) {
+			if (!tagCorrupta) {
+				if (leidoBienDeTag) {
+					if (!esCuenta){
+						if (escritoBienEnTag){
+							enviarPedidoACuenta();
+							setResult(RESULT_OK, null);
+							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
+						} else {
+							if (heCalculadoTam) {
+								if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
+								else if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
+							} else {
+								if (restauranteCorrecto) Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+								else Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
+							}
 						}
-				}
-			}
-		}
+					} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
+				} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+			} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizo mal",Toast.LENGTH_LONG).show();
+		} else Toast.makeText(this,"Pedido no sincronizado. Tu dispositivo no es compatible con esta tarjeta",Toast.LENGTH_LONG).show();
 		
 		cerrarBasesDeDatos();
-		
-		
-		System.out.println("BLOQUE VALIDO: " + bloquesDepuracion);
-		System.out.println("SINC MAL FINAL: "+ heSincronizadoMalAntes);
-		System.out.println("COPIA FINAL : " + copiaSeguridad);
-		System.out.println("ULT FINAL : " + copiaUltimoBloque);
-		System.out.println("BLOQUE COM FINAL : " + numBloqueComienzo);
-		System.out.println("\n");
-
-		if (!heSincronizadoMalAntes)
-			finish();
-    
+		if (!heSincronizadoMalAntes) finish();
 	}
 
 	/**
@@ -351,19 +318,19 @@ public class SincronizarPedidoNFC extends Activity implements
 
 	}
 	
-	private boolean estoyEnRestauranteCorrecto(){
+	private void obtenerIdRestYAbreviatura(){
 		// Campos que quieres recuperar
 		String[] campos = new String[] { "Numero", "Abreviatura" };
 		String[] datos = new String[] { restaurante };
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
 
 		cursorPedido.moveToFirst();
-		byte idRest = (byte) Integer.parseInt(cursorPedido.getString(0));
+		idRestaurante = (byte) Integer.parseInt(cursorPedido.getString(0));
 		abreviaturaRest = cursorPedido.getString(1);
-		restauranteCorrecto = (idRest == idRestauranteTag);
-		
-		return restauranteCorrecto;
-		
+	}
+	
+	private boolean estoyEnRestauranteCorrecto(){
+		return restauranteCorrecto = (idRestaurante == idRestauranteTag);
 	}
 
 	/**
@@ -700,18 +667,6 @@ public class SincronizarPedidoNFC extends Activity implements
 	public void onResume() {
 		super.onResume();
 		adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters,null);
-
-		/*
-		 * TODO descomentar y poner esto o poner que salgan los puntos
-		 */
-
-		/*
-		 * if (!adapter.isEnabled()){ Toast.makeText(getApplicationContext(),
-		 * "Por favor activa NFC y pulsa en el boton back para regresar a NFCook"
-		 * , Toast.LENGTH_LONG).show(); startActivity(new
-		 * Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)); }
-		 */
-
 	}
 
 	/********************************** LECTURA NFC **********************************************/
@@ -737,14 +692,15 @@ public class SincronizarPedidoNFC extends Activity implements
 		// Establece la conexion
 		mfc.connect();
 
-		boolean sectorValido = false;
-		leidoBienDeTag = true;
 		// Variable usada para saber por el bloque que vamos
 		int numBloque = 0;
 		// el texto que ha escrito el usuario
 		byte[] textoByte = null;
-		// para copiaSeguridad
+		// para copiaSeguridad y errores
+		boolean sectorValido = false;
+		leidoBienDeTag = true;
 		Byte menosUno = (byte) Integer.parseInt("255");
+		Byte menosDos = (byte) Integer.parseInt("254");
 		boolean menosUnoEncontrado = false;
 		boolean esPrimerBloque = false;
 
@@ -760,6 +716,7 @@ public class SincronizarPedidoNFC extends Activity implements
 					textoByte = mfc.readBlock(numBloque); // leemos un bloque entero
 
 					if (!esPrimerBloque){
+						esCuenta = menosDos == textoByte[0];
 						idRestauranteTag = textoByte[0];
 						esPrimerBloque = true;
 					}
