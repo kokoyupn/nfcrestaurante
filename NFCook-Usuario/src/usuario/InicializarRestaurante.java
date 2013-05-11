@@ -13,6 +13,7 @@ import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,6 +21,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,6 +53,7 @@ import android.widget.Toast;
  * @author Abel
  *
  */
+@SuppressLint("NewApi")
 public class InicializarRestaurante extends Activity implements TabContentFactory, OnTabChangeListener{
 	
 	private ImageView imagenRestaurante;
@@ -73,7 +77,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	
 	// global para poder acceder a el y trabajar con la ayuda
 	private Fragment fragmentPantallaInicioRes;
-	private String anteriorTabPulsado;
+	private static String anteriorTabPulsado;
 	private static int tabInferiorSeleccionado;
 	
 	private int numComensales;
@@ -226,7 +230,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	 *  Metodo encargado de desmarcar el tab superior activado para evitarle líos
 	 *  al usuario.
 	 */
-	public void desmarcarTabSuperiorActivo(){
+	public static void desmarcarTabSuperiorActivo(){
 		/*
 		 * La única forma de descmarcar el tab activo superior del action bar, es llamando
 		 * al siguiente metodo con null que sabemos que va a rebentar y hacemos un try
@@ -508,6 +512,41 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
           	}
         });
         
+        // por si le da a atras
+        ventanaEmergente.setOnKeyListener(new OnKeyListener() {
+			
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_BACK) {
+					/* Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+					 * ya no lo esté.
+					 */
+				    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
+				    /* Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+				     * usuario vea cual está seleccionado.
+				     */
+				    if(!seleccionadoTabSuperior){
+				    	tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+				    }
+				}
+				return false;
+			}
+        });
+        
+        // por si toca fuera de la pantalla
+        ventanaEmergente.setOnDismissListener(new OnDismissListener() {
+			
+			public void onDismiss(DialogInterface dialog) {
+				/* Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+				 * ya no lo esté.  */
+				tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
+				/* Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+				* usuario vea cual está seleccionado. */
+				if(!seleccionadoTabSuperior){
+				 	tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+				}	
+			}
+		});
+        
         // Aplicamos la vista y la mostramos
 		ventanaEmergente.setView(vistaVentanaEmergente);
 		ventanaEmergente.show();
@@ -578,6 +617,29 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 				t.cancel(); 
 			}
 		}, 3500);	
+	}
+	
+	public static void cargarTabCuenta(){
+		/*
+		 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
+		 * ya no lo esté.
+		 */
+	    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#c38838"));
+	    /*
+	     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
+	     * usuario vea cual está seleccionado.
+	     */
+	    tabs.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#906d35"));
+	    tabInferiorSeleccionado = 2;
+	    
+		// Descamarcamos el tab superior activado para evitar confusiones
+		desmarcarTabSuperiorActivo();
+		// Marcamos el tab falso
+        tabs.setCurrentTabByTag("tabFalso");
+        // Marcamos a falso selccionado tabSuperior
+        seleccionadoTabSuperior = false;
+        //anterior tab pulsado
+        anteriorTabPulsado = "tabCuenta";
 	}
 	
 	public static void setSeleccionadoTabSuperior(boolean seleccionado){
