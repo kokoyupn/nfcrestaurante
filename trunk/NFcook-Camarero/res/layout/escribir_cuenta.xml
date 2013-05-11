@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BFEFFF"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/imageViewSincronizarPedido"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="50dp"
+            android:layout_weight="0.88"
+            android:src="@drawable/escribir_cuenta" />
+
+    </LinearLayout>
+
+</FrameLayout>
