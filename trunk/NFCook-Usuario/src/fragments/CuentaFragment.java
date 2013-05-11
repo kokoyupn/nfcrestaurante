@@ -2,6 +2,7 @@ package fragments;
 
 import java.util.ArrayList;
 
+import usuario.RecogerCuentaNFC;
 import usuario.RecogerCuentaQR;
 import usuario.SincronizarPedidoBeamNFC;
 import usuario.SincronizarPedidoNFC;
@@ -227,7 +228,7 @@ public class CuentaFragment extends Fragment{
 				ventanaEmergenteElegirRecogerCuenta.dismiss();
 				if (adapter != null) {					
 					// abro la ventana para sincronizar con NFC
-					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
+					Intent intent = new Intent(getActivity(),RecogerCuentaNFC.class);
 					intent.putExtra("Restaurante", restaurante);
 					startActivityForResult(intent, 0);
 				} else Toast.makeText(vista.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
