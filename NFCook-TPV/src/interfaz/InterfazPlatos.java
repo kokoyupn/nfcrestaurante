@@ -22,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -47,24 +48,29 @@ import tpv.Producto;
 import tpv.Restaurante;
 import tpv.TuplaProdEnv;
 
+/**
+ * Clase gestora de los platos del restaurante. Añade y elimina platos, envia a cocina, cobra, aplica promociones,  
+ * tiene en cuenta platos mas pedidos en el restaurante e imprime cuentas con codigos qr
+ * @author Guille
+ *
+ */
 public class InterfazPlatos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPaneGlobal, panelPlatos, menuConfig, cobrar, eliminar, enviar, aceptar, promociones;
 	private JTable tablaPlatos;
 	private JButton rehacer, deshacer, subir, bajar,subirTabla, bajarTabla;
-	static GridBagConstraints gbc_btnNewButton2,gbc_btnBotones,gbc_btnPopup;
+	static GridBagConstraints gbc_btnNewButton2,gbc_btnBotones,gbc_btnPopup,gbc_promo;
 	static JScrollPane scrollPane, scrollPanePl,scrollPaneBotones,scrollPaneTable;
 	private ArrayList<String> categorias;
 	private ArrayList<AuxDeshacerRehacer>  auxiliarDeshacer, auxiliarRehacer;
 	private ArrayList<TuplaProdEnv> productosEnMesa;
-	private HashMap<String,Integer> favoritos; // Para luego pasarselo a la base de datos y actualizar. Id y cantidad
 	private Restaurante unRestaurante ;
 	private TablaNoEditable dtm;
 	private String idMesa,precioAux,obsAux,extrasAux, idCam, categoriaExtraPadre ;
 	private Producto productoATabla;
 	private HashMap<String,String> hashExtras; //la clave es el tipo de extra
-	private int contDeshacer,idsUnicos=0; 
+	private int contDeshacer,idsUnicos=0, promocion; //Promocion=1 --> 2x1, Promocion=2 --> 30%, Promocion= 0 --> No promo, 
 	private JTextField textoObs;
 	private boolean esExtras,esObs;
 	private JLabel total;
@@ -114,7 +120,7 @@ public class InterfazPlatos extends JFrame {
 		JPanel panelBotones = new JPanel();
 		panelBotones.setBounds(10, 10, (int)ancho/11, 530);
 		contentPaneGlobal.add(panelBotones);
-		GridLayout gbl_panelBotones = new GridLayout(6,1);
+		GridLayout gbl_panelBotones = new GridLayout(5,1);
 		panelBotones.setLayout(gbl_panelBotones);
 		
 		
@@ -201,12 +207,14 @@ public class InterfazPlatos extends JFrame {
 							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
 					if (seleccion == 0){//aceptar
 						//TODO cobrar 
-						
 						//cobramos solo los platos que han sido enviados a cocina
-						ArrayList<Producto> aCobrar = platosACobrar();
+						ArrayList<Producto> aCobrar = platosACobrar();						
 						if (aCobrar.size()>0){
+							//Construimos el panel con las promociones
+							generaPromociones();
+							
 							//Pasamos los parametros necesarios para imprimir el tiket
-							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante());
+							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante(),promocion);
 							//mostramos mensaje de acción realizada con éxito
 							JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
 									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
@@ -227,7 +235,7 @@ public class InterfazPlatos extends JFrame {
 					JOptionPane.showOptionDialog(contentPaneGlobal ,"No hay platos para cobrar",null,JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/wrong.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");
 				}
-			} 
+			}
 		});
 
 ////////////////////////////BOTON ENVIAR A COCINA/////////////////////
@@ -329,24 +337,6 @@ public class InterfazPlatos extends JFrame {
 
 		});
 
-////////////////////////////BOTON PROMOCIONES/////////////////////	
-		//damos forma y color a los botones
-		promociones = new JPanelBordesRedondos(false);
-		((JPanelBordesRedondos) promociones).setColorPrimario(new Color(105,25,254));
-		((JPanelBordesRedondos) promociones).setColorSecundario(Color.cyan);
-		//((JPanelBordesRedondos) promociones).setColorContorno(Color.blue);
-		aux = new JLabel();
-		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/oferta.png"),70,70));
-		promociones.add(aux);		
-		
-		//Añadimos el boton al panel y establecemos el oyente
-		panelBotones.add(promociones);
-		promociones.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent arg0){
-				//TODO
-			}
-		});
 
 		
 		
@@ -764,7 +754,7 @@ public class InterfazPlatos extends JFrame {
 	
 }
 
-
+	
 	private void generaBotonesScrollPlatos() {
 		//Calculamos el tamaño de los botones en funcion del de la pantalla
 		int altoBotones = (int)(((dimensionesPantalla.getHeight() - 460)/2)-10) ;
@@ -874,21 +864,100 @@ public class InterfazPlatos extends JFrame {
 	
 	
 	
+	public void generaPromociones(){
+		//TODO		
+		ButtonGroup grupo = new ButtonGroup();
+		//Creo un panel con gridlayout para los radiobuttons
+		JPanel panelRadio = new JPanel();
+		
+		GridLayout gridRadio = new GridLayout(3,1);
+		panelRadio.setLayout(gridRadio);
+
+		//Generamos el boton de NoPromo
+		JRadioButton oferta = new JRadioButton();
+		panelRadio.add(oferta);
+		grupo.add(oferta);
+		oferta.setBackground(Color.BLUE.darker());
+		oferta.setForeground(Color.WHITE);
+		
+		JPanel panelAux = new JPanelBordesRedondos(true);
+		((JPanelBordesRedondos) panelAux).setColorPrimario(Color.BLUE);
+		((JPanelBordesRedondos) panelAux).setColorSecundario(Color.BLUE);
+//		((JPanelBordesRedondos) panelAux).setColorContorno(Color.CYAN);
+
+		JLabel aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/SinPromo.png"),170,90));
+		oferta.add(aux);
+		panelAux.add(oferta);
+		panelRadio.add(panelAux);
+		
+		//Generamos el boton de 2x1
+		JRadioButton oferta2x1 = new JRadioButton();
+		panelRadio.add(oferta2x1);
+		grupo.add(oferta2x1);
+		oferta2x1.setBackground(Color.BLUE.darker());
+		oferta2x1.setForeground(Color.WHITE);
+
+
+		panelAux = new JPanelBordesRedondos(true);
+		((JPanelBordesRedondos) panelAux).setColorPrimario(Color.BLUE);
+		((JPanelBordesRedondos) panelAux).setColorSecundario(Color.BLUE);
+//		((JPanelBordesRedondos) panelAux).setColorContorno(Color.CYAN);
+
+		aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/2x1.png"),170,90));
+		oferta2x1.add(aux);
+		panelAux.add(oferta2x1);
+		panelRadio.add(panelAux);
+		
+		//Generamos el boton de 30%
+		JRadioButton oferta30 = new JRadioButton();
+		panelRadio.add(oferta30);
+		grupo.add(oferta30);
+		oferta30.setBackground(Color.BLUE.darker());
+		oferta30.setForeground(Color.WHITE);
+		
+		panelAux = new JPanelBordesRedondos(true);
+		((JPanelBordesRedondos) panelAux).setColorPrimario(Color.BLUE);
+		((JPanelBordesRedondos) panelAux).setColorSecundario(Color.BLUE);
+//		((JPanelBordesRedondos) panelAux).setColorContorno(Color.CYAN);
+
+		aux = new JLabel();
+		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/30off.png"),170,90));
+		oferta30.add(aux);
+		panelAux.add(oferta30);
+		panelRadio.add(panelAux);
+
+		int opcion = JOptionPane.showOptionDialog(contentPaneGlobal , panelRadio,"¿Desea aplicar alguna promoción?",JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE,null,new Object[] {"Aceptar"},"Aceptar");			
+	
+		if(opcion == 0){//Miramos que radiobutton esta seleccionado
+			if(oferta.isSelected()){//No promo
+				promocion = 0;
+			}else if(oferta2x1.isSelected()){//2x1
+				promocion = 1;
+			}else{//30%
+				promocion = 2;
+			}
+		}else{//No se aplica promocion
+			promocion = 0 ;
+		}
+	}
+	
+	
+	
+	
 	/**
 	 * @param prod
 	 * Genera un menu en una subventana emergente con las posibles configuraciones del producto prod
 	 */
 	public void generarMenuConfig(final TuplaProdEnv prod){
 		productoATabla = prod.getProd();
-		
-		
+
 		menuConfig = new JPanelBordesRedondos(true);
 		menuConfig.setLayout(new GridBagLayout());
 		((JPanelBordesRedondos) menuConfig).setColorPrimario(Color.BLUE);
 		((JPanelBordesRedondos) menuConfig).setColorSecundario(Color.BLUE);
-
-		
-		//menuConfig = new JPanel(new GridBagLayout());
 		
 		GridBagConstraints grid = new GridBagConstraints();
 		
@@ -939,11 +1008,6 @@ public class InterfazPlatos extends JFrame {
 						JPanel panelRadio = new JPanel();
 						panelRadio.setBackground(Color.BLUE.darker());
 						
-						//damos forma y color a los botones
-//						JPanel panelRadio = new JPanelBordesRedondos();
-//						((JPanelBordesRedondos) panelRadio).setColorPrimario(Color.BLUE);
-//						((JPanelBordesRedondos) panelRadio).setColorSecundario(Color.BLUE);
-						
 						GridLayout gridRadio = new GridLayout(2,1);
 						panelRadio.setLayout(gridRadio);
 
@@ -955,8 +1019,6 @@ public class InterfazPlatos extends JFrame {
 							((JPanelBordesRedondos) panelExtra).setColorSecundario(Color.BLUE);
 							((JPanelBordesRedondos) panelExtra).setColorContorno(Color.CYAN);
 
-							
-							
 							//En cada radioButton va un extra						
 							JRadioButton extra2 = new JRadioButton(elementosExtra[j]);
 							panelExtra.add(extra2);
@@ -1212,35 +1274,34 @@ public class InterfazPlatos extends JFrame {
 	 }
 	 
 	 /**
-	  * @return busca los platos en la tabla (y array) que aun no han sido enviados y los devuelve en un ArrayList
+	  * @return busca los platos en el array que aun no han sido enviados y los devuelve en un ArrayList
 	  */
-	 //TODO mirar solo en array
 	 public ArrayList<Producto> platosAEnviar(){
-		 ArrayList<Producto> tmp = new ArrayList<Producto>();
-		int i = tablaPlatos.getRowCount()-1;
-		while(i >= 0){
+		ArrayList<Producto> tmp = new ArrayList<Producto>();
+		int i = 0;
+		while(i < productosEnMesa.size()){
 			if (!productosEnMesa.get(i).isEnviado()){
 				tmp.add(productosEnMesa.get(i).getProd());
 			}
-			i--;
+			i++;
 		}
 		return tmp;
 	 }
 	 
 	 /**
 	  * 
-	  * @return busca los platos en la tabla (y array) que han sido enviados y los devuelve en un ArrayList
+	  * @return busca los platos en el array que han sido enviados y los devuelve en un ArrayList
 	  */
 	 public ArrayList<Producto> platosACobrar(){
 		 ArrayList<Producto> tmp = new ArrayList<Producto>();
-		int i = tablaPlatos.getRowCount()-1;
+		int i = 0;
 		dineroAcobrar = 0;
-		while(i >= 0){
+		while(i < productosEnMesa.size()){
 			if (productosEnMesa.get(i).isEnviado()){
 				dineroAcobrar = Math.rint((dineroAcobrar + productosEnMesa.get(i).getProd().getPrecio())*100)/100;
 				tmp.add(productosEnMesa.get(i).getProd());
 			}
-			i--;
+			i++;
 		}
 		return tmp;
 	 }
