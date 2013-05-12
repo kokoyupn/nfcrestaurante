@@ -226,6 +226,7 @@ public class Sincronizacion_QR extends Activity {
 	        plato.put("Precio",cursor.getDouble(1));
 	        plato.put("Personas",numPersonas);
 	        plato.put("IdUnico", idUnico);
+	        plato.put("Sincro", 0);
 	        dbMesas.insert("Mesas", null, plato);
 	        dbMesas.close();
 	        

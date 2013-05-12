@@ -200,6 +200,7 @@ public class AnadirBebida extends Activity{
 		        	nuevaBebida.put("Precio", Double.toString(precio));
 		        	nuevaBebida.put("Personas", personasMesa);
 		        	nuevaBebida.put("IdUnico", idUnico);
+		        	nuevaBebida.put("Sincro", 0);
 		        	System.out.println(idUnico);
 				    
 		        	System.out.println("LEga1");

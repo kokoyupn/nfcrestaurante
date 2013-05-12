@@ -315,6 +315,7 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
 	        	plato.put("Precio",cursor.getDouble(1));
 	        	plato.put("Personas",PantallaMesasFragment.dameNumPersonas());
 	        	plato.put("IdUnico", PantallaMesasFragment.getIdUnico());
+	        	plato.put("IdUnico",0);
 	        	dbMesas.insert("Mesas", null, plato);
 	        	dbMesas.close();
 	        	

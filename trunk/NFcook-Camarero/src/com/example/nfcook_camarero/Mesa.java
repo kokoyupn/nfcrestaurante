@@ -21,6 +21,9 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -103,23 +106,23 @@ public class Mesa extends Activity {
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MESA " + numMesa + ": PEDIDO ACTUAL");
+    	
 		
 		try{
-			//antes del 4/5/2013
 			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			dbMesas= sqlMesas.open();
 			
 			//Añadir platos a la ListView----------------------------------------------------
 	  	  	platos = (ListView)findViewById(R.id.listaPlatos);
 		    elemLista = obtenerElementos();
-	         
+		    
+		    
 	  	    adapter = new MiListAdapterMesa(this, elemLista);
 	  	     
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
 	  	    precioTotal.setText(Double.toString( Math.rint(adapter.getPrecio()*100)/100 )+" €");
 	  	     
 	  	    platos.setAdapter(adapter);
-	  	    
 
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
@@ -173,7 +176,7 @@ public class Mesa extends Activity {
 		            			if(!noBorrar){
 			            			if(moviendose){
 			            				
-			            				//PINTARADAPTER------------
+			            				//FIXME PINTARADAPTER------------
 			            				for(int i=0;i<adapter.getCount();i++){
 			            					ContenidoListMesa aux=(ContenidoListMesa)adapter.getItem(i);
 			            					System.out.println(aux.getCantidad()+" " +aux.getNombre());
@@ -212,9 +215,10 @@ public class Mesa extends Activity {
 			            	    				//Pones que esa vista tenga una distancia de la izquierda de 0 porque si no la 
 			            	    				//siguiente vista la coloca con el margen de donde estuviera el raton al levantar
 			            	    				vista.setTranslationX(0);
-			            	    				//Notificas que has borrado un elemento del adapter y que repinte la lista
-			            	    				adapter.notifyDataSetChanged();
 			            	    				
+			            	    				actualizaListPlatos();//FIXME o esto: adapter.notifyDataSetChanged();
+			            	    				//Notificas que has borrado un elemento del adapter y que repinte la lista
+			            	    							            	    				
 			            	    				//Recalculamos el precio(será cero ya que no quedan platos en la lista)
 			            	    				precioTotal.setText(Double.toString( Math.rint( adapter.getPrecio()*100 )/100) +" €");
 			            		        	}catch(Exception e){
@@ -373,7 +377,7 @@ public class Mesa extends Activity {
 	private static ArrayList<ContenidoListMesa> obtenerElementos() {
 		ArrayList<ContenidoListMesa> elementos=null;
 		try{
-			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato","Sincro"};
 		    String[] numeroDeMesa = new String[]{numMesa};
 		    
 		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
@@ -387,7 +391,7 @@ public class Mesa extends Activity {
 		    	numElems++;
 		    	System.out.println("Elems: "+numElems);
 		    	if(primero){
-		    		elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
+		    		elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    		System.out.println("Primero: "+c.getString(0));
 		    		primero=false;
 		    	}else{
@@ -397,6 +401,9 @@ public class Mesa extends Activity {
 		    			System.out.println("Elemento del adapter numero: "+" "+(i+1));
 	    				String n = elementos.get(i).getNombre();
 	    				String e = elementos.get(i).getExtras();
+	    				
+	    				int sincronizado = elementos.get(i).getSincronizado();
+	    				
 	    				//if(e==null)
 	    					//e="";
 	    				String o = elementos.get(i).getObservaciones();
@@ -404,7 +411,8 @@ public class Mesa extends Activity {
 	    					//o="";
 			    		if( n.equals(c.getString(0)) &&
 			    			e.equals(c.getString(2)) &&
-			    			o.equals(c.getString(1)) ){
+			    			o.equals(c.getString(1)) &&
+			    			sincronizado == c.getInt(6) ){
 			    				System.out.println("Repetido: "+c.getString(0));
 			    				repetido = true;
 			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
@@ -413,7 +421,7 @@ public class Mesa extends Activity {
 			    			i++;
 		    		}
 		    		if(!repetido){
-		    			elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5)));
+		    			elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    			System.out.println("nombre: "+elementos.get(i).getNombre()+" extras: "+elementos.get(i).getExtras()+" obs: "+elementos.get(i).getObservaciones());
 		    		}
 		    	}
@@ -433,38 +441,57 @@ public class Mesa extends Activity {
 		ventanaEmergente.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
+				
+				//Si un plato ya esta sincronizado no tiene sentido poder editarlo
+				if(!sincronizado(posicion)){
+					importarBaseDatatosMesa();
+					String nuevosExtrasMarcados = null;
+					
+					if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
+						nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
+					}
+			    	
+			    	String observacionesNuevas;
+			    	if(!actwObservaciones.getText().toString().equals("")){
+			    		observacionesNuevas = actwObservaciones.getText().toString();
+			    	}else{
+			    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
+			    	}
+			    	
+			    	if(nuevosExtrasMarcados==null)
+						nuevosExtrasMarcados="";
+					
+			    	ContentValues platoEditado = new ContentValues();
+			    	platoEditado.put("Extras", nuevosExtrasMarcados);
+			    	platoEditado.put("Observaciones", observacionesNuevas);
+			        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
+			        
+			        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
+					
+			        //FIXME borrar. ASI queda la DB despues de la actualizacion------------------
+			        pintarBaseDatosMesa();
+			        //ASI queda despues de la actualizacion------------------
+			        
+			        sqlMesas.close();
+					
+			        actualizaListPlatos();
+			   }else
+				   Toast.makeText(getApplicationContext(),"Plato ya sincronizado",Toast.LENGTH_SHORT).show();
+			}
+
+			private boolean sincronizado(int pos) {
 				importarBaseDatatosMesa();
-				String nuevosExtrasMarcados = null;
-				
-				if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
-					nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
-				}
-		    	
-		    	String observacionesNuevas;
-		    	if(!actwObservaciones.getText().toString().equals("")){
-		    		observacionesNuevas = actwObservaciones.getText().toString();
-		    	}else{
-		    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
-		    	}
-		    	
-		    	if(nuevosExtrasMarcados==null)
-					nuevosExtrasMarcados="";
-				
-		    	ContentValues platoEditado = new ContentValues();
-		    	platoEditado.put("Extras", nuevosExtrasMarcados);
-		    	platoEditado.put("Observaciones", observacionesNuevas);
-		        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
-		        
-		        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
-				
-		        //FIXME borrar. ASI queda la DB despues de la actualizacion------------------
-		        pintarBaseDatosMesa();
-		        //ASI queda despues de la actualizacion------------------
-		        
-		        sqlMesas.close();
-				
-		        actualizaListPlatos();
-		   }
+	        	
+				String[] campos = new String[]{"Sincro"};
+	        	
+	        	String[] numeroDeMesa = new String[]{numMesa,String.valueOf(adapter.getIdPlatoUnico(pos))};
+	        	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=? AND IdUnico=?",numeroDeMesa, null,null, null);
+	        	c.moveToNext();
+	        	if(c.getInt(0) == 1)
+	        		return true;
+	        	else 
+	        		return false;	        				
+			}
 		});
 		
 	}
@@ -473,7 +500,7 @@ public class Mesa extends Activity {
 		try{
 			importarBaseDatatosMesa();
         	
-			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato"};
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato","Sincro"};
         	
         	String[] numeroDeMesa = new String[]{numMesa};
         	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
@@ -488,6 +515,7 @@ public class Mesa extends Activity {
 		    	
 		    	System.out.println(c.getString(1));
 		    	System.out.println(c.getString(4));
+		    	System.out.println("Sincro: " + c.getString(6));
 		    }
 		}catch(Exception e){
 			System.out.println("Error en pintarBaseDatosMesa"+e.getCause()+" "+e.getLocalizedMessage()+" "+e.getStackTrace());
@@ -495,12 +523,12 @@ public class Mesa extends Activity {
 				
 			}
 	
-	private void importarBaseDatatosMesa(){
+	private static void importarBaseDatatosMesa(){
 		try{
-			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			dbMesas= sqlMesas.open();
 		}catch(SQLiteException e){
-		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
+		 	Toast.makeText(actividad,"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
 		}	
 	}
 	
@@ -570,8 +598,9 @@ public class Mesa extends Activity {
 	
 	public static void actualizaListPlatos(){
 		try{
-			sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-			dbMesas= sqlMesas.open();
+			importarBaseDatatosMesa();
+			/*sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();*/
 			
 			elemLista = obtenerElementos();
 	        adapter = new MiListAdapterMesa(actividad, elemLista);
@@ -611,7 +640,7 @@ public class Mesa extends Activity {
 
 	public static void actualizarNumeroVecesPlatoPedido(String id) {
 		try{
-    		sqlMiBaseFav = new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
+			sqlMiBaseFav = new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
 			dbMiBaseFav = sqlMiBaseFav.open();
 			
 			String[] campo = new String[]{"VecesPedido"};//Consultas el numero de veces que ya se ha pedido
@@ -663,4 +692,76 @@ public class Mesa extends Activity {
 				
 			}
 	
+	/*Metemos en el action bar un boton para sincronizar la mesa*/
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mesamenu, menu);
+        
+        return true;
+    }
+    
+    /*Metodo que realiza la accion del boton introducido en el ActionBar (Sincronizar)*/
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.botonNFC:
+    		actualizarSincronizadosBaseMesas();
+    		//Notificas que has borrado un elemento del adapter y que repinte la lista
+    		actualizaListPlatos();
+			return true;
+           
+    	default:
+           return super.onOptionsItemSelected(item);
+   }
+       }
+    
+    /*Metodo que actualiza el campo Sincro de la base de datos Mesas tras sincronizar el pedido con el TPV*/
+    public static void actualizarSincronizadosBaseMesas() {
+    	try{
+    		importarBaseDatatosMesa();
+    		/*sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();*/
+			
+			for(int i=0;i<adapter.getCount();i++){
+				ContenidoListMesa posAdapter = (ContenidoListMesa)adapter.getItem(i);
+				
+				/*En caso de que haya varios platos iguales(agrupados) tenemos que recorrer el array de repetidos e ir poniendo
+				a 1 el campo Sincro de cada uno en la base de datos*/
+				if(posAdapter.getCantidad() > 1){
+					for(int j=0;j<posAdapter.getCantidad();j++){
+						
+						int idUnico = posAdapter.getIdRepetido(j);
+						
+						String[] info = new String[]{Integer.toString(idUnico),numMesa};//En un restaurante concreto y con un IdPlato 
+			    		Cursor campoSincro = dbMesas.query("Mesas",null,"IdUnico=? AND NumMesa=?",info,null,null,null); 
+			    		campoSincro.moveToFirst();
+			    		
+			    		ContentValues platoSincronizado = new ContentValues();
+			      		platoSincronizado.put("Sincro", 1);
+			      		String[] camposUpdate = {Integer.toString(idUnico),numMesa};
+			      		dbMesas.update("Mesas", platoSincronizado, "IdUnico=? AND NumMesa=?", camposUpdate);
+						
+					}
+				//En caso de que haya un unico plato(sin agrupar), solo actualizamos su campo Sincro en la base Mesas
+				}else{
+					int idUnico = posAdapter.getId();//Devuelve el id de la posicion 0 del array de repetidos(el unico que hay)
+					
+					String[] info = new String[]{Integer.toString(idUnico),numMesa};//En un restaurante concreto y con un IdPlato 
+		    		Cursor campoSincro = dbMesas.query("Mesas",null,"IdUnico=? AND NumMesa=?",info,null,null,null); 
+		    		campoSincro.moveToFirst();
+		    		
+		    		ContentValues platoSincronizado = new ContentValues();
+		      		platoSincronizado.put("Sincro", 1);
+		      		String[] camposUpdate = {Integer.toString(idUnico),numMesa};
+		      		dbMesas.update("Mesas", platoSincronizado, "IdUnico=? AND NumMesa=?", camposUpdate);
+					
+				}
+	    	}
+			dbMesas.close();
+			
+    	}catch(SQLiteException e){
+			System.out.println("CATCH abrir actualizarSincronizadosDelAdapter() en Mesa.java");
+			Toast.makeText(actividad,"NO EXISTE LA BASE DE DATOS",Toast.LENGTH_SHORT).show();
+		}
+    }
+    
 }

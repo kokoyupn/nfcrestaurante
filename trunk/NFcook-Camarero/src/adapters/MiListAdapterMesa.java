@@ -7,6 +7,7 @@ import com.example.nfcook_camarero.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,9 @@ public class MiListAdapterMesa extends BaseAdapter {
 	         
 	    TextView observaciones = (TextView) vista.findViewById(R.id.observaciones);
 	    observaciones.setText(lista.getObservaciones());    
+	    
+	    if(lista.getSincronizado() == 1)
+	    	vista.setBackgroundColor(Color.GREEN);
 	    
 	    return vista;
 	    }
