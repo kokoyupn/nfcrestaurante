@@ -313,13 +313,16 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 		        	plato.put("Precio", precioPlato);
 		        	plato.put("Personas",AnadirPlatos.getNumPersonas());
 		        	plato.put("IdUnico", idUnico);
+		        	plato.put("Sincro", 0);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
 		        	
 		        	
 		        	//Añadimos una unidad a las veces que se ha pedido el plato
 		        	Mesa.actualizarNumeroVecesPlatoPedido(idPlato);
-		        	//FIXME 
+		        	
+		        	AnadirPlatos.actualizaTopPedidos(padresExpandableList);
+		        	
 		        	Mesa.pintarBaseDatosMiFav();
 		        	
 		        	Mesa.actualizaListPlatos();

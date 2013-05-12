@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import fragments.PantallaMesasFragment;
-import adapters.ContenidoListMesa;
 import adapters.HijoExpandableListEditar;
 import adapters.MiCursorAdapterBuscadorPlatos;
 import adapters.MiExpandableListAdapterEditar;
@@ -25,7 +24,6 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
@@ -40,19 +38,24 @@ public class AnadirPlatos extends Activity{
 	 * poder actualizar la lista desde otras clases*/
 	private static MiExpandableListAdapterAnadirPlato  adapterExpandableListAnadirPlato;
 	private static ExpandableListView expandableListAnadirPlato;
-	private HandlerGenerico sqlMiBase, sqlBuscador,sqlMiBaseFav;
+	private HandlerGenerico sqlMiBase, sqlBuscador;
+	private static HandlerGenerico sqlMiBaseFav;
 	private AutoCompleteTextView buscador;
 	private boolean noSeleccionadoAutoCompleteTextView;
-	private SQLiteDatabase dbMiBase, dbBuscador,dbMiBaseFav;
+	private SQLiteDatabase dbMiBase, dbBuscador;
+	private static SQLiteDatabase dbMiBaseFav;
+	public static Activity actividad;
 	
 	private static String numMesa;
 	private static String idCamarero;
 	private static String numPersonas; 
 	
+	ArrayList<PadreExpandableListAnadirPlato> padres;
+	
 	private static ExpandableListView expandableListEditarExtras;
 	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
 	private AutoCompleteTextView actwObservaciones;
-	private String restaurante;
+	private static String restaurante;
 	
 	//private ArrayList<InfoPlato> platosAñadidos; //aqui vaos guardando los platos que ha añadido para luego pasarselos a la pantalla de Mesa 
 	//cuando añade un plato se añade a la base de datos de mesas
@@ -61,6 +64,7 @@ public class AnadirPlatos extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		noSeleccionadoAutoCompleteTextView = false;
         super.onCreate(savedInstanceState);
+        actividad = this;
         
         setContentView(R.layout.expandable_list_anadir_plato);
         
@@ -79,8 +83,7 @@ public class AnadirPlatos extends Activity{
 	}
 	
 	public void crearExpandableList() {	  
-	
-		ArrayList<PadreExpandableListAnadirPlato> padres = new ArrayList<PadreExpandableListAnadirPlato>();
+		padres = new ArrayList<PadreExpandableListAnadirPlato>();
 		//De momento leer todos los platos para probar de MiBase.db
 		
 		 //abrimos la base de datos MiBase.db
@@ -182,9 +185,9 @@ public class AnadirPlatos extends Activity{
 	}
 	
 	
-	 private void generarTopPedidos(ArrayList<PadreExpandableListAnadirPlato> padres) {
+	 public static void generarTopPedidos(ArrayList<PadreExpandableListAnadirPlato> padres) {
 		 try{
-			sqlMiBaseFav = new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
+			sqlMiBaseFav = new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
 			dbMiBaseFav = sqlMiBaseFav.open();
 			
 			String[] campos = new String[]{"Id","Foto","Nombre","Precio","VecesPedido"};
@@ -255,6 +258,7 @@ public class AnadirPlatos extends Activity{
 		HijoExpandableListAnadirPlato hijosTop = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
    		PadreExpandableListAnadirPlato top = new PadreExpandableListAnadirPlato("TOP Pedidos", hijosTop);
    		padres.add(top);
+   		
 	   	
 		}catch(Exception e){
 			 System.out.println("Error en generarTopPedidos");
@@ -298,6 +302,8 @@ public class AnadirPlatos extends Activity{
 					   cargarExpandableListAnadirExtras(nombrePlato);
 					   ventanaEmergente.setView(vistaAviso);
 					   ventanaEmergente.show();
+					   
+					   
 				    }
 				      
 				 });
@@ -441,12 +447,16 @@ public class AnadirPlatos extends Activity{
 		        	plato.put("Precio",cursor.getDouble(1));
 		        	plato.put("Personas",numPersonas);
 		        	plato.put("IdUnico", idUnico);
+		        	plato.put("Sincro", 0);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
 		        	
 		        	//Añadimos una unidad a las veces que se ha pedido el plato
 		        	Mesa.actualizarNumeroVecesPlatoPedido(cursor.getString(0));
-		        	//FIXME 
+		        	
+		        	//crearExpandableList();//Esto iba pero se quedaba cerrado
+		        	actualizaTopPedidos(padres);
+		        	
 		        	Mesa.pintarBaseDatosMiFav();
 		        	
 		        	Mesa.actualizaListPlatos();
@@ -459,6 +469,92 @@ public class AnadirPlatos extends Activity{
 			}
 			
 		});	
+	}
+	
+	public static void actualizaTopPedidos(ArrayList<PadreExpandableListAnadirPlato> padresExpandableList) {
+		 try{
+			sqlMiBaseFav = new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
+			dbMiBaseFav = sqlMiBaseFav.open();
+			
+			String[] campos = new String[]{"Id","Foto","Nombre","Precio","VecesPedido"};
+	    	String[] restricciones = new String[]{restaurante};
+	    	
+	    	Cursor platosVeces = dbMiBaseFav.query("Restaurantes", campos, "Restaurante=?",restricciones,null, null,null);
+	   		
+	    	ArrayList<String> idHijos= new ArrayList<String>();
+	   		ArrayList<String> numImags= new ArrayList<String>();
+	   		ArrayList<String> nombrePlatos= new ArrayList<String>();
+	   		ArrayList<Double> precio= new ArrayList<Double>();
+	   		
+	   		ArrayList<Integer> vecesPedidoLosTops= new ArrayList<Integer>();//Array que guarda el numero de veces que se han pedido los mas pedidos
+	    	
+	   		while(platosVeces.moveToNext()){
+	    		
+	    		String veces = platosVeces.getString(4);
+	    		if( veces == null )//Si ese plato no ha sido pedido nunca, no habra nada y sera null y petará
+	    			veces = "0";
+	    		
+	    		boolean seguir=true;
+	    		int i=0;
+	    		while(seguir && i<6){
+	    				//Rellenas cuando aun hay nulls en el array de los mas pedidos y el valor de la DB es >0
+	    				if(vecesPedidoLosTops.size() < 6){
+			    			if( Integer.parseInt(veces)>0 ){//Compruebo solo el idHijos porque si este es null, los demas tambien lo seran
+			    				idHijos.add(platosVeces.getString(0));
+					   			numImags.add(platosVeces.getString(1));
+					   			nombrePlatos.add(platosVeces.getString(2));
+					   			precio.add(platosVeces.getDouble(3));
+					   			
+					   			vecesPedidoLosTops.add( Integer.parseInt(veces) );//Vas añadiendo en las mismas posiciones que es los otros arrays
+					   		}	
+					   		//En caso de que la posicion sea vacia, lo añadas o no, tienes que cambiar de elemento de la DB	
+			    			seguir=false;
+			    			
+			    		//Aqui ya es cuando tienes que comparar
+			    		}else{
+			    			
+			    			//Calculo el minimo
+		    				int minimo = Integer.MAX_VALUE;
+		    				int posMin = 0;
+		    				for (int j=0;j<vecesPedidoLosTops.size();j++){
+		    					System.out.println("LLEGA");
+		    					if(vecesPedidoLosTops.get(j) < minimo){
+		    						System.out.println("vecesPedidoLosTops de: "+j+" "+vecesPedidoLosTops.get(j));
+		    						minimo = vecesPedidoLosTops.get(j);
+		    						posMin = j;
+		    					}
+		    				}
+		    				
+			    			if( Integer.parseInt(veces)>minimo ){
+			    				idHijos.set(posMin, platosVeces.getString(0));
+					   			numImags.set(posMin,platosVeces.getString(1));
+					   			nombrePlatos.set(posMin,platosVeces.getString(2));
+					   			precio.set(posMin,platosVeces.getDouble(3));
+					   			
+					   			vecesPedidoLosTops.set(posMin, Integer.parseInt(veces) );//Vas añadiendo en las mismas posiciones que es los otros arrays
+					   		}
+			    			
+			    			seguir=false;
+			    		}
+	    		}
+	   		}
+	    	
+	   	platosVeces.close();//Se cierra el cursor para que no de problemas
+	  
+		HijoExpandableListAnadirPlato hijosTop = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
+  		PadreExpandableListAnadirPlato top = new PadreExpandableListAnadirPlato("TOP Pedidos", hijosTop);
+  		padresExpandableList.set(0, top);
+  		
+  		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(actividad, padresExpandableList);
+		
+  		expandableListAnadirPlato.deferNotifyDataSetChanged();
+		//expandableListAnadirPlato.notifyAll();
+	
+  		
+		 }catch(Exception e){
+			 System.out.println("Error en generarTopPedidos");
+		}
+		
 	}
 	
 }

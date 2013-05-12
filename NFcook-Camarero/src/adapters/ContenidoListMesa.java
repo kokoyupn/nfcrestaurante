@@ -25,8 +25,9 @@ public class ContenidoListMesa {
 	private double precio;
 	private int cantidad;
 	private ArrayList<Integer> repetidos;
+	private int sincronizado;
 	
-	public ContenidoListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato){
+	public ContenidoListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato,int s){
 		this.nombre = nombre;
 		this.extras = extras;
 		this.observaciones = observaciones;
@@ -36,16 +37,23 @@ public class ContenidoListMesa {
 		this.cantidad = 1;
 		repetidos=new ArrayList<Integer>();
 		repetidos.add(id);
+		sincronizado=s;
 	}
 	
+	public int getSincronizado(){
+		return sincronizado;
+	}
 	
+	public void setSincronizado(int s){
+		sincronizado = s;
+	}
 	
 	public String getIdPlato(){
 		return idPlato;
 	}
 	
 	public int getId() {
-		return repetidos.get(0);//FIXME
+		return repetidos.get(0);
 	}
 	
 	public String getNombre() {
@@ -105,7 +113,12 @@ public class ContenidoListMesa {
 
 
 	public void eliminaId() {
-		repetidos.remove(0);//FIXME no se si bien
+		repetidos.remove(0);
+		
+	}
+	
+	public int getIdRepetido(int i) {
+		return repetidos.get(i);
 		
 	}
 
