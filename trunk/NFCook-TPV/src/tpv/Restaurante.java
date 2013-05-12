@@ -657,6 +657,11 @@ public class Restaurante {
 		
 	}
 	
+	/**
+	 * Compara productos por la cantidad de veces pedidos
+	 * @author Guille
+	 *
+	 */
 	public static class MiComparator implements Comparator<Object>{
 
 		@Override

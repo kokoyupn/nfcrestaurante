@@ -3,10 +3,17 @@ package tpv;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+
+import basesDeDatos.Operaciones;
 
 public class Cobro {
 
@@ -16,14 +23,16 @@ public class Cobro {
 	private String idMesa;
 	private double total;
 	private String restaurante;
+	private int promocion ;
 	
-	public Cobro(ArrayList<Producto> cobro, String idMesa, String idCamarero, double total , String restaurante) {
+	public Cobro(ArrayList<Producto> cobro, String idMesa, String idCamarero, double total , String restaurante,int promocion) {
 		this.cobro = cobro;
 		this.idCamarero = idCamarero;
 		this.idMesa = idMesa;
 		horaEnvioYFecha = new FechaYHora();
 		this.total = total;
 		this.restaurante = restaurante;
+		this.promocion = promocion;
 		enviarCobroAImpresora();
 	}
 
@@ -47,49 +56,74 @@ public class Cobro {
 		Iterator<Producto> itProductos = cobro.iterator();
 		String comida = "";
 		String bebida = "";
-		String textoQR = restaurante.toUpperCase() + " NFCook";
-
-		while(itProductos.hasNext()){
-			Producto producto = itProductos.next();
-			if(producto instanceof Plato){
-				comida +=  "Nombre: " + ((Plato) producto).getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
-				textoQR += "Nombre: " + ((Plato) producto).getNombre() + " -->" + producto.getPrecio() + "€";
-			}else{
-				bebida += "Nombre: " + ((Bebida) producto).getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
-				textoQR += "Nombre: " + ((Bebida) producto).getNombre() + " -->" + producto.getPrecio() + "€";
+		try{
+			//busco en la base de datos Equivalencia, el numero asociado al restaurante
+			Operaciones operacion = new Operaciones("Equivalencia_Restaurantes.db");
+			ResultSet resultados = operacion.consultar("select * from Restaurantes where Restaurante=" + restaurante);
+			
+			String abreviatura = resultados.getString("Abreviatura");
+			String numero = resultados.getString("Numero");
+					
+			String textoQR = numero;
+				
+			while(itProductos.hasNext()){
+				Producto producto = itProductos.next();
+				comida +=  "Nombre: " + producto.getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
+				textoQR += "@" + producto.getId().substring(abreviatura.length());//le quitamos fh o v
 			}
-		}
-		boolean comidaBool = false;
-		boolean bebidaBool = false;
-		if(!comida.equals("")){
-			comidaBool = true;
-		}
-		if(!bebida.equals("")){
-			bebidaBool = true;
-		}
+			boolean comidaBool = false;
+			boolean bebidaBool = false;
+			if(!comida.equals("")){
+				comidaBool = true;
+			}
+			if(!bebida.equals("")){
+				bebidaBool = true;
+			}
+			
+			String textoAImprimir = "";
+			//cuando lea "Nombre: " saltara de linea
+			textoAImprimir = 	restaurante.toUpperCase() + " ------ NFCook" +
+								"Nombre: " + "Mesa: " + idMesa +  ".  Le atendió " + idCamarero + 
+								"Nombre: " + "Fecha y hora: " + horaEnvioYFecha + "Nombre: ";
+			
+			if (comidaBool && bebidaBool){
+				textoAImprimir += comida + bebida; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
+			}else if(comidaBool){//no hay bebida
+				textoAImprimir += comida ; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
+			}else{//no hay comida
+				textoAImprimir += bebida; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
+			}
+			if (promocion == 1){//2x1
+				
+				textoAImprimir += "Nombre: " + separador(80) +
+						"Nombre: " + "Subtotal: " + total ;
+				//aplicamos la promocion 2x1. Cobramos los platos mas caros. Bebidas y platos por separado
+				total = Math.rint(aplica2x1(cobro)*100)/100;
+				textoAImprimir += "Nombre: " + "¡¡¡Aplicado 2x1!!!" + "Nombre: "+
+						"Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
+				
+			}else if  (promocion == 2){//30%
+				textoAImprimir += "Nombre: " + separador(80) +
+						"Nombre: " + "Subtotal: " + total ;
+				total = Math.rint((total*0.7)*100)/100;
+				textoAImprimir += "Nombre: " + "¡¡¡Aplicado el 30%!!!" + "Nombre: "+
+						"Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
+			}else{//No promo
+				textoAImprimir += "Nombre: " + separador(80) +
+						"Nombre: " + "Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
+				
+			} 			
+			QRCodeJava.generaQR(textoQR);//Crea el archivo en C:\\hlocal\\QR_Code.PNG
+			Image img = loadImage("ArchivoQR/QR_Code.PNG");
+			//Image img = loadImage("C:\\Archivos de Guillermo\\Uni\\IS\\QR_Code.PNG");
+			Imprimir.imprime(textoAImprimir,img);
 		
-		String textoAImprimir = "";
-		//cuando lea "Nombre: " saltara de linea
-		textoAImprimir = 	restaurante.toUpperCase() + " ------ NFCook" +
-							"Nombre: " + "Mesa: " + idMesa +  ".  Le atendió " + idCamarero + 
-							"Nombre: " + "Fecha y hora: " + horaEnvioYFecha + "Nombre: ";
-		
-		if (comidaBool && bebidaBool){
-			textoAImprimir += comida + bebida; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
-		}else if(comidaBool){//no hay bebida
-			textoAImprimir += comida ; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
-		}else{//no hay comida
-			textoAImprimir += bebida; //Para que salga todo en la misma impresion. Quitar cuando separemos en dos impresoras
-		}
-		textoAImprimir += "Nombre: " + separador(80) +
-				"Nombre: " + "Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
-		
-		textoQR += "Nombre: " + "Total: " + total + " €";
-		
-		QRCodeJava.generaQR(textoQR);//Crea el archivo en C:\\hlocal\\QR_Code.PNG
-		Image img = loadImage("ArchivoQR/QR_Code.PNG");
-		//Image img = loadImage("C:\\Archivos de Guillermo\\Uni\\IS\\QR_Code.PNG");
-		Imprimir.imprime(textoAImprimir,img);
+		}catch(SQLException e) {
+            System.out.println("Mensaje:"+e.getMessage());
+            System.out.println("Estado:"+e.getSQLState());
+            System.out.println("Codigo del error:"+e.getErrorCode());
+            JOptionPane.showMessageDialog(null, ""+e.getMessage());
+        }
 		
 	}
 	
@@ -121,6 +155,96 @@ public class Cobro {
 		}
 		return bimg;
 	}
+
+	
+	public double aplica2x1(ArrayList<Producto> cobro){
+		double result = 0;
+		//Separo los platos de las bebidas
+		PriorityQueue<Plato> platos = new PriorityQueue<Plato>(1,new ComparadorPrecio());
+		PriorityQueue<Bebida> bebidas = new PriorityQueue<Bebida>(1,new ComparadorPrecio());
+		for(int i = 0; i< cobro.size();i++){
+			if (cobro.get(i) instanceof Plato){
+				platos.add((Plato) cobro.get(i));
+			}else{
+				bebidas.add((Bebida) cobro.get(i));
+				}
+		}
+		int auxPlatos = platos.size()/2;
+		int auxBebidas = bebidas.size()/2;
+		Producto p ;
+		
+		if(platos.size() % 2 == 0 && bebidas.size() % 2 == 0){//Hay platos y bebidas pares. Cobramos la mitad (los mas caros)
+			for(int i =0; i < auxPlatos; i++){
+				p = platos.remove();
+				result += p.getPrecio();			
+			}
+			for(int i =0; i < auxBebidas; i++){
+				p = bebidas.remove();
+				result += p.getPrecio();			
+			}
+		}else if(platos.size() % 2 != 0 && bebidas.size() % 2 != 0){//Hay platos y bebidas impares. Cobramos la mitad mas uno de los platos y la mitad menos uno de las bebidas
+			for(int i =0; i <= auxPlatos ; i++){
+				p = platos.remove();
+				result += p.getPrecio();				
+			}
+			for(int i =0; i <= auxBebidas ; i++){
+				p = bebidas.remove();
+				result += p.getPrecio();		
+			}
+		}else if(platos.size() % 2 == 0 && bebidas.size() % 2 != 0){//Platos pares bebidas impares. Mitad de los platos y mitad mas uno de las bebidas
+			for(int i =0; i < auxPlatos; i++){
+				p = platos.remove();
+				result += p.getPrecio();				
+			}
+			for(int i =0; i <= auxBebidas; i++){
+				p = bebidas.remove();
+				result += p.getPrecio();			
+			}
+		}else{//Platos impares bebidas pares. Mitad mas uno de los platos y mitad de las bebidas
+			for(int i =0; i <= auxPlatos; i++){
+				p = platos.remove();
+				result += p.getPrecio();				
+			}
+			for(int i =0; i < auxBebidas; i++){
+				p = bebidas.remove();
+				result += p.getPrecio();			
+			}
+		}
+		return result;
+		
+	}
+	
+	
+	
+	
+	/**
+	 * Compara productos por precio
+	 * @author Guille
+	 *
+	 */
+	public class ComparadorPrecio implements Comparator<Object>{
+
+		@Override
+		public int compare(Object arg0, Object arg1) {
+			if(arg0 instanceof Producto && arg1 instanceof Producto){
+				if (((Producto)arg0).getPrecio() < ((Producto)arg1).getPrecio()){
+					return 1;
+				}
+				if (((Producto)arg0).getPrecio() > ((Producto)arg1).getPrecio()){
+					return -1;
+				}
+				//cuestan igual
+				return 0;
+			}
+			return 0;
+		}
+		
+	}
+	
 	
 }
+
+
+
+
 
