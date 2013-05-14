@@ -7,6 +7,7 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
@@ -33,11 +34,23 @@ public class InicializarMapas extends TabActivity{
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MAPAS");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
 		
 		// Inicializamos y cargamos Tabs
 		inicializarTabs();
 		cargarTabs();
     }
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
+	
+	
 	
 	// Metodo encargado de inicializar los tabs
     private void inicializarTabs(){

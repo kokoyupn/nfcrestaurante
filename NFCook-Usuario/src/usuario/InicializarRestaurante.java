@@ -34,6 +34,9 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -159,7 +162,64 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         
         // Seleccionamos el modo tabs en el actionBar
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        
+        // atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
     }
+    
+    
+    // para meter botones en el action bar
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.redes_sociales, menu);
+        inflater.inflate(R.menu.enviar_valoraciones, menu);
+        return true;
+    }
+    
+    // para el atras y botones del action bar
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId()==R.id.icono_redes_sociales){
+    		// codigo de prado
+
+    		// borrar esto
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(" Codigo de \n Prado ");
+            builder.create();
+            builder.show();
+    		
+            // dejar
+    		return true;
+    	}
+    	else if (item.getItemId()==R.id.icono_enviar_valoraciones){
+    		// codigo de busy
+    		
+    		// borrar esto
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(" Codigo de \n Busy ");
+            builder.create();
+            builder.show();
+            
+            // dejar
+            return true;
+    	}
+    	else {
+    		// atras
+    		tabInferiorSeleccionado = 0;
+        	if(anteriorTabPulsado.equals("tabInicio")){
+        		if (((PantallaInicialRestaurante) fragmentPantallaInicioRes).comprobarImagenActiva()){
+        			// Cargamos en el fragment la pantalla de bienvenida del restaurante
+        			fragmentPantallaInicioRes = new PantallaInicialRestaurante();
+        			((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
+        			FragmentTransaction m = getFragmentManager().beginTransaction();
+        			m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
+        			m.commit();
+        		}
+        		else finish();
+        	} else finish();
+        	return true;
+    	}
+		
+   }
     
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
 	private void cargarTabsSuperiores(){

@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,9 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
         
         Bundle bundle = getIntent().getExtras();
       	restaurante = bundle.getString("Restaurante");
@@ -86,6 +90,13 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
            
         }
+    }
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
     }
     
     //---Codificar los platos---------------------------------

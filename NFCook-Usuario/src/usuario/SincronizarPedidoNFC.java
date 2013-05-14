@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -146,6 +147,9 @@ public class SincronizarPedidoNFC extends Activity implements
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
 
 		// El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
@@ -172,6 +176,13 @@ public class SincronizarPedidoNFC extends Activity implements
 		abrirBasesDeDatos();
 		obtenerIdRestYAbreviatura();		
 	}
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
 
 	/**
 	 * Cierra la actividad y muestra un mensaje. Se ejecuta cuando se cierra el
