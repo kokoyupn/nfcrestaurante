@@ -336,12 +336,42 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 		});
 	}
 	
+	//FIXME
+	/**
+	 * Expande los padres que ya estuviesen expandidos al principio. De esta forma cuando hagamos una
+	 *  modificación en la lista la encontraremos en el mismo estado, pero con esos elementos modificados.
+	 */
+	public void expandePadres(){
+		for(int i=0;i<padresExpandableList.size();i++){
+			if(padresExpandableList.get(i).isExpandido()){
+				AnadirPlatos.expandeGrupo(i);
+			}
+		}
+	}
+	
 	public static void actualizaExpandableList() {
 		expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);
+	}
+	
+	//FIXME
+	public void actualizaPadresExpandableList(ArrayList<PadreExpandableListAnadirPlato> p) {
+		padresExpandableList = p;
 	}
 
 	public static void expandeGrupoLista(int groupPositionMarcar) {
 		expandableListEditarExtras.expandGroup(groupPositionMarcar);
 	}
+	
+	@Override
+	public void onGroupExpanded(int groupPosition){
+		padresExpandableList.get(groupPosition).setExpandido(true);
+	}
+	
+	@Override
+	public void onGroupCollapsed(int groupPosition){
+		padresExpandableList.get(groupPosition).setExpandido(false);
+	}
+	
+	
 	
 }
