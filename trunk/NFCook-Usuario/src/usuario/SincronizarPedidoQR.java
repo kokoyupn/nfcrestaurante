@@ -24,6 +24,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -47,6 +48,9 @@ public class SincronizarPedidoQR extends Activity {
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
         
         // El numero de la mesa se obtiene de la pantalla anterior
   		Bundle bundle = getIntent().getExtras();
@@ -83,6 +87,30 @@ public class SincronizarPedidoQR extends Activity {
     		setResult(RESULT_CANCELED, null);
     		finish();
     	}
+    }
+    
+    //  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	// si se ha generado el QR muestro el aviso
+    	if (fueGeneradoBienQR) {
+	    	//creo el alert dialog que se mostrara al pulsar en el boton back
+	    	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(this);
+			onClickBotonAceptarAlertDialog(ventanaEmergente);
+			onClickBotonCancelarAlertDialog(ventanaEmergente);
+			View vistaAviso = LayoutInflater.from(this).inflate(R.layout.aviso_continuar_pedido, null);
+			//modifico el texto a mostrar
+			TextView textoAMostar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
+			textoAMostar.setText("¿Está seguro que desa salir?. \n\nSu pedido será trasnferido a Cuenta y el código QR desaparecerá." +
+					"\n\nAntes de salir asegurese de que el camarero haya leido su código QR. ");
+			ventanaEmergente.setView(vistaAviso);
+			ventanaEmergente.show();
+    	} else {
+    		// no se ha generado y salgo directamente volviendo a pedido
+    		setResult(RESULT_CANCELED, null);
+    		finish();
+    	}
+		return false;
     }
 
     /**

@@ -6,8 +6,11 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import baseDatos.HandlerDB;
 import com.example.nfcook.R;
+
+import fragments.PantallaInicialRestaurante;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -25,6 +28,7 @@ import android.nfc.tech.MifareClassic;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 public class RecogerCuentaNFC extends Activity implements
@@ -113,6 +117,9 @@ public class RecogerCuentaNFC extends Activity implements
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" RECOGER CUENTA");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
 
 		// El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
@@ -132,6 +139,13 @@ public class RecogerCuentaNFC extends Activity implements
 		// configuracion del sonido
 		configurarSonido();
 	}
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
 
 	/**
 	 * Cierra la actividad y muestra un mensaje. Se ejecuta cuando se cierra el

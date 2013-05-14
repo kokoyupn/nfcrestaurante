@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -51,6 +52,9 @@ public class DescripcionPlatoEditar extends Activity {
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" EDICIÓN DE PLATO");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
     	
     	pulsado=false;
     	
@@ -183,6 +187,13 @@ public class DescripcionPlatoEditar extends Activity {
         this.finish();
 	}
     	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
+	
 	public static void actualizaExpandableList() {
 		adapterExpandableListPedidoEditar.notifyDataSetChanged();
 	}

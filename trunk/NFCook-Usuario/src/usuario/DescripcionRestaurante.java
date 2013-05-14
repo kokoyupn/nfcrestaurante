@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,9 @@ public class DescripcionRestaurante extends Activity {
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" INFORMACIÓN RESTAURANTE");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
 
 		Bundle bundle = getIntent().getExtras();
 		nombreRestaurante = bundle.getString("nombreRestaurante");
@@ -95,4 +99,12 @@ public class DescripcionRestaurante extends Activity {
 	    //	servicios.add("foster_cumpleanios");
 	    gridViewServ.setAdapter(new ServiciosRestauranteAdapter(getApplicationContext(), servicios));
 	}
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
+	
 }

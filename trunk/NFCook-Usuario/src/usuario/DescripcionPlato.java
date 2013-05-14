@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -55,6 +56,10 @@ public class DescripcionPlato extends Activity {
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" SELECCIÓN DE PLATO");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	
     	//	Variables expandir
     	pulsado=false;
     	
@@ -317,6 +322,13 @@ public class DescripcionPlato extends Activity {
     		adapterExpandableListExtras.expandeTodosLosPadres();
     		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes", Toast.LENGTH_SHORT).show();
     	}
+    }
+    
+    //  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
     }
 
     public static void actualizaExpandableList() {
