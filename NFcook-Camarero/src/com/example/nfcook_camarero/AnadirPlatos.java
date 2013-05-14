@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,6 +58,8 @@ public class AnadirPlatos extends Activity{
 	private AutoCompleteTextView actwObservaciones;
 	private static String restaurante;
 	
+	private Parcelable mstate;
+	
 	//private ArrayList<InfoPlato> platosAñadidos; //aqui vaos guardando los platos que ha añadido para luego pasarselos a la pantalla de Mesa 
 	//cuando añade un plato se añade a la base de datos de mesas
 	
@@ -65,6 +68,7 @@ public class AnadirPlatos extends Activity{
 		noSeleccionadoAutoCompleteTextView = false;
         super.onCreate(savedInstanceState);
         actividad = this;
+        
         
         setContentView(R.layout.expandable_list_anadir_plato);
         
@@ -384,6 +388,10 @@ public class AnadirPlatos extends Activity{
 		expandableListEditarExtras.expandGroup(groupPositionMarcar);
 	}
 	
+	public static void expandeGrupo(int pos) {
+		expandableListAnadirPlato.expandGroup(pos);
+	}
+	
 	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente, final String nombrePlato) {
 		
 		
@@ -543,19 +551,38 @@ public class AnadirPlatos extends Activity{
 	  
 		HijoExpandableListAnadirPlato hijosTop = new HijoExpandableListAnadirPlato(idHijos,numImags,nombrePlatos,precio);
   		PadreExpandableListAnadirPlato top = new PadreExpandableListAnadirPlato("TOP Pedidos", hijosTop);
+  		top.setExpandido(padresExpandableList.get(0).isExpandido());
   		padresExpandableList.set(0, top);
   		
   		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(actividad, padresExpandableList);
 		
-  		expandableListAnadirPlato.deferNotifyDataSetChanged();
-		//expandableListAnadirPlato.notifyAll();
-	
+  		//Para que vuelva a abrir los padres que estuvieran expandidos, no hace falta el exandePadres()
+  		Parcelable state = expandableListAnadirPlato.onSaveInstanceState();
+  		expandableListAnadirPlato.setAdapter(adapterExpandableListAnadirPlato);
+  		expandableListAnadirPlato.onRestoreInstanceState(state);
+  		//adapterExpandableListAnadirPlato.expandePadres();
   		
-		 }catch(Exception e){
+  		}catch(Exception e){
 			 System.out.println("Error en generarTopPedidos");
 		}
+		 
+		 
 		
 	}
+	
+	
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+	    super.onSaveInstanceState(state);
+	    mstate = expandableListAnadirPlato.onSaveInstanceState();
+	    state.putParcelable("listState", mstate);
+	}
+	
+	protected void onRestoreInstanceState(Bundle state) {
+	    super.onRestoreInstanceState(state);
+	    mstate = state.getParcelable("listState");
+	}
+	
 	
 }
  
