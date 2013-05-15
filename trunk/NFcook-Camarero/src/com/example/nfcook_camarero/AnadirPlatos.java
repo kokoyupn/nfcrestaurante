@@ -24,6 +24,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -76,6 +77,9 @@ public class AnadirPlatos extends Activity{
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" AÑADIR PLATO");
         
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	
         Bundle bundle = getIntent().getExtras();
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
@@ -85,6 +89,13 @@ public class AnadirPlatos extends Activity{
 		cargarBarraDeBusqueda();
         crearExpandableList();
 	}
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
 	
 	public void crearExpandableList() {	  
 		padres = new ArrayList<PadreExpandableListAnadirPlato>();

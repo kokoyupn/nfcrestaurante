@@ -8,9 +8,6 @@ import java.util.GregorianCalendar;
 
 import fragments.PantallaMesasFragment;
 import junit.framework.Assert;
-
-
-import adapters.ContenidoListMesa;
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
 import adapters.PadreExpandableListEditar;

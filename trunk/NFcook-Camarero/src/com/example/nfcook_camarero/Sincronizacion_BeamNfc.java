@@ -2,17 +2,11 @@ package com.example.nfcook_camarero;
 
 
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+
 import java.util.StringTokenizer;
 import fragments.PantallaMesasFragment;
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -21,16 +15,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
-import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -83,6 +74,10 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle("SINCRONIZAR PEDIDO");
     	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	
+    	
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
 		restaurante=bundle.getString("Restaurante");
@@ -108,7 +103,6 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
 	}
-	
 	
 	 /**
      * Implementation for the OnNdefPushCompleteCallback interface
@@ -341,21 +335,15 @@ public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompl
    
 	public boolean onOptionsItemSelected(MenuItem item) {
          Intent intent;
-            switch (item.getItemId()) {
-            case R.id.menu_nfc:
-                intent = new Intent(Settings.ACTION_NFC_SETTINGS);
-                startActivity(intent);
-                return true;
-            case R.id.menu_sbeam:
-                 intent = new Intent(Settings.ACTION_NFCSHARING_SETTINGS);
-              
-                startActivity(intent);
-                return true;
-           
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        }
+         if (item.getItemId() == R.id.menu_nfc){
+         	intent = new Intent(Settings.ACTION_NFC_SETTINGS);
+            startActivity(intent);
+         } else if (item.getItemId() ==  R.id.menu_sbeam){
+        	 intent = new Intent(Settings.ACTION_NFCSHARING_SETTINGS); 
+             startActivity(intent);
+         } else finish();
+         return true;
+    }
 
 
 	
