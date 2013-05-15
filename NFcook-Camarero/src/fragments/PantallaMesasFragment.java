@@ -56,12 +56,10 @@ public class PantallaMesasFragment extends Fragment {
 	private GridView gridviewCam;
     private static ArrayList<MesaView> mesas;
     private static String idCamarero;
-    private String nombre;
     private static String numeroMesaAEditar;
     private static String numeroPersonas;
-    private double precio;
     private static int idUnico = 0;
-    private ArrayList<InfoPlato> datos; //Lo que nos llega del chip
+
     //Ventana emergente para la sincronizacion
     private AlertDialog ventanaEmergenteSincronizacion;
     private HandlerGenerico sqlMesas, sqlMiBase;

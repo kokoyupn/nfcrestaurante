@@ -59,7 +59,6 @@ public class Mesa extends Activity {
 	private String idCamarero;
 	private String numPersonas; 
 	private static SQLiteDatabase dbMesas,dbMiBaseFav;
-	private SQLiteDatabase dbLogin;
 	private static ListView platos;
 	private static ArrayList<ContenidoListMesa> elemLista;
 	private static MiListAdapterMesa adapter;
@@ -106,6 +105,9 @@ public class Mesa extends Activity {
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MESA " + numMesa + ": PEDIDO ACTUAL");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
     	
 		
 		try{
@@ -702,17 +704,13 @@ public class Mesa extends Activity {
     
     /*Metodo que realiza la accion del boton introducido en el ActionBar (Sincronizar)*/
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-    	case R.id.botonNFC:
+    	if (item.getItemId() == R.id.botonNFC) {
     		actualizarSincronizadosBaseMesas();
     		//Notificas que has borrado un elemento del adapter y que repinte la lista
     		actualizaListPlatos();
-			return true;
-           
-    	default:
-           return super.onOptionsItemSelected(item);
-   }
-       }
+    	} else finish();
+    	return false;	
+    }
     
     /*Metodo que actualiza el campo Sincro de la base de datos Mesas tras sincronizar el pedido con el TPV*/
     public static void actualizarSincronizadosBaseMesas() {

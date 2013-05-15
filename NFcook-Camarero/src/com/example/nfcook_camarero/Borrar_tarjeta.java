@@ -4,19 +4,12 @@ package com.example.nfcook_camarero;
 
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
-import java.util.Iterator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -124,6 +117,10 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle("BORRAR TAG");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	
 		ctx=this;
 		
 		// preparamos para NFC
@@ -352,11 +349,12 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
                 return true;
               
             default:
-                return super.onOptionsItemSelected(item);
+                finish();
+                return true;
         }
         }
 
-
+	
 
 	
 

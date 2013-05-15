@@ -14,22 +14,18 @@ import java.util.GregorianCalendar;
 import com.example.nfcook_camarero.R;
 
 import fragments.PantallaMesasFragment;
-import adapters.ContenidoListMesa;
 import adapters.MiGridViewBebidasAdapter;
 import adapters.PadreGridViewBebidas;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -77,6 +73,9 @@ public class AnadirBebida extends Activity{
     	// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" AÑADIR BEBIDA");
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
         
 		setContentView(R.layout.tab_superior_categoria_bebidas);
 		
@@ -96,6 +95,13 @@ public class AnadirBebida extends Activity{
 		
 		validar();
 	}
+    
+    //  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
     
     public void validar(){
     	validar = (Button) findViewById(R.id.validar);

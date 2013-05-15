@@ -21,6 +21,7 @@ import android.nfc.tech.MifareClassic;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 public class EscribirCuentaPorNFC extends Activity implements
@@ -109,6 +110,9 @@ public class EscribirCuentaPorNFC extends Activity implements
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" ESCRIBIR CUENTA");
 
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	
 		// El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
 		restaurante = bundle.getString("Restaurante");
@@ -134,6 +138,14 @@ public class EscribirCuentaPorNFC extends Activity implements
 		codificarCuenta(dameCuentaString());
 		
 	}
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
+	
 
 	/**
 	 * Cierra la actividad y muestra un mensaje. Se ejecuta cuando se cierra el

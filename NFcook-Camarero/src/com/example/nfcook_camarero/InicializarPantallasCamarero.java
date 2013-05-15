@@ -1,22 +1,19 @@
 package com.example.nfcook_camarero;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import fragments.PantallaHistoricoFragment;
 import fragments.PantallaMesasFragment;
 import adapters.PagerAdapter;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -30,7 +27,6 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
 	private TabHost tabs;
 	private ViewPager miViewPager;
 	private PagerAdapter miPagerAdapter;
-	private View tabContentView;
 	private long anteriorPulsacion;
 	
 	 /**
@@ -69,6 +65,9 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MENÚ PRINCIPAL");
         
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	
         inicializarTabs();
 		cargarTabs();
 		
@@ -90,6 +89,12 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
 	        super.onBackPressed();
 	    }
 	}
+	
+	/*Metodo que realiza la accion del boton introducido en el ActionBar (Sincronizar)*/
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	finish();
+    	return false;	
+    }
 	
 	
 	// Metodo encargado de inicializar los tabs inferiores

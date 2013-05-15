@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.Window;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -61,6 +61,9 @@ public class PedidoHistorico extends Activity {
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MESA "+ numMesa);
+    	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
 		
 		//TextView mesa = (TextView)findViewById(R.id.textViewFechaHora);
 		//mesa.setText("Fecha: " + hora.substring(0, 11) + " a las " + hora.substring(hora.indexOf(" ")+1));
@@ -88,6 +91,13 @@ public class PedidoHistorico extends Activity {
 		
 
 	}
+	
+	//  para el atras del action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){       
+    	finish();
+		return false;
+    }
 	
 	private ArrayList<ContenidoListPedidoHistorico> obtenerElementos() {
 		ArrayList<ContenidoListPedidoHistorico> elementos=null;

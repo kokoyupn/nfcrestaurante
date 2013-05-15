@@ -1,6 +1,5 @@
 package com.example.nfcook_camarero;
 import android.content.Context;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

@@ -137,6 +137,9 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle("SINCRONIZAR PEDIDO");
     	
+    	// atras en el action bar
+        actionbar.setDisplayHomeAsUpEnabled(true);
+    	    	
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
 		numMesa = bundle.getString("NumMesa");
@@ -609,21 +612,15 @@ public class Sincronizacion_LecturaNfc extends Activity implements DialogInterfa
     
    
 	public boolean onOptionsItemSelected(MenuItem item) {
-         Intent intent;
-            switch (item.getItemId()) {
-            case R.id.menu_nfc:
-                intent = new Intent(Settings.ACTION_NFC_SETTINGS);
-                startActivity(intent);
-                return true;
-            case R.id.menu_sbeam:
-                 intent = new Intent(Settings.ACTION_NFCSHARING_SETTINGS);
-              
-                startActivity(intent);
-                return true;
-           
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+		Intent intent;
+        if (item.getItemId() == R.id.menu_nfc){
+        	intent = new Intent(Settings.ACTION_NFC_SETTINGS);
+           startActivity(intent);
+        } else if (item.getItemId() ==  R.id.menu_sbeam){
+       	 intent = new Intent(Settings.ACTION_NFCSHARING_SETTINGS); 
+            startActivity(intent);
+        } else finish();
+        return true;
         }
 
 

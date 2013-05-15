@@ -1,7 +1,5 @@
 package adapters;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Configura los hijos del adapter de la ExpandableList de la pantalla historico, cada hijo sera un pedido
