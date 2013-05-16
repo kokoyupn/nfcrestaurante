@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efdd8d"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        	android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#0B3861"
+            android:orientation="vertical" >
+
+        <TextView
+             android:id="@+id/textViewAviso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Valoración"
+                android:textColor="#ffffff"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/ServicioLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" >
+
+        <TextView
+            android:id="@+id/ServicioText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical|center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:text="Servicio" />
+
+        <RatingBar
+            android:id="@+id/ServicioStars"
+            style="android:ratingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="-35dp"
+            android:numStars="5"
+            android:scaleX="0.65"
+            android:scaleY="0.65" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/CalidadLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" >
+
+        <TextView
+            android:id="@+id/CalidadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical|center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:text="Calidad " />
+
+        <RatingBar
+            android:id="@+id/CalidadStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="-35dp"
+            android:numStars="5"
+            android:scaleX="0.65"
+            android:scaleY="0.65" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/AmbienteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" >
+
+        <TextView
+            android:id="@+id/AmbienteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical|center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:text="Ambiente" />
+
+        <RatingBar
+            android:id="@+id/AmbienteStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="-35dp"
+            android:numStars="5"
+            android:scaleX="0.65"
+            android:scaleY="0.65" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/LimpiezaLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" >
+
+        <TextView
+            android:id="@+id/LimpiezaText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical|center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:text="Limpieza" />
+
+        <RatingBar
+            android:id="@+id/LimpiezaStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="-35dp"
+            android:numStars="5"
+            android:scaleX="0.65"
+            android:scaleY="0.65" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/PrecioLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp" >
+
+        <TextView
+            android:id="@+id/PrecioText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical|center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:text="Calidad/Precio" />
+
+        <RatingBar
+            android:id="@+id/PrecioStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="-35dp"
+            android:numStars="5"
+            android:scaleX="0.65"
+            android:scaleY="0.65" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/MediaLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/MediaText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Nota Media"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/resultadoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="0.0 / 5" />
+
+    </FrameLayout>
+
+    <AutoCompleteTextView
+        android:id="@+id/ComentariosText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Comentarios" >
+
+        <requestFocus />
+    </AutoCompleteTextView>
+
+</LinearLayout>
