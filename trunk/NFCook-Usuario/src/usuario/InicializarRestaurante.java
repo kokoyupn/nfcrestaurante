@@ -6,6 +6,9 @@ import java.util.TimerTask;
 import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
+import android.widget.RatingBar;
+import usuario.Mail;
+
 
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import fragments.CuentaFragment;
@@ -19,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -38,8 +42,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
@@ -61,6 +67,14 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	
 	private ImageView imagenRestaurante;
 	private String restaurante;
+	
+	//Valoración
+	public Builder ventanaEmergente;
+	private float resultado=0;
+	private String mensaje="";
+	private RatingBar ambiente,calidad,servicio,limpieza,precio;
+	private TextView mediaTexto;
+	private AutoCompleteTextView comentarios;
 	
 	// Base de datos
 	private HandlerDB sql;
@@ -191,13 +205,49 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     		return true;
     	}
     	else if (item.getItemId()==R.id.icono_enviar_valoraciones){
-    		// codigo de busy
     		
-    		// borrar esto
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(" Codigo de \n Busy ");
-            builder.create();
-            builder.show();
+    		/**
+    		 *  valoraciones via email.
+    		 * 
+    		 * Las valoraciones se divide principalmente en las siguientes partes:
+    		 * 
+    		 * 1- Cinco secciones con sus correspondientes RatingBar y su nota media para que puedan calcular la valoración definitiva del restaurante.
+    		 * 
+    		 * 2- AutoCompleteTextView para añadir comentarios.
+    		 * 
+    		 * 3- Botón enviar en el que se crea la clase mail que cuando realiza la acción enviar necesita crear un nuevo hilo debido a su tamaño . * 
+    		 * 
+    		 * @author Busy
+    		 *
+    		 */
+    		
+    		//Creación y configuración de la ventana emergente
+        	ventanaEmergente = new AlertDialog.Builder(InicializarRestaurante.this);
+            View vistaAviso = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.valoracion, null);
+            
+        	//Anadimos los botones de enviar y cancelar al alert Dialog
+            onClickBotonAceptarAlertDialog(ventanaEmergente);
+            onClickBotonCancelarAlertDialog(ventanaEmergente);
+            ventanaEmergente.setView(vistaAviso);
+            ventanaEmergente.show();
+        	
+            //Recuperamos los valores de nuestras rating bar en variables globales para que se vayan actualizando
+            RatingBar ambienteEstrellas = (RatingBar) vistaAviso.findViewById(R.id.AmbienteStars);
+            RatingBar calidadEstrellas = (RatingBar) vistaAviso.findViewById(R.id.CalidadStars);
+            RatingBar limpiezaEstrellas = (RatingBar) vistaAviso.findViewById(R.id.LimpiezaStars);
+            RatingBar precioEstrellas = (RatingBar) vistaAviso.findViewById(R.id.PrecioStars);
+            RatingBar servicioEstrellas = (RatingBar) vistaAviso.findViewById(R.id.ServicioStars);
+            TextView resultadoTexto = (TextView) vistaAviso.findViewById(R.id.resultadoText);
+            AutoCompleteTextView comentariosText=(AutoCompleteTextView) vistaAviso.findViewById(R.id.ComentariosText);
+            
+            ambiente=ambienteEstrellas;
+            calidad=calidadEstrellas;
+            limpieza=limpiezaEstrellas;
+            precio=precioEstrellas;
+            servicio=servicioEstrellas;
+            mediaTexto=resultadoTexto;
+            comentarios=comentariosText;
+            actualizaValorMedio();
             
             // dejar
             return true;
@@ -220,6 +270,102 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	}
 		
    }
+   
+    public void actualizaValorMedio() {
+   	 
+    	ActualizaValorEstrellas(ambiente);
+    	ActualizaValorEstrellas(calidad);
+    	ActualizaValorEstrellas(limpieza);
+    	ActualizaValorEstrellas(precio);
+    	ActualizaValorEstrellas(servicio);
+    	
+    }
+    
+    public void ActualizaValorEstrellas(RatingBar rating){
+    	rating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+
+			public void onRatingChanged(RatingBar ratingBar, float rating,
+					boolean fromUser) {
+				setResultado((ambiente.getRating()+calidad.getRating()+limpieza.getRating()+precio.getRating()+servicio.getRating())/5);
+    			mediaTexto.setText(String.valueOf(resultado)+" / "+ambiente.getNumStars());
+     
+				
+			}
+    	});
+
+    	
+    	
+    }
+	public void obtenerResultado(){
+		
+		mensaje+="Valoracion"+("\n")+("\n");
+		mensaje+="Ambiente: "+ambiente.getRating()+("\n"); 
+		mensaje+="Calidad: "+calidad.getRating()+("\n");
+        mensaje+="Limpieza: "+limpieza.getRating()+("\n");
+        mensaje+="Calidad/Precio: "+precio.getRating()+("\n");
+        mensaje+="Servicio: "+servicio.getRating()+("\n");
+       
+        mensaje+="Nota Media : "+ mediaTexto.getText() +("\n")+("\n");
+    	
+        mensaje+= "Comentarios" +("\n")+("\n");
+        Editable g=comentarios.getText();
+    	mensaje+=g.toString();
+    }
+  
+	
+	public void onClickBotonAceptarAlertDialog(Builder ventanaEmergente){
+	
+		
+		ventanaEmergente.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				   	  
+					obtenerResultado();
+					
+					Mail m = new Mail();
+		            m.setUser("nfcookapp@gmail.com");// username 
+		            m.setPass("Macarrones");// password
+
+		            String[] toArr = {"nfcookapp@gmail.com"}; 
+		            m.setTo(toArr); 
+		            m.setFrom("nfcookapp@gmail.com"); 
+		            m.setSubject("Valoracion Restaurante"); 
+		            m.setBody(mensaje); 
+
+		            try { 
+		              //m.addAttachment("/sdcard/filelocation"); //archivos adjuntos
+
+		              if(m.send()) { 
+		                Toast.makeText(InicializarRestaurante.this, "Email enviado correctamente.", Toast.LENGTH_LONG).show(); 
+		              } else { 
+		                Toast.makeText(InicializarRestaurante.this, "Email no enviado.", Toast.LENGTH_LONG).show();//Si usuario y enviante no coinciden 
+		              } 
+		            } catch(Exception e) { 
+		              Toast.makeText(InicializarRestaurante.this, "Error en el envio del email", Toast.LENGTH_LONG).show(); //Si ha habido fallos 
+		            } 
+		          }
+
+		        }); 
+		      } 
+	
+	public void onClickBotonCancelarAlertDialog(AlertDialog.Builder ventanaEmergente){
+		ventanaEmergente.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+	}
+	public float getResultado() {
+		return resultado;
+	}
+
+
+
+	public void setResultado(float f) {
+		this.resultado = f;
+	}
+	
+    
     
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
 	private void cargarTabsSuperiores(){
