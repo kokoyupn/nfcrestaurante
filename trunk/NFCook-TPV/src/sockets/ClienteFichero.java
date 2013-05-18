@@ -23,7 +23,7 @@ public class ClienteFichero
 	private static InetAddress hostLocal;
 	private final static int puerto = 5000;
 	private final static int puertoClientes = 5002;
-	private final static String servidor = "192.168.1.54";//"nfcook.no-ip.org";
+	private final static String servidor = "nfcook.no-ip.org";
 
 
     /**
@@ -257,7 +257,7 @@ public class ClienteFichero
     		        // cerramos el socket
     				socket.close();
     				oos.close();
-
+    				ois.close();
     			}
     			ultimaPos++;
     			}
