@@ -23,7 +23,7 @@ public class ClienteFichero
 	private static InetAddress hostLocal;
 	private final static int puerto = 5000;
 	private final static int puertoClientes = 5002;
-	private final static String servidor = "nfcook.no-ip.org";
+	private final static String servidor = "192.168.1.54";//"nfcook.no-ip.org";
 
 
     /**
@@ -80,7 +80,6 @@ public class ClienteFichero
             ips.add(socket.getLocalAddress());
             MensajeArrayConsultas mensajeArrayConsulta = new MensajeArrayConsultas(fichero, consultas, ips);
        
-           
             oos.writeObject(mensajeArrayConsulta);
             
             // recibir las IP internas de todos los clientes y enviar esta misma info
@@ -246,14 +245,15 @@ public class ClienteFichero
     			if(!mensaje.ips.get(ultimaPos).equals(hostLocal)){
 
     				Socket socket = new Socket(mensaje.ips.get(ultimaPos), puertoClientes);
-    				socket.setSoTimeout(2000); // timeout del socket a 1 segundo
 
     		    	ObjectOutputStream oos;
     				System.out.println("Aceptado servidor");
     				oos = new ObjectOutputStream(socket.getOutputStream());
 
     				oos.writeObject(mensaje);
-    		    
+    				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+    				ois.readObject();
+    				
     		        // cerramos el socket
     				socket.close();
     				oos.close();
@@ -262,13 +262,13 @@ public class ClienteFichero
     			ultimaPos++;
     			}
     		
-    	}catch (SocketTimeoutException e) {
+    	}catch (SocketException ex) {
     		System.err.println("Error al transmitir a los Clientes, reintentando...");
 			transmiteLocal(mensaje, ultimaPos);
 
-    	}catch (IOException e) {
-			System.err.println("Error al transmitir a los Clientes");
-
+    	}catch (Exception e) {
+			System.err.println("Error al transmitir a los Clientes, no reintentar envio");
+			e.printStackTrace();
     	}
 	}
 	

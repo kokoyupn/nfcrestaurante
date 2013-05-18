@@ -2,6 +2,7 @@ package sockets;
 
 
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -21,13 +22,16 @@ public class EscuchaCliente extends Thread {
 			
 				System.out.println("Soy un Servidor");
 				ServerSocket servidor = new ServerSocket(puerto);
+				
 				servidor.setReuseAddress(true);
-
+				
 				// se espera a un cliente. En este caso esperamos a que el servidor contacte con este cliente
 				Socket cliente = servidor.accept();
 				// Se lee el mensaje con la consulta a utilizar
+				System.out.println(cliente.getInetAddress());
 	            ObjectInputStream ois = new ObjectInputStream(cliente.getInputStream());
 	            Object mensaje = ois.readObject();
+	            ObjectOutputStream oos = new ObjectOutputStream(cliente.getOutputStream());
 	            
 	            if (mensaje instanceof MensajeConsulta){
 	            	// ejecutamos la consulta de insercion en la base de datos
@@ -60,14 +64,20 @@ public class EscuchaCliente extends Thread {
 	            	operacion.operacionCobrarMesaLLegadaExterna(mensajeUtilizar.idMesa, mensajeUtilizar.nombreFichero, mensajeUtilizar.sql, mensajeUtilizar.nombreFichero2, mensajeUtilizar.sql2);
 	            
 	            }
-			
+            	oos.writeObject(null);
+
+	           
+	            ois.close();
+	            oos.close();
+	            
 	            // cerramos los sockets
-	            cliente.close();
+            	cliente.close();
 	            servidor.close();
 			}
             
 		} catch (Exception e) {
 			System.err.println("Error al escuchar al servidor desde el cliente");
+			e.printStackTrace();
 		}
 	}
 	
