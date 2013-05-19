@@ -56,6 +56,10 @@ public class ClienteFichero
             oos.close();
             ois.close();
             
+		}catch(SocketException excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar consulta al Servidor");
+			enviaConsulta(fichero, sql);
+			
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar consulta al Servidor");
 		}
@@ -92,6 +96,10 @@ public class ClienteFichero
             oos.close();
             ois.close();
             
+		}catch(SocketException excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar array consultas al Servidor");
+			enviaArrayConsultas(fichero, consultas);
+			
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar array consultas al Servidor");
 		}
@@ -127,6 +135,10 @@ public class ClienteFichero
             oos.close();
             ois.close();
             
+		}catch(SocketException excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar el estado de una mesa al Servidor, reintentando...");
+			enviaEstadoMesa(idMesa, idCamarero, numPersonas, estado, fichero, sql);
+			
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar el estado de una mesa al Servidor");
 		}
@@ -162,6 +174,10 @@ public class ClienteFichero
             oos.close();
             ois.close();
             
+		}catch(SocketException excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar mesa visitada al Servidor");
+			enviaMesaVisitada(idMesa, visitada);
+			
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar mesa visitada al Servidor");
 		}
@@ -197,6 +213,10 @@ public class ClienteFichero
             oos.close();
             ois.close();
             
+		}catch(SocketException excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar mesa visitada cobrar al Servidor, reintentando...");
+			enviaMesaVisitadaCobrar(idMesa);
+			
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar mesa visitada cobrar al Servidor");
 		}
@@ -232,6 +252,10 @@ public class ClienteFichero
             oos.close();
             ois.close();
             
+		}catch(SocketException excepcionEnviaConsulta){
+			System.err.println("Fallo al enviar consulta cobrar mesa al Servidor, reintentando...");
+			enviaCobrarMesa(idMesa, fichero, sql, fichero2, sql2);
+			
 		}catch(Exception excepcionEnviaConsulta){
 			System.err.println("Fallo al enviar consulta cobrar mesa al Servidor");
 		}
@@ -411,6 +435,10 @@ public class ClienteFichero
 	        socket.close();
 	        oos.close();
         
+    	}catch(SocketException exceptionCierreTPV){
+    		System.err.println("Fallo al enviar el cierre del TPV, reintentando...");
+    		enviaIPtpv();
+    		
     	}catch(Exception exceptionCierreTPV){
     		System.err.println("Fallo al enviar el cierre del TPV");
     	}
