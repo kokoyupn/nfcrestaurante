@@ -38,7 +38,7 @@ public class MiTabsSuperioresListener  implements TabListener{
     	actionbar.setTitle(" CONFIGURE SU MENÚ...");
     	
     	// Marcamos a true seleccionado tabSuperior
-    	InicializarRestaurante.setSeleccionadoTabSuperior(true);
+    	//InicializarRestaurante.setSeleccionadoTabSuperior(true);
         // Guardamos la pos del tab por si seleccionamos la calculadora
     	InicializarRestaurante.setPosTabSuperior(posTab);
     	

@@ -1,4 +1,5 @@
 package usuario;
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,16 +13,15 @@ import usuario.Mail;
 
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
 import fragments.CuentaFragment;
-import fragments.MiTabsSuperioresListener;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
+import adapters.PagerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +33,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -41,10 +44,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -55,7 +61,7 @@ import android.widget.Toast;
 /**
  * Esta clase es la encargada de cargar toda la información del restaurante que hemos seleccionado.
  * 
- * Carga los tabs superiores con las distintas categorías que ofreza el restaurante.
+ * Carga los tabs superiores con las distintas categorías de la carta que ofreza el restaurante.
  * Carga el logo y el texto de bienvenida del restaurante.
  * Carga los tabs inferiores, que serán comunes para todos los restaurantes.
  * 
@@ -63,7 +69,8 @@ import android.widget.Toast;
  *
  */
 @SuppressLint("NewApi")
-public class InicializarRestaurante extends Activity implements TabContentFactory, OnTabChangeListener{
+public class InicializarRestaurante extends FragmentActivity 
+									implements /*TabContentFactory,*/ OnTabChangeListener, OnPageChangeListener{
 	
 	private ImageView imagenRestaurante;
 	private String restaurante;
@@ -85,6 +92,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	
 	// Tabs inferiores con las funcionalidades de la aplicacion
 	private static TabHost tabs;
+	private static TabHost tabsSuperiores;
 	// Vista de los tabs inferiores
 	private View tabInferiorContentView;
 	
@@ -97,7 +105,36 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	private static String anteriorTabPulsado;
 	private static int tabInferiorSeleccionado;
 	
+	
+	// Atributos para poder deslizar el dedo horizontalmente entre pestañas
+	private ViewPager miViewPager;
+	private PagerAdapter miPagerAdapter;
+	
+	// Vector en el que guardaremos todos los fragments generados
+	private ArrayList<Fragment> listFragments = new ArrayList<Fragment>();
+	
 	private int numComensales;
+	private boolean tabsSuperioresCompletos;
+	private ArrayList<String> listNombresTabsSuperiores;
+	private boolean sePuedeEliminarElTabFalso;
+	private static boolean usandoTabsInferiores;
+	
+    class TabFactory implements TabContentFactory {
+    	 
+        private final Context mContext;
+ 
+        public TabFactory(Context context) {
+            mContext = context;
+        }
+ 
+        public View createTabContent(String tag) {
+            View v = new View(mContext);
+            v.setMinimumWidth(0);
+            v.setMinimumHeight(0);
+            return v;
+        }
+ 
+    }
 		
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,24 +150,44 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		// Importamos la base de datos
 		importarBaseDatatos();
 		
+		// Variables que es necesario inicializar antes de crear los tabs inferiores
+		tabsSuperioresCompletos = false;
+		sePuedeEliminarElTabFalso = true;
+		usandoTabsInferiores = true;
+		listNombresTabsSuperiores = new ArrayList<String>();
+		
 		// Inicializamos y cargamos Tabs inferiores
 		inicializarTabsInferiores();
 		cargarTabsInferiores();
 	 
-		// Inicializamos y cargamos Tabs superiores que contendrá el actionBar
-		inicializarActionBarConTab();
+		inicializarActionBar();
+		
+		// Inicializamos y cargamos Tabs superiores
+		inicializarTabsSuperiores();
 		cargarTabsSuperiores();
+		
+		// Este if es necesario para el correcto funcionamiento del ViewPager
+		if (savedInstanceState != null)
+            tabsSuperiores.setCurrentTabByTag(savedInstanceState.getString("tabSup"));
+        else 
+        	tabsSuperiores.setCurrentTab(0); 
 		
 		// Cerramos la base de datos
 		sql.close();
 		
 		// Descamarcamos el tab superior activado para evitar confusiones
-		desmarcarTabSuperiorActivo();
+		//desmarcarTabSuperiorActivo();
 		
 		// Seleccionamos el tab inicio para que salga una vez selecciones el restaurante
         tabs.setCurrentTabByTag("tabInicio");
 	    tabInferiorSeleccionado = 0;
     }
+    
+    protected void onSaveInstanceState(Bundle instanceState) {
+        // Guardar en "tabSup" la pestaña seleccionada.
+        instanceState.putString("tabSup", tabsSuperiores.getCurrentTabTag());
+        super.onSaveInstanceState(instanceState);
+	}
     
     /* Metodo encargado de implementar el botón back.
      * De la pantalla de navegación de platos, si se pulsa back, volverá a la pantalla 
@@ -147,7 +204,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     				// Cargamos en el fragment la pantalla de bienvenida del restaurante
     				fragmentPantallaInicioRes = new PantallaInicialRestaurante();
     				((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
-    				FragmentTransaction m = getFragmentManager().beginTransaction();
+    				FragmentTransaction m = getSupportFragmentManager().beginTransaction();
     				m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
     				m.commit();
     				return false;
@@ -169,13 +226,13 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         }	
 	}
     
-    // Metodo encargado de inicializar el actionBar y ponerlo en modo tabs
-    private void inicializarActionBarConTab(){
+    // Metodo encargado de inicializar el actionBar
+    private void inicializarActionBar(){
     	// Recogemos ActionBar
         actionbar = getActionBar();
         
         // Seleccionamos el modo tabs en el actionBar
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        //actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         
         // atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -260,7 +317,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         			// Cargamos en el fragment la pantalla de bienvenida del restaurante
         			fragmentPantallaInicioRes = new PantallaInicialRestaurante();
         			((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
-        			FragmentTransaction m = getFragmentManager().beginTransaction();
+        			FragmentTransaction m = getSupportFragmentManager().beginTransaction();
         			m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
         			m.commit();
         		}
@@ -279,6 +336,12 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	ActualizaValorEstrellas(precio);
     	ActualizaValorEstrellas(servicio);
     	
+    }
+    
+    private void inicializarTabsSuperiores(){
+    	// Creamos los tabs inferiores y los inicializamos
+		tabsSuperiores = (TabHost)findViewById(R.id.tabhostSuperior);
+		tabsSuperiores.setup();
     }
     
     public void ActualizaValorEstrellas(RatingBar rating){
@@ -369,6 +432,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
 	private void cargarTabsSuperiores(){
+		// Utilizaremos el TabSpec para añadir cada pestaña superior
+		TabHost.TabSpec spec; 
+		
     	Stack<String> tipos = new Stack<String>();
     	
     	// Obtenemos las distintas categorías de platos que hay
@@ -396,56 +462,121 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     	while (!tipos.isEmpty()){
     		pilaTipos.add(tipos.pop());
     	}
-    	
     	// Vamos añadiendo cada categoría a los tabs
     	String tipoTab="";
-    	int i = 0;
     	while (!pilaTipos.isEmpty()){
     		// Sacamos el nombre de la categoría
     		tipoTab = pilaTipos.pop();
     		// Creamos el tab
-    		ActionBar.Tab tab = actionbar.newTab().setText(tipoTab);
+            spec = tabsSuperiores.newTabSpec(tipoTab);
+            // Hacemos referencia a su layout correspondiente
+            spec.setContent(R.id.tab1Sup);
+            // Preparamos la vista del tab con el layout que hemos preparado
+            spec.setIndicator(tipoTab, null);
+            // Lo añadimos
+            tabsSuperiores.addTab(spec);
     		// Creamos el fragment de cada tab y le metemos el restaurante al que pertenece
     		// Miramos si se trata de la categoría bebidas que tendrá un fragment distinto
     		if(tipoTab.toLowerCase().equals("bebidas")){
     			Fragment tabFragment = new ContenidoTabSuperiorCategoriaBebidas();
 	    		ContenidoTabSuperiorCategoriaBebidas.setTipoTab(tipoTab);
 	    		ContenidoTabSuperiorCategoriaBebidas.setRestaurante(restaurante);
-	    		// Hacemos oyente al tab
-	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment, tipoTab, this, i));
+	    		listFragments.add(tabFragment);
     		}else{
 	    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setcategoriaTab(tipoTab);
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
-	    		// Hacemos oyente al tab
-	    		tab.setTabListener(new MiTabsSuperioresListener(tabFragment,tipoTab, this, i));
-    		}
-    		// Añadimos dicha categoría como tab
-    		actionbar.addTab(tab, i, true);
-    		i++;
+	    		listFragments.add(tabFragment);
+	    	}
+    		listNombresTabsSuperiores.add(tipoTab);
+    	}
+    	tabsSuperioresCompletos = true;
+    
+    	// Determinamos el ancho de cada tab superior (225dp)
+    	for(int i=0;i<listFragments.size();i++){
+        tabsSuperiores.getTabWidget().getChildAt(i).setLayoutParams(new
+               LinearLayout.LayoutParams(225,100));
     	}
     	
-    	// Marcamos el tab primero para situar el foco en el primer tab
-    	actionbar.selectTab(actionbar.getTabAt(0));
+    	// Aqui creamos el viewPager y el pagerAdapter para el correcto slide entre pestañas
+    	miPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), listFragments);
+        miViewPager = (ViewPager) super.findViewById(R.id.viewPagerTabsSuperiores);
+        miViewPager.setAdapter(miPagerAdapter);
+        // Indica cuál es el número máximo de páginas que puede haber
+        miViewPager.setOffscreenPageLimit(listFragments.size());
+        miViewPager.setOnPageChangeListener(this);
+        miViewPager.setOnTouchListener(new OnTouchListener() {
+			// Método para que estando predominando un fragment que corresponde a un tab
+        	// inferior, no sea posible hacer slide del fragment correspondiente a un tab
+        	// superior que hay escondido debajo del primer fragment mencionado 
+			public boolean onTouch(View v, MotionEvent event) {
+				if (usandoTabsInferiores)
+					return true;
+				else
+					return false;
+			}
+		});
+        
+        // Ponemos el color del texto en blanco
+        for(int i=0;i<=listFragments.size()-1;i++) 
+		{ 
+            TextView tv = (TextView) tabsSuperiores.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
+        }
     	
+    	// Hacemos oyente al tabhost
+		tabsSuperiores.setOnTabChangedListener(new OnTabChangeListener() {
+			
+			public void onTabChanged(String tabId) {
+				// Este "for" hace que los tabs de arriba tengan el foco activado para que los tabs
+				// aparezcan en la pantalla siempre en vez de salir escondidos
+				for (int i = 0; i < listFragments.size(); i++) {
+		            tabsSuperiores.getTabWidget().getChildAt(i).setFocusableInTouchMode(true);
+		        }
+				// Aquí eliminamos el tabFalsoSup creado para que esté seleccionado cuando navegamos por
+				// los tabs inferiores
+				if(existeTabFalsoSup() && tabsSuperioresCompletos && sePuedeEliminarElTabFalso)
+				{
+					tabsSuperiores.getTabWidget().removeView(tabsSuperiores.getTabWidget().getChildTabViewAt(listFragments.size()-1));
+		            listFragments.remove(listFragments.size()-1);
+		            listNombresTabsSuperiores.remove(listNombresTabsSuperiores.size()-1);
+				}
+				seleccionadoTabSuperior = true;
+				// Obtener la pestaña actual
+				int pos = tabsSuperiores.getCurrentTab(); 
+				// Seleccionar la página en el ViewPager.
+		        miViewPager.setCurrentItem(pos);
+		        
+		      	tabsSuperiores.setCurrentTabByTag(tabId);
+		        Fragment f = new Fragment();
+		        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		        ft.replace(R.id.FrameLayoutPestanas, f);
+		        ft.commit();
+		        
+		        usandoTabsInferiores = false;
+				// Ponemos el título a la actividad
+		        // Recogemos ActionBar
+		        ActionBar actionbar = getActionBar();
+		    	actionbar.setTitle(" CONFIGURE SU MENÚ...");
+		  
+		        tabs.getTabWidget().getChildAt(InicializarRestaurante.getTabInferiorSeleccionado()).setBackgroundColor(Color.parseColor("#c38838"));
+			}
+		});
+    	
+		
     	// Ponemos el título a la actividad
     	actionbar.setTitle(" INICIO");
 	}
 	
-	/*
-	 *  Metodo encargado de desmarcar el tab superior activado para evitarle líos
-	 *  al usuario.
-	 */
-	public static void desmarcarTabSuperiorActivo(){
-		/*
-		 * La única forma de descmarcar el tab activo superior del action bar, es llamando
-		 * al siguiente metodo con null que sabemos que va a rebentar y hacemos un try
-		 * catch para controlarlo y que funcione tal y como queremos.
-		 */
-		try{
-            actionbar.selectTab(null);
-         }catch (Exception e){
-         }
+	// Método que indica si está el tabFalsoSup creado en los tabs superiores
+	public boolean existeTabFalsoSup() {
+		if (tabsSuperiores != null && tabsSuperioresCompletos){
+			if (listNombresTabsSuperiores.get(listNombresTabsSuperiores.size()-1).equals("tabFalsoSup"))
+				return true;
+			else
+				return false;
+		}else
+			return false;
 	}
     
     // Metodo encargado de inicializar los tabs inferiores
@@ -534,6 +665,39 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
     
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
+		if (tabsSuperiores != null){
+			// Este for hace que los tabs de arriba tengan el foco desactivado
+			for (int i = 0; i < listFragments.size(); i++) {
+	            tabsSuperiores.getTabWidget().getChildAt(i).setFocusableInTouchMode(false);
+	        }
+			tabsSuperiores.getTabWidget().getChildAt(tabsSuperiores.getCurrentTab()).setFocusable(false);
+		}
+		if(!existeTabFalsoSup())
+		{
+			if (tabsSuperiores != null && tabsSuperioresCompletos){
+				// Creamos el tab falso superior
+				TabHost.TabSpec spec = tabsSuperiores.newTabSpec("tabFalsoSup");
+		        // Hacemos referencia a su layout correspondiente
+		        spec.setContent(R.id.tab1Sup);
+		        // Preparamos la vista del tab con el layout que hemos preparado
+		        spec.setIndicator("tabFalsoSup", null);
+		        // Lo añadimos
+		        tabsSuperiores.addTab(spec);
+		    	Fragment fragmentEnBlanco = new Fragment();
+		        listFragments.add(fragmentEnBlanco);
+		        listNombresTabsSuperiores.add("tabFalsoSup");
+		        // Ocultamos el tabFalsoSup
+		        tabsSuperiores.getTabWidget().getChildAt(listFragments.size()-1).setVisibility(View.GONE);
+		        
+		        sePuedeEliminarElTabFalso = false;
+		        // Seleccionamos momentaneamente el tab falso que está oculto
+		        tabsSuperiores.setCurrentTabByTag("tabFalsoSup");
+		        sePuedeEliminarElTabFalso = true;
+		        
+		        usandoTabsInferiores = true;
+			}
+		}
+		
 		if(tabs.getCurrentTabTag().equals("tabInicio")){
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
@@ -547,8 +711,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		    tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#906d35"));
 		    tabInferiorSeleccionado = 0;
 		    
-			// Descamarcamos el tab superior activado para evitar confusiones
-			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
             // Marcamos a falso selccionado tabSuperior
@@ -559,7 +721,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 			// Cargamos en el fragment la pantalla de bienvenida del restaurante
 			fragmentPantallaInicioRes = new PantallaInicialRestaurante();
 			((PantallaInicialRestaurante)fragmentPantallaInicioRes).setRestaurante(restaurante);
-	        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        FragmentTransaction m = getSupportFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        m.commit();
 		}else if(tabId.equals("tabPedidoSincronizar")){
@@ -575,8 +737,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		    tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#906d35"));
 		    tabInferiorSeleccionado = 1;
 		    
-			// Descamarcamos el tab superior activado para evitar confusiones
-			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
             // Marcamos a falso selccionado tabSuperior
@@ -587,7 +747,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
             
 			Fragment fragmentPedido = new PedidoFragment();
 			PedidoFragment.setRestaurante(restaurante);
-	        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        FragmentTransaction m = getSupportFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
 	        m.addToBackStack("Pedido");
 	        m.commit();
@@ -604,8 +764,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 		    tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#906d35"));
 		    tabInferiorSeleccionado = 2;
 		    
-			// Descamarcamos el tab superior activado para evitar confusiones
-			desmarcarTabSuperiorActivo();
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
             // Marcamos a falso selccionado tabSuperior
@@ -616,7 +774,7 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
             
 			Fragment fragmentCuenta = new CuentaFragment();
 			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-	        FragmentTransaction m = getFragmentManager().beginTransaction();
+	        FragmentTransaction m = getSupportFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        m.addToBackStack("Cuenta");
 	        m.commit();
@@ -643,9 +801,9 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	}
 
 	// Metodo encargado de devolver el contenido de cada tab
-	public View createTabContent(String tag) {
-        return tabInferiorContentView;
-	}
+//	public View createTabContent(String tag) {
+//        return tabInferiorContentView;
+//	}
 	
 	// Metodo encargado de lanzar la ventana emergente para indicar el número de comesales
 	public void lanzarVentanaEmergenteParaIndicarNumeroComensales(){
@@ -704,8 +862,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
           	public void onClick(DialogInterface dialog, int whichButton) {
           		if(numComensales > 0){
-    				// Descamarcamos el tab superior activado para evitar confusiones
-    				desmarcarTabSuperiorActivo();
     				
     				// Lanzamos la actividad de una forma específica para conocer cuando acaba
     				Intent intent = new Intent(getApplicationContext(), Calculadora.class);
@@ -766,15 +922,15 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
-		if(seleccionadoTabSuperior){
+		/*if(seleccionadoTabSuperior){
 			actionbar.selectTab(actionbar.getTabAt(postabSuperiorPulsado));
-		}else{
+		}else{*/
 		    /*
 		     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
 		     * usuario vea cual está seleccionado.
 		     */
 		    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
-		}
+		//}
 	}
 	
 	// Metodo encargado de decirnos si se ha sincronizado algún pedido o no
@@ -838,8 +994,6 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	    tabs.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#906d35"));
 	    tabInferiorSeleccionado = 2;
 	    
-		// Descamarcamos el tab superior activado para evitar confusiones
-		desmarcarTabSuperiorActivo();
 		// Marcamos el tab falso
         tabs.setCurrentTabByTag("tabFalso");
         // Marcamos a falso selccionado tabSuperior
@@ -848,9 +1002,17 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
         anteriorTabPulsado = "tabCuenta";
 	}
 	
-	public static void setSeleccionadoTabSuperior(boolean seleccionado){
-		seleccionadoTabSuperior = seleccionado;
+	public void bloquearSlideTabsSuperiores()
+	{
+		if(!seleccionadoTabSuperior)
+		{
+			miViewPager.setEnabled(true);
+		}
 	}
+	
+	/*public static void setSeleccionadoTabSuperior(boolean seleccionado){
+		seleccionadoTabSuperior = seleccionado;
+	}*/
 	
 	public static void setPosTabSuperior(int posTab){
 		postabSuperiorPulsado = posTab;
@@ -858,5 +1020,15 @@ public class InicializarRestaurante extends Activity implements TabContentFactor
 	
 	public static int getTabInferiorSeleccionado(){
 		return tabInferiorSeleccionado;
+	}
+
+	public void onPageScrollStateChanged(int arg0) {
+	}
+
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+
+	public void onPageSelected(int pos) {
+		tabsSuperiores.setCurrentTab(pos);
 	}
 }

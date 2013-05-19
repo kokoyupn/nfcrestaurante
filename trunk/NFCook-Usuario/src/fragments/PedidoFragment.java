@@ -17,8 +17,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -42,7 +43,7 @@ public class PedidoFragment extends Fragment{
 	 * poder actualizar la lista desde otras clases*/
 	private static MiExpandableListAdapterPedido  adapterExpandableListPedido;
 	private static ExpandableListView expandableListPedido;
-	private static View vistaConExpandaleList;
+	private static View vistaConExpandableList;
 	
 	private static String restaurante;
 	private float total;
@@ -56,7 +57,7 @@ public class PedidoFragment extends Fragment{
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		vistaConExpandaleList = inflater.inflate(R.layout.pedido, container, false);
+		vistaConExpandableList = inflater.inflate(R.layout.pedido, container, false);
         
 		// Ponemos el título a la actividad
         // Recogemos ActionBar
@@ -74,14 +75,14 @@ public class PedidoFragment extends Fragment{
         ponerOnClickSincronizarPedidoQR();
         
         // me devuelve null si no tiene NFC, si no, me devuelve el adapter nfc del dispositivo
-        adapter = NfcAdapter.getDefaultAdapter(vistaConExpandaleList.getContext());
+        adapter = NfcAdapter.getDefaultAdapter(vistaConExpandableList.getContext());
         
-        return vistaConExpandaleList;
+        return vistaConExpandableList;
 	}
   	
 	
 	private void actualizarPrecioPedido() {
-		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandaleList.findViewById(R.id.textViewTotalPedido);
+		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandableList.findViewById(R.id.textViewTotalPedido);
 		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + " €");
 	}
 
@@ -118,11 +119,11 @@ public class PedidoFragment extends Fragment{
 		    	PadreExpandableListPedido unPadre = new PadreExpandableListPedido(nombrePlato, hijos, precio, idPadre);
 		    	padres.add(unPadre);
 	    	}
-			expandableListPedido = (ExpandableListView) vistaConExpandaleList.findViewById(R.id.expandableListPedido);
-			adapterExpandableListPedido = new MiExpandableListAdapterPedido(vistaConExpandaleList.getContext(), padres, this);
+			expandableListPedido = (ExpandableListView) vistaConExpandableList.findViewById(R.id.expandableListPedido);
+			adapterExpandableListPedido = new MiExpandableListAdapterPedido(vistaConExpandableList.getContext(), padres, this);
 			expandableListPedido.setAdapter(adapterExpandableListPedido);
 	    }catch(SQLiteException e){
-	        Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTEN DATOS DEL PEDIDO",Toast.LENGTH_SHORT).show();
+	        Toast.makeText(vistaConExpandableList.getContext(),"NO EXISTEN DATOS DEL PEDIDO",Toast.LENGTH_SHORT).show();
 	    }   
 	}
 	
@@ -135,10 +136,10 @@ public class PedidoFragment extends Fragment{
 
 	private static void importarBaseDatatos() {
 		 try{
-			 sqlPedido=new HandlerDB(vistaConExpandaleList.getContext(),"Pedido.db"); 
+			 sqlPedido=new HandlerDB(vistaConExpandableList.getContext(),"Pedido.db"); 
 	     	 dbPedido = sqlPedido.open();
 	     }catch(SQLiteException e){
-	    	 Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show(); 		
+	    	 Toast.makeText(vistaConExpandableList.getContext(),"NO EXISTE BASE DE DATOS PEDIDO USUARIO",Toast.LENGTH_SHORT).show(); 		
 	     }
 	}
 	
@@ -167,8 +168,8 @@ public class PedidoFragment extends Fragment{
 	 * disponibles.
 	 */
 	private void crearVentanaEmergenteElegirSincronizacion(){
-		vistaVentanaEmergenteElegirSincronizacion = LayoutInflater.from(vistaConExpandaleList.getContext()).inflate(R.layout.ventana_emergente_elegir_sincronizacion, null);
-		ventanaEmergenteElegirSincronizacion = new AlertDialog.Builder(vistaConExpandaleList.getContext()).create();
+		vistaVentanaEmergenteElegirSincronizacion = LayoutInflater.from(vistaConExpandableList.getContext()).inflate(R.layout.ventana_emergente_elegir_sincronizacion, null);
+		ventanaEmergenteElegirSincronizacion = new AlertDialog.Builder(vistaConExpandableList.getContext()).create();
 		ventanaEmergenteElegirSincronizacion.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancelar", 
 				new DialogInterface.OnClickListener() {
 			
@@ -183,16 +184,16 @@ public class PedidoFragment extends Fragment{
 	 * Crea el onClick la papelera para borrar todo el pedido.
 	 */
 	private void ponerOnClickPapelera() {
-		ImageView botonPapelera = (ImageView) vistaConExpandaleList.findViewById(R.id.imagePapelera);
+		ImageView botonPapelera = (ImageView) vistaConExpandableList.findViewById(R.id.imagePapelera);
 		
 		botonPapelera.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
 				//creo el alert dialog que se mostrara al pulsar en el boton back
-		    	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(vistaConExpandaleList.getContext());
+		    	AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(vistaConExpandableList.getContext());
 				onClickBotonAceptarAlertDialog(ventanaEmergente);
 				onClickBotonCancelarAlertDialog(ventanaEmergente);
-				View vistaAviso = LayoutInflater.from(vistaConExpandaleList.getContext()).inflate(R.layout.aviso_continuar_pedido, null);
+				View vistaAviso = LayoutInflater.from(vistaConExpandableList.getContext()).inflate(R.layout.aviso_continuar_pedido, null);
 				//modifico el texto a mostrar
 				TextView textoAMostar = (TextView) vistaAviso.findViewById(R.id.textViewInformacionAviso);
 				textoAMostar.setText("¿Desea eliminar todo su pedido?");
@@ -224,7 +225,7 @@ public class PedidoFragment extends Fragment{
 					
 			public void onClick(DialogInterface dialog, int which) {
 				try{
-					HandlerDB sqlPedido = new HandlerDB(vistaConExpandaleList.getContext(),"Pedido.db"); 
+					HandlerDB sqlPedido = new HandlerDB(vistaConExpandableList.getContext(),"Pedido.db"); 
 					SQLiteDatabase dbPedido = sqlPedido.open();
 					dbPedido.delete("Pedido", null, null);
 					sqlPedido.close();
@@ -235,7 +236,7 @@ public class PedidoFragment extends Fragment{
 			        ContenidoTabSuperiorCategoriaBebidas.reiniciarPantallaBebidas();
 					
 				}catch(SQLiteException e){
-		         	Toast.makeText(vistaConExpandaleList.getContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
+		         	Toast.makeText(vistaConExpandableList.getContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
 		        }		
 			}
 		});
@@ -248,7 +249,7 @@ public class PedidoFragment extends Fragment{
 	 * Si se puede abre una ventana emergente para elegir el metodo de sincronizacion.
 	 */
 	private void ponerOnClickSincronizar() {
-		ImageView botonSincronizar = (ImageView) vistaConExpandaleList.findViewById(R.id.imageSincronizar);
+		ImageView botonSincronizar = (ImageView) vistaConExpandableList.findViewById(R.id.imageSincronizar);
 		
 		botonSincronizar.setOnClickListener(new View.OnClickListener() {
 			
@@ -256,7 +257,7 @@ public class PedidoFragment extends Fragment{
 				if(!baseDeDatosPedidoyCuentaVacias()){
 		    		ventanaEmergenteElegirSincronizacion.show();
 				} 
-				else Toast.makeText(vistaConExpandaleList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
+				else Toast.makeText(vistaConExpandableList.getContext(),"No puedes sincronizar si no has configurado un pedido",Toast.LENGTH_SHORT).show();
 			}
 		});
 		
@@ -281,7 +282,7 @@ public class PedidoFragment extends Fragment{
 					Intent intent = new Intent(getActivity(),SincronizarPedidoNFC.class);
 					intent.putExtra("Restaurante", restaurante);
 					startActivityForResult(intent, 0);
-				} else Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
+				} else Toast.makeText(vistaConExpandableList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
 			} 
 		});
 	}
@@ -320,7 +321,7 @@ public class PedidoFragment extends Fragment{
 					Intent intent = new Intent(getActivity(),SincronizarPedidoBeamNFC.class);
 					intent.putExtra("Restaurante", restaurante);
 					startActivityForResult(intent, 0);
-				} else Toast.makeText(vistaConExpandaleList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
+				} else Toast.makeText(vistaConExpandableList.getContext(),"Tu dispositivo no tiene NFC. Prueba a sincronizar tu pedido por QR.",Toast.LENGTH_LONG).show();
 			}
 		});
 		
@@ -356,7 +357,7 @@ public class PedidoFragment extends Fragment{
 	}
 
 	public static void actualizaExpandableList() {
-		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandaleList.findViewById(R.id.textViewTotalPedido);
+		TextView textViewPrecioTotalPedido = (TextView) vistaConExpandableList.findViewById(R.id.textViewTotalPedido);
 		textViewPrecioTotalPedido.setText(Math.rint(adapterExpandableListPedido.getPrecioTotalPedido()*100)/100 + " €");
 		adapterExpandableListPedido.notifyDataSetChanged();
 	}
