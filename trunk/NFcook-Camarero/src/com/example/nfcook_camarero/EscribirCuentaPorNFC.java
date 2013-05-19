@@ -3,6 +3,8 @@ package com.example.nfcook_camarero;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import baseDatos.HandlerGenerico;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.PendingIntent;

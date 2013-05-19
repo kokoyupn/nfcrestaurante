@@ -7,18 +7,18 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import com.example.nfcook_camarero.Borrar_tarjeta;
-import com.example.nfcook_camarero.EscribirCuentaPorNFC;
-import com.example.nfcook_camarero.HandlerGenerico;
-import com.example.nfcook_camarero.InfoPlato;
-import com.example.nfcook_camarero.InicialCamareroAdapter;
-import com.example.nfcook_camarero.Mesa;
-import com.example.nfcook_camarero.MesaView;
-import com.example.nfcook_camarero.R;
-import com.example.nfcook_camarero.Sincronizacion_BeamNfc;
-import com.example.nfcook_camarero.Sincronizacion_LecturaNfc;
-import com.example.nfcook_camarero.Sincronizacion_QR;
+import baseDatos.HandlerGenerico;
 
+import com.example.nfcook_camarero.BorrarTarjeta;
+import com.example.nfcook_camarero.EscribirCuentaPorNFC;
+import com.example.nfcook_camarero.Mesa;
+import com.example.nfcook_camarero.R;
+import com.example.nfcook_camarero.SincronizacionBeamNFC;
+import com.example.nfcook_camarero.SincronizacionLecturaNFC;
+import com.example.nfcook_camarero.SincronizacionQR;
+
+import adapters.InformacionMesa;
+import adapters.MiGridViewMesasAdapter;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.content.ContentValues;
@@ -54,7 +54,7 @@ public class PantallaMesasFragment extends Fragment {
 	
 	private View vista;
 	private GridView gridviewCam;
-    private static ArrayList<MesaView> mesas;
+    private static ArrayList<InformacionMesa> mesas;
     private static String idCamarero;
     private static String numeroMesaAEditar;
     private static String numeroPersonas;
@@ -78,7 +78,7 @@ public class PantallaMesasFragment extends Fragment {
         //Quitamos barra de titulo de la aplicacion
         //this.getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
         //creamos la lista de mesas
-        mesas = new ArrayList<MesaView>();
+        mesas = new ArrayList<InformacionMesa>();
         gridviewCam = (GridView) vista.findViewById(R.id.gridViewInicial); 
         // Obtenemos el idCamarero de la pantalla anterior
         Bundle bundle = getActivity().getIntent().getExtras();
@@ -108,7 +108,7 @@ public class PantallaMesasFragment extends Fragment {
     	
         	//añadir mesas que ya tiene
         	while(cPMesas.moveToNext()){
-        		MesaView mesa1= new MesaView(this.getActivity());
+        		InformacionMesa mesa1= new InformacionMesa(this.getActivity());
         		mesa1.setNumMesa(cPMesas.getString(0));
         		mesa1.setNumPersonas(cPMesas.getString(1));
         		if(!existeMesa(mesa1))
@@ -120,13 +120,13 @@ public class PantallaMesasFragment extends Fragment {
 
         ordenaMesas();
         //Llamamos al adapter para que muestre en la pantalla los cambios realizados
-        InicialCamareroAdapter adapterCam= new InicialCamareroAdapter(this.getActivity().getApplicationContext(), mesas);
+        MiGridViewMesasAdapter adapterCam= new MiGridViewMesasAdapter(this.getActivity().getApplicationContext(), mesas);
         gridviewCam.setAdapter(adapterCam);
         //creamos el oyente del gridView
         gridviewCam.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
             	//nos llevara a la pantalla siguiente          	
-            	MesaView pulsada= mesas.get(position);
+            	InformacionMesa pulsada= mesas.get(position);
             //	dbMesas.close();
             	Intent intent = new Intent(PantallaMesasFragment.this.getActivity(),Mesa.class);
             	//Le pasamos a la siguiente pantalla el numero de la mesa que se ha pulsado
@@ -229,7 +229,7 @@ public class PantallaMesasFragment extends Fragment {
 				                		eliminarDeArray(numeroMesaAEditar);
 				                		//refrescamos  
 				                        
-				                     	InicialCamareroAdapter adapterCam = new InicialCamareroAdapter(PantallaMesasFragment.this.getActivity(), mesas);
+				                     	MiGridViewMesasAdapter adapterCam = new MiGridViewMesasAdapter(PantallaMesasFragment.this.getActivity(), mesas);
 				                     	gridviewCam.setAdapter(adapterCam);
 		
 				                			
@@ -261,7 +261,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		imagenNfc.setOnClickListener(new OnClickListener() {
 
 									public void onClick(View v) {
-										intent = new Intent(ctx,Sincronizacion_LecturaNfc.class);
+										intent = new Intent(ctx,SincronizacionLecturaNFC.class);
 										intent.putExtra("NumMesa", numeroMesaAEditar);
 										intent.putExtra("IdCamarero",idCamarero);
 										intent.putExtra("Personas", numeroPersonas);
@@ -277,7 +277,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		imagenQr.setOnClickListener(new OnClickListener() {
 
 									public void onClick(View v) {
-										intent = new Intent(ctx,Sincronizacion_QR.class);
+										intent = new Intent(ctx,SincronizacionQR.class);
 										intent.putExtra("NumMesa", numeroMesaAEditar);
 										intent.putExtra("IdCamarero",idCamarero);
 										intent.putExtra("Personas", numeroPersonas);
@@ -293,7 +293,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		imagenBeam.setOnClickListener(new OnClickListener() {
 
 									public void onClick(View v) {
-										intent = new Intent(ctx,Sincronizacion_BeamNfc.class);
+										intent = new Intent(ctx,SincronizacionBeamNFC.class);
 								    	intent.putExtra("Restaurante", restaurante);
 								    	ventanaEmergenteSincronizacion.dismiss();
 										
@@ -335,21 +335,21 @@ public class PantallaMesasFragment extends Fragment {
 				    	        			Toast.makeText(PantallaMesasFragment.this.getActivity(), "Introduce la mesa", Toast.LENGTH_LONG).show();           			
 				    	        		}else{//ha introducido la mesa
 				    	        			//Creamos una mesa aux para buscarla en la base de datos y ver si ya existe previamente
-				    	        			MesaView mesaBuscarRepe = new MesaView(getActivity().getApplicationContext());
+				    	        			InformacionMesa mesaBuscarRepe = new InformacionMesa(getActivity().getApplicationContext());
 				    	        			mesaBuscarRepe.setNumMesa(numeroMesa);
 				    	        			if (existeMesa(mesaBuscarRepe)){// si ya existe la mesa no la metemos y sacamos un mensaje
 				    	        				Toast.makeText(PantallaMesasFragment.this.getActivity(), "Esa mesa ya está siendo atendida", Toast.LENGTH_LONG).show();
 				    	        			}else{//la mesa no existe. La introducimos     				
 				    	            			gridviewCam = (GridView) getActivity().findViewById(R.id.gridViewInicial);
-				    	            			Iterator<MesaView> it = mesas.iterator();
-				    	            			MesaView mesaAux = new MesaView(PantallaMesasFragment.this.getActivity());
+				    	            			Iterator<InformacionMesa> it = mesas.iterator();
+				    	            			InformacionMesa mesaAux = new InformacionMesa(PantallaMesasFragment.this.getActivity());
 				    	            			while(it.hasNext()){
-				    	            				MesaView mesaAntigua = it.next();
+				    	            				InformacionMesa mesaAntigua = it.next();
 				    	            				if (mesaAntigua.getNumMesa() == numeroMesaAEditar)
 				    	            					mesaAux = mesaAntigua;
 				    	            			}
 				    	            			mesas.remove(mesaAux);
-				    	                    	MesaView mesaNueva = new MesaView(PantallaMesasFragment.this.getActivity());
+				    	                    	InformacionMesa mesaNueva = new InformacionMesa(PantallaMesasFragment.this.getActivity());
 				    	                    	mesaNueva.setNumMesa(numeroMesa);
 				    	                    	mesaNueva.setNumPersonas(mesaAux.getNumPersonas());
 				    	                    	mesas.add(mesaNueva);
@@ -359,7 +359,7 @@ public class PantallaMesasFragment extends Fragment {
 				    	                    	
 				    	                    	//Ordenamos y refrescamos
 				    	                        ordenaMesas();
-				    	                        InicialCamareroAdapter adapterCam = new InicialCamareroAdapter(PantallaMesasFragment.this.getActivity(), mesas);
+				    	                        MiGridViewMesasAdapter adapterCam = new MiGridViewMesasAdapter(PantallaMesasFragment.this.getActivity(), mesas);
 				    	                    	gridviewCam.setAdapter(adapterCam);  
 				    	                    	
 				    	                    	//Modificamos el campo NumMesa de la base de datos de cada plato
@@ -404,10 +404,10 @@ public class PantallaMesasFragment extends Fragment {
 				    	        			Toast.makeText(PantallaMesasFragment.this.getActivity(), "Introduce las personas", Toast.LENGTH_LONG).show();           			
 				    	        		}else{//ha introducido las personas
 				    	            			gridviewCam = (GridView) getActivity().findViewById(R.id.gridViewInicial);
-				    	            			Iterator<MesaView> it = mesas.iterator();
-				    	            			MesaView mesaAux = new MesaView(PantallaMesasFragment.this.getActivity());
+				    	            			Iterator<InformacionMesa> it = mesas.iterator();
+				    	            			InformacionMesa mesaAux = new InformacionMesa(PantallaMesasFragment.this.getActivity());
 				    	            			while(it.hasNext()){
-				    	            				MesaView mesaAntigua = it.next();
+				    	            				InformacionMesa mesaAntigua = it.next();
 				    	            				if (mesaAntigua.getNumMesa() == numeroMesaAEditar)
 				    	            					mesaAux = mesaAntigua;
 				    	            			}
@@ -416,7 +416,7 @@ public class PantallaMesasFragment extends Fragment {
 				    	                    	Toast.makeText(getActivity().getApplicationContext(),
 				    	                    			"Ahora hay "+numeroPersonas+" personas en la mesa "+numeroMesaAEditar, Toast.LENGTH_LONG).show();
 				    	                    	ordenaMesas();
-				    	                    	InicialCamareroAdapter adapterCam = new InicialCamareroAdapter(PantallaMesasFragment.this.getActivity(), mesas);
+				    	                    	MiGridViewMesasAdapter adapterCam = new MiGridViewMesasAdapter(PantallaMesasFragment.this.getActivity(), mesas);
 				    	                    	gridviewCam.setAdapter(adapterCam);  
 				    	                    	
 				    	                    	//Modificamos el campo NumMesa de la base de datos de cada plato
@@ -445,10 +445,10 @@ public class PantallaMesasFragment extends Fragment {
 				             alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 				               	public void onClick(DialogInterface dialog, int whichButton) {
 					                //eliminamos la mesa de la lista de MesaView		
-				               		Iterator<MesaView> it = mesas.iterator();
-	    	            			MesaView mesaAux = new MesaView(PantallaMesasFragment.this.getActivity());
+				               		Iterator<InformacionMesa> it = mesas.iterator();
+	    	            			InformacionMesa mesaAux = new InformacionMesa(PantallaMesasFragment.this.getActivity());
 	    	            			while(it.hasNext()){
-	    	            				MesaView mesaAntigua = it.next();
+	    	            				InformacionMesa mesaAntigua = it.next();
 	    	            				if (mesaAntigua.getNumMesa() == numeroMesaAEditar)
 	    	            					mesaAux = mesaAntigua;
 	    	            			}
@@ -459,7 +459,7 @@ public class PantallaMesasFragment extends Fragment {
 					                
 					             	//Ordenamos y refrescamos  
 					                ordenaMesas();
-					                InicialCamareroAdapter adapterCam = new InicialCamareroAdapter(PantallaMesasFragment.this.getActivity(), mesas);
+					                MiGridViewMesasAdapter adapterCam = new MiGridViewMesasAdapter(PantallaMesasFragment.this.getActivity(), mesas);
 					             	gridviewCam.setAdapter(adapterCam);
 				               	}
 				             });//fin onclick aceptar
@@ -467,7 +467,7 @@ public class PantallaMesasFragment extends Fragment {
 				             alert.show();
 				    	} // ----- borrar tag ---
 				    	else if (item == 6){
-				    		intent = new Intent(ctx,Borrar_tarjeta.class);
+				    		intent = new Intent(ctx,BorrarTarjeta.class);
 				    		intent.putExtra("Restaurante",restaurante);
 				    		startActivity(intent);
 				    	}
@@ -485,7 +485,7 @@ public class PantallaMesasFragment extends Fragment {
      * @param mesa
      * @return true si mesa está en el array mesas, false si no está
      */
-    public boolean existeMesa(MesaView mesa){
+    public boolean existeMesa(InformacionMesa mesa){
     	boolean enc = false;
     	int i=0;
     	while(!enc && i<mesas.size()){
@@ -538,19 +538,19 @@ public class PantallaMesasFragment extends Fragment {
 	        			Toast.makeText(PantallaMesasFragment.this.getActivity(), "La cantidad de personas ha de ser un número", Toast.LENGTH_LONG).show();
 	        		}else{//ha introducido la mesa y numero de personas
 	        			//Creamos una mesa aux para buscarla en la base de datos y ver si ya existe previamente
-	        			MesaView mesaBuscarRepe = new MesaView(getActivity().getApplicationContext());
+	        			InformacionMesa mesaBuscarRepe = new InformacionMesa(getActivity().getApplicationContext());
 	        			mesaBuscarRepe.setNumMesa(numeroMesa);
 	        			if (existeMesa(mesaBuscarRepe)){// si ya existe la mesa no la metemos y sacamos un mensaje
 	        				Toast.makeText(PantallaMesasFragment.this.getActivity(), "Esa mesa ya está siendo atendida", Toast.LENGTH_LONG).show();
 	        			}else{//la mesa no existe. La introducimos     				
 	            			gridviewCam = (GridView) getActivity().findViewById(R.id.gridViewInicial);
-	                    	MesaView mesa2 = new MesaView(PantallaMesasFragment.this.getActivity());
+	                    	InformacionMesa mesa2 = new InformacionMesa(PantallaMesasFragment.this.getActivity());
 	                    	mesa2.setNumMesa(numeroMesa);
 	                    	mesa2.setNumPersonas(numeroPersonas);
 	                    	mesas.add(mesa2);
 	                    	//Ordenamos y refrescamos
 	                        ordenaMesas();
-	                        InicialCamareroAdapter adapterCam = new InicialCamareroAdapter(PantallaMesasFragment.this.getActivity(), mesas);
+	                        MiGridViewMesasAdapter adapterCam = new MiGridViewMesasAdapter(PantallaMesasFragment.this.getActivity(), mesas);
 	                    	gridviewCam.setAdapter(adapterCam);
 	                    	
 	                    	//Sacamos la fecha a la que el camarero ha introducido la mesa
@@ -645,7 +645,7 @@ public class PantallaMesasFragment extends Fragment {
                  		gridviewCam = (GridView) getActivity().findViewById(R.id.gridViewInicial);
                  
                      	//Creo una mesa aux para buscarla en la base de datos para ver si existe
-            			MesaView buscaMesa = new MesaView(getActivity().getApplicationContext());
+            			InformacionMesa buscaMesa = new InformacionMesa(getActivity().getApplicationContext());
             			buscaMesa.setNumMesa(value);
             			if (!existeMesa(buscaMesa)){// si no existe la mesa mostramos un mensaje
             				Toast.makeText(PantallaMesasFragment.this.getActivity(), "Esa mesa no existe", Toast.LENGTH_LONG).show();
@@ -655,9 +655,9 @@ public class PantallaMesasFragment extends Fragment {
 	                     	dbMesas.execSQL("DELETE FROM Mesas WHERE NumMesa=?", args);
 	                        //Lo eliminamos tambien de la lista de mesas	
 	                     	Boolean enc = false;
-	                     	Iterator<MesaView> it = mesas.iterator();
+	                     	Iterator<InformacionMesa> it = mesas.iterator();
 	                     	while (it.hasNext() && !enc){
-	                     		MesaView atratar = it.next();
+	                     		InformacionMesa atratar = it.next();
 	                     		if(atratar.getNumMesa().equals(value)){
 	                     			enc=true;
 	                     			mesas.remove(atratar);
@@ -665,7 +665,7 @@ public class PantallaMesasFragment extends Fragment {
 	                     	}
 	                     	//Ordenamos y refrescamos  
 	                        ordenaMesas();
-	                        InicialCamareroAdapter adapterCam = new InicialCamareroAdapter(PantallaMesasFragment.this.getActivity(), mesas);
+	                        MiGridViewMesasAdapter adapterCam = new MiGridViewMesasAdapter(PantallaMesasFragment.this.getActivity(), mesas);
 	                     	gridviewCam.setAdapter(adapterCam);
 	               		}
                      }
@@ -676,11 +676,11 @@ public class PantallaMesasFragment extends Fragment {
 	
 	public void ordenaMesas(){		
 		//en mesasnumero guardamos las mesas que son un numero
-		ArrayList<MesaView> mesasNumero = new ArrayList<MesaView>();
-		ArrayList<MesaView> mesasNumeroAux = new ArrayList<MesaView>();
+		ArrayList<InformacionMesa> mesasNumero = new ArrayList<InformacionMesa>();
+		ArrayList<InformacionMesa> mesasNumeroAux = new ArrayList<InformacionMesa>();
 		//en mesastexto guardamos las mesas que son texto
-		ArrayList<MesaView> mesasTexto = new ArrayList<MesaView>();
-		ArrayList<MesaView> mesasTextoAux = new ArrayList<MesaView>();
+		ArrayList<InformacionMesa> mesasTexto = new ArrayList<InformacionMesa>();
+		ArrayList<InformacionMesa> mesasTextoAux = new ArrayList<InformacionMesa>();
 		
 		for(int i = 0; i < mesas.size(); i++){
 			if (esNumero(mesas.get(i).getNumMesa())) mesasNumero.add(mesas.get(i));
@@ -688,7 +688,7 @@ public class PantallaMesasFragment extends Fragment {
 		}
 		//recorremos el array  mesasNumero y lo ordenamos
 		while(mesasNumero.size() > 0){
-			MesaView mesaMin = buscaMinNumero(mesasNumero);
+			InformacionMesa mesaMin = buscaMinNumero(mesasNumero);
 			mesasNumero.remove(mesaMin);
 			mesasNumeroAux.add(mesaMin);
 		}
@@ -696,7 +696,7 @@ public class PantallaMesasFragment extends Fragment {
 		
 		//recorremos el array  mesasTexto y lo ordenamos
 				while(mesasTexto.size() > 0){
-					MesaView mesaMin = buscaMinTexto(mesasTexto);
+					InformacionMesa mesaMin = buscaMinTexto(mesasTexto);
 					mesasTexto.remove(mesaMin);
 					mesasTextoAux.add(mesaMin);
 				}
@@ -708,9 +708,9 @@ public class PantallaMesasFragment extends Fragment {
 		mesas = mesasNumero;
 	}
 	 
-	public MesaView buscaMinNumero(ArrayList<MesaView> arrayMesas){
+	public InformacionMesa buscaMinNumero(ArrayList<InformacionMesa> arrayMesas){
 		//recorremos todas las mesas buscando la que tiene menor numero de mesa
-		MesaView mesaMin = arrayMesas.get(0);//Pongo el primero
+		InformacionMesa mesaMin = arrayMesas.get(0);//Pongo el primero
 		int i = 1;
 		while (i < arrayMesas.size())
 		{
@@ -724,9 +724,9 @@ public class PantallaMesasFragment extends Fragment {
 		return mesaMin;
 	}
 	
-	public MesaView buscaMinTexto(ArrayList<MesaView> arrayMesas){
+	public InformacionMesa buscaMinTexto(ArrayList<InformacionMesa> arrayMesas){
 		//recorremos todas las mesas buscando la que tiene menor numero de mesa
-		MesaView mesaMin = arrayMesas.get(0);//Pongo el primero
+		InformacionMesa mesaMin = arrayMesas.get(0);//Pongo el primero
 		int i = 1;
 		while (i < arrayMesas.size())
 		{
@@ -754,9 +754,9 @@ public class PantallaMesasFragment extends Fragment {
 	
 	static void eliminarDeArray(final String numeroMesa){
 		Boolean enc = false;
-     	Iterator<MesaView> it = mesas.iterator();
+     	Iterator<InformacionMesa> it = mesas.iterator();
      	while (it.hasNext() && !enc){
-     		MesaView atratar = it.next();
+     		InformacionMesa atratar = it.next();
      		if(atratar.getNumMesa().equals(numeroMesa)){
      			enc=true;
      			mesas.remove(atratar);

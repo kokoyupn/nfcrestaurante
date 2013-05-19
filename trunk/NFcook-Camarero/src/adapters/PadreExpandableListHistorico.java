@@ -18,7 +18,6 @@ public class PadreExpandableListHistorico {
     private boolean expandido;
     private ArrayList<HijoExpandableListHistorico> hijos;
     
-    
     public PadreExpandableListHistorico(String numMesa, double precio, ArrayList<HijoExpandableListHistorico> hijos) {
 		this.numMesa = numMesa;
 		this.precio = precio;
@@ -50,8 +49,6 @@ public class PadreExpandableListHistorico {
 		return precio;
 	}
 
-	
-    
 	public void addHijo(HijoExpandableListHistorico nuevoHijo) {
 		hijos.add(nuevoHijo);
 	}

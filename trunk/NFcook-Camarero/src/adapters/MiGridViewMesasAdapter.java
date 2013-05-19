@@ -1,9 +1,8 @@
-package com.example.nfcook_camarero;
-
+package adapters;
 
 import java.util.ArrayList;
 
-
+import com.example.nfcook_camarero.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class InicialCamareroAdapter extends BaseAdapter {
-	private ArrayList<MesaView> mesas;
+public class MiGridViewMesasAdapter extends BaseAdapter {
+	private ArrayList<InformacionMesa> mesas;
 	private LayoutInflater l_Inflater;
 	
 
-	public InicialCamareroAdapter(Context context, ArrayList<MesaView> mesas) {
+	public MiGridViewMesasAdapter(Context context, ArrayList<InformacionMesa> mesas) {
 		this.mesas = mesas;
 		this.l_Inflater = LayoutInflater.from(context);
 	}

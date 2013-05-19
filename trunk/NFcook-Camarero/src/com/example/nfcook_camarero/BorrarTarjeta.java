@@ -1,10 +1,9 @@
 package com.example.nfcook_camarero;
 
-
-
-
 import java.io.IOException;
 import java.util.ArrayList;
+
+import baseDatos.HandlerGenerico;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -31,7 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismissListener{
+public class BorrarTarjeta extends Activity implements DialogInterface.OnDismissListener{
 
 	//Variables usadas para el nfc
 	NfcAdapter adapter;
@@ -162,10 +161,7 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
         	
  	  	   numeroRestaurante = c.getInt(0);
  	  	   String abreviatura = c.getString(1);
- 	  	   
- 	  	
  		}catch(Exception e){ }
- 	   
         
         // creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
@@ -339,26 +335,18 @@ public class Borrar_tarjeta extends Activity implements DialogInterface.OnDismis
         return true;
     }
     
-   
 	public boolean onOptionsItemSelected(MenuItem item) {
          Intent intent;
             switch (item.getItemId()) {
-            case R.id.menu_nfc:
-                intent = new Intent(Settings.ACTION_NFC_SETTINGS);
-                startActivity(intent);
-                return true;
-              
-            default:
-                finish();
-                return true;
-        }
-        }
+	            case R.id.menu_nfc:
+	                intent = new Intent(Settings.ACTION_NFC_SETTINGS);
+	                startActivity(intent);
+	                return true;
+	              
+	            default:
+	                finish();
+	                return true;
+            }
+    }
 
-	
-
-	
-
-	
-    
-  
 }

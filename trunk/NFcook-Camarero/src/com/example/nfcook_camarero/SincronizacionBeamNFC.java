@@ -4,6 +4,8 @@ package com.example.nfcook_camarero;
 
 
 import java.util.StringTokenizer;
+
+import baseDatos.HandlerGenerico;
 import fragments.PantallaMesasFragment;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -30,7 +32,7 @@ import android.widget.Toast;
 import android.provider.Settings;
 
 
-public class Sincronizacion_BeamNfc extends Activity  implements OnNdefPushCompleteCallback {
+public class SincronizacionBeamNFC extends Activity  implements OnNdefPushCompleteCallback {
 
     NfcAdapter mNfcAdapter;
     TextView mInfoText;

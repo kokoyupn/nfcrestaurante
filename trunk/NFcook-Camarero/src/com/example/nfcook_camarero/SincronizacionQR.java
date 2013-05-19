@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
+import baseDatos.HandlerGenerico;
+
 import fragments.PantallaMesasFragment;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -18,7 +20,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 
-public class Sincronizacion_QR extends Activity {
+public class SincronizacionQR extends Activity {
 	
 	private	HandlerGenerico sqlMesas,sqlrestaurante,sqlEquivalencia;;
 	private	String numMesa;

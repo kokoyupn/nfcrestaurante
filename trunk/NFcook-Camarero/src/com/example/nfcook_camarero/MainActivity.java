@@ -3,6 +3,8 @@ package com.example.nfcook_camarero;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import baseDatos.HandlerGenerico;
+
 
 
 
@@ -34,17 +36,12 @@ public class MainActivity extends Activity {
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
     	 //Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        
     	super.onCreate(savedInstanceState);       
         setContentView(R.layout.activity_main);
     }
     
-    
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -58,7 +55,7 @@ public class MainActivity extends Activity {
 	  public void onClickBotonInvisible(View boton)
 	  {
 		  //Iniciamos la nueva actividad
-	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
+	   	  Intent intent = new Intent(this, InicializarCamarero.class);
        	  intent.putExtra("usuario", "Foster");
        	  intent.putExtra("Restaurante","Foster");
        	  startActivityForResult(intent,0); 
@@ -73,15 +70,13 @@ public class MainActivity extends Activity {
 		  password.setText("");
 	  }   
 	  
- /**
-  * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
-  * esta en la base de datos de camareros 
-  * @param boton
-  * autor:Daniel
-  */
-
-public void  onClickBotonEntrar(View boton)
-   {
+	 /**
+	  * Metodo onclick de boton encargado de comprobar si el usuario y la contraseña introducidas por pantalla
+	  * esta en la base de datos de camareros 
+	  * @param boton
+	  * autor:Daniel
+	  */
+	  public void  onClickBotonEntrar(View boton){
 	   /*Contiene en nombre que introduces por pantalla en el editText*/
 	
 	   usuario = (EditText) findViewById(R.id.editTextUsuario);
@@ -113,7 +108,7 @@ public void  onClickBotonEntrar(View boton)
     	   {  
     	   	  
            	  //Iniciamos la nueva actividad
-    	   	  Intent intent = new Intent(this, InicializarPantallasCamarero.class);
+    	   	  Intent intent = new Intent(this, InicializarCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
 
            	  if (password.getText().toString().equals("foster"))
@@ -135,13 +130,13 @@ public void  onClickBotonEntrar(View boton)
 	   
    }
 
-/**
- * Metodo encargado de sacar un mensaje por pantalla durante 2 segundos con le mensaje indicadopor parametro y la foto indicada
- * * @param text
- * @param foto
- */
-
-private void abrir_ventanaEmergente(String text, int foto) {
+	/**
+	 * Metodo encargado de sacar un mensaje por pantalla durante 2 segundos con le mensaje indicadopor parametro y la foto indicada
+	 * * @param text
+	 * @param foto
+	 */
+	
+	private void abrir_ventanaEmergente(String text, int foto) {
 	 	View vistaAviso = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog_login_camarero, null);
 	    ImageView img= (ImageView) vistaAviso.findViewById(R.id.imageNFC);
 		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewAvisoCamarero);
@@ -153,12 +148,11 @@ private void abrir_ventanaEmergente(String text, int foto) {
 		
 		//Crea el timer para que el mensaje solo aparezca durante 2 segundos
 		final Timer t = new Timer();
-     t.schedule(new TimerTask() {
-         public void run() {
-            ventanaEmergente.dismiss(); 
-             t.cancel(); 
-         }
-     }, 5000);
-	
-}
+	     t.schedule(new TimerTask() {
+	         public void run() {
+	            ventanaEmergente.dismiss(); 
+	             t.cancel(); 
+	         }
+	     }, 5000);
+	}
 }

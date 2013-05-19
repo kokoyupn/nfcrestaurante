@@ -17,7 +17,7 @@ import java.util.ArrayList;
  *
  */
 
-public class ContenidoListMesa {
+public class PadreListMesa {
 	
 	private String nombre, extras, observaciones;
 	private int id;
@@ -27,7 +27,7 @@ public class ContenidoListMesa {
 	private ArrayList<Integer> repetidos;
 	private int sincronizado;
 	
-	public ContenidoListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato,int s){
+	public PadreListMesa(String nombre,String extras,String observaciones,double precio,int id,String idPlato,int s){
 		this.nombre = nombre;
 		this.extras = extras;
 		this.observaciones = observaciones;
@@ -98,8 +98,6 @@ public class ContenidoListMesa {
 		
 	}
 
-
-
 	public void aniadeId(int id) {
 		repetidos.add(id);
 		
@@ -109,8 +107,6 @@ public class ContenidoListMesa {
 		return repetidos.get(0);
 		
 	}
-
-
 
 	public void eliminaId() {
 		repetidos.remove(0);

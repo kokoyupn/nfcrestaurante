@@ -26,11 +26,11 @@ import android.widget.TextView;
  *
  */
 
-public class MiListAdapterMesa extends BaseAdapter {
+public class MiListMesaAdapter extends BaseAdapter {
 	 private Activity activity;
-	 protected ArrayList<ContenidoListMesa> contenido;
+	 protected ArrayList<PadreListMesa> contenido;
 	 
-	 public MiListAdapterMesa(Activity activity, ArrayList<ContenidoListMesa> contenido) {
+	 public MiListMesaAdapter(Activity activity, ArrayList<PadreListMesa> contenido) {
 		 this.activity = activity;
 		 this.contenido = contenido;
 	}
@@ -55,7 +55,7 @@ public class MiListAdapterMesa extends BaseAdapter {
 	      vista = inflater.inflate(R.layout.contenido_lista_mesa, null);
 	    }
 	             
-	    ContenidoListMesa lista = contenido.get(posicion);
+	    PadreListMesa lista = contenido.get(posicion);
 	         
 	    TextView nombre = (TextView) vista.findViewById(R.id.nombrePlato);
 	    nombre.setText(lista.getNombre());
@@ -82,12 +82,12 @@ public class MiListAdapterMesa extends BaseAdapter {
 	    }
 	
 	public void deleteId(int id){
-		Iterator<ContenidoListMesa> it = contenido.iterator();
+		Iterator<PadreListMesa> it = contenido.iterator();
 		System.out.println("entra");
 		boolean encontrado = false;
 		int pos = 0;
 		while(it.hasNext() && !encontrado){
-			ContenidoListMesa m = it.next();
+			PadreListMesa m = it.next();
 			
 			if(m.getId() == id)
 				encontrado = true;
@@ -99,7 +99,6 @@ public class MiListAdapterMesa extends BaseAdapter {
 			contenido.remove(pos);
 	}
 	
-	
 	public double getPrecio() {
 		double precio = 0;
 		for (int i=0;i<contenido.size();i++)
@@ -109,15 +108,12 @@ public class MiListAdapterMesa extends BaseAdapter {
 		return precio;
 	}
 	
-	
 	public void deletePosicion(int posicion){
 		contenido.get(posicion).restaCantidad();
 		contenido.get(posicion).eliminaId();
 		if(contenido.get(posicion).getCantidad()==0)
 			contenido.remove(posicion);
 	}
-	
-	
 
 	public String getExtrasMarcados(int posicion) {
 		return contenido.get(posicion).getExtras();
@@ -147,15 +143,11 @@ public class MiListAdapterMesa extends BaseAdapter {
 		contenido.get(posicion).setObservaciones(observacionesNuevas);		
 	}
 
-	public void addPlato(ContenidoListMesa platoNuevo) {
+	public void addPlato(PadreListMesa platoNuevo) {
 		contenido.add(platoNuevo);
 	}
 
 	public View getViewOnScreen(int itemId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
-
 }

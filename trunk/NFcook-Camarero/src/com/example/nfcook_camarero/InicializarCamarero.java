@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import fragments.PantallaHistoricoFragment;
 import fragments.PantallaMesasFragment;
-import adapters.PagerAdapter;
+import adapters.MiViewPagerAdapter;
 import android.app.ActionBar;
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -21,12 +21,12 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 
-public class InicializarPantallasCamarero extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
+public class InicializarCamarero extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
 	
 	// Tabs con las mesas y el histórico
 	private TabHost tabs;
 	private ViewPager miViewPager;
-	private PagerAdapter miPagerAdapter;
+	private MiViewPagerAdapter miPagerAdapter;
 	private long anteriorPulsacion;
 	
 	 /**
@@ -78,8 +78,7 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
         else 
         	tabs.setCurrentTab(0); 
 	}
-	
-	
+		
 	public void onBackPressed() {
 	    long tiempoActual = System.currentTimeMillis();
 	    if(tiempoActual - anteriorPulsacion > 2000){
@@ -95,7 +94,6 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
     	finish();
     	return false;	
     }
-	
 	
 	// Metodo encargado de inicializar los tabs inferiores
     private void inicializarTabs(){
@@ -147,7 +145,7 @@ public class InicializarPantallasCamarero extends FragmentActivity implements On
         arguments.putString("Restaurante", "Foster");
         listFragments.add(Fragment.instantiate(this, PantallaMesasFragment.class.getName(),arguments));
         listFragments.add(Fragment.instantiate(this, PantallaHistoricoFragment.class.getName()));
-        miPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), listFragments);
+        miPagerAdapter  = new MiViewPagerAdapter(super.getSupportFragmentManager(), listFragments);
       
         miViewPager = (ViewPager) super.findViewById(R.id.viewpager);
         miViewPager.setAdapter(miPagerAdapter);

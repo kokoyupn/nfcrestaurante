@@ -27,7 +27,7 @@ import android.widget.TextView;
  * @author Busy
  *
  */
-public class MiExpandableListAdapterHistorico extends BaseExpandableListAdapter {
+public class MiExpandableListHistoricoAdapter extends BaseExpandableListAdapter {
  
     private LayoutInflater inflater;
     private ArrayList<PadreExpandableListHistorico> padresExpandableList;
@@ -35,7 +35,7 @@ public class MiExpandableListAdapterHistorico extends BaseExpandableListAdapter 
     
   
 
-	public MiExpandableListAdapterHistorico(Context context,
+	public MiExpandableListHistoricoAdapter(Context context,
 			ArrayList<PadreExpandableListHistorico> padres) {
 		padresExpandableList = padres;
         inflater = LayoutInflater.from(context);

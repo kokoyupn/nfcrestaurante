@@ -11,14 +11,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
-
-
-public class MiListAdapterPedidoHistorico extends BaseAdapter {
+public class MiListPedidoHistoricoAdapter extends BaseAdapter {
 	 private Activity activity;
-	 protected ArrayList<ContenidoListPedidoHistorico> contenido;
+	 protected ArrayList<PadreListPedidoHistorico> contenido;
 	 
-	 public MiListAdapterPedidoHistorico(Activity activity, ArrayList<ContenidoListPedidoHistorico> contenido) {
+	 public MiListPedidoHistoricoAdapter(Activity activity, ArrayList<PadreListPedidoHistorico> contenido) {
 		 this.activity = activity;
 		 this.contenido = contenido;
 	}
@@ -43,7 +40,7 @@ public class MiListAdapterPedidoHistorico extends BaseAdapter {
 	      vista = inflater.inflate(com.example.nfcook_camarero.R.layout.contenido_lista_pedido_historico, null);
 	    }
 	             
-	    ContenidoListPedidoHistorico lista = contenido.get(posicion);
+	    PadreListPedidoHistorico lista = contenido.get(posicion);
 	         
 	    TextView nombre = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.nombrePlato);
 	    nombre.setText(lista.getNombre());
@@ -56,21 +53,17 @@ public class MiListAdapterPedidoHistorico extends BaseAdapter {
 	         
 	    TextView observaciones = (TextView) vista.findViewById(com.example.nfcook_camarero.R.id.observaciones);
 	    observaciones.setText(lista.getObservaciones());
-	    
-	    
-	    
-	    return vista;
-	    
-	    	
-	    }
+	     
+	    return vista;	
+    }
 	
 	public void deleteId(int id){
-		Iterator<ContenidoListPedidoHistorico> it = contenido.iterator();
+		Iterator<PadreListPedidoHistorico> it = contenido.iterator();
 		System.out.println("entra");
 		boolean encontrado = false;
 		int pos = 0;
 		while(it.hasNext() && !encontrado){
-			ContenidoListPedidoHistorico m = it.next();
+			PadreListPedidoHistorico m = it.next();
 			
 			if(m.getId() == id)
 				encontrado = true;
@@ -92,13 +85,10 @@ public class MiListAdapterPedidoHistorico extends BaseAdapter {
 		return precio;
 	}
 	
-	
 	public void deletePosicion(int posicion){
 		contenido.remove(posicion);
 	}
 	
-	
-
 	public String getExtrasMarcados(int posicion) {
 		return contenido.get(posicion).getExtras();
 	}
@@ -127,15 +117,11 @@ public class MiListAdapterPedidoHistorico extends BaseAdapter {
 		contenido.get(posicion).setObservaciones(observacionesNuevas);		
 	}
 
-	public void addPlato(ContenidoListPedidoHistorico platoNuevo) {
+	public void addPlato(PadreListPedidoHistorico platoNuevo) {
 		contenido.add(platoNuevo);
 	}
 
 	public View getViewOnScreen(int itemId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
-
 }
