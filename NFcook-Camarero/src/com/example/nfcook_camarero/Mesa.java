@@ -2,10 +2,12 @@ package com.example.nfcook_camarero;
 
 import java.util.ArrayList;
 
-import adapters.ContenidoListMesa;
+import baseDatos.HandlerGenerico;
+
+import adapters.PadreListMesa;
 import adapters.HijoExpandableListEditar;
-import adapters.MiExpandableListAdapterEditar;
-import adapters.MiListAdapterMesa;
+import adapters.MiExpandableListEditarAdapter;
+import adapters.MiListMesaAdapter;
 import adapters.PadreExpandableListEditar;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -50,8 +52,6 @@ import android.widget.Toast;
  * 
  * @author Rober
  */
-
-
 public class Mesa extends Activity {
 
 	private static HandlerGenerico sqlMesas,sqlMiBaseFav;
@@ -60,8 +60,8 @@ public class Mesa extends Activity {
 	private String numPersonas; 
 	private static SQLiteDatabase dbMesas,dbMiBaseFav;
 	private static ListView platos;
-	private static ArrayList<ContenidoListMesa> elemLista;
-	private static MiListAdapterMesa adapter;
+	private static ArrayList<PadreListMesa> elemLista;
+	private static MiListMesaAdapter adapter;
 	private static TextView precioTotal;
 	private static Activity actividad;
 	
@@ -79,7 +79,7 @@ public class Mesa extends Activity {
 	private static String restaurante;
 	
 	
-	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
+	private static MiExpandableListEditarAdapter adapterExpandableListEditarExtras;
 	private static ExpandableListView expandableListEditarExtras;
 	private static Context context;
 	
@@ -109,7 +109,6 @@ public class Mesa extends Activity {
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
     	
-		
 		try{
 			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			dbMesas= sqlMesas.open();
@@ -119,7 +118,7 @@ public class Mesa extends Activity {
 		    elemLista = obtenerElementos();
 		    
 		    
-	  	    adapter = new MiListAdapterMesa(this, elemLista);
+	  	    adapter = new MiListMesaAdapter(this, elemLista);
 	  	     
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
 	  	    precioTotal.setText(Double.toString( Math.rint(adapter.getPrecio()*100)/100 )+" €");
@@ -180,7 +179,7 @@ public class Mesa extends Activity {
 			            				
 			            				//FIXME PINTARADAPTER------------
 			            				for(int i=0;i<adapter.getCount();i++){
-			            					ContenidoListMesa aux=(ContenidoListMesa)adapter.getItem(i);
+			            					PadreListMesa aux=(PadreListMesa)adapter.getItem(i);
 			            					System.out.println(aux.getCantidad()+" " +aux.getNombre());
 			            				}
 			            				//PINTARADAPTER------------
@@ -198,7 +197,7 @@ public class Mesa extends Activity {
 			            		        	//Entras si sigues con el dedo en la misma vista
 			            		        	if(event.getRawY()>coordenadas[1] && event.getRawY()<finVista){
 			            		        		try{
-				            		        		ContenidoListMesa platoSeleccionado = (ContenidoListMesa)adapter.getItem(itemId);
+				            		        		PadreListMesa platoSeleccionado = (PadreListMesa)adapter.getItem(itemId);
 				            		        		String identificador = Integer.toString(platoSeleccionado.getIdRepetido());
 			            	    				
 				            	    				try{
@@ -322,10 +321,7 @@ public class Mesa extends Activity {
 		}catch(Exception e){
 			System.out.println("Error lectura base de datos de Pedido");
 		}
-		
-
-		
-		
+			
 		//Boton AñadirPlato---------------------------------------------------------------
 		Button aniadirPlato = (Button)findViewById(R.id.aniadirPlato);
 		aniadirPlato.setOnClickListener(new View.OnClickListener() {
@@ -376,15 +372,15 @@ public class Mesa extends Activity {
 	 * 
 	 * @return un ArrayList con los elementos de la mesa actual.
 	 */
-	private static ArrayList<ContenidoListMesa> obtenerElementos() {
-		ArrayList<ContenidoListMesa> elementos=null;
+	private static ArrayList<PadreListMesa> obtenerElementos() {
+		ArrayList<PadreListMesa> elementos=null;
 		try{
 			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato","Sincro"};
 		    String[] numeroDeMesa = new String[]{numMesa};
 		    
 		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
 		    
-		    elementos = new ArrayList<ContenidoListMesa>();
+		    elementos = new ArrayList<PadreListMesa>();
 		    
 		    boolean primero = true;
 		    int numElems=0;
@@ -393,7 +389,7 @@ public class Mesa extends Activity {
 		    	numElems++;
 		    	System.out.println("Elems: "+numElems);
 		    	if(primero){
-		    		elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+		    		elementos.add(new PadreListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    		System.out.println("Primero: "+c.getString(0)+"Sincro: "+c.getString(6));
 		    		primero=false;
 		    	}else{
@@ -423,7 +419,7 @@ public class Mesa extends Activity {
 			    			i++;
 		    		}
 		    		if(!repetido){
-		    			elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+		    			elementos.add(new PadreListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    			System.out.println("nombre: "+elementos.get(i).getNombre()+" extras: "+elementos.get(i).getExtras()+" obs: "+elementos.get(i).getObservaciones()+"Sincro: "+c.getString(6));
 		    		}
 		    	}
@@ -589,7 +585,7 @@ public class Mesa extends Activity {
 					}
 				}
 		        // Creamos el adapater para adaptar la lista a la pantalla.
-		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(getApplicationContext(), categoriasExtras,1);
+		    	adapterExpandableListEditarExtras = new MiExpandableListEditarAdapter(getApplicationContext(), categoriasExtras,1);
 		        expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
   		}else{
   			//Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
@@ -605,7 +601,7 @@ public class Mesa extends Activity {
 			dbMesas= sqlMesas.open();*/
 			
 			elemLista = obtenerElementos();
-	        adapter = new MiListAdapterMesa(actividad, elemLista);
+	        adapter = new MiListMesaAdapter(actividad, elemLista);
 		    platos.setAdapter(adapter);
 		    
 			sqlMesas.close();
@@ -624,7 +620,7 @@ public class Mesa extends Activity {
 		expandableListEditarExtras.expandGroup(groupPositionMarcar);
 	}
 	
-	public static MiListAdapterMesa getAdapter(){
+	public static MiListMesaAdapter getAdapter(){
 		return adapter;
 	}
 	
@@ -720,7 +716,7 @@ public class Mesa extends Activity {
 			dbMesas= sqlMesas.open();*/
 			
 			for(int i=0;i<adapter.getCount();i++){
-				ContenidoListMesa posAdapter = (ContenidoListMesa)adapter.getItem(i);
+				PadreListMesa posAdapter = (PadreListMesa)adapter.getItem(i);
 				
 				/*En caso de que haya varios platos iguales(agrupados) tenemos que recorrer el array de repetidos e ir poniendo
 				a 1 el campo Sincro de cada uno en la base de datos*/

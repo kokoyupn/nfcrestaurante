@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import baseDatos.HandlerGenerico;
 
-import com.example.nfcook_camarero.HandlerGenerico;
 import com.example.nfcook_camarero.R;
 
 public class MiCursorAdapterBuscadorPlatos extends CursorAdapter{

@@ -11,6 +11,8 @@ import java.util.GregorianCalendar;
 
 
 
+import baseDatos.HandlerGenerico;
+
 import com.example.nfcook_camarero.R;
 
 import fragments.PantallaMesasFragment;
@@ -192,9 +194,7 @@ public class AnadirBebida extends Activity{
 					String idBebida = bebida.getIdPlato();
 					int idUnico = PantallaMesasFragment.getIdUnico();//ya suma 1 dentro
 					PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
-		        	
-					
-					
+	
 				    ContentValues nuevaBebida = new ContentValues();
 		        	nuevaBebida.put("NumMesa", numMesa);
 		        	nuevaBebida.put("IdCamarero", idCamarero);
@@ -210,13 +210,10 @@ public class AnadirBebida extends Activity{
 		        	
 		        	dbPedido.insert("Mesas", null, nuevaBebida);
 		        	
-		        	
-		        	
 		        	Mesa.actualizaListPlatos();
 					
 		        	uds--;
-		        	bebida.eliminaUnidad();
-		        	
+		        	bebida.eliminaUnidad();      	
 			    }
 			}
 			
@@ -286,5 +283,4 @@ public class AnadirBebida extends Activity{
 		// Cargamos las bebidas que haya en la base de datos
 		cargarBebidas(this);
 	}
-	
 }

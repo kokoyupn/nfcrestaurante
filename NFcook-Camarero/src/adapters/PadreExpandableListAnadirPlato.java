@@ -1,17 +1,14 @@
-package com.example.nfcook_camarero;
-
+package adapters;
 
 public class PadreExpandableListAnadirPlato {
     private String titulo;
     private HijoExpandableListAnadirPlato hijo;
     private boolean expandido;
  
-    
-    
-    public PadreExpandableListAnadirPlato(String titulo, HijoExpandableListAnadirPlato hijo/*,boolean expandido*/) {
+    public PadreExpandableListAnadirPlato(String titulo, HijoExpandableListAnadirPlato hijo) {
 		this.titulo = titulo;
 		this.hijo = hijo;
-		this.expandido = expandido;
+		this.expandido = false;
 	}
 
 	public String getTitle() {
@@ -27,7 +24,6 @@ public class PadreExpandableListAnadirPlato {
         return hijo;
     }
 
-    
     public String toString(){
     	return titulo;
     }
@@ -48,8 +44,8 @@ public class PadreExpandableListAnadirPlato {
 		return expandido;
 	}
 	
-	public void setExpandido(boolean e) {
-		expandido = e;
+	public void setExpandido(boolean expandido) {
+		this.expandido = expandido;
 	}
 	
 }

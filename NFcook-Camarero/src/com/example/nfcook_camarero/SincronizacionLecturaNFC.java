@@ -12,6 +12,8 @@ import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.Iterator;
 
+import baseDatos.HandlerGenerico;
+
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -40,7 +42,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class Sincronizacion_LecturaNfc extends Activity implements DialogInterface.OnDismissListener{
+public class SincronizacionLecturaNFC extends Activity implements DialogInterface.OnDismissListener{
 
 	//Variables usadas para el nfc
 	NfcAdapter adapter;

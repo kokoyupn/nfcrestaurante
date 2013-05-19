@@ -1,20 +1,19 @@
 package adapters;
 
-public class ContenidoListPedidoHistorico {
+public class PadreListPedidoHistorico {
 	
 	private String nombre, extras, observaciones;
 	private int id;
 	private String idPlato;
 	private double precio;
 	
-	public ContenidoListPedidoHistorico(String nombre,String extras,String observaciones,double precio){
+	public PadreListPedidoHistorico(String nombre,String extras,String observaciones,double precio){
 		this.nombre = nombre;
 		this.extras = extras;
 		this.observaciones = observaciones;
 		this.precio = precio;
 		this.id = id;
 		this.idPlato = idPlato;
-		
 	}
 	
 	public String getIdPlato(){
@@ -48,7 +47,4 @@ public class ContenidoListPedidoHistorico {
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
 	}
-
-	
-
 }

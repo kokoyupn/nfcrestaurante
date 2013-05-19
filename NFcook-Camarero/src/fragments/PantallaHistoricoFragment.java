@@ -5,12 +5,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.example.nfcook_camarero.HandlerGenerico;
+import baseDatos.HandlerGenerico;
+
 import com.example.nfcook_camarero.PedidoHistorico;
 import com.example.nfcook_camarero.R;
 
 import adapters.HijoExpandableListHistorico;
-import adapters.MiExpandableListAdapterHistorico;
+import adapters.MiExpandableListHistoricoAdapter;
 import adapters.PadreExpandableListHistorico;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -34,7 +35,7 @@ public class PantallaHistoricoFragment extends Fragment {
 	private SQLiteDatabase db;
 
 	private static ExpandableListView ExpandableListHistorico;
-	private MiExpandableListAdapterHistorico AdapterHistorico; 
+	private MiExpandableListHistoricoAdapter AdapterHistorico; 
 	@Override  
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		importarBaseDatatos();
@@ -99,7 +100,7 @@ public class PantallaHistoricoFragment extends Fragment {
 			}
 
 			ExpandableListHistorico = (ExpandableListView) vista.findViewById(R.id.expandableListHistorico);
-			AdapterHistorico = new MiExpandableListAdapterHistorico(this.getActivity().getApplicationContext(), padres);
+			AdapterHistorico = new MiExpandableListHistoricoAdapter(this.getActivity().getApplicationContext(), padres);
 			ExpandableListHistorico.setAdapter(AdapterHistorico);
 
 			ExpandableListHistorico.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

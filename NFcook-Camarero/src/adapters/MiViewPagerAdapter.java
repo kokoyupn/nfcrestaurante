@@ -25,22 +25,22 @@ import android.support.v4.app.FragmentPagerAdapter;
  * invocará a getItem.
  *
  */
-public class PagerAdapter extends FragmentPagerAdapter {
+public class MiViewPagerAdapter extends FragmentPagerAdapter {
 
-        private ArrayList<Fragment> fragments;
-        
-        public PagerAdapter(FragmentManager fragmentManager, ArrayList<Fragment> fragments) {
-                super(fragmentManager);
-                this.fragments = fragments;
-        }
+    private ArrayList<Fragment> fragments;
+    
+    public MiViewPagerAdapter(FragmentManager fragmentManager, ArrayList<Fragment> fragments) {
+            super(fragmentManager);
+            this.fragments = fragments;
+    }
 
-		@Override
-        public Fragment getItem(int position) {
-                return this.fragments.get(position);
-        }
-        
-        @Override
-        public int getCount() {
-                return this.fragments.size();
-        }
+	@Override
+    public Fragment getItem(int position) {
+            return this.fragments.get(position);
+    }
+    
+    @Override
+    public int getCount() {
+            return this.fragments.size();
+    }
 }

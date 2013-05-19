@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import com.example.nfcook_camarero.AnadirPlatos;
 import com.example.nfcook_camarero.Mesa;
-import com.example.nfcook_camarero.MiExpandableListAdapterAnadirPlato;
 import com.example.nfcook_camarero.R;
 
 import android.content.Context;
@@ -33,7 +32,7 @@ import android.widget.TextView;
  * @author Prado
  *
  */
-public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
+public class MiExpandableListEditarAdapter extends BaseExpandableListAdapter {
 	
 	private LayoutInflater inflater;
     private ArrayList<PadreExpandableListEditar> padresExpandableList;
@@ -45,14 +44,14 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
      * 2 -> Buscador de platos.
      */
     
-    public MiExpandableListAdapterEditar(Context context, ArrayList<PadreExpandableListEditar> arrayCategorias, int zonaAlertDialog){
+    public MiExpandableListEditarAdapter(Context context, ArrayList<PadreExpandableListEditar> arrayCategorias, int zonaAlertDialog){
     	this.context =  context;
     	this.padresExpandableList = arrayCategorias;
         inflater = LayoutInflater.from(context);
         this.zonaAlertDialog = zonaAlertDialog;
     }
 
-	public MiExpandableListAdapterEditar() {
+	public MiExpandableListEditarAdapter() {
 		this.context =  null;
     	this.padresExpandableList = null;
         inflater = null;
@@ -113,7 +112,7 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 					padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).setCheck(posicionRadioButton);
 					switch(zonaAlertDialog){
 					case 0 :
-						MiExpandableListAdapterAnadirPlato.actualizaExpandableList();
+						MiExpandableListAnadirPlatoAdapter.actualizaExpandableList();
 						break;
 					case 1 :
 						Mesa.actualizaExpandableList();
@@ -126,7 +125,7 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 						if(padresExpandableList.get(i).isExpandido()){
 							switch(zonaAlertDialog){
 							case 0 :
-								MiExpandableListAdapterAnadirPlato.expandeGrupoLista(i);
+								MiExpandableListAnadirPlatoAdapter.expandeGrupoLista(i);
 								break;
 							case 1 :
 								Mesa.expandeGrupoLista(i);
@@ -196,7 +195,7 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
         if(padresExpandableList.get(groupPosition).isExpandido()){
         	switch(zonaAlertDialog){
 			case 0 :
-				MiExpandableListAdapterAnadirPlato.expandeGrupoLista(groupPosition);
+				MiExpandableListAnadirPlatoAdapter.expandeGrupoLista(groupPosition);
 				break;
 			case 1 :
 				Mesa.expandeGrupoLista(groupPosition);

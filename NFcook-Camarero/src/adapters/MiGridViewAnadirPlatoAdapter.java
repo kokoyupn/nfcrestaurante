@@ -1,10 +1,8 @@
-package com.example.nfcook_camarero;
-
-
+package adapters;
 
 import java.util.ArrayList;
 
-
+import com.example.nfcook_camarero.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AnadirPlatoAdapter extends BaseAdapter {
-	private ArrayList<PlatoView> platos;
+public class MiGridViewAnadirPlatoAdapter extends BaseAdapter {
+	private ArrayList<InformacionPlato> platos;
 	private LayoutInflater l_Inflater;
 	private Context context;
 	
 
-	public AnadirPlatoAdapter(Context context, ArrayList<PlatoView> platos) {
+	public MiGridViewAnadirPlatoAdapter(Context context, ArrayList<InformacionPlato> platos) {
 		this.platos = platos;
 		this.context = context;
 		this.l_Inflater = LayoutInflater.from(context);
@@ -49,14 +47,14 @@ public class AnadirPlatoAdapter extends BaseAdapter {
 			convertView.setTag(nombrePl);
 			
 			imagenPlato = (ImageView) convertView.findViewById(R.id.imageViewPlato);
-			imagenPlato.setImageResource(MiExpandableListAdapterAnadirPlato.getDrawable(context,platos.get(position).getImagen()));
+			imagenPlato.setImageResource(MiExpandableListAnadirPlatoAdapter.getDrawable(context,platos.get(position).getImagen()));
 			
 		} else {
 			nombrePl = (TextView) convertView.getTag();
 			nombrePl.setText(platos.get(position).getNombrePlato());
 			
 			imagenPlato = (ImageView) convertView.findViewById(R.id.imageViewPlato);
-			imagenPlato.setImageResource(MiExpandableListAdapterAnadirPlato.getDrawable(context,platos.get(position).getImagen()));
+			imagenPlato.setImageResource(MiExpandableListAnadirPlatoAdapter.getDrawable(context,platos.get(position).getImagen()));
 			
 		}
 		return convertView;

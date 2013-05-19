@@ -7,10 +7,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import baseDatos.HandlerGenerico;
+
 import fragments.PantallaMesasFragment;
+import adapters.HijoExpandableListAnadirPlato;
 import adapters.HijoExpandableListEditar;
 import adapters.MiCursorAdapterBuscadorPlatos;
-import adapters.MiExpandableListAdapterEditar;
+import adapters.MiExpandableListAnadirPlatoAdapter;
+import adapters.MiExpandableListEditarAdapter;
+import adapters.PadreExpandableListAnadirPlato;
 import adapters.PadreExpandableListEditar;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -38,7 +43,7 @@ public class AnadirPlatos extends Activity{
 	
 	/*Atributos estaticos para poder tener acceso a ellos en los metodos estaticos de la clase y asi
 	 * poder actualizar la lista desde otras clases*/
-	private static MiExpandableListAdapterAnadirPlato  adapterExpandableListAnadirPlato;
+	private static MiExpandableListAnadirPlatoAdapter  adapterExpandableListAnadirPlato;
 	private static ExpandableListView expandableListAnadirPlato;
 	private HandlerGenerico sqlMiBase, sqlBuscador;
 	private static HandlerGenerico sqlMiBaseFav;
@@ -55,7 +60,7 @@ public class AnadirPlatos extends Activity{
 	ArrayList<PadreExpandableListAnadirPlato> padres;
 	
 	private static ExpandableListView expandableListEditarExtras;
-	private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
+	private static MiExpandableListEditarAdapter adapterExpandableListEditarExtras;
 	private AutoCompleteTextView actwObservaciones;
 	private static String restaurante;
 	
@@ -194,7 +199,7 @@ public class AnadirPlatos extends Activity{
    		}
    	
    		expandableListAnadirPlato = (ExpandableListView) findViewById(R.id.expandableListPlatos);
-		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(AnadirPlatos.this, padres);
+		adapterExpandableListAnadirPlato = new MiExpandableListAnadirPlatoAdapter(AnadirPlatos.this, padres);
 		expandableListAnadirPlato.setAdapter(adapterExpandableListAnadirPlato);
 		
 	}
@@ -370,7 +375,7 @@ public class AnadirPlatos extends Activity{
 				 }
   			 }
   			 // Creamos el adapater para adaptar la lista a la pantalla.
-  			 adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(getApplicationContext(), categoriasExtras,2);
+  			 adapterExpandableListEditarExtras = new MiExpandableListEditarAdapter(getApplicationContext(), categoriasExtras,2);
   			 expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
   		 }else{
   			 //Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.
@@ -404,8 +409,6 @@ public class AnadirPlatos extends Activity{
 	}
 	
 	protected void onClickBotonAceptarAlertDialog(final Builder ventanaEmergente, final String nombrePlato) {
-		
-		
 		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
@@ -565,7 +568,7 @@ public class AnadirPlatos extends Activity{
   		top.setExpandido(padresExpandableList.get(0).isExpandido());
   		padresExpandableList.set(0, top);
   		
-  		adapterExpandableListAnadirPlato = new MiExpandableListAdapterAnadirPlato(actividad, padresExpandableList);
+  		adapterExpandableListAnadirPlato = new MiExpandableListAnadirPlatoAdapter(actividad, padresExpandableList);
 		
   		//Para que vuelva a abrir los padres que estuvieran expandidos, no hace falta el exandePadres()
   		Parcelable state = expandableListAnadirPlato.onSaveInstanceState();
@@ -576,11 +579,7 @@ public class AnadirPlatos extends Activity{
   		}catch(Exception e){
 			 System.out.println("Error en generarTopPedidos");
 		}
-		 
-		 
-		
 	}
-	
 	
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
@@ -593,7 +592,5 @@ public class AnadirPlatos extends Activity{
 	    super.onRestoreInstanceState(state);
 	    mstate = state.getParcelable("listState");
 	}
-	
-	
 }
  

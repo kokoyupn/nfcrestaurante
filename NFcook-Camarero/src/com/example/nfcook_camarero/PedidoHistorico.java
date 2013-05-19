@@ -2,8 +2,10 @@ package com.example.nfcook_camarero;
 
 import java.util.ArrayList;
 
-import adapters.ContenidoListPedidoHistorico;
-import adapters.MiListAdapterPedidoHistorico;
+import baseDatos.HandlerGenerico;
+
+import adapters.PadreListPedidoHistorico;
+import adapters.MiListPedidoHistoricoAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -28,23 +30,19 @@ import android.widget.TextView;
  * 
  * @author Juan Diego y Álvaro
  */
-
-
 public class PedidoHistorico extends Activity {
 
 	private HandlerGenerico sqlHistorico;
 	private String numMesa;
 	private SQLiteDatabase dbHistorico;
 	private static ListView platos;
-	private ArrayList<ContenidoListPedidoHistorico> elemLista;
-	private static MiListAdapterPedidoHistorico adapter;
+	private ArrayList<PadreListPedidoHistorico> elemLista;
+	private static MiListPedidoHistoricoAdapter adapter;
 	private static TextView precioTotal;
 	private String hora;
 	
-	
 	private static Context context;
 	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,20 +74,16 @@ public class PedidoHistorico extends Activity {
 	  	  	platos = (ListView)findViewById(R.id.listaPlatosHistorico); 
 		    elemLista = obtenerElementos();
 	         
-	  	    adapter = new MiListAdapterPedidoHistorico(this, elemLista);
+	  	    adapter = new MiListPedidoHistoricoAdapter(this, elemLista);
 	  	     
 	  	    precioTotal = (TextView)findViewById(R.id.precioTotal);
 	  	    precioTotal.setText(Double.toString( Math.rint(adapter.getPrecio()*100)/100 )+" €");
 	  	     
 	  	    platos.setAdapter(adapter);
-	  	    
-	  	 
-	    
+
 		}catch(Exception e){
 			System.out.println("Error lectura base de datos de Historico");
 		}
-		
-
 	}
 	
 	//  para el atras del action bar
@@ -99,18 +93,18 @@ public class PedidoHistorico extends Activity {
 		return false;
     }
 	
-	private ArrayList<ContenidoListPedidoHistorico> obtenerElementos() {
-		ArrayList<ContenidoListPedidoHistorico> elementos=null;
+	private ArrayList<PadreListPedidoHistorico> obtenerElementos() {
+		ArrayList<PadreListPedidoHistorico> elementos=null;
 		try{
 			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio"};
 		    String[] consulta = new String[]{numMesa,hora};
 		    
 		    Cursor c = dbHistorico.query("Historico",campos, "NumMesa=? AND FechaHora=?",consulta, null,null, null);
 		    
-		    elementos = new ArrayList<ContenidoListPedidoHistorico>();
+		    elementos = new ArrayList<PadreListPedidoHistorico>();
 		     
 		    while(c.moveToNext())
-		    	elementos.add(new ContenidoListPedidoHistorico(c.getString(0) ,c.getString(2),c.getString(1),c.getDouble(3)));
+		    	elementos.add(new PadreListPedidoHistorico(c.getString(0) ,c.getString(2),c.getString(1),c.getDouble(3)));
 		    	
 		    return elementos;
 		    
@@ -132,5 +126,4 @@ public class PedidoHistorico extends Activity {
 	public static Context getContext() {
 		return context;
 	}
-	
 }

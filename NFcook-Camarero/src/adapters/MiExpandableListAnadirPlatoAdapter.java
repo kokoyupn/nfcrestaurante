@@ -1,4 +1,4 @@
-package com.example.nfcook_camarero;
+package adapters;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -6,11 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import baseDatos.HandlerGenerico;
+
+import com.example.nfcook_camarero.AnadirPlatos;
+import com.example.nfcook_camarero.Mesa;
+import com.example.nfcook_camarero.R;
 import fragments.PantallaMesasFragment;
 import junit.framework.Assert;
-import adapters.HijoExpandableListEditar;
-import adapters.MiExpandableListAdapterEditar;
-import adapters.PadreExpandableListEditar;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
@@ -33,18 +35,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-
-public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapter{
+public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapter{
 	private LayoutInflater inflater;
     private ArrayList<PadreExpandableListAnadirPlato> padresExpandableList;
     private Context context;
-    private ArrayList<PlatoView> platos;
+    private ArrayList<InformacionPlato> platos;
     
-    private static MiExpandableListAdapterEditar adapterExpandableListEditarExtras;
+    private static MiExpandableListEditarAdapter adapterExpandableListEditarExtras;
 	private static ExpandableListView expandableListEditarExtras;
 	private AutoCompleteTextView actwObservaciones;
     
-    public MiExpandableListAdapterAnadirPlato(Context context, ArrayList<PadreExpandableListAnadirPlato> padres){
+    public MiExpandableListAnadirPlatoAdapter(Context context, ArrayList<PadreExpandableListAnadirPlato> padres){
     	padresExpandableList = padres;
         inflater = LayoutInflater.from(context);
         this.context=context;
@@ -71,7 +72,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			ArrayList<String> nombreHijos = padresExpandableList.get(groupPosition).getHijo().getNombrePl();
 			ArrayList<Double> precioHijos = padresExpandableList.get(groupPosition).getHijo().getPrecio();
 
-			platos = new ArrayList<PlatoView>();
+			platos = new ArrayList<InformacionPlato>();
 			//Recorremos con una variable que indica la posicion, porque necesitariamos tres iteradores.
 			//Los tres ArrayList tienen el mismo tamaño
 			int pos = 0; 
@@ -81,7 +82,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 			    img.setImageResource(getDrawable(convertView.getContext(),imgHijos.get(pos)));
 			
 				//traer las cosas de platoView				
-				PlatoView plato= new PlatoView(nombreHijos.get(pos),imgHijos.get(pos),idHijos.get(pos),precioHijos.get(pos));
+				InformacionPlato plato= new InformacionPlato(nombreHijos.get(pos),imgHijos.get(pos),idHijos.get(pos),precioHijos.get(pos));
 	    		platos.add(plato);
 	    		
 	    		pos++;
@@ -110,8 +111,8 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 		    gridViewAnadir.getLayoutParams().height = GRID_HEIGHT;
 			
 			//Llamamos al adapter para que muestre en la pantalla los cambios realizados
-			AnadirPlatoAdapter adapterAnadir;
-			adapterAnadir = new AnadirPlatoAdapter(context, platos);
+			MiGridViewAnadirPlatoAdapter adapterAnadir;
+			adapterAnadir = new MiGridViewAnadirPlatoAdapter(context, platos);
 			gridViewAnadir.setAdapter(adapterAnadir);
 
 			gridViewAnadir.setOnItemClickListener(new OnItemClickListener() {
@@ -167,7 +168,6 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
         textViewPadrePlato.setText(getGroup(groupPosition).toString());
             
         return convertView;
-
 	}
 
 	public boolean hasStableIds() {
@@ -247,7 +247,7 @@ public class MiExpandableListAdapterAnadirPlato extends BaseExpandableListAdapte
 					}
 				}
 		        // Creamos el adapater para adaptar la lista a la pantalla.
-		    	adapterExpandableListEditarExtras = new MiExpandableListAdapterEditar(context, categoriasExtras,0);
+		    	adapterExpandableListEditarExtras = new MiExpandableListEditarAdapter(context, categoriasExtras,0);
 		        expandableListEditarExtras.setAdapter(adapterExpandableListEditarExtras);  
   		}else{
   			//Actualizamos el adapter a null, ya que es static, para saber que este plato no tiene extras.

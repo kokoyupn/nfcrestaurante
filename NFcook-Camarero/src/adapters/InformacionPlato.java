@@ -1,15 +1,12 @@
-package com.example.nfcook_camarero;
+package adapters;
 
-
-public class PlatoView{
-
-
+public class InformacionPlato{
     private String nombreP; 
     private String imagen;
     private String idPlato;
     private double precio;
     
-    public PlatoView(String nombre,String img, String id, double prec) {
+    public InformacionPlato(String nombre,String img, String id, double prec) {
     	nombreP = nombre;
     	imagen = img;
     	idPlato = id;

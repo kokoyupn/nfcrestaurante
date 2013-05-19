@@ -1,7 +1,6 @@
-package com.example.nfcook_camarero;
+package adapters;
 
 import java.util.ArrayList;
-
 
 public class HijoExpandableListAnadirPlato {
 	private ArrayList<String> idHijos;
