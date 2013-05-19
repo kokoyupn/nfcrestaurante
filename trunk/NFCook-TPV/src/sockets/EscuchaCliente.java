@@ -27,8 +27,8 @@ public class EscuchaCliente extends Thread {
 				
 				// se espera a un cliente. En este caso esperamos a que el servidor contacte con este cliente
 				Socket cliente = servidor.accept();
+
 				// Se lee el mensaje con la consulta a utilizar
-				System.out.println(cliente.getInetAddress());
 	            ObjectInputStream ois = new ObjectInputStream(cliente.getInputStream());
 	            Object mensaje = ois.readObject();
 	            ObjectOutputStream oos = new ObjectOutputStream(cliente.getOutputStream());
