@@ -75,6 +75,8 @@ public class MiListAdapterMesa extends BaseAdapter {
 	    
 	    if(lista.getSincronizado() == 1)
 	    	vista.setBackgroundColor(Color.GREEN);
+	    else
+	    	vista.setBackgroundColor(Color.TRANSPARENT);
 	    
 	    return vista;
 	    }

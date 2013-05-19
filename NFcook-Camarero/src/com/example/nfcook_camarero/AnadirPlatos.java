@@ -431,7 +431,7 @@ public class AnadirPlatos extends Activity{
 		    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
 		    		}
 		    		try{
-		    			sqlRestaurate =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		    			sqlRestaurate =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
 		    			dbRestaurante = sqlRestaurate.open();
 		    		}catch(SQLiteException e){
 		    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MiBase(Restaurante)",Toast.LENGTH_SHORT).show();
@@ -476,7 +476,7 @@ public class AnadirPlatos extends Activity{
 		        	//crearExpandableList();//Esto iba pero se quedaba cerrado
 		        	actualizaTopPedidos(padres);
 		        	
-		        	Mesa.pintarBaseDatosMiFav();
+		        	//Mesa.pintarBaseDatosMiFav();
 		        	
 		        	Mesa.actualizaListPlatos();
 		        	
