@@ -31,7 +31,7 @@ public class Restaurante {
 	
 	private InterfazPlatos ventanaPlatos;
 	
-	private final String nombreRestaurante = "'Foster'";
+	private final static String nombreRestaurante = "'Foster'";
 	
 
 
@@ -103,10 +103,11 @@ public class Restaurante {
 		
 	}
 	
-	private void cargarProductosFavoritos(){
+	public static void cargarProductosFavoritos(){
 		try{
 			Operaciones operacion = new Operaciones("MiBaseFav.db");
 			ResultSet resultados = operacion.consultar("select * from Restaurantes where Restaurante=" + nombreRestaurante);
+			productosFavoritos = new PriorityQueue<Producto>(1,new MiComparator());
 			
 			while(resultados.next()){
 				String id = resultados.getString("Id");
@@ -129,6 +130,7 @@ public class Restaurante {
 				
 				productosFavoritos.add(nuevoProducto);
 			}
+
 			operacion.cerrarBaseDeDatos();
 			
         }catch (SQLException e) {

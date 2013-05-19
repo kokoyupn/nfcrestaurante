@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,6 +39,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import basesDeDatos.Operaciones;
 
 import sockets.OperacionesSocketsSinBD;
 import tpv.AuxDeshacerRehacer;
@@ -611,7 +615,9 @@ public class InterfazPlatos extends JFrame {
 			public void mousePressed(MouseEvent arg0) {
 				//borramos lo que hubiera en en panel de los platos
 				panelPlatos.removeAll();
+				Restaurante.cargarProductosFavoritos();
 				PriorityQueue<Producto> colaTmp = getRestaurante().getCopiaFavoritos();
+								
 					//rellenamos de los platos de favoritos
 					int j = 0;
 					int i = 0;
