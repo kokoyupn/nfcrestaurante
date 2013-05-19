@@ -394,13 +394,13 @@ public class Mesa extends Activity {
 		    	System.out.println("Elems: "+numElems);
 		    	if(primero){
 		    		elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
-		    		System.out.println("Primero: "+c.getString(0));
+		    		System.out.println("Primero: "+c.getString(0)+"Sincro: "+c.getString(6));
 		    		primero=false;
 		    	}else{
 		    		int i = 0;
 		    		boolean repetido = false;
 		    		while(i<elementos.size() && !repetido){
-		    			System.out.println("Elemento del adapter numero: "+" "+(i+1));
+		    			System.out.println("Elemento del adapter numero: "+" "+(i+1)+"Sincro: "+c.getString(6));
 	    				String n = elementos.get(i).getNombre();
 	    				String e = elementos.get(i).getExtras();
 	    				
@@ -415,7 +415,7 @@ public class Mesa extends Activity {
 			    			e.equals(c.getString(2)) &&
 			    			o.equals(c.getString(1)) &&
 			    			sincronizado == c.getInt(6) ){
-			    				System.out.println("Repetido: "+c.getString(0));
+			    				System.out.println("Repetido: "+c.getString(0)+"Sincro: "+c.getString(6));
 			    				repetido = true;
 			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
 			    				elementos.get(i).aniadeId(Integer.parseInt(c.getString(4)));
@@ -424,7 +424,7 @@ public class Mesa extends Activity {
 		    		}
 		    		if(!repetido){
 		    			elementos.add(new ContenidoListMesa(c.getString(0) ,c.getString(2),c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
-		    			System.out.println("nombre: "+elementos.get(i).getNombre()+" extras: "+elementos.get(i).getExtras()+" obs: "+elementos.get(i).getObservaciones());
+		    			System.out.println("nombre: "+elementos.get(i).getNombre()+" extras: "+elementos.get(i).getExtras()+" obs: "+elementos.get(i).getObservaciones()+"Sincro: "+c.getString(6));
 		    		}
 		    	}
 		    	
@@ -498,7 +498,7 @@ public class Mesa extends Activity {
 		
 	}
 	
-	public void pintarBaseDatosMesa() {
+	public static void pintarBaseDatosMesa() {
 		try{
 			importarBaseDatatosMesa();
         	

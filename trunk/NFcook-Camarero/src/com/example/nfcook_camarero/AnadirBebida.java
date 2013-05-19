@@ -193,7 +193,7 @@ public class AnadirBebida extends Activity{
 					int idUnico = PantallaMesasFragment.getIdUnico();//ya suma 1 dentro
 					PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
 		        	
-					System.out.println("LEga");
+					
 					
 				    ContentValues nuevaBebida = new ContentValues();
 		        	nuevaBebida.put("NumMesa", numMesa);
@@ -207,19 +207,21 @@ public class AnadirBebida extends Activity{
 		        	nuevaBebida.put("Personas", personasMesa);
 		        	nuevaBebida.put("IdUnico", idUnico);
 		        	nuevaBebida.put("Sincro", 0);
-		        	System.out.println(idUnico);
-				    
-		        	System.out.println("LEga1");
 		        	
 		        	dbPedido.insert("Mesas", null, nuevaBebida);
+		        	
+		        	
 		        	
 		        	Mesa.actualizaListPlatos();
 					
 		        	uds--;
 		        	bebida.eliminaUnidad();
-		        	System.out.println("LEga2");
+		        	
 			    }
 			}
+			
+			//FIXME
+        	Mesa.pintarBaseDatosMesa();
 			
 			actualizaGridView();
         	
