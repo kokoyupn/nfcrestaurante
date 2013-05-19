@@ -10,7 +10,7 @@ import adapters.MiExpandableListTabsSuperioresCategoriasAdapter;
 import adapters.MiListTabsSuperioresCategoriasAdapter;
 import adapters.PadreExpandableListTabsSuperioresCategorias;
 import adapters.PadreListTabsSuperioresCategorias;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

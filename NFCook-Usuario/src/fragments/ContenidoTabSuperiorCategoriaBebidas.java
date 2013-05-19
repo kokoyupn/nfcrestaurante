@@ -9,7 +9,7 @@ import com.example.nfcook.R;
 import adapters.MiGridViewBebidasAdapter;
 import adapters.PadreGridViewBebidas;
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

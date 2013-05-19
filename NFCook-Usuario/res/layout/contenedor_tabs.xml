@@ -6,6 +6,61 @@
     android:layout_gravity="center"
     android:background="#ffdd8d" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TabHost
+            android:id="@+id/tabhostSuperior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+				<HorizontalScrollView
+				    android:id="@+id/horizontalScroll"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:fillViewport="true"
+				    android:scrollbars="none" >
+
+	                <TabWidget
+	                    android:id="@android:id/tabs"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:background="@color/negro"
+	                    android:scrollbars="horizontal" >
+	
+	                </TabWidget>
+				</HorizontalScrollView>
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp" >
+
+                    <LinearLayout
+                        android:id="@+id/tab1Sup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" >
+
+                    </LinearLayout>
+                </FrameLayout>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPagerTabsSuperiores"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+            </android.support.v4.view.ViewPager>
+            </LinearLayout>
+        </TabHost>
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/imageViewLogoRestaurante"
         android:layout_width="wrap_content"
@@ -39,7 +94,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#c38838" >
-
                 </TabWidget>
 
                 <FrameLayout
@@ -70,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" >
                     </LinearLayout>
-                    
+
                     <LinearLayout
                         android:id="@+id/tab5"
                         android:layout_width="match_parent"

@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import usuario.RecogerCuentaNFC;
 import usuario.RecogerCuentaQR;
-import usuario.SincronizarPedidoBeamNFC;
-import usuario.SincronizarPedidoNFC;
-import usuario.SincronizarPedidoQR;
-
 import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
@@ -15,11 +11,8 @@ import com.example.nfcook.R;
 import adapters.MiListCuentaAdapter;
 import adapters.PadreListCuenta;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.AlertDialog.Builder;
+import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
