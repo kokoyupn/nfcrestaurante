@@ -196,6 +196,8 @@ public class InicializarRestaurante extends FragmentActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         
+    	tabsSuperiores = null;
+		tabs = null;
     	tabInferiorSeleccionado = 0;
     	// Si pulsamos el botón back
     	if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -311,6 +313,8 @@ public class InicializarRestaurante extends FragmentActivity
     	}
     	else {
     		// atras
+    		tabsSuperiores = null;
+    		tabs = null;
     		tabInferiorSeleccionado = 0;
         	if(anteriorTabPulsado.equals("tabInicio")){
         		if (((PantallaInicialRestaurante) fragmentPantallaInicioRes).comprobarImagenActiva()){
