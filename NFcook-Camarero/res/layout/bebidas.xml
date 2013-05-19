@@ -28,33 +28,38 @@
 
             <Button
                 android:id="@+id/validar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:background="@drawable/validar"/>
-            
-            <TextView
-                android:id="@+id/textViewTotalPagarBebidas"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/validar" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:text="18e"
-                android:textColor="@color/blanco"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:gravity="right" >
 
-            <ImageView
-                android:id="@+id/imageViewMonedasBebidas"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="bottom|right"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="75dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/total" />
+                <ImageView
+                    android:id="@+id/imageViewMonedasBebidas"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/total" />
+
+                <TextView
+                    android:id="@+id/textViewTotalPagarBebidas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="18e"
+                    android:textColor="@color/blanco"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </FrameLayout>
 

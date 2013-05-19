@@ -79,7 +79,7 @@ public class AnadirBebida extends Activity{
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
         
-		setContentView(R.layout.tab_superior_categoria_bebidas);
+		setContentView(R.layout.bebidas);
 		
 		// Declaraciones -------------------------------------
 		eliminarBebidas = false;

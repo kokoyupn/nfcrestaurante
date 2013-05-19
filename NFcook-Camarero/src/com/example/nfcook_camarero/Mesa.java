@@ -34,6 +34,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -116,7 +117,6 @@ public class Mesa extends Activity {
 			//Añadir platos a la ListView----------------------------------------------------
 	  	  	platos = (ListView)findViewById(R.id.listaPlatos);
 		    elemLista = obtenerElementos();
-		    
 		    
 	  	    adapter = new MiListMesaAdapter(this, elemLista);
 	  	     
@@ -323,7 +323,7 @@ public class Mesa extends Activity {
 		}
 			
 		//Boton AñadirPlato---------------------------------------------------------------
-		Button aniadirPlato = (Button)findViewById(R.id.aniadirPlato);
+		LinearLayout aniadirPlato = (LinearLayout)findViewById(R.id.linearLayoutaAniadirPlato);
 		aniadirPlato.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{
@@ -340,12 +340,10 @@ public class Mesa extends Activity {
             		
             	}
             }
-        });
-		//Boton AñadirPlato---------------------------------------------------------------
-		
+        });		
 		
 		//Boton AñadirBebida--------------------------------------------------------------
-		Button aniadirBebida = (Button)findViewById(R.id.aniadirBebida);
+		LinearLayout aniadirBebida = (LinearLayout)findViewById(R.id.linearLayoutaAniadirBebida);
 		aniadirBebida.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	try{

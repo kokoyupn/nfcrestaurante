@@ -18,9 +18,8 @@
             android:id="@+id/listaPlatos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollingCache="false"
             android:layout_marginBottom="47dp"
-            android:layout_marginLeft="5dp" >
+            android:scrollingCache="false" >
 
         </ListView>
     </LinearLayout>
@@ -30,20 +29,23 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="80dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="10dp" >
 
         <ImageView
             android:id="@+id/imagenPrecio"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/totalprecio" />
 
         <TextView
             android:id="@+id/precioTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="10dp"
+            android:text="10 e"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -63,11 +65,12 @@
             android:background="@drawable/boton_anadir_eliminar_mesa"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:id="@+id/aniadirPlato"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/iconomas" />
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/iconomas" />
 
             <ImageView
                 android:id="@+id/imagenComida"
@@ -85,11 +88,11 @@
             android:background="@drawable/boton_anadir_eliminar_mesa"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:id="@+id/aniadirBebida"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/iconomas" />
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/iconomas" />
 
             <ImageView
                 android:id="@+id/imagenBebida"
