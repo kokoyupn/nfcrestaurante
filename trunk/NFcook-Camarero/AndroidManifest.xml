@@ -28,7 +28,7 @@
         </activity>
         
         <activity
-            android:name=".InicializarPantallasCamarero"
+            android:name=".InicializarCamarero"
             android:windowSoftInputMode="adjustResize|adjustPan"
             android:screenOrientation="portrait">
 
@@ -47,7 +47,7 @@
         </activity>
          
          <activity
-            android:name=".InicialCamareroAdapter"
+            android:name="adapters.MiGridViewMesasAdapter"
             android:screenOrientation="portrait">
 
         </activity>
@@ -57,7 +57,7 @@
 
         </activity>
          <activity
-            android:name=".MesaView"
+            android:name="adapters.InformacionMesa"
             android:screenOrientation="portrait">
 
         </activity>
@@ -67,16 +67,16 @@
 
         </activity>      
          <activity
-            android:name=".Sincronizacion_LecturaNfc"
+            android:name=".SincronizacionLecturaNFC"
             android:screenOrientation="portrait">
          </activity>
  		
          <activity
-            android:name=".Sincronizacion_QR"
+            android:name=".SincronizacionQR"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Borrar_tarjeta"
+            android:name=".BorrarTarjeta"
             android:screenOrientation="portrait">
         </activity>  
          <activity
@@ -84,7 +84,7 @@
             android:screenOrientation="portrait">
         </activity>   
         <activity
-            android:name=".Sincronizacion_BeamNfc"
+            android:name=".SincronizacionBeamNFC"
             android:screenOrientation="portrait"
                  android:launchMode="singleTop"
                  android:noHistory="true" >
