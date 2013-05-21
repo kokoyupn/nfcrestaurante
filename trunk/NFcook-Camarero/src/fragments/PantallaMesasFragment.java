@@ -170,7 +170,7 @@ public class PantallaMesasFragment extends Fragment {
 				numeroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
-				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag","Tpv"};
+				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -472,12 +472,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		intent.putExtra("Restaurante",restaurante);
 				    		startActivity(intent);
 				    	}
-				    	else if(item==7)
-				    	{
-				    		intent = new Intent(ctx,SincronizarTpv.class);
-				    		intent.putExtra("Restaurante", restaurante);
-				    		startActivity(intent);
-				    	}
+				    
 				    }
 				});
 			    ventEmergente.show();

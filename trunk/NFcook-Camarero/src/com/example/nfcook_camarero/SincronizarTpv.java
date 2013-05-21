@@ -41,15 +41,15 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
 	//Variables para los pedidos
 	String restaurante;
     String pedido;
-    
+    String numeroMesa;
     
     int numeroRestaurante;
 	String abreviatura;
 	/*Variables para obtener el valor equivalente del restaurante*/
 	String ruta="/data/data/com.example.nfcook_camarero/databases/";
 	
-	HandlerGenerico sqlMesas;
-	SQLiteDatabase dbMesas;
+	HandlerGenerico sqlMesas,sqlRestaurante;
+	SQLiteDatabase dbMesas,dbRestaurante;
     
 	@SuppressLint("NewApi")
 	@Override
@@ -68,7 +68,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
         
         Bundle bundle = getIntent().getExtras();
       	restaurante = bundle.getString("Restaurante");
-      		
+      	numeroMesa=bundle.getString("Mesa");
      
       	 pedido= damePedidoStr();
       	     	    	
@@ -117,7 +117,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
  	    }catch(SQLiteException e){
  	        	Toast.makeText(getApplicationContext(),"No existe la base de datos Mesas",Toast.LENGTH_SHORT).show();
  	       }
-        String numeroMesa= PantallaMesasFragment.dameMesa();
+        // PantallaMesasFragment.dameMesa();
         
 		String listaPlatosStr = dameCodigoRestaurante();
 		String[] campos = new String[]{"IdPlato","Observaciones","Extras"};//Campos que quieres recuperar
@@ -128,6 +128,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
     		listaPlatosStr += cursorPedido.getString(0)+"*"+cursorPedido.getString(1)+"+"+cursorPedido.getString(2)+"@";
     	}
     	System.out.println("PLATOS:"+listaPlatosStr);
+    	Toast.makeText(getApplicationContext(), listaPlatosStr, Toast.LENGTH_LONG).show();
     	// para indicar que ha finalizado el pedido escribo un 255 
     	//listaPlatosStr += "255";
     	
@@ -136,7 +137,17 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
 	
 	private String dameCodigoRestaurante(){
 		// Campos que quieres recuperar
-		/*String[] campos = new String[] { "Numero", "Abreviatura" };
+		
+		//Obtengo los datos del restaurante su numero y abreviatura
+        try{ //Abrimos la base de datos para consultarla
+ 	       	sqlRestaurante = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Equivalencia_Restaurantes.db"); 
+ 	        dbRestaurante = sqlRestaurante.open();
+ 	     
+ 	    }catch(SQLiteException e){
+ 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos Restaurante",Toast.LENGTH_SHORT).show();
+ 	       }
+		
+		String[] campos = new String[] { "Numero", "Abreviatura" };
 		String[] datos = new String[] { restaurante };
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
 
@@ -145,8 +156,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
 		abreviaturaRest = cursorPedido.getString(1);
 		
 		return codigoRest;
-		*/
-		return "";
+		
 	}
 
     /**
@@ -164,7 +174,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
      */
     @SuppressLint("NewApi")
     public NdefMessage createNdefMessage(NfcEvent event) {
-    	pedido= "PEDIDO";
+    	
           NdefMessage msg = new NdefMessage(NdefRecord.createMime(
                 "application/com.example.android.beam", pedido.getBytes())
        

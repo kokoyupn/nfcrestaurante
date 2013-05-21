@@ -699,9 +699,15 @@ public class Mesa extends Activity {
     /*Metodo que realiza la accion del boton introducido en el ActionBar (Sincronizar)*/
     public boolean onOptionsItemSelected(MenuItem item) {
     	if (item.getItemId() == R.id.botonNFC) {
+    		Intent intent = new Intent(this,SincronizarTpv.class);
+    		intent.putExtra("Restaurante", restaurante);
+    		intent.putExtra("Mesa", numMesa);
+    		startActivity(intent);
     		actualizarSincronizadosBaseMesas();
+    		
     		//Notificas que has borrado un elemento del adapter y que repinte la lista
     		actualizaListPlatos();
+    		
     	} else finish();
     	return false;	
     }
