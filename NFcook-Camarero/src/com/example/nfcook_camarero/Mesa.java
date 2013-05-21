@@ -519,7 +519,7 @@ public class Mesa extends Activity {
 				
 			}
 	
-	private static void importarBaseDatatosMesa(){
+	public static void importarBaseDatatosMesa(){
 		try{
 			sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 			dbMesas= sqlMesas.open();

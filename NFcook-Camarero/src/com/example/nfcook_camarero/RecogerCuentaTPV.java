@@ -3,6 +3,7 @@ package com.example.nfcook_camarero;
 import java.util.StringTokenizer;
 
 import baseDatos.HandlerGenerico;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -34,7 +35,10 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     private static final int MESSAGE_SENT = 1;
     Context context;
     HandlerGenerico sqlRestaurante;
-	SQLiteDatabase dbRestaurante, sqlEquivalencia;
+	SQLiteDatabase dbRestaurante;
+	
+	HandlerGenerico sqlMesas;
+	SQLiteDatabase dbMesas;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
@@ -47,6 +51,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 		this.finish();
 	}
 	
+	@SuppressLint("NewApi")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_beam_nfc);
@@ -84,8 +89,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
         
-        String pepe = "0&1/@12+Maca+ Pepe*Nada&2/@25+Guille + Javi*Todo";
-        procesarCuentas(pepe);
+       
 	}
 	
 	 /**
@@ -142,7 +146,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	        // only one message sent during the beam
 	        NdefMessage msg = (NdefMessage) rawMsgs[0];        
 	        
-	        //procesarCuentas(new String(msg.getRecords()[0].getPayload()));
+	        procesarCuentas(new String(msg.getRecords()[0].getPayload()));
 	        
 	        //Sonido para confirmar el pedido sincronizado
 	        sonidoManager.play(sonido);
@@ -158,6 +162,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	 * @return
 	 */
 	private void procesarCuentas(String cuentas) {
+		System.out.println("Entra");
 		boolean mesaEncontrada = false;
 		String cuenta = "";
 		StringTokenizer st = new StringTokenizer(cuentas,"&");
@@ -180,8 +185,38 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	/**Metodo encargado de procesar el string que le llega por correo.
 	* Formato: id+extras*obs@id+extras*obs.....
 	* Ejemplo: id1+e1+e2*obs@id2+e1+e2+e3*obs@id*/
+	
     private void procesarCuenta(String string) {
-	    	
+    	System.out.println("Todo: "+string);
+    	
+    	string = "fh1+e1+e2*Sin salsa@fh3+No configurable*_@fh10+extra1+extra2*OBS";
+    	
+    	try{
+			
+			Mesa.importarBaseDatatosMesa();
+			dbMesas.delete("Mesas", "NumMesa=?",new String[]{numMesa});
+			
+			StringTokenizer platos = new StringTokenizer(string,"@");
+			while(platos.hasMoreTokens()){
+				String plato = platos.nextToken();
+				StringTokenizer idExtras = new StringTokenizer(plato,"*");//Coges en el primer token id y extras y en el segundo las observaciones
+				String id = idExtras.nextToken();//Coges el id
+				System.out.println("Id: "+id);
+				String todosExtras = idExtras.nextToken();//Coges los extras
+				System.out.println("Todos extras: "+todosExtras);
+				StringTokenizer tokensExtras = new StringTokenizer(todosExtras,"+");
+				String extrasParaBD = "";
+				while(tokensExtras.hasMoreTokens()){
+					extrasParaBD = extrasParaBD + " " + tokensExtras.nextToken();
+				}
+				System.out.println("ExtrasParaDB: "+extrasParaBD);
+				
+				String obs = idExtras.nextToken();
+				System.out.println("Observac: "+obs);
+			}
+		}catch(Exception e){
+			System.out.println("Error borrar de la base pedido en up");
+		}
   
 	}
 
