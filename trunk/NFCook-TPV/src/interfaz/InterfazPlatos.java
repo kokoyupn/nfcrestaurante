@@ -114,7 +114,6 @@ public class InterfazPlatos extends JFrame {
 		scrollPanePl = new JScrollPane(panelPlatos);
 		scrollPanePl.getVerticalScrollBar().setUnitIncrement(150);
 		scrollPanePl.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-		//scrollPanePl.setBorder(BorderFactory.createLineBorder(Color.decode("#2C6791")));
 		scrollPanePl.setBounds(10,460,(int)(ancho-90),(int)(dimensionesPantalla.getHeight()-470));
 		contentPaneGlobal.add(scrollPanePl);
 		GridBagLayout gbl_panelPlatos = new GridBagLayout();
@@ -153,7 +152,6 @@ public class InterfazPlatos extends JFrame {
 		eliminar = new JPanelBordesRedondos(false);
 		((JPanelBordesRedondos) eliminar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) eliminar).setColorSecundario(Color.cyan);
-		//((JPanelBordesRedondos) btnNewButton).setColorContorno(Color.blue);
 		JLabel aux = new JLabel();
 		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/delete.png"),70,70));
 		eliminar.add(aux);
@@ -195,7 +193,6 @@ public class InterfazPlatos extends JFrame {
 		cobrar = new JPanelBordesRedondos(false);
 		((JPanelBordesRedondos) cobrar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) cobrar).setColorSecundario(Color.cyan);
-		//((JPanelBordesRedondos) cobrar).setColorContorno(Color.blue);
 		aux = new JLabel();
 		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"),70,70));
 		cobrar.add(aux);
@@ -349,7 +346,6 @@ public class InterfazPlatos extends JFrame {
 		aceptar = new JPanelBordesRedondos(false);
 		((JPanelBordesRedondos) aceptar).setColorPrimario(new Color(105,25,254));
 		((JPanelBordesRedondos) aceptar).setColorSecundario(Color.cyan);
-		//((JPanelBordesRedondos) aceptar).setColorContorno(Color.blue);
 		aux = new JLabel();
 		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/back.png"),70,70));
 		aceptar.add(aux);
@@ -374,8 +370,6 @@ public class InterfazPlatos extends JFrame {
 						enc = true;
 						}
 				}
-			
-			
 				
 				//Lanzamos VentanaMesas
 				dispose();
@@ -684,7 +678,6 @@ public class InterfazPlatos extends JFrame {
 				jLabelCategoria.setForeground(Color.WHITE);
 				((JPanelBordesRedondos) btnNewButton).setColorPrimario(new Color(105,25,254));
 				((JPanelBordesRedondos) btnNewButton).setColorSecundario(Color.cyan);
-				//((JPanelBordesRedondos) btnNewButton).setColorContorno(Color.blue);
 				btnNewButton.add(jLabelCategoria);
 				//Ponemos la categoria en el nombre para luego poder acceder a ella
 				btnNewButton.setName(categoria);
@@ -754,10 +747,7 @@ public class InterfazPlatos extends JFrame {
 				panelCategorias.add(btnNewButton);
 			}	
 		}				
-
 		generaBotonesScrollPlatos();
-	
-	
 }
 
 	
@@ -797,6 +787,7 @@ public class InterfazPlatos extends JFrame {
 		contentPaneGlobal.add(bajar);		
 	}
 	
+	
 	/**
 	 * @param prod
 	 * Añade el producto prod a la tabla y al array
@@ -825,12 +816,7 @@ public class InterfazPlatos extends JFrame {
 		tablaPlatos.repaint();
 		scrollPaneTable.validate();
 		scrollPaneTable.repaint();
-		
-//		
-//		//si sale el scroll
-//		if(scrollPaneTable.getVerticalScrollBar().isVisible()){
-//			generaBotonesScrollTabla();
-//		}
+
 	}
 	
 	
@@ -871,7 +857,6 @@ public class InterfazPlatos extends JFrame {
 	
 	
 	public void generaPromociones(){
-		//TODO		
 		ButtonGroup grupo = new ButtonGroup();
 		//Creo un panel con gridlayout para los radiobuttons
 		JPanel panelRadio = new JPanel();
@@ -889,7 +874,6 @@ public class InterfazPlatos extends JFrame {
 		JPanel panelAux = new JPanelBordesRedondos(true);
 		((JPanelBordesRedondos) panelAux).setColorPrimario(Color.BLUE);
 		((JPanelBordesRedondos) panelAux).setColorSecundario(Color.BLUE);
-//		((JPanelBordesRedondos) panelAux).setColorContorno(Color.CYAN);
 
 		JLabel aux = new JLabel();
 		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/SinPromo.png"),170,90));
@@ -908,7 +892,6 @@ public class InterfazPlatos extends JFrame {
 		panelAux = new JPanelBordesRedondos(true);
 		((JPanelBordesRedondos) panelAux).setColorPrimario(Color.BLUE);
 		((JPanelBordesRedondos) panelAux).setColorSecundario(Color.BLUE);
-//		((JPanelBordesRedondos) panelAux).setColorContorno(Color.CYAN);
 
 		aux = new JLabel();
 		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/2x1.png"),170,90));
@@ -926,7 +909,6 @@ public class InterfazPlatos extends JFrame {
 		panelAux = new JPanelBordesRedondos(true);
 		((JPanelBordesRedondos) panelAux).setColorPrimario(Color.BLUE);
 		((JPanelBordesRedondos) panelAux).setColorSecundario(Color.BLUE);
-//		((JPanelBordesRedondos) panelAux).setColorContorno(Color.CYAN);
 
 		aux = new JLabel();
 		aux.setIcon(tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/30off.png"),170,90));
@@ -1415,7 +1397,6 @@ public class InterfazPlatos extends JFrame {
 				 if(((Plato) productosEnMesa.get(i).getProd()).getCantiadPedido() >= max ){
 					 max = ((Plato) productosEnMesa.get(i).getProd()).getCantiadPedido();
 				 }
-//				 Plato pl = (Plato) productosEnMesa.get(i).getProd();
 				 ((Plato) productosEnMesa.get(i).getProd()).setCantiadPedido(plato.getCantiadPedido());
 			 }
 		 }
@@ -1443,9 +1424,6 @@ public class InterfazPlatos extends JFrame {
 		}
 		
 	}
-	
-	
-	
 	
 	
 	 

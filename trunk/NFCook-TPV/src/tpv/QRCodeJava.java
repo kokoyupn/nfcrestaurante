@@ -17,7 +17,6 @@ public class QRCodeJava {
         try {
             FileOutputStream fout = new FileOutputStream(new File(
             		"ArchivoQR/QR_Code.PNG"));
-//            		"C:\\Archivos de Guillermo\\Uni\\IS\\QR_Code.PNG"));
  
             fout.write(out.toByteArray());
  

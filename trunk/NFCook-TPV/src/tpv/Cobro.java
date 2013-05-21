@@ -65,12 +65,25 @@ public class Cobro {
 			String numero = resultados.getString("Numero");
 					
 			String textoQR = numero;
+			String textoACamarero = idMesa + "/";
 				
 			while(itProductos.hasNext()){
 				Producto producto = itProductos.next();
 				comida +=  "Nombre: " + producto.getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
 				textoQR += "@" + producto.getId().substring(abreviatura.length());//le quitamos fh o v
+				textoACamarero += "@" + producto.getId().substring(abreviatura.length()) + "+";//le quitamos fh o v
+				//Rellenamos los extras si es un plato
+				if(producto instanceof Plato){
+					textoACamarero += ((Plato)producto).getExtrasMarcados().replace(",","+");
+				}
+				//Rellenamos las observaciones
+				if(producto.getObservaciones().equals("")){//Si es vacio metemos una barra baja
+					textoACamarero += "*_";
+				}else textoACamarero += "*" + producto.getObservaciones();
+				
+				
 			}
+			
 			boolean comidaBool = false;
 			boolean bebidaBool = false;
 			if(!comida.equals("")){
@@ -113,9 +126,8 @@ public class Cobro {
 						"Nombre: " + "Total: " + total + " €" + "Nombre: " + "Gracias por su visita";
 				
 			} 			
-			QRCodeJava.generaQR(textoQR);//Crea el archivo en C:\\hlocal\\QR_Code.PNG
+			QRCodeJava.generaQR(textoQR);
 			Image img = loadImage("ArchivoQR/QR_Code.PNG");
-			//Image img = loadImage("C:\\Archivos de Guillermo\\Uni\\IS\\QR_Code.PNG");
 			Imprimir.imprime(textoAImprimir,img);
 		
 		}catch(SQLException e) {

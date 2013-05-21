@@ -8,9 +8,6 @@ import java.awt.print.PrinterJob;
 
 public class Imprimir{
 	static public void imprime(String texto, Image img){
-//		PrinterJob job = PrinterJob.getPrinterJob();
-//		
-//		job.setPrintable(new ObjetoDeImpresion(texto,100,200,img));
 		PrinterJob job = PrinterJob.getPrinterJob();
 		PageFormat pf = job.defaultPage();
 		Paper paper = new Paper();
@@ -34,28 +31,6 @@ public class Imprimir{
 			}catch(PrinterException e){
 				System.out.println(e);
 			}
-		
-//		PrinterJob job = PrinterJob.getPrinterJob();
-//		PageFormat pf = job.defaultPage();
-//		Paper paper = new Paper();
-//		paper.setSize(612.0,832.0);
-//		double margin = 10;
-//		paper.setImageableArea(margin, margin, paper.getWidth() - margin, paper.getHeight() - margin);
-//		pf.setPaper(paper);
-//		pf.setOrientation(PageFormat.LANDSCAPE);
-//		
-//		job.setPrintable(new ObjetoDeImpresion( texto,100,200, img), pf);
-//		
-//		try{
-//		job.print();
-//		}catch(PrinterException e){
-//		System.out.println(e);
-//		}
-//		}
-		
-		
-		
-		
 		}
 	}
 }
