@@ -268,7 +268,7 @@ class BotonMesa extends JPanel {
 	
 	protected void cargarMesasCamareroYRestaurante() {
 		ventanaMesas.cargarMesasCamarero();
-		ventanaMesas.cargarMesasRestaurate();
+		ventanaMesas.cargarMesasRestaurante();
 	}
 
 	protected String getIdMesa() {
