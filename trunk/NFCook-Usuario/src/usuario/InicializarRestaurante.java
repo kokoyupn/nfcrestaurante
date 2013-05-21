@@ -4,24 +4,18 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import baseDatos.HandlerDB;
-
-import com.example.nfcook.R;
-import android.widget.RatingBar;
-import usuario.Mail;
-
-
-import fragments.ContenidoTabSuperiorCategoriaBebidas;
-import fragments.CuentaFragment;
-import fragments.PantallaInicialRestaurante;
-import fragments.PedidoFragment;
-import fragments.ContenidoTabsSuperioresFragment;
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
 import adapters.PagerAdapter;
+import alertDialogPersonalizado.ActionItem;
+import alertDialogPersonalizado.QuickAction;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,7 +26,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -47,16 +45,29 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.Toast;
+import baseDatos.HandlerDB;
+
+import com.example.nfcook.R;
+
+import facebook.FacebookPublicarYLogin;
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
+import fragments.ContenidoTabsSuperioresFragment;
+import fragments.CuentaFragment;
+import fragments.PantallaInicialRestaurante;
+import fragments.PedidoFragment;
 
 /**
  * Esta clase es la encargada de cargar toda la información del restaurante que hemos seleccionado.
@@ -114,6 +125,29 @@ public class InicializarRestaurante extends FragmentActivity
 	private ArrayList<Fragment> listFragments = new ArrayList<Fragment>();
 	
 	private int numComensales;
+	
+	//Menu emergente Redes Soaciales
+	// ID Acciones
+	private static final int ID_FACEBOOK = 1;
+	private static final int ID_TWITER = 2;
+	private QuickAction quickAction;
+	
+	//Twiter
+	private static final String CONSUMER_KEY = "e4G6cmP3VA7YNlB9sl9Ug";
+	private static final String CONSUMER_SECRET = "9ZZ1H7kJQ4WSpWMquzvKgYWbEBmcWasYeyuCFE3RZ8";
+	private static final String REQUEST_URL = "https://api.twitter.com/oauth/request_token";
+	private static final String AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize";
+	private static final String ACCESS_URL = "https://api.twitter.com/oauth/access_token";
+	private static final String CALLBACK_URL = "app://IniciarRestaurante";
+	
+	private TextView campoTweet;
+	private ImageView botonEnviarTweet;
+	private CommonsHttpOAuthConsumer httpOauthConsumer;
+	private OAuthProvider httpOauthprovider;
+	private AccessToken accessToken;
+	private AlertDialog ventanaEmergenteTwitter;
+	private AlertDialog ventanaEmergenteAutentificarTwitter;
+
 	private boolean tabsSuperioresCompletos;
 	private ArrayList<String> listNombresTabsSuperiores;
 	private boolean sePuedeEliminarElTabFalso;
@@ -243,24 +277,62 @@ public class InicializarRestaurante extends FragmentActivity
     
     // para meter botones en el action bar
     public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.redes_sociales, menu);
         inflater.inflate(R.menu.enviar_valoraciones, menu);
+        ImageView botonRedesSociales = (ImageView) menu.findItem(R.id.icono_redes_sociales).getActionView();
+        botonRedesSociales.setBackgroundResource(R.drawable.compartir_redes_sociales);
+        botonRedesSociales.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                crearPopupMenuRedesSociales();
+                quickAction.show(v);
+            }
+        });
         return true;
+    }
+    
+    public void crearPopupMenuRedesSociales(){
+    	ActionItem facebook = new ActionItem(ID_FACEBOOK, null, getResources().getDrawable(R.drawable.logofb));
+		ActionItem twitter = new ActionItem(ID_TWITER, null, getResources().getDrawable(R.drawable.logotw));
+		
+		quickAction = new QuickAction(this);
+		
+		//add action items into QuickAction
+        quickAction.addActionItem(facebook);
+		quickAction.addActionItem(twitter);
+        
+        //Set listener for action item clicked
+		quickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {			
+			
+			public void onItemClick(QuickAction source, int pos, int actionId) {				
+				
+				//here we can filter which action item was clicked with pos or actionId parameter
+				if (actionId == ID_FACEBOOK) {
+					Intent intent = new Intent(getApplicationContext(), FacebookPublicarYLogin.class);
+			    	startActivity(intent);
+				} else if (actionId == ID_TWITER) {
+					autorizaTwitter();
+					//SharedPreferences autorizacionTwitter = getSharedPreferences("twiter", 0);
+		    		//String userKey = autorizacionTwitter.getString("user_key", "vacio");
+		    		//String userSecret = autorizacionTwitter.getString("user_secret", "vacio");
+		    		//if(userSecret.equals("vacio") || userKey.equals("vacio")){
+		    		//	autorizaTwitter();
+		    		//}else{
+		    		//	accessToken = new AccessToken(userKey, userSecret);
+		        	//	lanzarVentanaEmergenteTwitter();
+		    		//}
+				}
+			}
+		}); 	
     }
     
     // para el atras y botones del action bar
     public boolean onOptionsItemSelected(MenuItem item) {
     	if (item.getItemId()==R.id.icono_redes_sociales){
+    		//Hecho en el onCreateOptionMenu, sino no puedo tener acceso a la vista del boton
     		// codigo de prado
-
-    		// borrar esto
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(" Codigo de \n Prado ");
-            builder.create();
-            builder.show();
-    		
-            // dejar
     		return true;
     	}
     	else if (item.getItemId()==R.id.icono_enviar_valoraciones){
@@ -1026,6 +1098,119 @@ public class InicializarRestaurante extends FragmentActivity
 		return tabInferiorSeleccionado;
 	}
 
+	
+	public void lanzarVentanaEmergenteTwitter(){
+		
+        View vistaTwiter = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.twiter, null);
+		campoTweet = (TextView) vistaTwiter.findViewById(R.id.textViewTweet);
+		botonEnviarTweet = (ImageView) vistaTwiter.findViewById(R.id.botonAnadirTweet);
+
+		botonEnviarTweet.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				enviaTweet();
+				ventanaEmergenteTwitter.dismiss();
+			}
+		});
+		
+		ventanaEmergenteTwitter = new AlertDialog.Builder(InicializarRestaurante.this).create();
+        ventanaEmergenteTwitter.setView(vistaTwiter);
+        ventanaEmergenteTwitter.show();
+	}
+	
+	private void autorizaTwitter() {
+		try {
+			StrictMode.enableDefaults();
+			httpOauthConsumer = new CommonsHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+			httpOauthprovider = new DefaultOAuthProvider(REQUEST_URL, ACCESS_URL, AUTHORIZE_URL);
+			String authUrl = httpOauthprovider.retrieveRequestToken(httpOauthConsumer, CALLBACK_URL);
+	    	
+			WebView webView = new WebView(this){
+				@Override
+			    public boolean onCheckIsTextEditor()
+			    {
+			        return true;
+			    }
+
+			    @Override
+			    public boolean onTouchEvent(MotionEvent ev)
+			    {
+			        switch (ev.getAction())
+			        {
+			            case MotionEvent.ACTION_DOWN:
+			            case MotionEvent.ACTION_UP:
+			                if (!hasFocus())
+			                    requestFocus();
+			            break;
+			        }
+
+			        return super.onTouchEvent(ev);
+			    }
+			};
+			webView.getSettings().setJavaScriptEnabled(true);
+					    
+			webView.setWebViewClient(new WebViewClient() {  
+	        	
+	        	@Override  
+	            public void onPageFinished(WebView view, String url)  {  
+	        		
+	        		Uri uri = Uri.parse(url);
+	        		
+	        		if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {
+	        			
+	        			view.setVisibility(View.INVISIBLE);
+	        			 
+	        	        String verifier = uri.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+	        	 
+	        	        try {
+	        	            // this will populate token and token_secret in consumer
+	        	 
+	        	            httpOauthprovider.retrieveAccessToken(httpOauthConsumer, verifier);
+	        	            String userKey = httpOauthConsumer.getToken();
+	        	            String userSecret = httpOauthConsumer.getTokenSecret();
+	        	            accessToken = new AccessToken(userKey, userSecret);
+	        	 
+	        	            // Save user_key and user_secret in user preferences and return
+	        	            //SharedPreferences settings = getBaseContext().getSharedPreferences("twiter", 0);
+	        	            //SharedPreferences.Editor editor = settings.edit();
+	        	            //editor.putString("user_key", userKey);
+	        	            //editor.putString("user_secret", userSecret);
+	        	            //editor.commit();
+	        	            
+	        	            ventanaEmergenteAutentificarTwitter.dismiss();
+	        	            lanzarVentanaEmergenteTwitter();
+	        	            	        	 
+	        	        } catch (Exception e) {
+	        	 
+	        	        }	  		      
+	        		}
+	        	}	
+	        });
+			webView.loadUrl(authUrl);
+			
+			ventanaEmergenteAutentificarTwitter = new AlertDialog.Builder(InicializarRestaurante.this).create();
+			ventanaEmergenteAutentificarTwitter.setView(webView);
+			ventanaEmergenteAutentificarTwitter.show();
+			
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	private void enviaTweet() {
+		try {
+			Twitter twitter = new TwitterFactory().getInstance();
+			twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+			twitter.setOAuthAccessToken(accessToken);
+			twitter.updateStatus(campoTweet.getText().toString());
+
+			Toast.makeText(getApplicationContext(), "¡Tweet enviado!", Toast.LENGTH_SHORT).show();
+		} catch(Exception e) {
+			Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+		}
+	}
+
+
 	public void onPageScrollStateChanged(int arg0) {
 	}
 
@@ -1035,4 +1220,5 @@ public class InicializarRestaurante extends FragmentActivity
 	public void onPageSelected(int pos) {
 		tabsSuperiores.setCurrentTab(pos);
 	}
+
 }
