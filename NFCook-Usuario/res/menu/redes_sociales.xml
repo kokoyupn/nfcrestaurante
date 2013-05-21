@@ -3,5 +3,5 @@
     <item android:id="@+id/icono_redes_sociales"
         android:title="Compartir Redes Sociales"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/compartir_redes_sociales" />
+        android:actionViewClass="android.widget.ImageView"/>
 </menu>

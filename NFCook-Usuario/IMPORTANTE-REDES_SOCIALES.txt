@@ -1,0 +1,4 @@
+- Hacemos un checkout de la libreria FacebookSDK del repositorio.
+- Click derecho en la carpeta del proyecto en el Project Explorer
+- Una vez descargada, click derecho en la carpeta del proyecto en el Project Explorer->Properties
+- En resource->android abajo del todo pone "Library", le damos a Add..., Ok y listo.

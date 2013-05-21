@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#3B5998" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:src="@drawable/logofacebook" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.facebook.widget.ProfilePictureView
+	         android:id="@+id/profilePicture"
+	         android:layout_height="wrap_content"
+	         android:layout_width="wrap_content"
+	         android:layout_gravity="center_horizontal"
+	         android:layout_marginTop="10dp"
+	         android:layout_marginBottom="5dp"
+	         facebook:preset_size="normal"/>
+
+    </FrameLayout>
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.facebook.widget.LoginButton
+             android:id="@+id/login_button"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_horizontal"
+             facebook:confirm_logout="false"
+             facebook:fetch_user_info="true"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bordes_redondeados_tweet">
+
+        <TextView
+            android:id="@+id/textViewPublicarFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:textColor="@color/negro"
+            android:text="Disfrutando de una maginífica cena en MiCasa gracias a la aplicación NFCook que ofrecen para hacer sus pedidos."/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/postStatusUpdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/compartirfacebook" />
+
+    </FrameLayout>
+    
+</LinearLayout>
