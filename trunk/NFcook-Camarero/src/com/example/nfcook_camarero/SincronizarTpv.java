@@ -100,11 +100,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
 	
 
 	/** 
-	 * Prepara el pedido en un string para que sea facil su tratamiento a la hora de escribir en la tag.
-	 * Obtiene de la base de datos el pedido a sincronizar con la siguiente forma:
-	 * "id_plato@id_plato+extras@5*Obs@id_plato+extras*Obs@";	
-	 * "1@2@3@4+10010@5*Con tomate@1+01001*Con azucar@2+10010*Sin macarrones@";	
-	 * 
+	 
 	 * @return
 	 */
 	private String damePedidoStr() {
@@ -117,24 +113,32 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
  	    }catch(SQLiteException e){
  	        	Toast.makeText(getApplicationContext(),"No existe la base de datos Mesas",Toast.LENGTH_SHORT).show();
  	       }
-        // PantallaMesasFragment.dameMesa();
+        // 
         
-		String listaPlatosStr = dameCodigoRestaurante();
+		String listaPlatosStr = dameCodigoRestaurante()+numeroMesa+"@";
 		String[] campos = new String[]{"Sincro","IdPlato","Observaciones","Extras"};//Campos que quieres recuperar
 		String[] datosMesa = new String[]{numeroMesa};	
 		Cursor cursorPedido = dbMesas.query("Mesas", campos, "NumMesa=?", datosMesa,null, null,null);
 		int sincro=0;
     	while(cursorPedido.moveToNext()){
+    		
     		sincro=cursorPedido.getInt(0);
     		if (sincro==0)//No estasincronizado
     		{
-    		listaPlatosStr += cursorPedido.getString(1)+"+"+cursorPedido.getString(2)+"*"+cursorPedido.getString(3)+"@";
+    		listaPlatosStr += cursorPedido.getString(1);
+    		if(!cursorPedido.getString(2).equals(""))
+    			listaPlatosStr+="+"+cursorPedido.getString(2);
+    		if(!cursorPedido.getString(3).equals(""))
+        	listaPlatosStr+= "*"+cursorPedido.getString(3);
+    		
+    		listaPlatosStr+="@";
+    		
     		}
-    	}
+    }
     	//System.out.println("PLATOS:"+listaPlatosStr);
     	Toast.makeText(getApplicationContext(), listaPlatosStr, Toast.LENGTH_LONG).show();
     	// para indicar que ha finalizado el pedido escribo un 255 
-    	//listaPlatosStr += "255";
+    	listaPlatosStr += "255";
     	
     	return listaPlatosStr;
 	}
