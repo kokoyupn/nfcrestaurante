@@ -112,6 +112,11 @@
             android:screenOrientation="portrait">
         </activity> 
         <activity
+            android:name=".RecogerCuentaTPV"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
+        </activity> 
+        <activity
             android:clearTaskOnLaunch="true"
             android:stateNotNeeded="true"
             android:configChanges="orientation|keyboardHidden"

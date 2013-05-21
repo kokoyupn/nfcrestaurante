@@ -13,6 +13,7 @@ import com.example.nfcook_camarero.BorrarTarjeta;
 import com.example.nfcook_camarero.EscribirCuentaPorNFC;
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.R;
+import com.example.nfcook_camarero.RecogerCuentaTPV;
 import com.example.nfcook_camarero.SincronizacionBeamNFC;
 import com.example.nfcook_camarero.SincronizacionLecturaNFC;
 import com.example.nfcook_camarero.SincronizacionQR;
@@ -170,7 +171,7 @@ public class PantallaMesasFragment extends Fragment {
 				numeroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
-				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
+				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Recoger Cuenta TPV", "Borrar Tag", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -310,9 +311,20 @@ public class PantallaMesasFragment extends Fragment {
 				    		intent.putExtra("Restaurante",restaurante);
 				    		intent.putExtra("NumMesa", numeroMesaAEditar);
 				    		startActivity(intent);
-				    	}//fin else item5
+				    	}
+				    	 // ----- borrar tag ---
+				    	else if (item == 3){
+				    		intent = new Intent(ctx,BorrarTarjeta.class);
+				    		intent.putExtra("Restaurante",restaurante);
+				    		startActivity(intent);
+				    	}
+				    	else if (item == 4){
+				    		intent = new Intent(ctx,RecogerCuentaTPV.class);
+				    		intent.putExtra("Restaurante",restaurante);
+				    		startActivity(intent);
+				    	}
 				    	//----------------- onClickListener de editar número de mesa --------------------------------
-				    	else if(item == 3){
+				    	else if(item == 5){
 				    		LayoutInflater factory = LayoutInflater.from(PantallaMesasFragment.this.getActivity());
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
 				    		final TextView tituloVentana = (TextView) textEntryView.findViewById(R.id.textViewTituloEditar);
@@ -376,7 +388,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
 				    		//----------------- onClickListener de editar número de personas --------------------------------
-				    	} else if(item == 4){
+				    	} else if(item == 6){
 				    		LayoutInflater factory = LayoutInflater.from(PantallaMesasFragment.this.getActivity());
 				    		final View textEntryView = factory.inflate(R.layout.alert_dialog_edit, null);
 				    		final TextView tituloVentana = (TextView) textEntryView.findViewById(R.id.textViewTituloEditar);
@@ -433,7 +445,7 @@ public class PantallaMesasFragment extends Fragment {
 				    		ventEmergEditMesa.setView(textEntryView);
 				    		ventEmergEditMesa.show();
 				    	//---------Eliminar Mesa------
-				    	}else if (item == 5){
+				    	}else if (item == 7){
 							 
 				    	    View vistaAviso = LayoutInflater.from(PantallaMesasFragment.this.getActivity()).inflate(R.layout.alert_dialog_cobrar, null);
 				    		TextView texto= (TextView) vistaAviso.findViewById(R.id.textViewCobrar);
@@ -466,11 +478,6 @@ public class PantallaMesasFragment extends Fragment {
 				             });//fin onclick aceptar
 				             alert.setView(vistaAviso);
 				             alert.show();
-				    	} // ----- borrar tag ---
-				    	else if (item == 6){
-				    		intent = new Intent(ctx,BorrarTarjeta.class);
-				    		intent.putExtra("Restaurante",restaurante);
-				    		startActivity(intent);
 				    	}
 				    
 				    }
