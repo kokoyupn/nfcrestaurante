@@ -127,13 +127,13 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 		// Añadimos el panel al panel principal.
 		panelContenedorMesasYcamarero.add(scrollpanelMesasCamarero);
 		
-		cargarMesasRestaurate();
+		cargarMesasRestaurante();
 		
 		cargarMesasCamarero();
 
 	}
 	
-	public void cargarMesasRestaurate(){
+	public void cargarMesasRestaurante(){
 		if (mutex.tryLock()){
 			
 			mutex.lock();
@@ -152,7 +152,8 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 			scrollpanelMesas.repaint();
 			
 			mutex.unlock();
-		}
+		}else
+			cargarMesasRestaurante(); // si el mutex esta cogido, rellamamos al metodo
 		
 	}
 	
@@ -176,7 +177,7 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 	
 	
 	public void refrescarMesasPanel(){
-		cargarMesasRestaurate();
+		cargarMesasRestaurante();
 		cargarMesasCamarero();
 	}
 	
