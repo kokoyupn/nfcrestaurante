@@ -36,7 +36,8 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 	private JScrollPane scrollpanelMesasCamarero;
 	private JScrollPane scrollpanelMesas;
 	
-	private final Lock mutex = new ReentrantLock(true);
+	private final Lock mutexMesasRestaurante = new ReentrantLock(true);
+	private final Lock mutexMesasCamarero = new ReentrantLock(true);
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
 		
@@ -133,10 +134,12 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 
 	}
 	
+	/* Incluimos los mutex porque al tener más de un thread en ejecución, 
+	* si los dos acceden a este método nos pintarán las mismas mesas más de una vez
+	*/
 	public void cargarMesasRestaurante(){
-		if (mutex.tryLock()){
+		if (mutexMesasRestaurante.tryLock()){ // si el mutex no está bloqueado, lo bloqueo
 			
-			mutex.lock();
 			panelMesas.removeAll();
 			Iterator<Mesa> iteradorMesas = unRestaurante.getIteratorMesas();
 			
@@ -151,28 +154,38 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 			scrollpanelMesas.validate();
 			scrollpanelMesas.repaint();
 			
-			mutex.unlock();
-		}else
-			cargarMesasRestaurante(); // si el mutex esta cogido, rellamamos al metodo
-		
+			mutexMesasRestaurante.unlock(); // desbloqueamos el mutex
+		} else{
+			System.err.println("Mutex ocupado");
+			cargarMesasRestaurante(); // si el mutex esta cogido, rellamamos al metodo hasta que se desbloquee
+		}
 	}
 	
+	/* Incluimos los mutex porque al tener más de un thread en ejecución, 
+	* si los dos acceden a este método nos pintarán las mismas mesas más de una vez
+	*/
 	public void cargarMesasCamarero(){
-		panelMesasCamarero.removeAll();
-		Iterator<Mesa> iteradorMesasCamarero = unRestaurante.getIteratorMesas();
-		
-		while(iteradorMesasCamarero.hasNext()){
-			Mesa unaMesa = iteradorMesasCamarero.next();
-			if(unaMesa.getIdCamarero()!=null && unaMesa.getIdCamarero().equals(idCamarero) && !unaMesa.esMesaCerrada()){
-				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
-				panelMesasCamarero.add(botonMesa, null);
+		if (mutexMesasCamarero.tryLock()){ // si el mutex no está bloqueado, lo bloqueo
+			
+			panelMesasCamarero.removeAll();
+			Iterator<Mesa> iteradorMesasCamarero = unRestaurante.getIteratorMesas();
+			
+			while(iteradorMesasCamarero.hasNext()){
+				Mesa unaMesa = iteradorMesasCamarero.next();
+				if(unaMesa.getIdCamarero()!=null && unaMesa.getIdCamarero().equals(idCamarero) && !unaMesa.esMesaCerrada()){
+					BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
+					panelMesasCamarero.add(botonMesa, null);
+				}
 			}
-		}
-		panelMesasCamarero.validate();
-		panelMesasCamarero.repaint();
-		
-		scrollpanelMesasCamarero.validate();
-		scrollpanelMesasCamarero.repaint();
+			panelMesasCamarero.validate();
+			panelMesasCamarero.repaint();
+			
+			scrollpanelMesasCamarero.validate();
+			scrollpanelMesasCamarero.repaint();
+			mutexMesasCamarero.unlock(); // desbloqueamos el mutex
+			
+		}else
+			cargarMesasCamarero(); // si el mutex esta cogido, rellamamos al metodo hasta que se desbloquee
 	}
 	
 	
