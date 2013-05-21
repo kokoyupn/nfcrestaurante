@@ -125,6 +125,7 @@ public class MainActivity extends Activity {
   	
 		}catch(Exception e){
 			//No existe ese usuario en la base de datos
+			System.out.println(e.getStackTrace().toString());
 			abrir_ventanaEmergente("No existe ese usuario o contraseña incorrecta",R.drawable.icono_usuario);
 		}
 	   
