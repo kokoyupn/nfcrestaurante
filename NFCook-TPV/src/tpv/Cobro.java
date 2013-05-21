@@ -65,7 +65,7 @@ public class Cobro {
 			String numero = resultados.getString("Numero");
 					
 			String textoQR = numero;
-			String textoACamarero = idMesa + "/";
+			String textoACamarero = idMesa.substring(1) + "/";
 				
 			while(itProductos.hasNext()){
 				Producto producto = itProductos.next();
