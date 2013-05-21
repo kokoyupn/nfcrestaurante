@@ -11,7 +11,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InputStream;
+import java.util.Properties;
 
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Store;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -277,8 +283,88 @@ public class VentanaLogin extends JFrame implements ActionListener{
 					}
 				}
 			});
-		}
-		
+		}	
+	}
+	
+    /**
+     * Metodo recursivo.
+     * Si la parte que se pasa es compuesta, se extrae cada una de las subpartes y
+     * el metodo se llama a si mismo con cada una de ellas.
+     * Si la parte es un text, se escribe en pantalla.
+     * Si la parte es una image, se guarda en un fichero y se visualiza en un JFrame.
+     * En cualquier otro caso, simplemente se escribe el tipo recibido, pero se
+     * ignora el mensaje.
+     *
+     * @param unaParte Parte del mensaje a analizar.
+     */
+    private static void analizaParteDeMensaje(Message unaParte)
+    {
+        try
+        {
+    		// Si es texto, se escribe el texto.
+            if (unaParte.isMimeType("text/*")) {
+                InputStream stream = unaParte.getInputStream();
+                String pedido = "";
+                while(stream.available() != 0){
+                	pedido += (char) stream.read();
+                }
+                procesaPedido(pedido);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	public static void escuchaReceptorNFC(){
+		// Se obtiene la Session
+        Properties prop = new Properties();
+        prop.setProperty("mail.pop3.starttls.enable", "false");
+        prop.setProperty(
+            "mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        prop.setProperty("mail.pop3.socketFactory.fallback", "false");
+        prop.setProperty("mail.pop3.port", "995");
+        prop.setProperty("mail.pop3.socketFactory.port", "995");
+        Session sesion = Session.getInstance(prop);
+        try{
+        	// Se obtiene el Store y el Folder, para poder leer el
+        	// correo.
+            Store store = sesion.getStore("pop3");
+            store.connect(
+                "pop.gmail.com", "nfcookapp@gmail.com", "Macarrones");
+            Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_ONLY);
+
+            // Se obtienen los mensajes.
+            Message[] mensajes = folder.getMessages();
+
+            // Se escribe from y subject de cada mensaje
+            for (int i = 0; i < mensajes.length; i++)
+            {
+            	// Miramos si se trata de la sincronización de un pedido
+            	if(mensajes[i].getFrom()[0].toString().equals("nfcookapp@gmail.com") &&
+            			mensajes[i].getSubject().equals("PEDIDO")){
+            		// Se visualiza, si se sabe como, el contenido de cada mensaje
+            		analizaParteDeMensaje(mensajes[i]);
+            	}
+            }
+
+            folder.close(false);
+            store.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	public static void procesaPedido(String pedido){
+		/**
+		 * TODO Diniel procesar el string del pedido, lo deciodifica y lo añade a 
+		 * la mesa que corresponda.
+		 */
+		System.out.println("YA HAY UN PUTO NEGRO HACIENDO LA COMIDA");
 	}
 	
 	public static void main(String args[]){
@@ -294,6 +380,18 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
+        
+        new Thread(new Runnable() {
+    	    public void run() {
+    	    	while(true){
+    	    		try {
+    	    			escuchaReceptorNFC();
+    	    		} catch (Exception e) {
+    	    			System.out.println("Error en la recepción NFC del TPV");
+    	    		} 
+    	    	}
+    	    }
+        }).start();
 
   	}
 }
