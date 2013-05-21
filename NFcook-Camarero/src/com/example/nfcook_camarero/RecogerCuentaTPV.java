@@ -2,10 +2,13 @@ package com.example.nfcook_camarero;
 
 import java.util.StringTokenizer;
 
+import fragments.PantallaMesasFragment;
+
 import baseDatos.HandlerGenerico;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,8 +40,8 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     HandlerGenerico sqlRestaurante;
 	SQLiteDatabase dbRestaurante;
 	
-	HandlerGenerico sqlMesas;
-	SQLiteDatabase dbMesas;
+	private static HandlerGenerico sqlMesas;
+	private static SQLiteDatabase dbMesas;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
@@ -51,7 +54,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 		this.finish();
 	}
 	
-	@SuppressLint("NewApi")
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_beam_nfc);
@@ -89,7 +92,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
         
-       
+       procesarCuenta("a");
 	}
 	
 	 /**
@@ -162,7 +165,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	 * @return
 	 */
 	private void procesarCuentas(String cuentas) {
-		System.out.println("Entra");
+		
 		boolean mesaEncontrada = false;
 		String cuenta = "";
 		StringTokenizer st = new StringTokenizer(cuentas,"&");
@@ -182,40 +185,101 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	}
 	
 
-	/**Metodo encargado de procesar el string que le llega por correo.
-	* Formato: id+extras*obs@id+extras*obs.....
-	* Ejemplo: id1+e1+e2*obs@id2+e1+e2+e3*obs@id*/
-	
+	//Metodo encargado de procesar el string que le llega por correo.
+	//FORMATO: id+extras*observaciones*nombrePlato*precio*numPersonas*idUnico*idCamarero*fechaHora@siguientePlato(Igual)
     private void procesarCuenta(String string) {
-    	System.out.println("Todo: "+string);
-    	
-    	string = "fh1+e1+e2*Sin salsa@fh3+No configurable*_@fh10+extra1+extra2*OBS";
+
+    	string = "fh8+Poco hecha, Roquefort, Patatas Fritas*_*PLATO ESTRELLA: Director`s Choice*10.85*5*2*idCamarero*fechaHora@";/* +
+    			"3+No configurable*_*nombrePlato*4.76*3*61*idCamarero*fechaHora" +
+    			"@10+extra1+extra2*OBS*nombrePlato*2.2*4*62*idCamarero*fechaHora";*/
     	
     	try{
+    		sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+			dbMesas= sqlMesas.open();
 			
-			Mesa.importarBaseDatatosMesa();
 			dbMesas.delete("Mesas", "NumMesa=?",new String[]{numMesa});
 			
 			StringTokenizer platos = new StringTokenizer(string,"@");
 			while(platos.hasMoreTokens()){
 				String plato = platos.nextToken();
-				StringTokenizer idExtras = new StringTokenizer(plato,"*");//Coges en el primer token id y extras y en el segundo las observaciones
-				String id = idExtras.nextToken();//Coges el id
-				System.out.println("Id: "+id);
-				String todosExtras = idExtras.nextToken();//Coges los extras
-				System.out.println("Todos extras: "+todosExtras);
-				StringTokenizer tokensExtras = new StringTokenizer(todosExtras,"+");
+				StringTokenizer campos = new StringTokenizer(plato,"*");
+				String idYExtras = campos.nextToken();
+				StringTokenizer idOExtras = new StringTokenizer(idYExtras,"+");
+				String id = idOExtras.nextToken();//Tienes el id del plato
+				
 				String extrasParaBD = "";
-				while(tokensExtras.hasMoreTokens()){
-					extrasParaBD = extrasParaBD + " " + tokensExtras.nextToken();
+				boolean tiene = true;
+				boolean primero = true;
+				while(idOExtras.hasMoreTokens() && tiene){
+					String extra = idOExtras.nextToken();
+					if(extra.equals("No configurable"))
+						tiene = false;
+					else{
+						if(primero){
+							extrasParaBD = extra;//Vas concatenando los extras
+							primero = false;
+						}else
+							extrasParaBD = extrasParaBD + ", " + extra;
+					}
+					
 				}
 				System.out.println("ExtrasParaDB: "+extrasParaBD);
 				
-				String obs = idExtras.nextToken();
+				String obs = campos.nextToken();//Tienes las observaciones
+				if(obs.equals("_"))
+					obs="";
 				System.out.println("Observac: "+obs);
-			}
+				
+				String nombrePlato,precio,numPersonas,idUnico,idCamarero,fechaHora;
+				nombrePlato = campos.nextToken();
+				precio = campos.nextToken();
+				numPersonas = campos.nextToken();
+				idUnico = campos.nextToken();
+				idCamarero = campos.nextToken();
+				fechaHora = campos.nextToken();
+				
+				//Introduces el plato en la base de datos
+				ContentValues nuevo = new ContentValues();
+	        	nuevo.put("NumMesa", numMesa);
+				nuevo.put("IdCamarero", idCamarero);
+				nuevo.put("IdPlato", id);
+				nuevo.put("Observaciones", obs);
+				nuevo.put("Extras", extrasParaBD);
+				nuevo.put("FechaHora", fechaHora);
+				nuevo.put("Nombre", nombrePlato);
+				nuevo.put("Precio",Double.parseDouble(precio));
+				nuevo.put("Personas",Integer.parseInt(numPersonas));
+				nuevo.put("IdUnico", Integer.parseInt(idUnico));
+				nuevo.put("Sincro", 1);
+				
+	        	dbMesas.insert("Mesas", null, nuevo);
+	        }
+			
+			//Prueba-----------------------------------------
+			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato","Sincro"};
+        	String[] numeroDeMesa = new String[]{numMesa};
+        	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
+        	while(c.moveToNext()){
+        		System.out.println(c.getString(0));
+		    	String extras=c.getString(2);
+		    	if (extras==null)
+		    		System.out.println("era null");
+		    	else
+		    		System.out.println(c.getString(2));
+		    	
+		    	System.out.println(c.getString(1));
+		    	System.out.println(c.getString(3));
+		    	System.out.println(c.getString(4));
+		    	System.out.println(c.getString(5));
+		    	System.out.println("Sincro: " + c.getString(6));
+		    }
+        	//Prueba-----------------------------------------
+        	
+        	
+			dbMesas.close();
+			
 		}catch(Exception e){
-			System.out.println("Error borrar de la base pedido en up");
+			System.out.println("Error metodo procesarCuenta de cla clase RecogerCuentaTPV.java");
 		}
   
 	}

@@ -130,7 +130,7 @@ public class Mesa extends Activity {
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
 	  	    			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
 		  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
-		  				onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
+		  	    		onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
 		  				//onClickBotonCancelarAlertDialog(ventanaEmergente);
 		  				View vistaAviso = LayoutInflater.from(Mesa.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 		  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
@@ -510,6 +510,7 @@ public class Mesa extends Activity {
 		    		System.out.println(c.getString(2));
 		    	
 		    	System.out.println(c.getString(1));
+		    	System.out.println("Extras: " + c.getString(2));
 		    	System.out.println(c.getString(4));
 		    	System.out.println("Sincro: " + c.getString(6));
 		    }
@@ -537,7 +538,7 @@ public class Mesa extends Activity {
   		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Id =?",datos,null,null,null); 
   		cursor.moveToFirst();
   		
-  		String extrasPlato = cursor.getString(0);
+  		String extrasPlato = cursor.getString(0);//FIXME aqi casca
   		String extrasMarcados = adapter.getExtrasMarcados(posicion);
   		  		
   		if(!extrasPlato.equals("")){
@@ -595,13 +596,19 @@ public class Mesa extends Activity {
 	public static void actualizaListPlatos(){
 		try{
 			importarBaseDatatosMesa();
-			/*sqlMesas=new HandlerGenerico(actividad, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-			dbMesas= sqlMesas.open();*/
-			
+						
 			elemLista = obtenerElementos();
 	        adapter = new MiListMesaAdapter(actividad, elemLista);
-		    platos.setAdapter(adapter);
+	        
+	        
+	        //FIXME Quitar el set adapter para probar lo la prueba. 
+	        //Con setAdapter funciona bien!!	        
+	        platos.setAdapter(adapter);
 		    
+	        //Prueba----------
+	        adapter.notifyDataSetChanged();
+	        //Prueba---------
+	        
 			sqlMesas.close();
 			
 			precioTotal.setText( Math.rint(adapter.getPrecio()*100)/100 +" €");
