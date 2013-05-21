@@ -9,6 +9,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author Guille
+ * Clase que tiene imagen y nombre de plato para los productos
+ *
+ */
 public class PlatoCelda extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
@@ -38,6 +44,7 @@ public class PlatoCelda extends JPanel{
 			int cont = 0;
 			int i = 0;
 			boolean llena = false;
+			//Calculamos que la palabra cabe en la linea
 			while (i < palabras.length && !llena){
 				if((palabras[i].length() + cont) < 16){// cabe
 					linea1 += palabras[i] + " ";
@@ -61,8 +68,7 @@ public class PlatoCelda extends JPanel{
 			grid.gridy = 2;
 			panel.add(lblNewLabelLinea2,grid);
 			
-		}
-		else{
+		}else{
 			lblNewLabel.setText(nombrePlato);
 			lblNewLabelLinea2.setText("-----------");
 			lblNewLabelLinea2.setForeground(new Color(-1118482));
