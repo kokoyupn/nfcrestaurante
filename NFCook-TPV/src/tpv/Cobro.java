@@ -82,10 +82,14 @@ public class Cobro {
 				if(producto.getObservaciones().equals("")){//Si es vacio metemos una barra baja
 					textoACamarero += "*_";
 				}else textoACamarero += "*" + producto.getObservaciones();
-				textoACamarero +=  "*" + producto.getIdUnico() + "*" + producto.getPrecio() + "*" + horaEnvioYFecha + "*" + mesa.getNumeroPersonas()
-						+ "*" + mesa.getIdCamarero();
-				
-				
+				textoACamarero +=  "*" 	+ producto.getNombre() +"*"
+										+ producto.getPrecio() + "*"
+										+ mesa.getNumeroPersonas()
+										+ producto.getIdUnico() + "*"  
+										+ "*" + mesa.getIdCamarero()
+										+ horaEnvioYFecha + "*" ;
+
+
 			}
 			
 			boolean comidaBool = false;
