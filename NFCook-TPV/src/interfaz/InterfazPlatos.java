@@ -208,9 +208,20 @@ public class InterfazPlatos extends JFrame {
 						if (aCobrar.size()>0){
 							//Construimos el panel con las promociones
 							generaPromociones();
+							//TODO Usar solo la mesa y lo necesario
+							boolean enc = false;
+							Mesa mesa = null;
+							Iterator<Mesa> iteratorMesas = getRestaurante().getIteratorMesas();
+							while(iteratorMesas.hasNext() && !enc)
+							{
+								mesa = iteratorMesas.next();
+								if (mesa.getIdMesa().equals(idMesa)){
+									enc = true;
+									}
+							}
 							
 							//Pasamos los parametros necesarios para imprimir el tiket
-							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante(),promocion);
+							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante(),promocion,mesa);
 							//mostramos mensaje de acción realizada con éxito
 							JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
 									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			

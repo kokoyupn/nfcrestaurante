@@ -24,8 +24,9 @@ public class Cobro {
 	private double total;
 	private String restaurante;
 	private int promocion ;
+	private Mesa mesa;
 	
-	public Cobro(ArrayList<Producto> cobro, String idMesa, String idCamarero, double total , String restaurante,int promocion) {
+	public Cobro(ArrayList<Producto> cobro, String idMesa, String idCamarero, double total , String restaurante,int promocion,Mesa mesa) {
 		this.cobro = cobro;
 		this.idCamarero = idCamarero;
 		this.idMesa = idMesa;
@@ -33,6 +34,7 @@ public class Cobro {
 		this.total = total;
 		this.restaurante = restaurante;
 		this.promocion = promocion;
+		this.mesa = mesa;
 		enviarCobroAImpresora();
 	}
 
@@ -80,6 +82,8 @@ public class Cobro {
 				if(producto.getObservaciones().equals("")){//Si es vacio metemos una barra baja
 					textoACamarero += "*_";
 				}else textoACamarero += "*" + producto.getObservaciones();
+				textoACamarero +=  "*" + producto.getIdUnico() + "*" + producto.getPrecio() + "*" + horaEnvioYFecha + "*" + mesa.getNumeroPersonas()
+						+ "*" + mesa.getIdCamarero();
 				
 				
 			}
