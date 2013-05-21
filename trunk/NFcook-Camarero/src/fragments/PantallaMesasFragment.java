@@ -16,6 +16,7 @@ import com.example.nfcook_camarero.R;
 import com.example.nfcook_camarero.SincronizacionBeamNFC;
 import com.example.nfcook_camarero.SincronizacionLecturaNFC;
 import com.example.nfcook_camarero.SincronizacionQR;
+import com.example.nfcook_camarero.SincronizarTpv;
 
 import adapters.InformacionMesa;
 import adapters.MiGridViewMesasAdapter;
@@ -169,7 +170,7 @@ public class PantallaMesasFragment extends Fragment {
 				numeroPersonas = mesas.get(position).getNumPersonas();
 				//Preparamos los elementos que tendrá la lista
 				//final CharSequence[] items = {"Cobrar","Sincronizacion NFC","Sincronizacion Beam","Codigo QR", "Editar nº mesa", "Editar nº personas","Eliminar mesa"};
-				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag"};
+				final CharSequence[] items = {"Cobrar","Recoger Pedido", "Escribir Cuenta", "Editar nº mesa", "Editar nº personas","Eliminar mesa","Borrar Tag","Tpv"};
 				AlertDialog.Builder ventEmergente = new AlertDialog.Builder(PantallaMesasFragment.this.getActivity());
 				ventEmergente.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -469,6 +470,12 @@ public class PantallaMesasFragment extends Fragment {
 				    	else if (item == 6){
 				    		intent = new Intent(ctx,BorrarTarjeta.class);
 				    		intent.putExtra("Restaurante",restaurante);
+				    		startActivity(intent);
+				    	}
+				    	else if(item==7)
+				    	{
+				    		intent = new Intent(ctx,SincronizarTpv.class);
+				    		intent.putExtra("Restaurante", restaurante);
 				    		startActivity(intent);
 				    	}
 				    }
