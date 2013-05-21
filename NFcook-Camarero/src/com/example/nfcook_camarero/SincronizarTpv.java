@@ -37,7 +37,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
     Context context;
     private String abreviaturaRest;
     
-    
+    boolean enviado;
 	//Variables para los pedidos
 	String restaurante;
     String pedido;
@@ -57,7 +57,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sincronizacion_beam_nfc);
         context= this;
-                     	
+         enviado=false;            	
         // Ponemos el título a la actividad
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
@@ -120,14 +120,18 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
         // PantallaMesasFragment.dameMesa();
         
 		String listaPlatosStr = dameCodigoRestaurante();
-		String[] campos = new String[]{"IdPlato","Observaciones","Extras"};//Campos que quieres recuperar
+		String[] campos = new String[]{"Sincro","IdPlato","Observaciones","Extras"};//Campos que quieres recuperar
 		String[] datosMesa = new String[]{numeroMesa};	
 		Cursor cursorPedido = dbMesas.query("Mesas", campos, "NumMesa=?", datosMesa,null, null,null);
-		
+		int sincro=0;
     	while(cursorPedido.moveToNext()){
-    		listaPlatosStr += cursorPedido.getString(0)+"*"+cursorPedido.getString(1)+"+"+cursorPedido.getString(2)+"@";
+    		sincro=cursorPedido.getInt(0);
+    		if (sincro==0)//No estasincronizado
+    		{
+    		listaPlatosStr += cursorPedido.getString(1)+"+"+cursorPedido.getString(2)+"*"+cursorPedido.getString(3)+"@";
+    		}
     	}
-    	System.out.println("PLATOS:"+listaPlatosStr);
+    	//System.out.println("PLATOS:"+listaPlatosStr);
     	Toast.makeText(getApplicationContext(), listaPlatosStr, Toast.LENGTH_LONG).show();
     	// para indicar que ha finalizado el pedido escribo un 255 
     	//listaPlatosStr += "255";
@@ -165,8 +169,10 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
     public void onNdefPushComplete(NfcEvent arg0) {
         // A handler is needed to send messages to the activity when this
         // callback occurs, because it happens from a binder thread
-        mHandler.obtainMessage(MESSAGE_SENT).sendToTarget();
-        
+       if (enviado == false)
+    	{mHandler.obtainMessage(MESSAGE_SENT).sendToTarget();
+        enviado=true;
+    	}
     }
 
     /**
@@ -175,10 +181,11 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
     @SuppressLint("NewApi")
     public NdefMessage createNdefMessage(NfcEvent event) {
     	
-          NdefMessage msg = new NdefMessage(NdefRecord.createMime(
+        	NdefMessage msg = new NdefMessage(NdefRecord.createMime(
                 "application/com.example.android.beam", pedido.getBytes())
        
         );
+        
         return msg;
     }
     /**

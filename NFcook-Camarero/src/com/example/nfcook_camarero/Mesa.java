@@ -702,16 +702,21 @@ public class Mesa extends Activity {
     		Intent intent = new Intent(this,SincronizarTpv.class);
     		intent.putExtra("Restaurante", restaurante);
     		intent.putExtra("Mesa", numMesa);
-    		startActivity(intent);
-    		actualizarSincronizadosBaseMesas();
+    		startActivityForResult(intent,0);
     		
-    		//Notificas que has borrado un elemento del adapter y que repinte la lista
-    		actualizaListPlatos();
+    		
     		
     	} else finish();
     	return false;	
     }
-    
+    public void onActivityResult(int requestCode, int resultCode,Intent data)
+    {
+    	
+    	actualizarSincronizadosBaseMesas();
+		//Notificas que has borrado un elemento del adapter y que repinte la lista
+		actualizaListPlatos();
+    	
+    }
     /*Metodo que actualiza el campo Sincro de la base de datos Mesas tras sincronizar el pedido con el TPV*/
     public static void actualizarSincronizadosBaseMesas() {
     	try{
