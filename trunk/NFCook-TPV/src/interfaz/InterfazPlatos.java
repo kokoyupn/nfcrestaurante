@@ -12,8 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +22,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,8 +36,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
-import basesDeDatos.Operaciones;
 
 import sockets.OperacionesSocketsSinBD;
 import tpv.AuxDeshacerRehacer;
@@ -61,7 +56,7 @@ import tpv.TuplaProdEnv;
 public class InterfazPlatos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPaneGlobal, panelPlatos, menuConfig, cobrar, eliminar, enviar, aceptar, promociones;
+	private JPanel contentPaneGlobal, panelPlatos, menuConfig, cobrar, eliminar, enviar, aceptar;
 	private JTable tablaPlatos;
 	private JButton rehacer, deshacer, subir, bajar,subirTabla, bajarTabla;
 	static GridBagConstraints gbc_btnNewButton2,gbc_btnBotones,gbc_btnPopup,gbc_promo;
@@ -1340,10 +1335,20 @@ public class InterfazPlatos extends JFrame {
 			tablaPlatos.repaint();
 	 }
 	 
-	 public void mostrarAvisoYcerrar(String idMesa) {
+	 public void mostrarAvisoYcerrar(final String idMesa) {
 		 if(this.idMesa.equals(idMesa)){
-			 JFrame marco = new JFrame();
-			 JOptionPane.showMessageDialog(marco, "Esta mesa ha sido cobrada desde otro TPV y se va ha cerrar.");
+			 // lanzamos un thread para poder seguir ejecutando en segundo plano
+			 new Thread(new Runnable() {
+	    	    public void run() {
+    	    		try {
+    	    			JFrame marco = new JFrame();
+    	    			JOptionPane.showMessageDialog(marco, "La mesa " + idMesa +" ha sido cobrada desde otro TPV y se ha cerrado.");
+    	    		} catch (Exception e){ 
+    	    			System.err.println("Error en la ventana de mesa cobrada desde otro TPV");
+    	    		}
+	    	    }
+		        }).start();
+			 
 			 dispose();
 			 getRestaurante().setIterfazPlatos(null);
 			 VentanaMesas ventanaMesa = new VentanaMesas(getRestaurante(),idCam);
