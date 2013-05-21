@@ -1,15 +1,10 @@
 package com.example.nfcook_camarero;
 
-
-
-
 import java.util.StringTokenizer;
 
 import baseDatos.HandlerGenerico;
-import fragments.PantallaMesasFragment;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,36 +33,23 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     TextView mInfoText;
     private static final int MESSAGE_SENT = 1;
     Context context;
-	 
-	//Variables usadas en la manipulacion e bases de datos	
-	HandlerGenerico sqlMesas,sqlrestaurante;
-	SQLiteDatabase dbMesas,dbMiBase;
-	
+    HandlerGenerico sqlRestaurante;
+	SQLiteDatabase dbRestaurante, sqlEquivalencia;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
-	
-	String restaurante;
-	int numeroRestaurante;
-	String abreviatura;
-	/*Variables para obtener el valor equivalente del restaurante*/
-	String ruta="/data/data/com.example.nfcook_camarero/databases/";
-	private SQLiteDatabase dbEquivalencia;
-	private HandlerGenerico sqlEquivalencia;
-	
+	String restaurante, numMesa, numMesaLeida; 
 	    
 	/**Metodo que se encarga de cerrar la ventana
 	 * */
 	public void cerrarVentana(){
-	    	this.finish();
+		this.finish();
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_beam_nfc);
-		
-		context=this;
 		
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
@@ -79,8 +61,8 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     	
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
-		restaurante=bundle.getString("Restaurante");
-	
+		numMesa = bundle.getString("NumMesa");
+		restaurante = bundle.getString("Restaurante");
 		    
 		//Creamos la instacia del manager de sonido
 		sonidoManager = new SonidoManager(getApplicationContext());
@@ -101,6 +83,9 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
         	// Register callback to listen for message-sent success
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
+        
+        String pepe = "0&1/@12+Maca+ Pepe*Nada&2/@25+Guille + Javi*Todo";
+        procesarCuentas(pepe);
 	}
 	
 	 /**
@@ -148,7 +133,8 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	    }
 	   
 	    /**
-	     *Metodo encargado de procesar el mensaje que se le envia de un dispositivo al otro
+	     * Metodo encargado de procesar el mensaje que se le envia de un dispositivo al otro
+	     * @param intent
 	     */
 	    public void processIntent(Intent intent) {
 	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
@@ -156,7 +142,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	        // only one message sent during the beam
 	        NdefMessage msg = (NdefMessage) rawMsgs[0];        
 	        
-	        procesarCuenta(new String(msg.getRecords()[0].getPayload()));
+	        //procesarCuentas(new String(msg.getRecords()[0].getPayload()));
 	        
 	        //Sonido para confirmar el pedido sincronizado
 	        sonidoManager.play(sonido);
@@ -165,23 +151,72 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	        
 	    }
 
+	/***
+	 * Obtiene la cuenta de las cuentas separadas por &
+	 * Formato: rest & numMesaX / cuentaX & numMesaY / cuentaY & numMesaZ cuentaZ
+	 * @param string
+	 * @return
+	 */
+	private void procesarCuentas(String cuentas) {
+		boolean mesaEncontrada = false;
+		String cuenta = "";
+		StringTokenizer st = new StringTokenizer(cuentas,"&");
 		
+		if (estoyEnRestauranteCorrecto(st.nextToken())){
+	
+			while(st.hasMoreElements() && !mesaEncontrada){
+				StringTokenizer stCuenta = new StringTokenizer(st.nextToken(),"/");
+				String numMesaCuenta = stCuenta.nextToken();
+				cuenta = stCuenta.nextToken();
+				mesaEncontrada = numMesaCuenta.equals(numMesa);
+			}	
+			if (mesaEncontrada) procesarCuenta(cuenta);
+			else Toast.makeText(this, "Error al recoger la cuenta. No existe ninguna cuenta para la mesa "+ numMesa, Toast.LENGTH_SHORT).show();
+    	} 
+		else Toast.makeText(this, "Error al recoger la cuenta. No se encuentra el restaurante correcto", Toast.LENGTH_SHORT).show();	
+	}
+	
+
 	/**Metodo encargado de procesar el string que le llega por correo.
-	* Formato: rest@id+extras*obs@id+extras*obs.....
-	* Ejemplo: rest@id1+e1+e2*obs@id2+e1+e2+e3*obs@id*/
+	* Formato: id+extras*obs@id+extras*obs.....
+	* Ejemplo: id1+e1+e2*obs@id2+e1+e2+e3*obs@id*/
     private void procesarCuenta(String string) {
 	    	
-    	if (estoyEnRestauranteCorrecto()){
-	    		
-    	} else {
-	    		Toast.makeText(this, "Error al recoger la cuenta del TPV. No estas en restaurante correcto.", Toast.LENGTH_LONG);
-	    }
+  
 	}
 
-	private boolean estoyEnRestauranteCorrecto() {
-			// TODO Auto-generated method stub
-			return false;
+   
+	private boolean estoyEnRestauranteCorrecto(String id){
+		
+		abrirBaseDatos();
+		
+		// Campos que quieres recuperar
+		String[] campos = new String[] { "Numero" };
+		String[] datos = new String[] { restaurante };
+		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
+
+		cursorPedido.moveToFirst();
+		String idRestaurante = cursorPedido.getString(0);
+			
+		// cerrar
+		dbRestaurante.close();
+		
+		return (idRestaurante.equalsIgnoreCase(id));
+	}
+   
+
+	private void abrirBaseDatos() {
+		// apertura de la base de datos
+		sqlRestaurante = null;
+		dbRestaurante = null;
+
+		try {
+			sqlRestaurante = new HandlerGenerico(getApplicationContext(), "Equivalencia_Restaurantes.db");
+			dbRestaurante = sqlRestaurante.open();
+		} catch (SQLiteException e) {
+			System.out.println("NO EXISTE BASE DE DATOS EQUIV REST (estoyEnRestauranteCorrecto)");
 		}
+	}
 
 	/*Menu que usaremos para activar el NFC y el beam*/
     public boolean onCreateOptionsMenu(Menu menu) {

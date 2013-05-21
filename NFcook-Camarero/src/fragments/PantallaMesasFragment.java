@@ -312,14 +312,15 @@ public class PantallaMesasFragment extends Fragment {
 				    		intent.putExtra("NumMesa", numeroMesaAEditar);
 				    		startActivity(intent);
 				    	}
-				    	 // ----- borrar tag ---
 				    	else if (item == 3){
-				    		intent = new Intent(ctx,BorrarTarjeta.class);
+				    		intent = new Intent(ctx,RecogerCuentaTPV.class);
+				    		intent.putExtra("NumMesa", numeroMesaAEditar);
 				    		intent.putExtra("Restaurante",restaurante);
 				    		startActivity(intent);
 				    	}
+				    	// ----- borrar tag ---
 				    	else if (item == 4){
-				    		intent = new Intent(ctx,RecogerCuentaTPV.class);
+				    		intent = new Intent(ctx,BorrarTarjeta.class);
 				    		intent.putExtra("Restaurante",restaurante);
 				    		startActivity(intent);
 				    	}
