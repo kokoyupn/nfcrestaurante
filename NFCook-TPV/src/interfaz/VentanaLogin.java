@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -30,6 +31,7 @@ import javax.swing.border.EmptyBorder;
 import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
 import sockets.ShutdownHook;
+import tpv.Producto;
 import tpv.Restaurante;
 
 public class VentanaLogin extends JFrame implements ActionListener{
@@ -38,6 +40,8 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private static Restaurante unRestaurante;
+	
+
 	
 	public VentanaLogin(){
 		
@@ -364,10 +368,76 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		 * TODO Diniel procesar el string del pedido, lo deciodifica y lo añade a 
 		 * la mesa que corresponda.
 		 */
-		System.out.println("YA HAY UN PUTO NEGRO HACIENDO LA COMIDA");
+		
+		
+		
+		//1@h@V73@V74@V20+rvkc*Cebolla frita@V37*Al punto, Patatas fritas, Queso@255
+		//restaurante@idplato "+"observaciones"*" extras
+		StringTokenizer platos = new StringTokenizer (pedido, "@");
+		boolean parar=false;
+		//Restaurante
+		int restaurante = Integer.parseInt(platos.nextToken());
+		String numeroMesa=platos.nextToken();
+		if (restaurante==0){
+		while (platos.hasMoreTokens())
+		{
+			//----------------------------------------
+			//Para cada plato lo decodificamos y lo añadimos a la base de datos
+			String plato = platos.nextToken();
+			StringTokenizer stTodoSeparado =  new StringTokenizer(plato,"*+");
+			
+			String extras,comentario;
+			extras=comentario="";
+			// id
+			String id =  stTodoSeparado.nextToken();
+			parar= id.equals("255");
+			if(!parar){//Si no ha acabado el mensaje		
+				// comentarios
+				if (plato.contains("+"))  {
+					comentario =  stTodoSeparado.nextToken();
+				}
+				
+				// extras
+				if (plato.contains("*"))  {
+					extras =  stTodoSeparado.nextToken();
+						
+				}
+				
+				
+				Producto  producto = unRestaurante.dameProductoRestauranteDadoID(id);
+				
+				
+				
+//				 Plato(String id, String categoria, String tipo, String nombre,
+//							String descripción, String foto, double precio,
+//							String observaciones, String extras, String extrasMarcados, int cantiadPedido)
+				String categoria = producto.getCategoria();
+				String tipo = producto.getTipo();
+				String nombre = producto.getNombre();
+				String descripcion = producto.getDescripción();
+				String foto = producto.getFoto();
+		     	Double precio = producto.getPrecio();
+		     	String extrasMarcados="";
+		     	int cantidad =1;
+				System.out.println("\n PLATO:"+id+":"+extras+":"+comentario);
+				if (extras.equals(""))
+					extras="No configurable"; 
+				unRestaurante.añadirProductoEnMesa("M"+numeroMesa,producto, extras, comentario);
+
+			}	
+		}
+		unRestaurante.actualizaEstadoMesaComanda("M"+numeroMesa);
+		
+		}
+		else {
+			System.out.println("\n Esos platos no corresponden a este restaurante");
+		}
+		
+	
 	}
 	
 	public static void main(String args[]){
+		
 		ClienteFichero.pide("MesasRestaurante.db");
 		ClienteFichero.pide("MiBase.db");
 		ClienteFichero.pide("login.db");
@@ -377,6 +447,11 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		ClienteFichero.pide("MiBaseFav.db");
 				
 		VentanaLogin ventanaLogin = new VentanaLogin();
+		//0@h@V20+rvkc*Cebolla frita@V37*Al punto, Patatas fritas, Queso@255
+		//0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255
+		//0@1@fh1@fh8+Sin cebolla ni salsasa barbacoa*Al punto, Barbacoa, Patata Asada@fh43@fh26+Sin queso@fh3*Mexicana@255
+		procesaPedido("0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255");
+				
 		ventanaLogin.pack();
 		ventanaLogin.setVisible(true);
 		

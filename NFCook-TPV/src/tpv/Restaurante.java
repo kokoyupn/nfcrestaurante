@@ -659,6 +659,10 @@ public class Restaurante {
 		
 	}
 	
+	public Producto dameProductoRestauranteDadoID(String id){
+		return productosRestaurante.get(id);
+	}
+	
 	/**
 	 * Compara productos por la cantidad de veces pedidos
 	 * @author Guille
