@@ -10,6 +10,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -33,6 +35,8 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 	
 	private JScrollPane scrollpanelMesasCamarero;
 	private JScrollPane scrollpanelMesas;
+	
+	private final Lock mutex = new ReentrantLock(true);
 
 	public VentanaMesas(Restaurante unRestaurante, String idCamarero){
 		
@@ -130,19 +134,25 @@ public class VentanaMesas extends JFrame implements ActionListener, MouseMotionL
 	}
 	
 	public void cargarMesasRestaurate(){
-		panelMesas.removeAll();
-		Iterator<Mesa> iteradorMesas = unRestaurante.getIteratorMesas();
-		
-		while(iteradorMesas.hasNext()){
-			Mesa unaMesa = iteradorMesas.next();
-			BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
-			panelMesas.add(botonMesa, null);
+		if (mutex.tryLock()){
+			
+			mutex.lock();
+			panelMesas.removeAll();
+			Iterator<Mesa> iteradorMesas = unRestaurante.getIteratorMesas();
+			
+			while(iteradorMesas.hasNext()){
+				Mesa unaMesa = iteradorMesas.next();
+				BotonMesa botonMesa = new BotonMesa(this, unRestaurante, unaMesa.getNumeroPersonas(), unaMesa.getIdMesa(), idCamarero);
+				panelMesas.add(botonMesa, null);
+			}
+			panelMesasCamarero.validate();
+			panelMesasCamarero.repaint();
+			
+			scrollpanelMesas.validate();
+			scrollpanelMesas.repaint();
+			
+			mutex.unlock();
 		}
-		panelMesasCamarero.validate();
-		panelMesasCamarero.repaint();
-		
-		scrollpanelMesas.validate();
-		scrollpanelMesas.repaint();
 		
 	}
 	
