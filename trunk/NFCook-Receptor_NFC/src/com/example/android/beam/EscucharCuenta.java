@@ -5,6 +5,8 @@ import java.util.Properties;
 
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 
@@ -20,7 +22,7 @@ public class EscucharCuenta {
 	}
 	
 	public String esperaYprocesaCuentas(){
-		// Se obtiene la Session
+		/*// Se obtiene la Session
         Properties prop = new Properties();
         prop.setProperty("mail.pop3.starttls.enable", "false");
         prop.setProperty(
@@ -59,7 +61,37 @@ public class EscucharCuenta {
         {
             e.printStackTrace();
         }
-        
+        */
+		Properties props = new Properties();
+	    props.setProperty("mail.store.protocol", "imaps");
+
+	    props.setProperty("mail.store.socketFactory.class",
+	                "com.imap.DummySSLSocketFactory");
+
+
+	    // Prevents to fall into NOT-secure connection
+	    props.setProperty("mail.pop3.socketFactory.fallback", "false");
+
+	    try {
+	        Session session = Session.getDefaultInstance(props, null);
+	        Store store = session.getStore("imaps");
+	        store.connect("nfcookapp@gmail.com", "nfcookapp@gmail.com", "Macarrones");
+
+	        System.out.println(store);
+
+	        Folder inbox = store.getFolder("Inbox");
+	        inbox.open(Folder.READ_ONLY);
+	        Message messages[] = inbox.getMessages();
+	        for (Message message : messages) {
+	            System.out.println(message);
+	        }
+	    } catch (NoSuchProviderException e) {
+	        e.printStackTrace();
+	        System.exit(1);
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
+	        System.exit(2);
+	    }
         return cuentas;
 	}
 	
