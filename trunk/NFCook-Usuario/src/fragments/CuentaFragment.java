@@ -1,5 +1,6 @@
 package fragments;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import usuario.RecogerCuentaNFC;
@@ -7,10 +8,14 @@ import usuario.RecogerCuentaQR;
 import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
+import com.paypal.android.MEP.PayPal;
+import com.paypal.android.MEP.PayPalActivity;
+import com.paypal.android.MEP.PayPalPayment;
 
 import adapters.MiListCuentaAdapter;
 import adapters.PadreListCuenta;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
@@ -44,9 +49,15 @@ public class CuentaFragment extends Fragment{
 	
 	private NfcAdapter adapter;
 	
+	private static final int REQUEST_PAYPAL_CHECKOUT = 2;
+	private boolean _paypalLibraryInit;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.cuenta, container, false);
+		
+		//Inicializamos la libreria de paypal
+		inicializarPayPal();
 		
 		// Ponemos el título a la actividad
         // Recogemos ActionBar
@@ -182,11 +193,27 @@ public class CuentaFragment extends Fragment{
 		botonPayPal.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				Toast.makeText(vista.getContext(),"PAYPAL",Toast.LENGTH_LONG).show();
-				
+				lanzarActivityPayPal();
 			}
 		});
 	}
+	
+		private void lanzarActivityPayPal(){
+		
+		PayPalPayment newPayment = new PayPalPayment(); 
+		newPayment.setSubtotal(new BigDecimal(total)); 
+		newPayment.setCurrencyType("Eur"); 
+		newPayment.setRecipient("nfcookapp@gmail.com"); 
+		newPayment.setMerchantName("NFCook");					
+					
+		
+		Intent checkoutIntent = PayPal.getInstance().checkout(newPayment, this.getActivity() /*, new ResultDelegate()*/);
+			    // Use the android's startActivityForResult() and pass in our
+			    // Intent.
+			    // This will start the library.
+		this.startActivityForResult(checkoutIntent, REQUEST_PAYPAL_CHECKOUT);
+	}
+
 
 	/**
 	 * Crea el onClick la la imagen botonSincronizar.
@@ -236,6 +263,7 @@ public class CuentaFragment extends Fragment{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		cargarCuenta();
 		crearListView();
+		 if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
 	}
 	
 	/**
@@ -258,6 +286,49 @@ public class CuentaFragment extends Fragment{
 		});
 		
 	}
+	public void inicializarPayPal() {
+		PayPal pp = PayPal.getInstance();
 
+		if (pp == null) {  // Test to see if the library is already initialized
+
+		// This main initialization call takes your Context, AppID, and target server
+		pp = PayPal.initWithAppID(this.getActivity(), "APP-80W284485P519543T", PayPal.ENV_SANDBOX);
+
+		// Required settings:
+
+		// Set the language for the library
+		pp.setLanguage("es_ES");
+
+		// Some Optional settings:
+
+		// Sets who pays any transaction fees. Possible values are:
+		// FEEPAYER_SENDER, FEEPAYER_PRIMARYRECEIVER, FEEPAYER_EACHRECEIVER, and FEEPAYER_SECONDARYONLY
+		pp.setFeesPayer(PayPal.FEEPAYER_EACHRECEIVER);
+
+		// true = transaction requires shipping
+		pp.setShippingEnabled(false);
+
+		_paypalLibraryInit = true;
+		}
+	}
+	
+	
+	public void PayPalActivityResult(int requestCode, int resultCode, Intent intent) {
+		switch (resultCode) {
+		// The payment succeeded
+		case Activity.RESULT_OK:
+			Toast.makeText(this.getActivity(), "El pago fue realizado con éxito",1).show();
+		break;
+
+		// The payment was canceled
+		case Activity.RESULT_CANCELED:
+			Toast.makeText(this.getActivity(), "El pago fue cancelado",1).show();
+		break;
+
+		// The payment failed, get the error from the EXTRA_ERROR_ID and EXTRA_ERROR_MESSAGE
+		case PayPalActivity.RESULT_FAILURE:
+			Toast.makeText(this.getActivity(), "Error al procesar el pago",1).show();
+		}
+		}
 	
 }
