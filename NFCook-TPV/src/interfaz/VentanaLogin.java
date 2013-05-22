@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 
 import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
+import sockets.OperacionesSocketsSinBD;
 import sockets.ShutdownHook;
 import tpv.Producto;
 import tpv.Restaurante;
@@ -378,8 +379,9 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		//Restaurante
 		int restaurante = Integer.parseInt(platos.nextToken());
 		String numeroMesa=platos.nextToken();
+		String numeroPersonas = platos.nextToken();
 		if (restaurante==0){
-		while (platos.hasMoreTokens())
+		while (platos.hasMoreTokens() && !parar)
 		{
 			//----------------------------------------
 			//Para cada plato lo decodificamos y lo añadimos a la base de datos
@@ -403,14 +405,11 @@ public class VentanaLogin extends JFrame implements ActionListener{
 						
 				}
 				
-				
+				System.out.println("\n PLATO:"+id+":"+extras+":"+comentario);
 				Producto  producto = unRestaurante.dameProductoRestauranteDadoID(id);
 				
 				
-				
-//				 Plato(String id, String categoria, String tipo, String nombre,
-//							String descripción, String foto, double precio,
-//							String observaciones, String extras, String extrasMarcados, int cantiadPedido)
+
 				String categoria = producto.getCategoria();
 				String tipo = producto.getTipo();
 				String nombre = producto.getNombre();
@@ -419,15 +418,17 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		     	Double precio = producto.getPrecio();
 		     	String extrasMarcados="";
 		     	int cantidad =1;
-				System.out.println("\n PLATO:"+id+":"+extras+":"+comentario);
+				
 				if (extras.equals(""))
 					extras="No configurable"; 
 				unRestaurante.añadirProductoEnMesa("M"+numeroMesa,producto, extras, comentario);
 
 			}	
 		}
-		unRestaurante.actualizaEstadoMesaComanda("M"+numeroMesa);
-		
+		numeroMesa= "M"+numeroMesa;
+		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
+		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 2);
+		operacion.actualizarMesaBD(numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 2);
 		}
 		else {
 			System.out.println("\n Esos platos no corresponden a este restaurante");
@@ -445,12 +446,12 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		ClienteFichero.pide("InfoMesas.db");
 		ClienteFichero.pide("Equivalencia_Restaurantes.db");
 		ClienteFichero.pide("MiBaseFav.db");
-				
+		//procesaPedido("0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255@\r\n");		
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		//0@h@V20+rvkc*Cebolla frita@V37*Al punto, Patatas fritas, Queso@255
 		//0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255
 		//0@1@fh1@fh8+Sin cebolla ni salsasa barbacoa*Al punto, Barbacoa, Patata Asada@fh43@fh26+Sin queso@fh3*Mexicana@255
-		procesaPedido("0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255");
+		//procesaPedido("0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255");
 				
 		ventanaLogin.pack();
 		ventanaLogin.setVisible(true);
