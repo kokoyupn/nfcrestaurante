@@ -6,7 +6,17 @@ package sockets;
  **/
 public class ShutdownHook extends Thread{
 
+	private String idMesa;
+	
+	public ShutdownHook(String idMesa){
+		this.idMesa = idMesa;
+	}
+	
 	public void run(){
+		
+		if (idMesa != null)
+			 // si estamos dentro de una mesa, cambiamos el estado a NO visitada
+			ClienteFichero.enviaMesaVisitada(idMesa, false);
 		
 		// enviamos la IP del TPV al servidor para eliminarlo de su lista de IPs
 		ClienteFichero.enviaIPtpv();
