@@ -210,26 +210,26 @@ public class InterfazPlatos extends JFrame {
 					int seleccion = JOptionPane.showOptionDialog(contentPaneGlobal ,"¿Seguro?",null,JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
 					if (seleccion == 0){//aceptar
-						//TODO cobrar 
 						//cobramos solo los platos que han sido enviados a cocina
 						ArrayList<Producto> aCobrar = platosACobrar();						
 						if (aCobrar.size()>0){
 							//Construimos el panel con las promociones
 							generaPromociones();
-							//TODO Usar solo la mesa y lo necesario
 							boolean enc = false;
 							Mesa mesa = null;
+							int numPers = 0;
 							Iterator<Mesa> iteratorMesas = getRestaurante().getIteratorMesas();
 							while(iteratorMesas.hasNext() && !enc)
 							{
 								mesa = iteratorMesas.next();
 								if (mesa.getIdMesa().equals(idMesa)){
+									numPers = mesa.getNumeroPersonas();
 									enc = true;
 									}
 							}
 							
 							//Pasamos los parametros necesarios para imprimir el tiket
-							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante(),promocion,mesa);
+							Cobro c = new Cobro(aCobrar,idMesa, idCam, dineroAcobrar, unRestaurante.getNombreRestaurante(),promocion,numPers);
 							//mostramos mensaje de acción realizada con éxito
 							JOptionPane.showOptionDialog(contentPaneGlobal ,"Cobrado con éxito",null,JOptionPane.YES_NO_CANCEL_OPTION,
 									JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/check.png"), 50, 50),new Object[] {"Aceptar"},"Aceptar");			
@@ -1011,10 +1011,10 @@ public class InterfazPlatos extends JFrame {
 						i++;
 						
 						//Metemos un blanco para verlo mejor
-						JLabel etqBlancoAbajo = new JLabel("\n");
+						etqBlanco = new JLabel("\n");
 						gbc_btnPopup.gridx = 0;
 						gbc_btnPopup.gridy = i;
-						menuConfig.add(etqBlancoAbajo, gbc_btnPopup);
+						menuConfig.add(etqBlanco, gbc_btnPopup);
 						i++;
 						
 						//Creamos un radioGroup para que solo se pueda seleccionar un extra por tipo de extra
@@ -1076,12 +1076,27 @@ public class InterfazPlatos extends JFrame {
 		}	
 		//Común para plato y bebida
 		
+		//Metemos un blanco para verlo mejor
+		JLabel etqBlanco = new JLabel("\n");
+		gbc_btnPopup.gridx = 0;
+		gbc_btnPopup.gridy = i;
+		menuConfig.add(etqBlanco, gbc_btnPopup);
+		i++;
+		
+		
 		JLabel etqObs = new JLabel("OBSERVACIONES");
 		gbc_btnPopup.gridx = 0;
 		gbc_btnPopup.gridy = i;
 		etqObs.setFont(new Font(etqObs.getFont().getName(), etqObs.getFont().getStyle(), 20));
 		etqObs.setForeground(Color.WHITE);
 		menuConfig.add(etqObs, gbc_btnPopup);
+		i++;
+		
+		//Metemos un blanco para verlo mejor
+		etqBlanco = new JLabel("\n");
+		gbc_btnPopup.gridx = 0;
+		gbc_btnPopup.gridy = i;
+		menuConfig.add(etqBlanco, gbc_btnPopup);
 		i++;
 
 		//Ponemos un campo para poder escribir observaciones
@@ -1090,6 +1105,14 @@ public class InterfazPlatos extends JFrame {
 		grid.gridy = i;
 		menuConfig.add(textoObs,grid);
 		i++;
+		
+		//Metemos un blanco para verlo mejor
+		etqBlanco = new JLabel("\n");
+		gbc_btnPopup.gridx = 0;
+		gbc_btnPopup.gridy = i;
+		menuConfig.add(etqBlanco, gbc_btnPopup);
+		i++;
+		
 		//Establecemos el oyente de las observaciones
 		textoObs.addMouseListener(new MouseAdapter() {
 			@Override

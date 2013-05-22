@@ -23,9 +23,10 @@ public class Cobro {
 	private double total;
 	private String restaurante;
 	private int promocion ;
-	private Mesa mesa;
+	private int numPers;
 	
-	public Cobro(ArrayList<Producto> cobro, String idMesa, String idCamarero, double total , String restaurante,int promocion,Mesa mesa) {
+	public Cobro(ArrayList<Producto> cobro, String idMesa, String idCamarero, double total,
+				String restaurante,int promocion, int numPers) {
 		this.cobro = cobro;
 		this.idCamarero = idCamarero;
 		this.idMesa = idMesa;
@@ -33,7 +34,7 @@ public class Cobro {
 		this.total = total;
 		this.restaurante = restaurante;
 		this.promocion = promocion;
-		this.mesa = mesa;
+		this.numPers = numPers;
 		enviarCobroAImpresora();
 	}
 
@@ -84,9 +85,9 @@ public class Cobro {
 				}else textoACamarero += "*" + producto.getObservaciones();
 				textoACamarero +=  "*" 	+ producto.getNombre() +"*"
 										+ producto.getPrecio() + "*"
-										+ mesa.getNumeroPersonas() + "*"
+										+ numPers + "*"
 										+ producto.getIdUnico() +  "*"
-										+ mesa.getIdCamarero() + "*"
+										+ idCamarero + "*"
 										+ horaEnvioYFecha ;	
 			}
 			
