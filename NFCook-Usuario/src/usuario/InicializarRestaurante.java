@@ -4,12 +4,27 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import baseDatos.HandlerDB;
+
+import com.example.nfcook.R;
+
+import android.widget.RatingBar;
+import usuario.Mail;
+
+
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
+import fragments.CuentaFragment;
+import fragments.PantallaInicialRestaurante;
+import fragments.PedidoFragment;
+import fragments.ContenidoTabsSuperioresFragment;
+
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
+
 import adapters.PagerAdapter;
 import alertDialogPersonalizado.ActionItem;
 import alertDialogPersonalizado.QuickAction;
@@ -44,6 +59,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -81,7 +97,7 @@ import fragments.PedidoFragment;
  */
 @SuppressLint("NewApi")
 public class InicializarRestaurante extends FragmentActivity 
-									implements /*TabContentFactory,*/ OnTabChangeListener, OnPageChangeListener{
+									implements OnTabChangeListener, OnPageChangeListener{
 	
 	private ImageView imagenRestaurante;
 	private String restaurante;
@@ -104,8 +120,9 @@ public class InicializarRestaurante extends FragmentActivity
 	// Tabs inferiores con las funcionalidades de la aplicacion
 	private static TabHost tabs;
 	private static TabHost tabsSuperiores;
-	// Vista de los tabs inferiores
+	// Vista de los tabs inferiores y superiores
 	private View tabInferiorContentView;
+	private View tabSuperiorContentView;
 	
 	// Para volver cuando lanzamos una actividad
 	private static boolean seleccionadoTabSuperior;
@@ -122,7 +139,9 @@ public class InicializarRestaurante extends FragmentActivity
 	private PagerAdapter miPagerAdapter;
 	
 	// Vector en el que guardaremos todos los fragments generados
-	private ArrayList<Fragment> listFragments = new ArrayList<Fragment>();
+	private ArrayList<Fragment> listFragments;
+	private ArrayList<Fragment> listFragmentsCopia;
+	private ArrayList<Fragment> listFragmentsVacios;
 	
 	private int numComensales;
 	
@@ -150,8 +169,7 @@ public class InicializarRestaurante extends FragmentActivity
 
 	private boolean tabsSuperioresCompletos;
 	private ArrayList<String> listNombresTabsSuperiores;
-	private boolean sePuedeEliminarElTabFalso;
-	private static boolean usandoTabsInferiores;
+	public static boolean usandoTabsInferiores;
 	
     class TabFactory implements TabContentFactory {
     	 
@@ -174,7 +192,10 @@ public class InicializarRestaurante extends FragmentActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs);
-
+        
+        listFragments = new ArrayList<Fragment>();
+        listFragmentsCopia = new ArrayList<Fragment>();
+        listFragmentsVacios = new ArrayList<Fragment>();
         // Cargamos el logo del restaurante en el layout y asignamos el nombre del restaurante
         imagenRestaurante = (ImageView)findViewById(R.id.imageViewLogoRestaurante);
         Bundle bundle = getIntent().getExtras();
@@ -186,7 +207,6 @@ public class InicializarRestaurante extends FragmentActivity
 		
 		// Variables que es necesario inicializar antes de crear los tabs inferiores
 		tabsSuperioresCompletos = false;
-		sePuedeEliminarElTabFalso = true;
 		usandoTabsInferiores = true;
 		listNombresTabsSuperiores = new ArrayList<String>();
 		
@@ -519,7 +539,7 @@ public class InicializarRestaurante extends FragmentActivity
 	    	String[] datos = new String[]{restaurante};
 	    	Cursor c = db.query("Restaurantes", campos, "Restaurante=?", datos,null, null,null);
 	    	
-	    	tipos.add("       Mis\nFavoritos");
+	    	tipos.add("Mis\nFavoritos");
 	    	
 	    	// Recorremos todos los registros
 	    	while(c.moveToNext()){
@@ -548,7 +568,7 @@ public class InicializarRestaurante extends FragmentActivity
             // Hacemos referencia a su layout correspondiente
             spec.setContent(R.id.tab1Sup);
             // Preparamos la vista del tab con el layout que hemos preparado
-            spec.setIndicator(tipoTab, null);
+            spec.setIndicator(prepararTabViewSuperior(getApplicationContext(),tipoTab));
             // Lo añadimos
             tabsSuperiores.addTab(spec);
     		// Creamos el fragment de cada tab y le metemos el restaurante al que pertenece
@@ -558,15 +578,24 @@ public class InicializarRestaurante extends FragmentActivity
 	    		ContenidoTabSuperiorCategoriaBebidas.setTipoTab(tipoTab);
 	    		ContenidoTabSuperiorCategoriaBebidas.setRestaurante(restaurante);
 	    		listFragments.add(tabFragment);
+	    		listFragmentsCopia.add(tabFragment);
     		}else{
 	    		Fragment tabFragment = new ContenidoTabsSuperioresFragment();
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setcategoriaTab(tipoTab);
 	    		((ContenidoTabsSuperioresFragment) tabFragment).setRestaurante(restaurante);
 	    		listFragments.add(tabFragment);
+	    		listFragmentsCopia.add(tabFragment);
 	    	}
+    		listFragmentsVacios.add(new Fragment());
     		listNombresTabsSuperiores.add(tipoTab);
     	}
     	tabsSuperioresCompletos = true;
+    	
+    	// Este "for" hace que los tabs de arriba tengan el foco activado para que los tabs
+		// aparezcan en la pantalla siempre en vez de salir escondidos
+		for (int i = 0; i < listFragments.size(); i++) {
+            tabsSuperiores.getTabWidget().getChildAt(i).setFocusableInTouchMode(true);
+        }
     
     	// Determinamos el ancho de cada tab superior (225dp)
     	for(int i=0;i<listFragments.size();i++){
@@ -593,35 +622,56 @@ public class InicializarRestaurante extends FragmentActivity
 			}
 		});
         
-        // Ponemos el color del texto en blanco
-        for(int i=0;i<=listFragments.size()-1;i++) 
-		{ 
-            TextView tv = (TextView) tabsSuperiores.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
-            tv.setTextColor(Color.parseColor("#FFFFFF"));
+        postabSuperiorPulsado = 0;
+        
+        miViewPager.setVisibility(View.GONE);
+        
+//        // Ponemos el color del texto en blanco
+//        for(int i=0;i<=listFragments.size()-1;i++) 
+//		{ 
+//            TextView tv = (TextView) tabsSuperiores.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
+//            tv.setTextColor(Color.parseColor("#FFFFFF"));
+//        }
+        for(int i=0;i<listFragments.size();i++){
+	        tabsSuperiores.getTabWidget().getChildAt(i).setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View v) {
+					miViewPager.setVisibility(View.VISIBLE);
+					usandoTabsInferiores = false;
+					cambiarBackgroundTabsSuperiores();
+					
+					seleccionadoTabSuperior = true;
+					// Obtener la pestaña actual
+					postabSuperiorPulsado = tabsSuperiores.getCurrentTab(); 
+					// Seleccionar la página en el ViewPager.
+			        miViewPager.setCurrentItem(postabSuperiorPulsado);
+					
+					//miPagerAdapter.notifyDataSetChanged();
+					
+					Fragment f = new Fragment();
+			        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			        ft.replace(R.id.FrameLayoutPestanas, f);
+			        ft.commit();
+			        
+			        postabSuperiorPulsado = tabsSuperiores.getCurrentTab();
+				}
+			});
         }
     	
     	// Hacemos oyente al tabhost
 		tabsSuperiores.setOnTabChangedListener(new OnTabChangeListener() {
 			
 			public void onTabChanged(String tabId) {
-				// Este "for" hace que los tabs de arriba tengan el foco activado para que los tabs
-				// aparezcan en la pantalla siempre en vez de salir escondidos
-				for (int i = 0; i < listFragments.size(); i++) {
-		            tabsSuperiores.getTabWidget().getChildAt(i).setFocusableInTouchMode(true);
-		        }
-				// Aquí eliminamos el tabFalsoSup creado para que esté seleccionado cuando navegamos por
-				// los tabs inferiores
-				if(existeTabFalsoSup() && tabsSuperioresCompletos && sePuedeEliminarElTabFalso)
-				{
-					tabsSuperiores.getTabWidget().removeView(tabsSuperiores.getTabWidget().getChildTabViewAt(listFragments.size()-1));
-		            listFragments.remove(listFragments.size()-1);
-		            listNombresTabsSuperiores.remove(listNombresTabsSuperiores.size()-1);
-				}
+				
+				miViewPager.setVisibility(View.VISIBLE);
+				usandoTabsInferiores = false;
+				cambiarBackgroundTabsSuperiores();
+
 				seleccionadoTabSuperior = true;
 				// Obtener la pestaña actual
-				int pos = tabsSuperiores.getCurrentTab(); 
+				postabSuperiorPulsado = tabsSuperiores.getCurrentTab(); 
 				// Seleccionar la página en el ViewPager.
-		        miViewPager.setCurrentItem(pos);
+		        miViewPager.setCurrentItem(postabSuperiorPulsado);
 		        
 		      	tabsSuperiores.setCurrentTabByTag(tabId);
 		        Fragment f = new Fragment();
@@ -629,7 +679,6 @@ public class InicializarRestaurante extends FragmentActivity
 		        ft.replace(R.id.FrameLayoutPestanas, f);
 		        ft.commit();
 		        
-		        usandoTabsInferiores = false;
 				// Ponemos el título a la actividad
 		        // Recogemos ActionBar
 		        ActionBar actionbar = getActionBar();
@@ -654,7 +703,34 @@ public class InicializarRestaurante extends FragmentActivity
 		}else
 			return false;
 	}
+	
+	public void cambiarBackgroundTabsSuperiores()
+	{
+		if(tabsSuperiores != null && listFragments != null){
+			for (int i=0;i<listFragments.size();i++)
+			{
+				tabsSuperiores.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_sup_no_seleccionado);
+			}
+			if (!usandoTabsInferiores)
+				tabsSuperiores.getTabWidget().getChildAt(tabsSuperiores.getCurrentTab()).setBackgroundResource(R.drawable.tab_sup_seleccionado);
+		}
+	}
     
+	 // Metodo encargado de preparar las vistas de cada tab inferior
+    private View prepararTabViewSuperior(Context context, String nombreTab){
+    	// Cargamos el layout
+    	tabSuperiorContentView = LayoutInflater.from(context).inflate(R.layout.tabs_superiores, null);
+    	// Cargamos el layout que va a contener la imagen de fondo del tab
+    	LinearLayout linLayout = (LinearLayout) tabSuperiorContentView.findViewById(R.id.linearLayoutContenidoTabsSuperiores);
+    	linLayout.setBackgroundResource(R.drawable.tab_sup_no_seleccionado);
+    	// Cargamos el titulo del tab
+    	TextView textoTab = (TextView)tabSuperiorContentView.findViewById(R.id.textViewTabSuperior);
+    	textoTab.setTextColor(Color.WHITE);
+    	// Asignamos el título e icono para cada tab
+    	textoTab.setText(nombreTab);
+    	return tabSuperiorContentView;
+    }
+	
     // Metodo encargado de inicializar los tabs inferiores
     private void inicializarTabsInferiores(){
     	// Creamos los tabs inferiores y los inicializamos
@@ -671,26 +747,26 @@ public class InicializarRestaurante extends FragmentActivity
         // Hacemos referencia a su layout correspondiente
         spec.setContent(R.id.tab1);
         // Preparamos la vista del tab con el layout que hemos preparado
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabInicio"));
+        spec.setIndicator(prepararTabViewInferior(getApplicationContext(),"tabInicio"));
         // Lo añadimos
         tabs.addTab(spec);
         
         // Creamos el tab2 --> Pedido a sincronizar
         spec = tabs.newTabSpec("tabPedidoSincronizar");
         spec.setContent(R.id.tab2);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabPedidoSincronizar"));
+        spec.setIndicator(prepararTabViewInferior(getApplicationContext(),"tabPedidoSincronizar"));
         tabs.addTab(spec);
         
         // Creamos el tab3 --> Cuenta
         spec = tabs.newTabSpec("tabCuenta");
         spec.setContent(R.id.tab3);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabCuenta"));
+        spec.setIndicator(prepararTabViewInferior(getApplicationContext(),"tabCuenta"));
         tabs.addTab(spec);
         
         // Creamos el tab4 --> Calculadora
         spec = tabs.newTabSpec("tabCalculadora");
         spec.setContent(R.id.tab4);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabCalculadora"));
+        spec.setIndicator(prepararTabViewInferior(getApplicationContext(),"tabCalculadora"));
         tabs.addTab(spec);
         
         /*
@@ -701,7 +777,7 @@ public class InicializarRestaurante extends FragmentActivity
         // Creamos el tab5 --> tabFalso
         spec = tabs.newTabSpec("tabFalso");
         spec.setContent(R.id.tab5);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabFalso"));
+        spec.setIndicator(prepararTabViewInferior(getApplicationContext(),"tabFalso"));
         tabs.addTab(spec);
         
         // Seleccionamos momentaneamente el tab falso para ocultarlo
@@ -714,7 +790,7 @@ public class InicializarRestaurante extends FragmentActivity
     }
     
     // Metodo encargado de preparar las vistas de cada tab inferior
-    private View prepararTabView(Context context, String nombreTab){
+    private View prepararTabViewInferior(Context context, String nombreTab){
     	// Cargamos el layout
     	tabInferiorContentView = LayoutInflater.from(context).inflate(R.layout.tabs_inferiores, null);
     	// Cargamos el icono del tab
@@ -741,40 +817,13 @@ public class InicializarRestaurante extends FragmentActivity
     
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
-		if (tabsSuperiores != null){
-			// Este for hace que los tabs de arriba tengan el foco desactivado
-			for (int i = 0; i < listFragments.size(); i++) {
-	            tabsSuperiores.getTabWidget().getChildAt(i).setFocusableInTouchMode(false);
-	        }
-			tabsSuperiores.getTabWidget().getChildAt(tabsSuperiores.getCurrentTab()).setFocusable(false);
-		}
-		if(!existeTabFalsoSup())
-		{
-			if (tabsSuperiores != null && tabsSuperioresCompletos){
-				// Creamos el tab falso superior
-				TabHost.TabSpec spec = tabsSuperiores.newTabSpec("tabFalsoSup");
-		        // Hacemos referencia a su layout correspondiente
-		        spec.setContent(R.id.tab1Sup);
-		        // Preparamos la vista del tab con el layout que hemos preparado
-		        spec.setIndicator("tabFalsoSup", null);
-		        // Lo añadimos
-		        tabsSuperiores.addTab(spec);
-		    	Fragment fragmentEnBlanco = new Fragment();
-		        listFragments.add(fragmentEnBlanco);
-		        listNombresTabsSuperiores.add("tabFalsoSup");
-		        // Ocultamos el tabFalsoSup
-		        tabsSuperiores.getTabWidget().getChildAt(listFragments.size()-1).setVisibility(View.GONE);
-		        
-		        sePuedeEliminarElTabFalso = false;
-		        // Seleccionamos momentaneamente el tab falso que está oculto
-		        tabsSuperiores.setCurrentTabByTag("tabFalsoSup");
-		        sePuedeEliminarElTabFalso = true;
-		        
-		        usandoTabsInferiores = true;
-			}
-		}
-		
+
+		if (miViewPager != null)
+			miViewPager.setVisibility(View.GONE);
+
 		if(tabs.getCurrentTabTag().equals("tabInicio")){
+			usandoTabsInferiores = true;
+			cambiarBackgroundTabsSuperiores();
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
 			 * ya no lo esté.
@@ -800,7 +849,14 @@ public class InicializarRestaurante extends FragmentActivity
 	        FragmentTransaction m = getSupportFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPantallaInicioRes);
 	        m.commit();
+	        
+	        Fragment f = new Fragment();
+	        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+	        ft.replace(R.id.linearLayoutContenidoTabsSuperiores, f);
+	        ft.commit();
 		}else if(tabId.equals("tabPedidoSincronizar")){
+			usandoTabsInferiores = true;
+			cambiarBackgroundTabsSuperiores();
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
 			 * ya no lo esté.
@@ -828,6 +884,8 @@ public class InicializarRestaurante extends FragmentActivity
 	        m.addToBackStack("Pedido");
 	        m.commit();
 		}else if(tabId.equals("tabCuenta")){
+			usandoTabsInferiores = true;
+			cambiarBackgroundTabsSuperiores();
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
 			 * ya no lo esté.
@@ -875,11 +933,6 @@ public class InicializarRestaurante extends FragmentActivity
 			}
 		}
 	}
-
-	// Metodo encargado de devolver el contenido de cada tab
-//	public View createTabContent(String tag) {
-//        return tabInferiorContentView;
-//	}
 	
 	// Metodo encargado de lanzar la ventana emergente para indicar el número de comesales
 	public void lanzarVentanaEmergenteParaIndicarNumeroComensales(){
