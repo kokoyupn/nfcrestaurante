@@ -12,7 +12,6 @@ import java.util.PriorityQueue;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-
 import basesDeDatos.Operaciones;
 
 public class Cobro {
@@ -89,8 +88,7 @@ public class Cobro {
 										+ producto.getIdUnico() +  "*"
 										+ mesa.getIdCamarero() + "*"
 										+ horaEnvioYFecha ;
-
-
+				mandarCuentaNFC(textoACamarero);
 			}
 			
 			boolean comidaBool = false;
@@ -262,7 +260,33 @@ public class Cobro {
 		
 	}
 	
-	
+	/**
+	 * Metodo encargado de mandar por mail la cuenta para que el dispositivo receptor la reciba y la pueda coger el camarero.
+	 * Esto simula al receptor NFC que habrá en la realidad
+	 * 
+	 * @author Abel
+	 */
+	public void mandarCuentaNFC(String cuenta){
+		Mail m = new Mail();
+        m.setUser("nfcookapp@gmail.com");// username 
+        m.setPass("Macarrones");// password
+
+        String[] toArr = {"nfcookapp@gmail.com"}; 
+        m.setTo(toArr); 
+        m.setFrom("nfcookapp@gmail.com"); 
+        m.setSubject("CUENTA"); 
+        m.setBody(cuenta); 
+
+        try { 
+        	if(m.send()) { 
+        		System.out.println("Cuenta sincronizada correctamente."); 
+        	} else { 
+        		System.out.println("Cuenta no sincronizada."); //Si usuario y enviante no coinciden 
+        	} 
+        }catch(Exception e) { 
+        	System.out.println("Error al sincronizar la cuenta"); //Si ha habido fallos 
+        } 
+    }
 }
 
 
