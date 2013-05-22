@@ -531,6 +531,9 @@ public class Restaurante {
 		return palabra.charAt(palabra.length()-1) == '\'' || palabra.charAt(palabra.length()-1) == ')';
 	}
 	
+	public String getIdCamareroDadaMesa(String idMesa){
+		return mesasRestaurante.get(idMesa).getIdCamarero();
+	}
 	
 	public void cargarRestaurante(){
 		
