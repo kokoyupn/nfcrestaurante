@@ -984,6 +984,13 @@ public class InterfazPlatos extends JFrame {
 						//Guardamos en el hashMap inicialmente el tipo de extra y vacio (porque aun no se ha seleccionado nunguno)
 						hashExtras.put(categoriaExtraPadre, "");
 						
+						//Metemos un blanco para verlo mejor
+						JLabel etqBlanco = new JLabel("\n");
+						gbc_btnPopup.gridx = 0;
+						gbc_btnPopup.gridy = i;
+						menuConfig.add(etqBlanco, gbc_btnPopup);
+						i++;
+						
 						// Creamos la variedad de extras
 						String[] elementosExtra = null;
 						//Ponemos el tipo de extra subrayado
@@ -993,6 +1000,13 @@ public class InterfazPlatos extends JFrame {
 						etq.setFont(new Font(etq.getFont().getName(), etq.getFont().getStyle(), 20));
 						etq.setForeground(Color.WHITE);
 						menuConfig.add(etq, gbc_btnPopup);
+						i++;
+						
+						//Metemos un blanco para verlo mejor
+						JLabel etqBlancoAbajo = new JLabel("\n");
+						gbc_btnPopup.gridx = 0;
+						gbc_btnPopup.gridy = i;
+						menuConfig.add(etqBlancoAbajo, gbc_btnPopup);
 						i++;
 						
 						//Creamos un radioGroup para que solo se pueda seleccionar un extra por tipo de extra

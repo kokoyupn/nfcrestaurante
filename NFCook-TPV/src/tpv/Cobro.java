@@ -87,9 +87,11 @@ public class Cobro {
 										+ mesa.getNumeroPersonas() + "*"
 										+ producto.getIdUnico() +  "*"
 										+ mesa.getIdCamarero() + "*"
-										+ horaEnvioYFecha ;
-				mandarCuentaNFC(textoACamarero);
+										+ horaEnvioYFecha ;	
 			}
+			
+			//Simulamos el envio por NFC
+			mandarCuentaNFC(textoACamarero);
 			
 			boolean comidaBool = false;
 			boolean bebidaBool = false;
