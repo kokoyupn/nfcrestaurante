@@ -136,4 +136,10 @@ public class PantallaHistoricoFragment extends Fragment {
 			Toast.makeText(getActivity().getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();
 		}	
 	}
+	
+	public void actualizar()
+	{
+		importarBaseDatatos();
+		crearExpandableList();
+	}
 }

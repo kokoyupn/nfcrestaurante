@@ -92,7 +92,12 @@ public class PantallaMesasFragment extends Fragment {
         
         
         restaurante=bundle.getString("Restaurante");
-        //restaurante="VIPS";
+        LinearLayout l = (LinearLayout) vista.findViewById(R.id.linearLayoutConFondo);
+        // Asignamos la imagen de fondo perteneciente al restaurante
+        if (restaurante.equals("Foster"))
+        	l.setBackgroundResource(R.drawable.logo_foster_azul);
+        if (restaurante.equals("VIPS"))
+        	l.setBackgroundResource(R.drawable.logo_vips_azul);
         
 	   //Para importar la base de Assets
         try{
