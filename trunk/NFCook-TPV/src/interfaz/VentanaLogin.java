@@ -15,10 +15,13 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Flags.Flag;
+import javax.mail.search.FlagTerm;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,6 +30,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import com.sun.mail.imap.protocol.FLAGS;
 
 import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
@@ -338,11 +343,14 @@ public class VentanaLogin extends JFrame implements ActionListener{
             Store store = sesion.getStore("pop3");
             store.connect(
                 "pop.gmail.com", "nfcookapp@gmail.com", "Macarrones");
-            Folder folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_ONLY);
+            Folder folder = store.getFolder("Inbox");
+            folder.open(Folder.READ_WRITE);
 
             // Se obtienen los mensajes.
-            Message[] mensajes = folder.getMessages();
+            Flags leidos = new Flags(Flags.Flag.SEEN);
+	        FlagTerm unseenFlagTerm = new FlagTerm(leidos, false);
+	        //Buscamos los mensajes NO leidos
+	        Message[] mensajes = folder.search(unseenFlagTerm);
 
             // Se escribe from y subject de cada mensaje
             for (int i = 0; i < mensajes.length; i++)
@@ -352,9 +360,10 @@ public class VentanaLogin extends JFrame implements ActionListener{
             			mensajes[i].getSubject().equals("PEDIDO")){
             		// Se visualiza, si se sabe como, el contenido de cada mensaje
             		analizaParteDeMensaje(mensajes[i]);
+            		mensajes[i].setFlag(Flag.SEEN, true);
             	}
             }
-
+            
             folder.close(false);
             store.close();
         }
