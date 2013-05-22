@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import usuario.DescripcionPlato;
+import usuario.InicializarRestaurante;
 import adapters.MiCursorAdapterBuscadorPlatos;
 import adapters.MiExpandableListTabsSuperioresCategoriasAdapter;
 import adapters.MiListTabsSuperioresCategoriasAdapter;

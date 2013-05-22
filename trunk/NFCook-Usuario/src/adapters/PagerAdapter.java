@@ -2,9 +2,15 @@ package adapters;
 
 import java.util.ArrayList;
 
+import fragments.ContenidoTabSuperiorCategoriaBebidas;
+import fragments.ContenidoTabsSuperioresFragment;
+import usuario.InicializarRestaurante;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.view.View;
 /**
  * 
  * @author Alejandro Villapalos
@@ -22,20 +28,38 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class PagerAdapter extends FragmentPagerAdapter {
 
-        private ArrayList<Fragment> fragments;
+        public ArrayList<Fragment> fragments;
         
         public PagerAdapter(FragmentManager fragmentManager, ArrayList<Fragment> fragments) {
                 super(fragmentManager);
                 this.fragments = fragments;
         }
 
+		@SuppressWarnings("unchecked")
 		@Override
         public Fragment getItem(int position) {
-                return this.fragments.get(position);
+			
+			if(position<5){
+				Fragment f = new ContenidoTabsSuperioresFragment();
+				ArrayList<Fragment> fl = new ArrayList<Fragment>();
+				fl = (ArrayList<Fragment>) fragments.clone();
+				f = fl.get(position);
+				
+				return f;
+			}else{
+				return new ContenidoTabSuperiorCategoriaBebidas();
+			}
         }
         
         @Override
         public int getCount() {
                 return this.fragments.size();
         }
+       
+        @Override
+        public int getItemPosition(Object object)
+        {
+        	 return POSITION_NONE;
+        }
+
 }
