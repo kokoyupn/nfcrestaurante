@@ -67,23 +67,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.Toast;
-import baseDatos.HandlerDB;
-
-import com.example.nfcook.R;
 
 import facebook.FacebookPublicarYLogin;
-import fragments.ContenidoTabSuperiorCategoriaBebidas;
-import fragments.ContenidoTabsSuperioresFragment;
-import fragments.CuentaFragment;
-import fragments.PantallaInicialRestaurante;
-import fragments.PedidoFragment;
 
 /**
  * Esta clase es la encargada de cargar toda la información del restaurante que hemos seleccionado.
@@ -235,6 +226,7 @@ public class InicializarRestaurante extends FragmentActivity
 		// Seleccionamos el tab inicio para que salga una vez selecciones el restaurante
         tabs.setCurrentTabByTag("tabInicio");
 	    tabInferiorSeleccionado = 0;
+	  
     }
     
     protected void onSaveInstanceState(Bundle instanceState) {
@@ -646,8 +638,13 @@ public class InicializarRestaurante extends FragmentActivity
 					// Seleccionar la página en el ViewPager.
 			        miViewPager.setCurrentItem(postabSuperiorPulsado);
 					
-					//miPagerAdapter.notifyDataSetChanged();
+			        // Obtener la pestaña actual
+					int pos = tabsSuperiores.getCurrentTab();
 					
+					//miPagerAdapter.notifyDataSetChanged();
+			        if (pos == listFragments.size()-1 && listFragments.get(listFragments.size()-1).getView() != null)
+			        	((ContenidoTabSuperiorCategoriaBebidas) listFragments.get(listFragments.size()-1)).actualizar();
+			        					
 					Fragment f = new Fragment();
 			        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			        ft.replace(R.id.FrameLayoutPestanas, f);
@@ -672,6 +669,14 @@ public class InicializarRestaurante extends FragmentActivity
 				postabSuperiorPulsado = tabsSuperiores.getCurrentTab(); 
 				// Seleccionar la página en el ViewPager.
 		        miViewPager.setCurrentItem(postabSuperiorPulsado);
+		        
+		        // Obtener la pestaña actual
+				int pos = tabsSuperiores.getCurrentTab();
+		        
+		        if (pos == 0 && listFragments.get(0).getView() != null)
+		        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).actualizar();
+		        else if (pos == listFragments.size()-1 && listFragments.get(listFragments.size()-1).getView() != null)
+		        	((ContenidoTabSuperiorCategoriaBebidas) listFragments.get(listFragments.size()-1)).actualizar();
 		        
 		      	tabsSuperiores.setCurrentTabByTag(tabId);
 		        Fragment f = new Fragment();

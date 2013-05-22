@@ -90,6 +90,10 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
    
     	return vistaTabCategoriaBebida;
 	}
+	
+	public void actualizar(){
+		aplicarAdapter();
+	}
     
 	// Importamos la base de datos de los restaurantes
     public static void importarBaseDatos() {
