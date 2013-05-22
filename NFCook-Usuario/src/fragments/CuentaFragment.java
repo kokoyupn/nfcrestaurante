@@ -2,6 +2,8 @@ package fragments;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import usuario.RecogerCuentaNFC;
 import usuario.RecogerCuentaQR;
@@ -52,10 +54,12 @@ public class CuentaFragment extends Fragment{
 	private static final int REQUEST_PAYPAL_CHECKOUT = 2;
 	private static boolean paypalInicializado;
 	
+	private static boolean botonPayPalPulsado;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.cuenta, container, false);
-		
+		botonPayPalPulsado = false;
 		// Ponemos el título a la actividad
         // Recogemos ActionBar
         ActionBar actionbar = getActivity().getActionBar();
@@ -190,16 +194,13 @@ public class CuentaFragment extends Fragment{
 		botonPayPal.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				if (total!=0){
-					if (!paypalInicializado){
-						Toast.makeText(getActivity(), "Cargando PayPal", Toast.LENGTH_SHORT).show();
+				if (!botonPayPalPulsado){
+					botonPayPalPulsado = true;
+					if (!paypalInicializado)
 						inicializarPayPal();
-					}
 					lanzarActivityPayPal();
-				} 
-				else{
-					Toast.makeText(getActivity(), "Por favor, confirma tu pedido antes de pagar", Toast.LENGTH_SHORT).show();
 				}
+				//Toast.makeText(getActivity(), "Salgo del onClick", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -213,8 +214,19 @@ public class CuentaFragment extends Fragment{
 			newPayment.setMerchantName("NFCook");					
 						
 			
-			Intent checkoutIntent = PayPal.getInstance().checkout(newPayment, this.getActivity());
+			Intent checkoutIntent = PayPal.getInstance().checkout(newPayment, this.getActivity() /*, new ResultDelegate()*/);
+				    // Use the android's startActivityForResult() and pass in our
+				    // Intent.
+				    // This will start the library.
 			this.startActivityForResult(checkoutIntent, REQUEST_PAYPAL_CHECKOUT);
+			//Crea el timer para que el mensaje solo aparezca durante 3,5 segundos
+			final Timer t = new Timer();
+			t.schedule(new TimerTask() {
+				public void run() { 
+					botonPayPalPulsado = false;
+					t.cancel(); 
+				}
+			}, 3000);
 	}
 
 
@@ -266,7 +278,6 @@ public class CuentaFragment extends Fragment{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		cargarCuenta();
 		crearListView();
-		Toast.makeText(getActivity(), "Por favor, confirma tu pedido antes de pagar", Toast.LENGTH_SHORT).show();
 		 if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
 	}
 	
@@ -293,21 +304,23 @@ public class CuentaFragment extends Fragment{
 	public void inicializarPayPal() {
 		PayPal pp = PayPal.getInstance();
 
-		if (pp == null) {  // Prueba si la libreria ha sido ya inicializada
+		if (pp == null) {  // Test to see if the library is already initialized
 
 			// This main initialization call takes your Context, AppID, and target server
 			pp = PayPal.initWithAppID(this.getActivity(), "APP-80W284485P519543T", PayPal.ENV_SANDBOX);
+
+			// Required settings:
 	
-			// Especifica el idioma (Obligatorio)
+			// Set the language for the library
 			pp.setLanguage("es_ES");
 	
-			// Ajustes opcionales:
+			// Some Optional settings:
 	
-			// Quien paga las tasas:
+			// Sets who pays any transaction fees. Possible values are:
 			// FEEPAYER_SENDER, FEEPAYER_PRIMARYRECEIVER, FEEPAYER_EACHRECEIVER, and FEEPAYER_SECONDARYONLY
 			pp.setFeesPayer(PayPal.FEEPAYER_EACHRECEIVER);
 	
-			// true = requiere envio
+			// true = transaction requires shipping
 			pp.setShippingEnabled(false);
 		}
 		
@@ -317,11 +330,17 @@ public class CuentaFragment extends Fragment{
 	
 	public void PayPalActivityResult(int requestCode, int resultCode, Intent intent) {
 		switch (resultCode) {
-		// El pago se ha relizado con éxito
+		// The payment succeeded
 		case Activity.RESULT_OK:
 			Toast.makeText(this.getActivity(), "El pago fue realizado con éxito",1).show();
 		break;
-		// El pago ha fallado
+
+		// The payment was canceled
+		case Activity.RESULT_CANCELED:
+			Toast.makeText(this.getActivity(), "El pago fue cancelado",1).show();
+		break;
+
+		// The payment failed, get the error from the EXTRA_ERROR_ID and EXTRA_ERROR_MESSAGE
 		case PayPalActivity.RESULT_FAILURE:
 			Toast.makeText(this.getActivity(), "Error al procesar el pago",1).show();
 		}
