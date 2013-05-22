@@ -538,7 +538,7 @@ public class Mesa extends Activity {
   		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Id =?",datos,null,null,null); 
   		cursor.moveToFirst();
   		
-  		String extrasPlato = cursor.getString(0);//FIXME aqi casca
+  		String extrasPlato = cursor.getString(0);
   		String extrasMarcados = adapter.getExtrasMarcados(posicion);
   		  		
   		if(!extrasPlato.equals("")){
@@ -605,8 +605,8 @@ public class Mesa extends Activity {
 	        //Con setAdapter funciona bien!!	        
 	        platos.setAdapter(adapter);
 		    
-	        //Prueba----------
-	        adapter.notifyDataSetChanged();
+	        //Prueba. Peta a veces, al editar un plato. Si añades un plato y ya habia, no los muestra----------
+	        //adapter.notifyDataSetChanged();
 	        //Prueba---------
 	        
 			sqlMesas.close();
