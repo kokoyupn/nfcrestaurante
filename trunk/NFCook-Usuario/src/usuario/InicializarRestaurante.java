@@ -651,6 +651,8 @@ public class InicializarRestaurante extends FragmentActivity
 			        ft.commit();
 			        
 			        postabSuperiorPulsado = tabsSuperiores.getCurrentTab();
+			        
+			        tabs.getTabWidget().getChildAt(InicializarRestaurante.getTabInferiorSeleccionado()).setBackgroundColor(Color.parseColor("#c38838"));
 				}
 			});
         }
