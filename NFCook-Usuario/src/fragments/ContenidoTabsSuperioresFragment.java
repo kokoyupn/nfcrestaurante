@@ -104,6 +104,21 @@ public class ContenidoTabsSuperioresFragment extends Fragment{
 	    	}
 	    }
 	    
+	    public View actualizar() {
+	    	if (categoriaTab.toLowerCase().endsWith("mis\nfavoritos")){
+	    		// actualizamos los platos
+		    	cargarPlatosFavoritos();
+	    	}
+	    	if (unicoTipoPlato){
+	    		return vistaConListView;
+	    	}else{
+	    		return vistaConExpandableListView;
+	    	}
+	    }
+	    
+	    
+	    
+	    
 	    public void setcategoriaTab(String categoriaTab){
 	    	this.categoriaTab = categoriaTab;
 	    }
