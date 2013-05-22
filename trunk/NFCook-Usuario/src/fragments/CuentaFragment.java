@@ -50,14 +50,11 @@ public class CuentaFragment extends Fragment{
 	private NfcAdapter adapter;
 	
 	private static final int REQUEST_PAYPAL_CHECKOUT = 2;
-	private boolean _paypalLibraryInit;
+	private static boolean paypalInicializado;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.cuenta, container, false);
-		
-		//Inicializamos la libreria de paypal
-		inicializarPayPal();
 		
 		// Ponemos el título a la actividad
         // Recogemos ActionBar
@@ -193,25 +190,28 @@ public class CuentaFragment extends Fragment{
 		botonPayPal.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				if (!paypalInicializado)
+					inicializarPayPal();
 				lanzarActivityPayPal();
+				Toast.makeText(getActivity(), "Salgo del onClick", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
 	
 		private void lanzarActivityPayPal(){
 		
-		PayPalPayment newPayment = new PayPalPayment(); 
-		newPayment.setSubtotal(new BigDecimal(total)); 
-		newPayment.setCurrencyType("Eur"); 
-		newPayment.setRecipient("nfcookapp@gmail.com"); 
-		newPayment.setMerchantName("NFCook");					
-					
-		
-		Intent checkoutIntent = PayPal.getInstance().checkout(newPayment, this.getActivity() /*, new ResultDelegate()*/);
-			    // Use the android's startActivityForResult() and pass in our
-			    // Intent.
-			    // This will start the library.
-		this.startActivityForResult(checkoutIntent, REQUEST_PAYPAL_CHECKOUT);
+			PayPalPayment newPayment = new PayPalPayment(); 
+			newPayment.setSubtotal(new BigDecimal(total)); 
+			newPayment.setCurrencyType("Eur"); 
+			newPayment.setRecipient("nfcookapp@gmail.com"); 
+			newPayment.setMerchantName("NFCook");					
+						
+			
+			Intent checkoutIntent = PayPal.getInstance().checkout(newPayment, this.getActivity() /*, new ResultDelegate()*/);
+				    // Use the android's startActivityForResult() and pass in our
+				    // Intent.
+				    // This will start the library.
+			this.startActivityForResult(checkoutIntent, REQUEST_PAYPAL_CHECKOUT);
 	}
 
 
@@ -291,25 +291,25 @@ public class CuentaFragment extends Fragment{
 
 		if (pp == null) {  // Test to see if the library is already initialized
 
-		// This main initialization call takes your Context, AppID, and target server
-		pp = PayPal.initWithAppID(this.getActivity(), "APP-80W284485P519543T", PayPal.ENV_SANDBOX);
-
-		// Required settings:
-
-		// Set the language for the library
-		pp.setLanguage("es_ES");
-
-		// Some Optional settings:
-
-		// Sets who pays any transaction fees. Possible values are:
-		// FEEPAYER_SENDER, FEEPAYER_PRIMARYRECEIVER, FEEPAYER_EACHRECEIVER, and FEEPAYER_SECONDARYONLY
-		pp.setFeesPayer(PayPal.FEEPAYER_EACHRECEIVER);
-
-		// true = transaction requires shipping
-		pp.setShippingEnabled(false);
-
-		_paypalLibraryInit = true;
+			// This main initialization call takes your Context, AppID, and target server
+			pp = PayPal.initWithAppID(this.getActivity(), "APP-80W284485P519543T", PayPal.ENV_SANDBOX);
+	
+			// Required settings:
+	
+			// Set the language for the library
+			pp.setLanguage("es_ES");
+	
+			// Some Optional settings:
+	
+			// Sets who pays any transaction fees. Possible values are:
+			// FEEPAYER_SENDER, FEEPAYER_PRIMARYRECEIVER, FEEPAYER_EACHRECEIVER, and FEEPAYER_SECONDARYONLY
+			pp.setFeesPayer(PayPal.FEEPAYER_EACHRECEIVER);
+	
+			// true = transaction requires shipping
+			pp.setShippingEnabled(false);
 		}
+		
+		paypalInicializado = true;
 	}
 	
 	
