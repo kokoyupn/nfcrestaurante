@@ -65,7 +65,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
-    	
+        procesarCuenta("a");
     	
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
@@ -92,7 +92,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
         }
         
-       procesarCuenta("a");
+       
 	}
 	
 	 /**
@@ -189,9 +189,9 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	//FORMATO: id+extras*observaciones*nombrePlato*precio*numPersonas*idUnico*idCamarero*fechaHora@siguientePlato(Igual)
     private void procesarCuenta(String string) {
 
-    	string = "fh8+Poco hecha, Roquefort, Patatas Fritas*_*PLATO ESTRELLA: Director`s Choice*10.85*5*2*idCamarero*fechaHora@";/* +
-    			"3+No configurable*_*nombrePlato*4.76*3*61*idCamarero*fechaHora" +
-    			"@10+extra1+extra2*OBS*nombrePlato*2.2*4*62*idCamarero*fechaHora";*/
+    	string = "@fh8+Poco hecha, Roquefort, Patatas Fritas*_*PLATO ESTRELLA: Director`s Choice*10.85*5*2*idCamarero*fechaHora@";/* +
+    			"@fh3+No configurable*_*nombrePlato*4.76*3*61*idCamarero*fechaHora" +
+    			"@fh10+extra1+extra2*OBS*nombrePlato*2.2*4*62*idCamarero*fechaHora";*/
     	
     	try{
     		sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
