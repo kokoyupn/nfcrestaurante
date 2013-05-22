@@ -245,7 +245,7 @@ public class PedidoFragment extends Fragment{
 	
 	/**
 	 * Crea el onClick la la imagen botonSincronizar.
-	 * Compruena si las bases de datos estan vacias para permitir o no sincronizar.
+	 * Comprueba si las bases de datos estan vacias para permitir o no sincronizar.
 	 * Si se puede abre una ventana emergente para elegir el metodo de sincronizacion.
 	 */
 	private void ponerOnClickSincronizar() {

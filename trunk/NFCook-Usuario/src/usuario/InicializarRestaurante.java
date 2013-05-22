@@ -652,6 +652,11 @@ public class InicializarRestaurante extends FragmentActivity
 			        
 			        postabSuperiorPulsado = tabsSuperiores.getCurrentTab();
 			        
+			        // Ponemos el título a la actividad
+			        // Recogemos ActionBar
+			        ActionBar actionbar = getActionBar();
+			    	actionbar.setTitle(" CONFIGURE SU MENÚ...");
+			        
 			        tabs.getTabWidget().getChildAt(InicializarRestaurante.getTabInferiorSeleccionado()).setBackgroundColor(Color.parseColor("#c38838"));
 				}
 			});
@@ -1114,7 +1119,7 @@ public class InicializarRestaurante extends FragmentActivity
 				ventanaEmergente.dismiss(); 
 				t.cancel(); 
 			}
-		}, 3500);	
+		}, 3500);
 	}
 	
 	public static void cargarTabCuenta(){
