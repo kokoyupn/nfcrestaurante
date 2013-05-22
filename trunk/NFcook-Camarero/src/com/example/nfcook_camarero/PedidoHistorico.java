@@ -63,8 +63,8 @@ public class PedidoHistorico extends Activity {
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
 		
-		//TextView mesa = (TextView)findViewById(R.id.textViewFechaHora);
-		//mesa.setText("Fecha: " + hora.substring(0, 11) + " a las " + hora.substring(hora.indexOf(" ")+1));
+		TextView mesa = (TextView)findViewById(R.id.textViewFechaHora);
+		mesa.setText("Fecha: " + hora.substring(0, 11) + " a las " + hora.substring(hora.indexOf(" ")+1));
 		
 		try{
 			sqlHistorico=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");

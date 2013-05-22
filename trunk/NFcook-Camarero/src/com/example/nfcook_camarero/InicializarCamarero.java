@@ -28,6 +28,7 @@ public class InicializarCamarero extends FragmentActivity implements OnTabChange
 	private ViewPager miViewPager;
 	private MiViewPagerAdapter miPagerAdapter;
 	private long anteriorPulsacion;
+	private ArrayList<Fragment> listFragments;
 	
 	 /**
      * A simple factory that returns dummy views to the Tabhost
@@ -139,7 +140,7 @@ public class InicializarCamarero extends FragmentActivity implements OnTabChange
     	/* listFragments es una lista donde están todos los Fragments que 
          * se van a usar en el ViewPager. En este caso va a tener 2 elementos.
          */
-        ArrayList<Fragment> listFragments = new ArrayList<Fragment>();
+        listFragments = new ArrayList<Fragment>();
         // Añadir todos los fragmentos implementados en otras clases x.class
         Bundle arguments = new Bundle();
         arguments.putString("Restaurante", "Foster");
@@ -158,6 +159,9 @@ public class InicializarCamarero extends FragmentActivity implements OnTabChange
 		// Cuando se pulsa en la pestaña
         int pos = tabs.getCurrentTab(); // Obtener que pestaña ha sido pu
         miViewPager.setCurrentItem(pos); // Seleccionar la página en el ViewPager.
+        
+        if (pos == 1 && listFragments.get(1).getView() != null)
+        	((PantallaHistoricoFragment) listFragments.get(1)).actualizar();
 	}
 
 	public View createTabContent(String tag) {

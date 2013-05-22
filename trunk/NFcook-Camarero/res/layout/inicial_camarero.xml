@@ -12,10 +12,10 @@
         android:orientation="vertical" >
 
         <LinearLayout
+            android:id="@+id/linearLayoutConFondo"
             android:layout_width="match_parent"
             android:layout_height="366dp"
             android:layout_weight="0.8"
-            android:background="@drawable/logo_foster_azul"
             android:orientation="vertical" >
 
             <GridView
