@@ -38,6 +38,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import sockets.OperacionesSocketsSinBD;
+import sockets.ShutdownHook;
 import tpv.AuxDeshacerRehacer;
 import tpv.Bebida;
 import tpv.Cobro;
@@ -81,6 +82,13 @@ public class InterfazPlatos extends JFrame {
 	 * @param idCamarero 
 	 */
 	public InterfazPlatos(final String idMesa, final Restaurante unRestaurante, String idCamarero) {
+		
+		/* ShutdownHook nos permite gestionar cuando cerramos la aplicacion desde esta ventana
+		*(para enviar al servidor la IP del TPV a eliminar y cambiar el estado de la mesa a NO visitada)
+		*/
+		ShutdownHook shutdownHook = new ShutdownHook(idMesa);
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        
 		this.idMesa = idMesa;
 		this.unRestaurante = unRestaurante;
 		this.idCam = idCamarero;

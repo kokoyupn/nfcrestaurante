@@ -47,7 +47,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	public VentanaLogin(){
 		
 		// ShutdownHook nos permite gestionar cuando cerramos la aplicacion (para enviar al servidor la IP del TPV a eliminar)
-		ShutdownHook shutdownHook = new ShutdownHook();
+		ShutdownHook shutdownHook = new ShutdownHook(null);
         Runtime.getRuntime().addShutdownHook(shutdownHook);
         
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
