@@ -73,7 +73,7 @@ public class Cobro {
 				Producto producto = itProductos.next();
 				comida +=  "Nombre: " + producto.getNombre() + " -->" + "Precio: " + producto.getPrecio() + "€";
 				textoQR += "@" + producto.getId().substring(abreviatura.length());//le quitamos fh o v
-				textoACamarero += "@" + producto.getId().substring(abreviatura.length()) + "+";//le quitamos fh o v
+				textoACamarero += "@" + producto.getId() + "+";
 				//Rellenamos los extras si es un plato
 				if(producto instanceof Plato){
 					textoACamarero += ((Plato)producto).getExtrasMarcados().replace(",","+");
