@@ -87,7 +87,7 @@ public class Cobro {
 										+ producto.getPrecio() + "*"
 										+ numPers + "*"
 										+ producto.getIdUnico() +  "*"
-										+ idCamarero + "*"
+										+ "1" + "*"//FIXME pasar idCam
 										+ horaEnvioYFecha ;	
 			}
 			
