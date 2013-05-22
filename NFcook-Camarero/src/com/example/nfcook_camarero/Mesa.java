@@ -709,6 +709,7 @@ public class Mesa extends Activity {
     		Intent intent = new Intent(this,SincronizarTpv.class);
     		intent.putExtra("Restaurante", restaurante);
     		intent.putExtra("Mesa", numMesa);
+    		intent.putExtra("Personas", numPersonas);
     		startActivityForResult(intent,0);
     		
     		

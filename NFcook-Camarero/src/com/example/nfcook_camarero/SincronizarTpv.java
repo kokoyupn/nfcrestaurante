@@ -42,6 +42,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
 	String restaurante;
     String pedido;
     String numeroMesa;
+    String numPersonas;
     
     int numeroRestaurante;
 	String abreviatura;
@@ -69,6 +70,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
         Bundle bundle = getIntent().getExtras();
       	restaurante = bundle.getString("Restaurante");
       	numeroMesa=bundle.getString("Mesa");
+      	numPersonas=bundle.getString("Personas");
      
       	 pedido= damePedidoStr();
       	     	    	
@@ -115,7 +117,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
  	       }
         // 
         
-		String listaPlatosStr = dameCodigoRestaurante()+numeroMesa+"@";
+		String listaPlatosStr = dameCodigoRestaurante()+numeroMesa+"@"+numPersonas+"@";
 		String[] campos = new String[]{"Sincro","IdPlato","Observaciones","Extras"};//Campos que quieres recuperar
 		String[] datosMesa = new String[]{numeroMesa};	
 		Cursor cursorPedido = dbMesas.query("Mesas", campos, "NumMesa=?", datosMesa,null, null,null);
@@ -138,7 +140,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
     	//System.out.println("PLATOS:"+listaPlatosStr);
     	Toast.makeText(getApplicationContext(), listaPlatosStr, Toast.LENGTH_LONG).show();
     	// para indicar que ha finalizado el pedido escribo un 255 
-    	listaPlatosStr += "255";
+    	listaPlatosStr += "255"+"@";
     	
     	return listaPlatosStr;
 	}
