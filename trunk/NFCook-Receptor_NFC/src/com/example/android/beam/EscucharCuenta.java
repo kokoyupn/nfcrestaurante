@@ -1,89 +1,91 @@
 package com.example.android.beam;
 
-import java.io.InputStream;
 import java.util.Properties;
 
+import javax.mail.BodyPart;
+import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.search.FlagTerm;
+
+
+
+/*
+ * ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡IMPORTANTE!!!!!!!!!!!!!!!
+ * 
+ * Es necesario realizar la llamada a esta clase de esta forma. NO esta permitido realizar conexiones
+ * en el hilo principal.
+ * 
+  		final EscucharCuenta escuchaCuentas = new EscucharCuenta(USUARIO, CONTRANESA);
+		//Creamos un hilo para poder escuchar la cuenta.
+		Thread hiloCuenta = new Thread(new Runnable() {
+		    public void run() {
+		    	try {
+					escuchaCuentas.esperaYprocesaCuentas();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		    }
+		  });
+		//Corremos el hilo
+		hiloCuenta.start();
+		//Esperamos hasta que termine
+		while(hiloCuenta.isAlive()){}
+		//Recogemos la cuenta
+    	String cuentas = escuchaCuentas.getCuentas();
+ * 
+ * 
+ * 
+ */
 
 public class EscucharCuenta {
-	private String cuentas;
 	
-	public EscucharCuenta(){
-		esperaYprocesaCuentas();
+	private String cuentas;
+	private String correo; //nfcookapp@gmail.com
+	private String contrasena; // Macarrones
+	
+	
+	public EscucharCuenta(String correo, String contrasena){
+		this.correo = correo;
+		this.contrasena = contrasena;
 	}
 	
 	public String getCuentas(){
 		return cuentas;
 	}
 	
-	public String esperaYprocesaCuentas(){
-		/*// Se obtiene la Session
-        Properties prop = new Properties();
-        prop.setProperty("mail.pop3.starttls.enable", "false");
-        prop.setProperty(
-            "mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        prop.setProperty("mail.pop3.socketFactory.fallback", "false");
-        prop.setProperty("mail.pop3.port", "995");
-        prop.setProperty("mail.pop3.socketFactory.port", "995");
-        Session sesion = Session.getInstance(prop);
-        
-        try{
-        	// Se obtiene el Store y el Folder, para poder leer el
-        	// correo.
-            Store store = sesion.getStore("pop3");
-            store.connect(
-                "pop.gmail.com", "nfcookapp@gmail.com", "Macarrones");
-            Folder folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_ONLY);
-
-            // Se obtienen los mensajes.
-            javax.mail.Message[] mensajes = folder.getMessages();
-
-            // Se escribe from y subject de cada mensaje
-            for (int i = 0; i < mensajes.length; i++){
-            	// Miramos si se trata de la sincronización de un pedido
-            	if(mensajes[i].getFrom()[0].toString().equals("nfcookapp@gmail.com") &&
-            			mensajes[i].getSubject().equals("CUENTA")){
-            		// Se visualiza, si se sabe como, el contenido de cada mensaje
-            		cuentas += "&" + analizaParteDeMensaje(mensajes[i]);
-            	}
-            }
-
-            folder.close(false);
-            store.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        */
-		Properties props = new Properties();
-	    props.setProperty("mail.store.protocol", "imaps");
-
-	    props.setProperty("mail.store.socketFactory.class",
-	                "com.imap.DummySSLSocketFactory");
-
-
-	    // Prevents to fall into NOT-secure connection
-	    props.setProperty("mail.pop3.socketFactory.fallback", "false");
-
+	
+	public void esperaYprocesaCuentas(){
+		//Properties props = new Properties();
+	    Properties props = System.getProperties();
+		props.setProperty("mail.store.protocol", "imaps");
 	    try {
 	        Session session = Session.getDefaultInstance(props, null);
 	        Store store = session.getStore("imaps");
-	        store.connect("nfcookapp@gmail.com", "nfcookapp@gmail.com", "Macarrones");
-
-	        System.out.println(store);
-
+	        store.connect("imap.gmail.com", correo, contrasena);
+	        
 	        Folder inbox = store.getFolder("Inbox");
-	        inbox.open(Folder.READ_ONLY);
-	        Message messages[] = inbox.getMessages();
+	        //Marcamos como lectura y escritura para poder marcar como leidos los mensajes en el correo
+	        inbox.open(Folder.READ_WRITE);
+	        //Creamos un flag para poder buscar solo los NO leidos
+	        Flags leidos = new Flags(Flags.Flag.SEEN);
+	        FlagTerm unseenFlagTerm = new FlagTerm(leidos, false);
+	        //Buscamos los mensajes NO leidos
+	        Message[] messages = inbox.search(unseenFlagTerm);
+	        //Recorremos y tratacmos cada mensaje
 	        for (Message message : messages) {
-	            System.out.println(message);
+	            // Miramos si se trata de la sincronización de una cuenta
+            	if(message.getFrom()[0].toString().equals("NFCook <nfcookapp@gmail.com>") && message.getSubject().equals("CUENTA")){
+            		// Se visualiza, si se sabe como, el contenido de cada mensaje
+            		cuentas += analizaParteDeMensaje(message);
+            	}
+            	//Marcamos el mensaje como leido en el correo
+            	message.setFlag(Flag.SEEN, true);
 	        }
 	    } catch (NoSuchProviderException e) {
 	        e.printStackTrace();
@@ -92,7 +94,6 @@ public class EscucharCuenta {
 	        e.printStackTrace();
 	        System.exit(2);
 	    }
-        return cuentas;
 	}
 	
     /**
@@ -111,11 +112,14 @@ public class EscucharCuenta {
         String cuenta = "";
         try
         {
-    		// Si es texto, se escribe el texto.
-            if (unaParte.isMimeType("text/*")) {
-                InputStream stream = unaParte.getInputStream();
-                while(stream.available() != 0){
-                	cuenta += (char) stream.read();
+            if(unaParte.getContent() instanceof Multipart)
+            {                                  
+                Multipart mime = (Multipart) unaParte.getContent();
+
+                for (int i = 0; i < mime.getCount(); i++)
+                {
+                    BodyPart part = mime.getBodyPart(i);
+                    cuenta += part.getContent().toString();
                 }
             }
         }

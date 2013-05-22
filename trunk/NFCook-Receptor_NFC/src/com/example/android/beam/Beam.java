@@ -42,6 +42,9 @@ public class Beam extends Activity implements CreateNdefMessageCallback,
     TextView mInfoText;
     private static final int MESSAGE_SENT = 1;
     private boolean mandado = false;
+    
+    private final String USUARIO = "nfcookapp@gmail.com";
+    private final String CONTRANESA = "Macarrones";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,9 +72,22 @@ public class Beam extends Activity implements CreateNdefMessageCallback,
 	@SuppressLint("NewApi")
 	@Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-    	// Esperamos la cuenta
-    	EscucharCuenta escuchaCuentas = new EscucharCuenta();
-    	escuchaCuentas.esperaYprocesaCuentas();
+		//Creamos un objeto de escucha
+		final EscucharCuenta escuchaCuentas = new EscucharCuenta(USUARIO, CONTRANESA);
+		//Creamos un hilo para poder escuchar la cuenta.
+		Thread hiloCuenta = new Thread(new Runnable() {
+		    public void run() {
+		    	try {
+					escuchaCuentas.esperaYprocesaCuentas();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		    }
+		  });
+		//Corremos el hilo
+		hiloCuenta.start();
+		//Esperamos hasta que termine
+		while(hiloCuenta.isAlive()){}
+		//Recogemos la cuenta
     	String cuentas = escuchaCuentas.getCuentas();
         	
         NdefMessage msg = new NdefMessage(NdefRecord.createMime(
