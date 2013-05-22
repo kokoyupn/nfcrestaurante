@@ -436,8 +436,8 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		}
 		numeroMesa= "M"+numeroMesa;
 		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
-		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 2);
-		operacion.actualizarMesaBD(numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 2);
+		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 1);
+		operacion.actualizarMesaBD(numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 1);
 		}
 		else {
 			System.out.println("\n Esos platos no corresponden a este restaurante");
@@ -455,7 +455,9 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		ClienteFichero.pide("InfoMesas.db");
 		ClienteFichero.pide("Equivalencia_Restaurantes.db");
 		ClienteFichero.pide("MiBaseFav.db");
+		
 		//procesaPedido("0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255@\r\n");		
+
 		VentanaLogin ventanaLogin = new VentanaLogin();
 		//0@h@V20+rvkc*Cebolla frita@V37*Al punto, Patatas fritas, Queso@255
 		//0@9@fh45@fh46@fh47@fh19+hola*Patatas Fritas@fh41+vabh@255
