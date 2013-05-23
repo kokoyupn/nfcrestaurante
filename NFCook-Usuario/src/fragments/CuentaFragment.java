@@ -291,17 +291,37 @@ public class CuentaFragment extends Fragment{
 		m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 		m.commitAllowingStateLoss();
 		if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
-		lanzarAlertDialogCuentaElectronica();
+		if(data.getExtras().getString("Tipo").equals("NFC")){
+			lanzarAlertDialogCuentaElectronicaNFC();
+		}else{
+			lanzarAlertDialogCuentaElectronicaQR();
+		}
 		
 	}
 	
-	public void lanzarAlertDialogCuentaElectronica()
+	public void lanzarAlertDialogCuentaElectronicaNFC()
 	{
     	ventanaEmergente = new AlertDialog.Builder(CuentaFragment.this.getActivity());
         View vistaAviso = LayoutInflater.from(CuentaFragment.this.getActivity()).inflate(R.layout.aviso_envio_mail_cuenta, null);
         
     	//Anadimos los botones de enviar y cancelar al alert Dialog
-        onClickBotonAceptarAlertDialog(ventanaEmergente);
+        onClickBotonAceptarAlertDialog(ventanaEmergente,"NFC");
+        onClickBotonCancelarAlertDialog(ventanaEmergente);
+        ventanaEmergente.setView(vistaAviso);
+        ventanaEmergente.show();
+    	
+        text = (TextView) vistaAviso.findViewById(R.id.textViewCuentaElectronica);
+        text.setText("Si quiere recibir su ticket en formato electrónico introduzca su email: ");
+        edit = (EditText) vistaAviso.findViewById(R.id.editTextCuentaElectronica);
+	}
+	
+	public void lanzarAlertDialogCuentaElectronicaQR()
+	{
+    	ventanaEmergente = new AlertDialog.Builder(CuentaFragment.this.getActivity());
+        View vistaAviso = LayoutInflater.from(CuentaFragment.this.getActivity()).inflate(R.layout.aviso_envio_mail_cuenta, null);
+        
+    	//Anadimos los botones de enviar y cancelar al alert Dialog
+        onClickBotonAceptarAlertDialog(ventanaEmergente,"QR");
         onClickBotonCancelarAlertDialog(ventanaEmergente);
         ventanaEmergente.setView(vistaAviso);
         ventanaEmergente.show();
@@ -311,58 +331,110 @@ public class CuentaFragment extends Fragment{
         edit = (EditText) vistaAviso.findViewById(R.id.editTextCuentaElectronica);
 	}
 
-public void onClickBotonAceptarAlertDialog(Builder ventanaEmergente){
+public void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,String tipo){
 
-	
-	ventanaEmergente.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
-		
-
-		public void onClick(DialogInterface dialog, int which) {
-				
-				RecogerCuentaNFC.enviarPorEmail = true;
-				
-				Mail m = new Mail();
-	            m.setUser("busyrm@gmail.com");// username 
-	            m.setPass("widowmaker");// password
-
-	            
-	            String[] toArr = {edit.getText().toString()}; 
-	            
-	            m.setTo(toArr); 
-	            m.setFrom("busyrm@gmail.com"); 
-	            m.setSubject("Ticket de su cuenta"); 
-	            
-	            Double precioTotal = 0.0;
-	            if(restaurante.equals("Foster"))
-	            	RecogerCuentaNFC.mensaje+= "Foster's Hollywood\n";
-	            else
-	            	RecogerCuentaNFC.mensaje+= "VIPS\n";
-	            for(int i=0;i<RecogerCuentaNFC.mensajes.size();i++)
-	            {
-	            	String m1 = RecogerCuentaNFC.mensajes.get(i).getAsString("Plato");
-	            	String m2 = RecogerCuentaNFC.mensajes.get(i).getAsString("PrecioPlato");
-	            	precioTotal = RecogerCuentaNFC.mensajes.get(i).getAsDouble("PrecioPlato") + precioTotal;
-	            	RecogerCuentaNFC.mensaje+= "\n" + m1 + " " + m2 + " €";
-	            }
-	            RecogerCuentaNFC.mensaje+= "\n------------------------------";
-	            RecogerCuentaNFC.mensaje+= "\n" + "Total: " + " " + precioTotal + " €";
-	            m.setBody(RecogerCuentaNFC.mensaje); 
-
-	            try { 
-	              //m.addAttachment("/sdcard/filelocation"); //archivos adjuntos
-
-	              if(m.send()) { 
-	                Toast.makeText(CuentaFragment.this.getActivity(), "Email enviado correctamente.", Toast.LENGTH_LONG).show(); 
-	              } else { 
-	                Toast.makeText(CuentaFragment.this.getActivity(), "Email no enviado.", Toast.LENGTH_LONG).show();//Si usuario y enviante no coinciden 
-	              } 
-	            } catch(Exception e) { 
-	              Toast.makeText(CuentaFragment.this.getActivity(), "Error en el envio del email", Toast.LENGTH_LONG).show(); //Si ha habido fallos 
-	            } 
-	          }
-
-	        }); 
+	if (tipo.equals("NFC")){
+		ventanaEmergente.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
 			
+	
+			public void onClick(DialogInterface dialog, int which) {
+					
+					RecogerCuentaNFC.enviarPorEmail = true;
+					
+					Mail m = new Mail();
+		            m.setUser("busyrm@gmail.com");// username 
+		            m.setPass("widowmaker");// password
+	
+		            
+		            String[] toArr = {edit.getText().toString()}; 
+		            
+		            m.setTo(toArr); 
+		            m.setFrom("busyrm@gmail.com"); 
+		            m.setSubject("Ticket de su cuenta"); 
+		            
+		            Double precioTotal = 0.0;
+		            if(restaurante.equals("Foster"))
+		            	RecogerCuentaNFC.mensaje+= "Foster's Hollywood\n";
+		            else
+		            	RecogerCuentaNFC.mensaje+= "VIPS\n";
+		            for(int i=0;i<RecogerCuentaNFC.mensajes.size();i++)
+		            {
+		            	String m1 = RecogerCuentaNFC.mensajes.get(i).getAsString("Plato");
+		            	String m2 = RecogerCuentaNFC.mensajes.get(i).getAsString("PrecioPlato");
+		            	precioTotal = RecogerCuentaNFC.mensajes.get(i).getAsDouble("PrecioPlato") + precioTotal;
+		            	RecogerCuentaNFC.mensaje+= "\n" + m1 + " " + m2 + " €";
+		            }
+		            RecogerCuentaNFC.mensaje+= "\n------------------------------";
+		            RecogerCuentaNFC.mensaje+= "\n" + "Total: " + " " + precioTotal + " €";
+		            m.setBody(RecogerCuentaNFC.mensaje); 
+	
+		            try { 
+		              //m.addAttachment("/sdcard/filelocation"); //archivos adjuntos
+	
+		              if(m.send()) { 
+		                Toast.makeText(CuentaFragment.this.getActivity(), "Email enviado correctamente.", Toast.LENGTH_LONG).show(); 
+		              } else { 
+		                Toast.makeText(CuentaFragment.this.getActivity(), "Email no enviado.", Toast.LENGTH_LONG).show();//Si usuario y enviante no coinciden 
+		              } 
+		            } catch(Exception e) { 
+		              Toast.makeText(CuentaFragment.this.getActivity(), "Error en el envio del email", Toast.LENGTH_LONG).show(); //Si ha habido fallos 
+		            } 
+		          }
+	
+		        }); 
+	}
+	else
+	{
+		ventanaEmergente.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+			
+			
+			public void onClick(DialogInterface dialog, int which) {
+					
+					RecogerCuentaQR.enviarPorEmail = true;
+					
+					Mail m = new Mail();
+		            m.setUser("busyrm@gmail.com");// username 
+		            m.setPass("widowmaker");// password
+	
+		            
+		            String[] toArr = {edit.getText().toString()}; 
+		            String aux="";
+		            m.setTo(toArr); 
+		            m.setFrom("busyrm@gmail.com"); 
+		            m.setSubject("Ticket de su cuenta"); 
+		            
+		            Double precioTotal = 0.0;
+		            if(restaurante.equals("Foster"))
+		            	aux += "Foster's Hollywood\n";
+		            else
+		            	aux+= "VIPS\n";
+		            for(int i=0;i<RecogerCuentaQR.mensajesQR.size();i++)
+		            {
+		            	String m1 = RecogerCuentaQR.mensajesQR.get(i).getAsString("Plato");
+		            	String m2 = RecogerCuentaQR.mensajesQR.get(i).getAsString("PrecioPlato");
+		            	precioTotal = RecogerCuentaQR.mensajesQR.get(i).getAsDouble("PrecioPlato") + precioTotal;
+		            	aux+= "\n" + m1 + " " + m2 + " €";
+		            }
+		            aux+= "\n------------------------------";
+		            aux+= "\n" + "Total: " + " " + precioTotal + " €";
+		            m.setBody(aux); 
+	
+		            try { 
+		              //m.addAttachment("/sdcard/filelocation"); //archivos adjuntos
+	
+		              if(m.send()) { 
+		                Toast.makeText(CuentaFragment.this.getActivity(), "Email enviado correctamente.", Toast.LENGTH_LONG).show(); 
+		              } else { 
+		                Toast.makeText(CuentaFragment.this.getActivity(), "Email no enviado.", Toast.LENGTH_LONG).show();//Si usuario y enviante no coinciden 
+		              } 
+		            } catch(Exception e) { 
+		              Toast.makeText(CuentaFragment.this.getActivity(), "Error en el envio del email", Toast.LENGTH_LONG).show(); //Si ha habido fallos 
+		            } 
+		          }
+	
+		        }); 
+		
+	}
 	      } 
 
 public void onClickBotonCancelarAlertDialog(AlertDialog.Builder ventanaEmergente){

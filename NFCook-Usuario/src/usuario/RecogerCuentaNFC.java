@@ -184,6 +184,7 @@ public class RecogerCuentaNFC extends Activity implements
 		
 		Intent intent = new Intent();
         intent.putExtra("Origen", "Cuenta");
+        intent.putExtra("Tipo", "NFC");
         setResult(RESULT_OK, intent);
         
 		cerrarBasesDeDatos();

@@ -1,11 +1,11 @@
 package usuario;
 
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import com.example.nfcook.R;
 
 import fragments.ContenidoTabSuperiorCategoriaBebidas;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -24,11 +24,13 @@ public class RecogerCuentaQR extends Activity {
 	private SQLiteDatabase dbCuenta, dbMiBase, dbRestaurante;
 	private String restaurante, abreviaturaRest;
 	private int numeroRestaurante;
-	    
+	public static boolean enviarPorEmail;
+	public static ArrayList<ContentValues> mensajesQR; 
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recoger_cuenta_qr);
-		
+		enviarPorEmail = false;
 		//El numero de la mesa se obtiene de la pantalla anterior
 		Bundle bundle = getIntent().getExtras();
 		restaurante = bundle.getString("Restaurante");
@@ -70,6 +72,7 @@ public class RecogerCuentaQR extends Activity {
            
            Intent intentToIniciarRestaurante = new Intent();
            intentToIniciarRestaurante.putExtra("Origen", "Cuenta");
+           intentToIniciarRestaurante.putExtra("Tipo", "QR");
 	       setResult(RESULT_OK, intentToIniciarRestaurante);
 	       
            finish();
@@ -83,7 +86,7 @@ public class RecogerCuentaQR extends Activity {
 	 * @param pedidoQR
 	 */
 	private void decodificarPlatos(String pedidoQR) {
-
+		mensajesQR= new ArrayList<ContentValues>();
 		// separamos por platos
 		StringTokenizer stPlatos = new StringTokenizer(pedidoQR,"@");
 			
@@ -164,6 +167,11 @@ public class RecogerCuentaQR extends Activity {
         	platoCuenta.put("Restaurante",restaurante);
         	platoCuenta.put("IdHijo", 0);
     		dbCuenta.insert("Cuenta", null, platoCuenta);
+    		
+    		ContentValues mensajeCuenta = new ContentValues();
+    		mensajeCuenta.put("Plato", cursorCuenta.getString(1));
+    		mensajeCuenta.put("PrecioPlato",cursorCuenta.getDouble(2));
+    		mensajesQR.add(mensajeCuenta);
     	}		
 	}	
 	
