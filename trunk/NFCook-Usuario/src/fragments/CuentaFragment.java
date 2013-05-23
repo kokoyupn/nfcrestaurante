@@ -202,7 +202,6 @@ public class CuentaFragment extends Fragment{
 						inicializarPayPal();
 					lanzarActivityPayPal();
 				}
-				//Toast.makeText(getActivity(), "Salgo del onClick", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -308,6 +307,9 @@ public class CuentaFragment extends Fragment{
 		
 	}
 	public void inicializarPayPal() {
+		
+		Toast.makeText(getActivity(), "Por favor, espere mientras se carga PayPal", Toast.LENGTH_LONG).show();
+		
 		PayPal pp = PayPal.getInstance();
 
 		if (pp == null) {  // Test to see if the library is already initialized

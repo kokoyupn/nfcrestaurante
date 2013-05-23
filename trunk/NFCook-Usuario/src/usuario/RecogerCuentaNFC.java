@@ -293,6 +293,7 @@ public class RecogerCuentaNFC extends Activity implements
         	platoCuenta.put("Plato", cursor.getString(1));
         	platoCuenta.put("Observaciones", "");
         	platoCuenta.put("Extras", "");
+        	platoCuenta.put("PrecioPlato",cursor.getDouble(2));
         	platoCuenta.put("Restaurante",restaurante);
         	platoCuenta.put("IdHijo", 0);
     		dbCuenta.insert("Cuenta", null, platoCuenta);
