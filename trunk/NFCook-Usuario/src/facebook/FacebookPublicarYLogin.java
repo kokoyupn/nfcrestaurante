@@ -16,6 +16,7 @@
 
 package facebook;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nfcook.R;
 import com.facebook.FacebookAuthorizationException;
@@ -57,6 +59,7 @@ public class FacebookPublicarYLogin extends Activity {
     private TextView mensajePublicar;
     private PendingAction pendingAction = PendingAction.NONE;
     private GraphUser user;
+    private String restaurante;
 
     private enum PendingAction {
         NONE,
@@ -78,6 +81,9 @@ public class FacebookPublicarYLogin extends Activity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
+        Bundle bundle = getIntent().getExtras();
+        restaurante = bundle.getString("Restaurante");
+        
         if (savedInstanceState != null) {
             String name = savedInstanceState.getString(PENDING_ACTION_BUNDLE_KEY);
             pendingAction = PendingAction.valueOf(name);
@@ -86,7 +92,33 @@ public class FacebookPublicarYLogin extends Activity {
         setContentView(R.layout.facebook_login_share);
         
         mensajePublicar = (TextView) findViewById(R.id.textViewPublicarFacebook);
-
+        
+        String restauranteParaShare = "";
+		
+		if(restaurante.equals("Foster")){
+			restauranteParaShare = "Foster´s Hollywood";
+		}else{
+			restauranteParaShare = "VIPS";
+		}
+		
+		String horarioPAraShare = "";
+		//Fecha y hora
+ 		int formatteHour;
+ 	    //Sacamos la hora a la que el camarero ha introducido la mesa
+ 	    Date dt = new Date();
+ 	    SimpleDateFormat dtf = new SimpleDateFormat("HH");
+ 	    formatteHour = Integer.parseInt(dtf.format(dt.getTime()));
+ 	    if(formatteHour>13 && formatteHour<=18){
+ 	    	horarioPAraShare = "una magnífica comida en ";
+ 	    }else if(formatteHour>6 && formatteHour<13){
+ 	    	horarioPAraShare = "un magnífico desayuno en ";
+ 	    }else{
+ 	    	horarioPAraShare = "una magnífica cena en ";
+ 	    }
+		
+		String mensajeShare = "Disfrutando de " + horarioPAraShare + restauranteParaShare + " gracias a la aplicación NFCook que ofrecen para hacer sus pedidos.";
+		mensajePublicar.setText(mensajeShare);
+		
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             public void onUserInfoFetched(GraphUser user) {
@@ -204,11 +236,13 @@ public class FacebookPublicarYLogin extends Activity {
             alertMessage = error.getErrorMessage();
         }
 
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(alertMessage)
-                .setPositiveButton(R.string.ok, null)
-                .show();
+//        new AlertDialog.Builder(this)
+//                .setTitle(title)
+//                .setMessage(alertMessage)
+//                .setPositiveButton(R.string.ok, null)
+//                .show();
+        Toast.makeText(getApplicationContext(), alertMessage, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private void onClickPostStatusUpdate() {
