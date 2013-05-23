@@ -1,9 +1,17 @@
-package com.example.nfcook_camarero;
+package recogerbeam;
 
 
 
 
 import java.util.StringTokenizer;
+
+import com.example.nfcook_camarero.Mesa;
+import com.example.nfcook_camarero.R;
+import com.example.nfcook_camarero.SonidoManager;
+import com.example.nfcook_camarero.R.id;
+import com.example.nfcook_camarero.R.layout;
+import com.example.nfcook_camarero.R.menu;
+import com.example.nfcook_camarero.R.raw;
 
 import baseDatos.HandlerGenerico;
 import fragments.PantallaMesasFragment;
