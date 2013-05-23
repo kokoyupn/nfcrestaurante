@@ -1053,15 +1053,19 @@ public class InicializarRestaurante extends FragmentActivity
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    String origen = data.getExtras().getString("Origen");
-		if (origen.equals("Favoritos")){
-	        if (tabsSuperiores.getCurrentTab() == 0 && listFragments.get(0).getView() != null)
-	        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).actualizar();
-		} else if (origen.equals("Pedido")){
-	        
-		}else if (origen.equals("Calculadora")) {//calculadora
-			tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
-			tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+		if(data != null){
+		    String origen = data.getExtras().getString("Origen");
+		    if(origen != null){
+				if (origen.equals("Favoritos")){
+			        if (tabsSuperiores.getCurrentTab() == 0 && listFragments.get(0).getView() != null)
+			        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).actualizar();
+				} else if (origen.equals("Pedido")){
+			        
+				}else if (origen.equals("Calculadora")) {
+					tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
+					tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+				}
+		    }
 		}
 	}
 	
