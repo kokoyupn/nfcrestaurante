@@ -1,20 +1,19 @@
 package com.example.android.beam;
 
+import android.annotation.SuppressLint;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
-
-import javax.mail.BodyPart;
+import java.util.StringTokenizer;
 import javax.mail.Flags;
-import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.search.FlagTerm;
-
-
 
 /*
  * ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡IMPORTANTE!!!!!!!!!!!!!!!
@@ -45,21 +44,27 @@ import javax.mail.search.FlagTerm;
 
 public class EscucharCuenta {
 	
-	private String cuentas;
+	private static String cuentas;
 	private String correo; //nfcookapp@gmail.com
 	private String contrasena; // Macarrones
 	
+	/**
+	 * Atributo que se va a encargar de almacenar las cuentas de todos los correos que vamos leyendo,
+	 * ya que al buscar una cuenta abrimos todos los mails de cuentas que hay y puede que abramos alguno
+	 * de otra mesa, entonces para no perdero ya que se marca como leído lo vamos a almacenar en esta 
+	 * estructura.
+	 */
+	private static Map<Integer,String> historicoCuentas;
 	
+	@SuppressLint("UseSparseArrays")
 	public EscucharCuenta(String correo, String contrasena){
 		this.correo = correo;
 		this.contrasena = contrasena;
+		
+		// Creamos el histórico de cuentas
+		historicoCuentas = new HashMap<Integer, String>();
 	}
-	
-	public String getCuentas(){
-		return cuentas;
-	}
-	
-	
+		
 	public void esperaYprocesaCuentas(){
 		//Properties props = new Properties();
 	    Properties props = System.getProperties();
@@ -80,13 +85,16 @@ public class EscucharCuenta {
 	        //Recorremos y tratacmos cada mensaje
 	        for (Message message : messages) {
 	            // Miramos si se trata de la sincronización de una cuenta
-            	if(message.getFrom()[0].toString().equals("NFCook <nfcookapp@gmail.com>") && message.getSubject().equals("CUENTA")){
+            	if(message.getFrom()[0].toString().equals("nfcookapp@gmail.com") && message.getSubject().equals("CUENTA")){
             		// Se visualiza, si se sabe como, el contenido de cada mensaje
-            		cuentas += analizaParteDeMensaje(message);
+            		analizaParteDeMensaje(message);
+            		
+            		//Marcamos el mensaje como leido en el correo
+                	message.setFlag(Flags.Flag.DELETED, true);
             	}
-            	//Marcamos el mensaje como leido en el correo
-            	message.setFlag(Flag.SEEN, true);
 	        }
+	        
+	        inbox.close(true);
 	    } catch (NoSuchProviderException e) {
 	        e.printStackTrace();
 	        System.exit(1);
@@ -107,27 +115,42 @@ public class EscucharCuenta {
      *
      * @param unaParte Parte del mensaje a analizar.
      */
-    private static String analizaParteDeMensaje(Message unaParte)
-    {
+    private String analizaParteDeMensaje(Message unaParte){
         String cuenta = "";
-        try
-        {
-            if(unaParte.getContent() instanceof Multipart)
-            {                                  
-                Multipart mime = (Multipart) unaParte.getContent();
-
-                for (int i = 0; i < mime.getCount(); i++)
-                {
-                    BodyPart part = mime.getBodyPart(i);
-                    cuenta += part.getContent().toString();
-                }
+        try{
+            // Si es texto, se escribe el texto.
+            if (unaParte.isMimeType("text/*")) {
+                cuenta = unaParte.getContent().toString();
+                cuenta = (String) cuenta.subSequence(0, cuenta.length()-2);
+                aniadirCuentaAHistorico(cuenta);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
         return cuenta;
     }
-
+    
+    public void aniadirCuentaAHistorico(String cuenta){
+    	// Vemos la mesa a la que corresponde
+    	StringTokenizer token = new StringTokenizer(cuenta,"|");
+    	// Cogemos el número de mesa
+    	Integer numMesa = Integer.parseInt(token.nextToken());
+    	
+		historicoCuentas.put(numMesa, cuenta);
+    }
+    
+    public String recogeTodasLasCuentas(){
+    	if(!historicoCuentas.isEmpty()){
+    		cuentas = "0";
+    		
+    		// Recorremos todas las cuentas que haya en el histórico
+    		Iterator<String> it = historicoCuentas.values().iterator();
+    		while(it.hasNext()){
+    			cuentas += "¬" + it.next();
+    		}
+    	}
+    	
+    	return cuentas;
+    }
 }
