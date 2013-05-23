@@ -50,9 +50,9 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private static Restaurante unRestaurante;
-	private static String clave = "";
 	
 	private static boolean registrado = false;
+	private static String claveAcceso = "";
 
 	
 	public VentanaLogin(){
@@ -154,7 +154,8 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private class TecladoParaLogin extends JPanel{
 		
 		private static final long serialVersionUID = 1L;
-		
+		private String clave = "";
+
 		private JTextField textFieldnumero = new JTextField();
 		
 		
@@ -187,7 +188,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 			
 			GridBagConstraints constraints = new GridBagConstraints();
 			Font fuente = new Font(Font.SANS_SERIF, Font.CENTER_BASELINE, 60);
-			
+
 			int numeroBoton = 1;
 			for(int fila = 1; fila<4 ; fila++){
 				for(int columna = 0; columna<3; columna++){
@@ -257,6 +258,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					claveAcceso = clave;
 					if(unRestaurante.existeCamarero(clave)){
 						VentanaMesas ventanaMesas = new VentanaMesas(unRestaurante, clave);
 						ventanaMesas.pack();
@@ -485,8 +487,8 @@ public class VentanaLogin extends JFrame implements ActionListener{
                 
         new Thread(new Runnable() {
     	    public void run() {
-    	    	while(clave.equals(""));
-    	    	while(clave.contentEquals("1235")){
+    	    	while(claveAcceso.equals(""));
+    	    	while(claveAcceso.contentEquals("1235")){
     	    		try {
     	    			escuchaReceptorNFC();
     	    			registrado = true;
