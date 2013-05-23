@@ -170,6 +170,10 @@ public class RecogerCuentaNFC extends Activity implements
 			} else Toast.makeText(this,"Error al recoger la cuenta. Has levantado el dispositivo antes de tiempo",Toast.LENGTH_LONG).show();
 		} else Toast.makeText(this,"Error al recoger la cuenta. Tu dispositivo no es compatible con esta tarjeta",Toast.LENGTH_LONG).show();
 		
+		Intent intent = new Intent();
+        intent.putExtra("Origen", "Cuenta");
+        setResult(RESULT_OK, intent);
+        
 		cerrarBasesDeDatos();
 
 		finish();

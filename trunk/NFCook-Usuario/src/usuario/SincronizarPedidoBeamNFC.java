@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("NewApi")
 public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMessageCallback,OnNdefPushCompleteCallback{ 
 
 	NfcAdapter mNfcAdapter;
@@ -269,7 +270,9 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
             	Toast.makeText(getApplicationContext(), "Pedido Sincronizado", Toast.LENGTH_LONG).show();
             	enviarPedidoACuenta();
             	cerrarBasesDeDatos();
-            	setResult(RESULT_OK, null);
+            	Intent intent = new Intent();
+    	        intent.putExtra("Origen", "Pedido");
+            	setResult(RESULT_OK, intent);
             	cerrarVentana();
                 break;
             }

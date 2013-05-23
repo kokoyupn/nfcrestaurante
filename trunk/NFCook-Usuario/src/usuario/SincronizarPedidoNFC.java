@@ -193,15 +193,17 @@ public class SincronizarPedidoNFC extends Activity implements
 	 * cosa como por ejemplo un string o un dato que necesite.
 	 */
 	public void onDismiss(DialogInterface dialog) {
-
-		setResult(RESULT_CANCELED, null);
+		
+		Intent intent = new Intent();
+		intent.putExtra("Origen", "Pedido");
+		setResult(RESULT_CANCELED, intent);
 		if (dispositivoCompatible) {
 			if (!tagCorrupta) {
 				if (leidoBienDeTag) {
 					if (!esCuenta){
 						if (escritoBienEnTag){
 							enviarPedidoACuenta();
-							setResult(RESULT_OK, null);
+							setResult(RESULT_OK, intent);
 							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
 						} else {
 							if (heCalculadoTam) {
