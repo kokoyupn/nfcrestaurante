@@ -45,6 +45,8 @@ public class Beam extends Activity implements CreateNdefMessageCallback,
     
     private final String USUARIO = "nfcookapp@gmail.com";
     private final String CONTRANESA = "Macarrones";
+    
+    private String cuentas = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,10 +90,9 @@ public class Beam extends Activity implements CreateNdefMessageCallback,
 		//Esperamos hasta que termine
 		while(hiloCuenta.isAlive()){}
 		//Recogemos la cuenta
-    	String cuentas = escuchaCuentas.getCuentas();
-        	
+    	cuentas = escuchaCuentas.recogeTodasLasCuentas();
         NdefMessage msg = new NdefMessage(NdefRecord.createMime(
-                "application/com.example.android.beam", cuentas.getBytes())
+                "application/recoger", cuentas.getBytes())
          /**
           * The Android Application Record (AAR) is commented out. When a device
           * receives a push with an AAR in it, the application specified in the AAR
@@ -100,8 +101,7 @@ public class Beam extends Activity implements CreateNdefMessageCallback,
           * activity starts when receiving a beamed message. For now, this code
           * uses the tag dispatch system.
           */
-          ,NdefRecord.createApplicationRecord("com.example.android.beam")
-        );
+             );
         return msg;
     }
 
@@ -191,7 +191,9 @@ public class Beam extends Activity implements CreateNdefMessageCallback,
         String[] toArr = {"nfcookapp@gmail.com"}; 
         m.setTo(toArr); 
         m.setFrom("nfcookapp@gmail.com"); 
-        m.setSubject("PEDIDO"); 
+        m.setSubject("PEDIDO");
+        
+        //pedido = "0&1/@fh8+Poco hecha, Roquefort, Patatas Fritas*_*PLATO ESTRELLA: Director`s Choice*10.85*5*2*idCamarero*fechaHora";
         m.setBody(pedido); 
 
         try { 
