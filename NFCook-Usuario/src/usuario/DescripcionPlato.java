@@ -13,6 +13,7 @@ import adapters.PadreExpandableListEditar;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -256,9 +257,13 @@ public class DescripcionPlato extends Activity {
      	ContentValues platoEditado = new ContentValues();
     	platoEditado.put("Favorito", "star_si");
 		String[] camposUpdate = {restaurante, idPlato};
-		int i = dbMiBase.update("Restaurantes", platoEditado, "Restaurante=? AND Id=?", camposUpdate);
-		
+		dbMiBase.update("Restaurantes", platoEditado, "Restaurante=? AND Id=?", camposUpdate);
+        
         dbMiBase.close();
+        
+        Intent intent = new Intent();
+        intent.putExtra("Origen", "Favoritos");
+        setResult(RESULT_OK, intent);
 	}
 	
 	public void onClickStarSi(View v){
@@ -277,6 +282,10 @@ public class DescripcionPlato extends Activity {
 		dbMiBase.update("Restaurantes", platoEditado, "Restaurante=? AND Id=?", camposUpdate);
 		
         dbMiBase.close();
+        
+        Intent intent = new Intent();
+        intent.putExtra("Origen", "Favoritos");
+        setResult(RESULT_OK, intent);
 	}
 	 
     public void onClickConfirmar(View boton){
