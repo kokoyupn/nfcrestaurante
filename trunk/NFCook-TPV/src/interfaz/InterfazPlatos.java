@@ -221,8 +221,9 @@ public class InterfazPlatos extends JFrame {
 						//Le sumamos los pedidos para favoritos
 						ArrayList<String> ids = new ArrayList<String>();
 						for(int i = 0; i < aCobrar.size();i++){
-							if(!ids.contains(((Plato)aCobrar.get(i)).getId())){
+							
 								if(aCobrar.get(i) instanceof Plato){
+									if(!ids.contains(((Plato)aCobrar.get(i)).getId())){
 									Plato plato = (Plato)aCobrar.get(i);
 									int cant = buscaCantidadNoEnviados(plato, aCobrar);
 									try {
