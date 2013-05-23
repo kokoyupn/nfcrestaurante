@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +38,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import basesDeDatos.Operaciones;
 
 import sockets.OperacionesSocketsSinBD;
 import sockets.ShutdownHook;
@@ -212,28 +216,29 @@ public class InterfazPlatos extends JFrame {
 					if (seleccion == 0){//aceptar
 						//cobramos solo los platos que han sido enviados a cocina
 						ArrayList<Producto> aCobrar = platosACobrar();	
-						
+						 
 						//Actualizamos los favoritos
 						//Le sumamos los pedidos para favoritos
+						ArrayList<String> ids = new ArrayList<String>();
 						for(int i = 0; i < aCobrar.size();i++){
-							if(aCobrar.get(i) instanceof Plato){
-								Plato plato = (Plato)aCobrar.get(i);
-								int cant = buscaCantidadNoEnviados(plato, aCobrar);
-//								int aux = buscaMaxEnviados(plato);
-//								int ant = 0;
-								
-//								if(plato.getCantiadPedido() >= aux){//Han añadido desde fuera mas platos de ese tipo
-									int ant = plato.getCantiadPedido();
-									//actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(), cant+ant);
-									///Actualizamos la base de datos de favoritos
-									plato.setCantiadPedido(cant+ant);
-									Restaurante.actualizaFavs(plato);
-//									actualizaEnviados(plato, cant+ant);
-//								}else{
-//									actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(),aux);
-//									//Actualizamos la base de datos de favoritos
-//									Restaurante.actualizaFavs(plato);
-//								}
+							if(!ids.contains(((Plato)aCobrar.get(i)).getId())){
+								if(aCobrar.get(i) instanceof Plato){
+									Plato plato = (Plato)aCobrar.get(i);
+									int cant = buscaCantidadNoEnviados(plato, aCobrar);
+									try {
+										Operaciones operacion = new Operaciones("MiBaseFav.db");
+										ResultSet resultados = operacion.consultar("select * from Restaurantes where Id='" + plato.getId() + "'");
+									
+										int cantidad = resultados.getInt("CantidadPedido");
+										operacion.cerrarBaseDeDatos();
+										ids.add(plato.getId());
+
+										plato.setCantiadPedido(cant+cantidad);
+										Restaurante.actualizaFavs(plato);
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+								}
 							}
 						}
 						

@@ -65,7 +65,8 @@ public class Cobro {
 			
 			String abreviatura = resultados.getString("Abreviatura");
 			String numero = resultados.getString("Numero");
-					
+			operacion.cerrarBaseDeDatos();
+			
 			String textoQR = numero;
 			String textoACamarero = idMesa.substring(1) + "|";
 				
