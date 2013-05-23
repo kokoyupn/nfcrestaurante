@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import usuario.InicializarRestaurante;
 import usuario.RecogerCuentaNFC;
 import usuario.RecogerCuentaQR;
 import baseDatos.HandlerDB;
@@ -20,6 +21,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -276,9 +278,13 @@ public class CuentaFragment extends Fragment{
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		cargarCuenta();
-		crearListView();
-		 if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
+		InicializarRestaurante.cargarTabCuenta();
+		Fragment fragmentCuenta = new CuentaFragment();
+		((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+		FragmentTransaction m = getFragmentManager().beginTransaction();
+		m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+		m.commitAllowingStateLoss();
+		if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
 	}
 	
 	/**
