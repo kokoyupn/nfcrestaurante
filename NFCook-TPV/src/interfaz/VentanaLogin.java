@@ -481,17 +481,19 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
         
-        new Thread(new Runnable() {
-    	    public void run() {
-    	    	while(true){
-    	    		try {
-    	    			escuchaReceptorNFC();
-    	    		} catch (Exception e) {
-    	    			System.out.println("Error en la recepción NFC del TPV");
-    	    		} 
-    	    	}
-    	    }
-        }).start();
+        if (clave.contentEquals("1235")){
+	        new Thread(new Runnable() {
+	    	    public void run() {
+	    	    	while(true){
+	    	    		try {
+	    	    			escuchaReceptorNFC();
+	    	    		} catch (Exception e) {
+	    	    			System.out.println("Error en la recepción NFC del TPV");
+	    	    		} 
+	    	    	}
+	    	    }
+	        }).start();
+        }
 
   	}
 }
