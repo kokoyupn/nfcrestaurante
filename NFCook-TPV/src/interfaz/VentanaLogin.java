@@ -51,6 +51,8 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private boolean esPantallaCompleta;
 	private static Restaurante unRestaurante;
 	private static String clave = "";
+	
+	private static boolean registrado = false;
 
 	
 	public VentanaLogin(){
@@ -480,20 +482,20 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		
 		EscuchaCliente thread = new EscuchaCliente(); // lanzamos el thread de escucha
         thread.start();
-        
-        if (clave.contentEquals("1235")){
-	        new Thread(new Runnable() {
-	    	    public void run() {
-	    	    	while(true){
+                
+        new Thread(new Runnable() {
+    	    public void run() {
+    	    	while(!registrado){
+    	    		if(clave.contentEquals("1235")){
 	    	    		try {
 	    	    			escuchaReceptorNFC();
+	    	    			registrado = true;
 	    	    		} catch (Exception e) {
 	    	    			System.out.println("Error en la recepción NFC del TPV");
-	    	    		} 
-	    	    	}
-	    	    }
-	        }).start();
-        }
-
+	    	    		}
+    	    		}
+    	    	}
+    	    }
+        }).start();
   	}
 }
