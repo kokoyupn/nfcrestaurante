@@ -1,5 +1,7 @@
 package usuario;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -325,18 +327,10 @@ public class InicializarRestaurante extends FragmentActivity
 				//here we can filter which action item was clicked with pos or actionId parameter
 				if (actionId == ID_FACEBOOK) {
 					Intent intent = new Intent(getApplicationContext(), FacebookPublicarYLogin.class);
-			    	startActivity(intent);
+			    	intent.putExtra("Restaurante", restaurante);
+					startActivity(intent);
 				} else if (actionId == ID_TWITER) {
 					autorizaTwitter();
-					//SharedPreferences autorizacionTwitter = getSharedPreferences("twiter", 0);
-		    		//String userKey = autorizacionTwitter.getString("user_key", "vacio");
-		    		//String userSecret = autorizacionTwitter.getString("user_secret", "vacio");
-		    		//if(userSecret.equals("vacio") || userKey.equals("vacio")){
-		    		//	autorizaTwitter();
-		    		//}else{
-		    		//	accessToken = new AccessToken(userKey, userSecret);
-		        	//	lanzarVentanaEmergenteTwitter();
-		    		//}
 				}
 			}
 		}); 	
@@ -1170,6 +1164,31 @@ public class InicializarRestaurante extends FragmentActivity
 		
         View vistaTwiter = LayoutInflater.from(InicializarRestaurante.this).inflate(R.layout.twiter, null);
 		campoTweet = (TextView) vistaTwiter.findViewById(R.id.textViewTweet);
+		String restauranteParaTweet = "";
+		
+		if(restaurante.equals("Foster")){
+			restauranteParaTweet = "Foster´s Hollywood";
+		}else{
+			restauranteParaTweet = "VIPS";
+		}
+		
+		String horarioPAraTweet = "";
+		//Fecha y hora
+ 		int formatteHour;
+ 	    //Sacamos la hora a la que el camarero ha introducido la mesa
+ 	    Date dt = new Date();
+ 	    SimpleDateFormat dtf = new SimpleDateFormat("HH");
+ 	    formatteHour = Integer.parseInt(dtf.format(dt.getTime()));
+ 	    if(formatteHour>13 && formatteHour<=18){
+ 	    	horarioPAraTweet = "una magnífica comida en ";
+ 	    }else if(formatteHour>6 && formatteHour<13){
+ 	    	horarioPAraTweet = "un magnífico desayuno en ";
+ 	    }else{
+ 	    	horarioPAraTweet = "una magnífica cena en ";
+ 	    }
+		
+		String mensajeTweet = "Disfrutando de " + horarioPAraTweet + restauranteParaTweet + " gracias a la aplicación NFCook que ofrecen para hacer sus pedidos.";
+		campoTweet.setText(mensajeTweet);
 		botonEnviarTweet = (ImageView) vistaTwiter.findViewById(R.id.botonAnadirTweet);
 
 		botonEnviarTweet.setOnClickListener(new View.OnClickListener() {
