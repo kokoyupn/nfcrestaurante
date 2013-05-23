@@ -1157,7 +1157,7 @@ public class InterfazPlatos extends JFrame {
 						if (extrasConcat == "")
 							extrasConcat = itExtras.next();
 						else
-							extrasConcat = extrasConcat + ", " + itExtras.next();
+							extrasConcat = itExtras.next() + "," + extrasConcat ;
 					}
 					platoATabla.setExtrasMarcados(extrasConcat);	
 					productoATabla = (Producto) platoATabla;
