@@ -50,7 +50,7 @@ public class FacebookPublicarYLogin extends Activity {
 
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 
-    private final String PENDING_ACTION_BUNDLE_KEY = "facebook:PendingAction";
+    private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction:PendingAction";
 
     private ImageView postStatusUpdateButton;
     private LoginButton loginButton;

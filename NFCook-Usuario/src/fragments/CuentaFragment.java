@@ -205,9 +205,15 @@ public class CuentaFragment extends Fragment{
 			public void onClick(View v) {
 				if (!botonPayPalPulsado){
 					botonPayPalPulsado = true;
-					if (!paypalInicializado)
-						inicializarPayPal();
-					lanzarActivityPayPal();
+					TextView textViewTotalCuenta = (TextView) vista.findViewById(R.id.textViewTotalCuenta);
+					if(textViewTotalCuenta.getText().toString().equals("0.0 €")){
+						Toast.makeText(vista.getContext(),"La cuenta esta vacia",Toast.LENGTH_SHORT).show();					}
+					else {
+						if (!paypalInicializado)
+							inicializarPayPal();
+						lanzarActivityPayPal();
+
+					}
 				}
 			}
 		});
