@@ -913,7 +913,8 @@ public class InicializarRestaurante extends FragmentActivity
 	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 	        m.addToBackStack("Cuenta");
 	        m.commit();
-		}else if(tabId.equals("tabCalculadora")){			
+		}else if(tabId.equals("tabCalculadora")){
+			usandoTabsInferiores = true;
 			// Marcamos el tab falso
             tabs.setCurrentTabByTag("tabFalso");
 			// Vemos si se ha sincronizado algún pedido para poder utilizar la calculadora
@@ -1064,7 +1065,6 @@ public class InicializarRestaurante extends FragmentActivity
 					((CuentaFragment)fragmentCuenta).onActivityResult(requestCode, resultCode, data);
 				}else if (origen.equals("Calculadora")) {
 					tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
-					tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
 				}
 		    }
 		}
