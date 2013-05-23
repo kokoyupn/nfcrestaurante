@@ -293,14 +293,15 @@ public class PedidoFragment extends Fragment{
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
+		//Por culpa del bug de goole tenemos que invocarlo manualmente desde onActivityResult en  InicializarRestaurante
 		// compruebo si se escribio en la tag (resul_ok) para ir a Cuenta. Si no se queda en Pedido
 		if (Activity.RESULT_OK == resultCode){
 			InicializarRestaurante.cargarTabCuenta();
 			Fragment fragmentCuenta = new CuentaFragment();
-	        ((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
-	        FragmentTransaction m = getFragmentManager().beginTransaction();
-	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
-	        m.commit();	
+			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
+			FragmentTransaction m = getFragmentManager().beginTransaction();
+			m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
+			m.commitAllowingStateLoss();
 		} 	
 	}
 	

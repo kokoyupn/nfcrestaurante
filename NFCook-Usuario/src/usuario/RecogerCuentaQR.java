@@ -67,6 +67,11 @@ public class RecogerCuentaQR extends Activity {
               decodificarPlatos(pedidoQR);  
            }
            cerrarBasesDeDatos();
+           
+           Intent intentToIniciarRestaurante = new Intent();
+           intentToIniciarRestaurante.putExtra("Origen", "Cuenta");
+	       setResult(RESULT_OK, intentToIniciarRestaurante);
+	       
            finish();
         }
 	}

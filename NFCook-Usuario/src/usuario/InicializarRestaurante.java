@@ -160,6 +160,10 @@ public class InicializarRestaurante extends FragmentActivity
 	private ArrayList<String> listNombresTabsSuperiores;
 	public static boolean usandoTabsInferiores;
 	
+	//Es necesario para poder invocar a su onActivityResult manualmente en el de esta clase
+	private Fragment fragmentPedido; 
+	private Fragment fragmentCuenta;
+	
     class TabFactory implements TabContentFactory {
     	 
         private final Context mContext;
@@ -878,7 +882,7 @@ public class InicializarRestaurante extends FragmentActivity
             //anterior tab pulsado
             anteriorTabPulsado = "tabPedidoSincronizar";
             
-			Fragment fragmentPedido = new PedidoFragment();
+			fragmentPedido = new PedidoFragment();
 			PedidoFragment.setRestaurante(restaurante);
 	        FragmentTransaction m = getSupportFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentPedido);
@@ -909,7 +913,7 @@ public class InicializarRestaurante extends FragmentActivity
             //anterior tab pulsado
             anteriorTabPulsado = "tabCuenta";
             
-			Fragment fragmentCuenta = new CuentaFragment();
+			fragmentCuenta = new CuentaFragment();
 			((CuentaFragment) fragmentCuenta).setRestaurante(restaurante);
 	        FragmentTransaction m = getSupportFragmentManager().beginTransaction();
 	        m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
@@ -1056,11 +1060,14 @@ public class InicializarRestaurante extends FragmentActivity
 		if(data != null){
 		    String origen = data.getExtras().getString("Origen");
 		    if(origen != null){
-				if (origen.equals("Favoritos")){
-			        if (tabsSuperiores.getCurrentTab() == 0 && listFragments.get(0).getView() != null)
-			        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).actualizar();
-				} else if (origen.equals("Pedido")){
-			        
+		    	if (origen.equals("Favoritos")){
+			        if (tabsSuperiores.getCurrentTab() == 0 && listFragments.get(0).getView() != null){
+			        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).onActivityResult(requestCode, resultCode, data);
+			        }
+				}else if (origen.equals("Pedido")){
+					((PedidoFragment)fragmentPedido).onActivityResult(requestCode, resultCode, data);
+				}else if(origen.equals("Cuenta")){
+					((CuentaFragment)fragmentCuenta).onActivityResult(requestCode, resultCode, data);
 				}else if (origen.equals("Calculadora")) {
 					tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
 					tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
