@@ -10,13 +10,13 @@ import java.util.Iterator;
 import recoger.RecogerCuentaTPV;
 
 
+import recogerbeam.SincronizacionBeamNFC;
 import baseDatos.HandlerGenerico;
 
 import com.example.nfcook_camarero.BorrarTarjeta;
 import com.example.nfcook_camarero.EscribirCuentaPorNFC;
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.R;
-import com.example.nfcook_camarero.SincronizacionBeamNFC;
 import com.example.nfcook_camarero.SincronizacionLecturaNFC;
 import com.example.nfcook_camarero.SincronizacionQR;
 import com.example.nfcook_camarero.SincronizarTpv;
