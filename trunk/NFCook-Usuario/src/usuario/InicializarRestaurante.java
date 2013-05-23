@@ -110,7 +110,7 @@ public class InicializarRestaurante extends FragmentActivity
 	
 	// Tabs inferiores con las funcionalidades de la aplicacion
 	private static TabHost tabs;
-	private static TabHost tabsSuperiores;
+	public static TabHost tabsSuperiores;
 	// Vista de los tabs inferiores y superiores
 	private View tabInferiorContentView;
 	private View tabSuperiorContentView;
@@ -126,7 +126,7 @@ public class InicializarRestaurante extends FragmentActivity
 	
 	
 	// Atributos para poder deslizar el dedo horizontalmente entre pestañas
-	private ViewPager miViewPager;
+	public static ViewPager miViewPager;
 	private PagerAdapter miPagerAdapter;
 	
 	// Vector en el que guardaremos todos los fragments generados
@@ -1062,16 +1062,17 @@ public class InicializarRestaurante extends FragmentActivity
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
-		/*if(seleccionadoTabSuperior){
-			actionbar.selectTab(actionbar.getTabAt(postabSuperiorPulsado));
-		}else{*/
-		    /*
-		     * Cambiamos el fondo del tab inferior que acabamos de selccionar para que el 
-		     * usuario vea cual está seleccionado.
-		     */
-		    tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
-		//}
+	    String origen = data.getExtras().getString("Origen");
+		if (origen.equals("Favoritos")){
+	        if (tabsSuperiores.getCurrentTab() == 0 && listFragments.get(0).getView() != null)
+	        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).actualizar();
+		} else if (origen.equals("Pedido")){
+	        
+		}
+		else {
+			tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
+			tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
+		}
 	}
 	
 	// Metodo encargado de decirnos si se ha sincronizado algún pedido o no

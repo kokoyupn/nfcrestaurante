@@ -107,7 +107,9 @@ public class SincronizarPedidoQR extends Activity {
 			ventanaEmergente.show();
     	} else {
     		// no se ha generado y salgo directamente volviendo a pedido
-    		setResult(RESULT_CANCELED, null);
+    		Intent intent = new Intent();
+	        intent.putExtra("Origen", "Pedido");
+	        setResult(RESULT_CANCELED, intent);
     		finish();
     	}
 		return false;
@@ -134,7 +136,9 @@ public class SincronizarPedidoQR extends Activity {
 		ventanaEmergente.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				setResult(RESULT_OK, null);
+				Intent intent = new Intent();
+		        intent.putExtra("Origen", "Pedido");
+		        setResult(RESULT_OK, intent);
 				finish();
 			}
 		});
