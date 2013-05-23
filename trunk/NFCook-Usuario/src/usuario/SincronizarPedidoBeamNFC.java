@@ -248,7 +248,7 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     @SuppressLint("NewApi")
     public NdefMessage createNdefMessage(NfcEvent event) {
           NdefMessage msg = new NdefMessage(NdefRecord.createMime(
-                "application/com.example.nfcook_camarero", pedido.getBytes())
+                "application/recogerbeam", pedido.getBytes())
        
         );
         return msg;
