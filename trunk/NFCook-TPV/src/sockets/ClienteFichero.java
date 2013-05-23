@@ -57,7 +57,7 @@ public class ClienteFichero
             ois.close();
             
 		}catch(SocketException excepcionEnviaConsulta){
-			System.err.println("Fallo al enviar consulta al Servidor");
+			System.err.println("Fallo al enviar consulta al Servidor, reintentando...");
 			enviaConsulta(fichero, sql);
 			
 		}catch(Exception excepcionEnviaConsulta){
@@ -97,7 +97,7 @@ public class ClienteFichero
             ois.close();
             
 		}catch(SocketException excepcionEnviaConsulta){
-			System.err.println("Fallo al enviar array consultas al Servidor");
+			System.err.println("Fallo al enviar array consultas al Servidor, reintentando...");
 			enviaArrayConsultas(fichero, consultas);
 			
 		}catch(Exception excepcionEnviaConsulta){
@@ -175,7 +175,7 @@ public class ClienteFichero
             ois.close();
             
 		}catch(SocketException excepcionEnviaConsulta){
-			System.err.println("Fallo al enviar mesa visitada al Servidor");
+			System.err.println("Fallo al enviar mesa visitada al Servidor, reintentando...");
 			enviaMesaVisitada(idMesa, visitada);
 			
 		}catch(Exception excepcionEnviaConsulta){

@@ -221,6 +221,18 @@ public class Restaurante {
 		
 	}
 	
+	public void añadirProductoEnMesaTrue(String idMesa, Producto producto, String extrasMarcados, String observaciones){
+		
+		if(producto instanceof Plato){
+			((Plato) producto).setExtrasMarcados(extrasMarcados);
+		}
+		
+		producto.setObservaciones(observaciones);
+		
+		mesasRestaurante.get(idMesa).añadirProducto(new TuplaProdEnv(producto, true));
+		
+	}
+	
 	public Iterator<Mesa> getIteratorMesas(){
 		Iterator<Mesa> itMesasSinOrdenar = mesasRestaurante.values().iterator();
 		ArrayList<Mesa> arrayMesas = new ArrayList<Mesa>();

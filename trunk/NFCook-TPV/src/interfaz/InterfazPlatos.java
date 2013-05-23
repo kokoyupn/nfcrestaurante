@@ -211,7 +211,33 @@ public class InterfazPlatos extends JFrame {
 							JOptionPane.QUESTION_MESSAGE,tamanioImagen(new ImageIcon("Imagenes/BotonesInterfazPlatos/pagar.png"), 50, 50),new Object[] {"Aceptar", "Cancelar"},"Cancelar");
 					if (seleccion == 0){//aceptar
 						//cobramos solo los platos que han sido enviados a cocina
-						ArrayList<Producto> aCobrar = platosACobrar();						
+						ArrayList<Producto> aCobrar = platosACobrar();	
+						
+						//Actualizamos los favoritos
+						//Le sumamos los pedidos para favoritos
+						for(int i = 0; i < aCobrar.size();i++){
+							if(aCobrar.get(i) instanceof Plato){
+								Plato plato = (Plato)aCobrar.get(i);
+								int cant = buscaCantidadNoEnviados(plato, aCobrar);
+//								int aux = buscaMaxEnviados(plato);
+//								int ant = 0;
+								
+//								if(plato.getCantiadPedido() >= aux){//Han añadido desde fuera mas platos de ese tipo
+									int ant = plato.getCantiadPedido();
+									//actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(), cant+ant);
+									///Actualizamos la base de datos de favoritos
+									plato.setCantiadPedido(cant+ant);
+									Restaurante.actualizaFavs(plato);
+//									actualizaEnviados(plato, cant+ant);
+//								}else{
+//									actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(),aux);
+//									//Actualizamos la base de datos de favoritos
+//									Restaurante.actualizaFavs(plato);
+//								}
+							}
+						}
+						
+						
 						if (aCobrar.size()>0){
 							//Construimos el panel con las promociones
 							generaPromociones();
@@ -278,28 +304,28 @@ public class InterfazPlatos extends JFrame {
 							ArrayList<Producto> aEnviar = platosAEnviar();
 							getRestaurante().addComandaAMesa(idMesa, idCam, aEnviar);
 							
-							//Actualizamos los favoritos
-							//Le sumamos los pedidos para favoritos
-							for(int i = 0; i < aEnviar.size();i++){
-								if(aEnviar.get(i) instanceof Plato){
-									Plato plato = (Plato)aEnviar.get(i);
-									int cant = buscaCantidadNoEnviados(plato, aEnviar);
-									int aux = buscaMaxEnviados(plato);
-									int ant = 0;
-									
-									if(plato.getCantiadPedido() >= aux){//Han añadido desde fuera mas platos de ese tipo
-										ant = plato.getCantiadPedido();
-										actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(), cant+ant);
-										//Actualizamos la base de datos de favoritos
-										Restaurante.actualizaFavs(plato);
-										actualizaEnviados(plato, cant+ant);
-									}else{
-										actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(),aux);
-										//Actualizamos la base de datos de favoritos
-										Restaurante.actualizaFavs(plato);
-									}
-								}
-							}
+//							//Actualizamos los favoritos
+//							//Le sumamos los pedidos para favoritos
+//							for(int i = 0; i < aEnviar.size();i++){
+//								if(aEnviar.get(i) instanceof Plato){
+//									Plato plato = (Plato)aEnviar.get(i);
+//									int cant = buscaCantidadNoEnviados(plato, aEnviar);
+//									int aux = buscaMaxEnviados(plato);
+//									int ant = 0;
+//									
+//									if(plato.getCantiadPedido() >= aux){//Han añadido desde fuera mas platos de ese tipo
+//										ant = plato.getCantiadPedido();
+//										actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(), cant+ant);
+//										//Actualizamos la base de datos de favoritos
+//										Restaurante.actualizaFavs(plato);
+//										actualizaEnviados(plato, cant+ant);
+//									}else{
+//										actualizaEnProductosEnMesa(plato.getIdUnico(),plato.getId(),aux);
+//										//Actualizamos la base de datos de favoritos
+//										Restaurante.actualizaFavs(plato);
+//									}
+//								}
+//							}
 							
 								
 							//actualizar en producto
@@ -609,7 +635,7 @@ public class InterfazPlatos extends JFrame {
 ///////////////CATEGORIAS Y PLATOS////////////////////		
 		//Primero creamos el boton favoritos
 		JPanel btnNewButtonFav = new JPanelBordesRedondos(false);
-		JLabel jLabelCategoriaFav = new JLabel("FAVORITOS");
+		JLabel jLabelCategoriaFav = new JLabel("TOP PEDIDOS");
 		jLabelCategoriaFav.setFont(new Font(jLabelCategoriaFav.getFont().getFontName(), jLabelCategoriaFav.getFont().getStyle(), 30));
 		jLabelCategoriaFav.setForeground(Color.WHITE);
 		((JPanelBordesRedondos) btnNewButtonFav).setColorPrimario(new Color(105,25,254));
@@ -1434,7 +1460,7 @@ public class InterfazPlatos extends JFrame {
 	  * @param aEnviar
 	  * @return
 	  */
-	 public int buscaCantidadNoEnviados(Producto producto,ArrayList<Producto> aEnviar) {
+	 public static int buscaCantidadNoEnviados(Producto producto,ArrayList<Producto> aEnviar) {
 			int result = 0;
 			for(int i = 0; i< aEnviar.size();i++){
 				if (producto.getId().equals(aEnviar.get(i).getId())){
@@ -1449,7 +1475,7 @@ public class InterfazPlatos extends JFrame {
 	 * @param plato
 	 * @return
 	 */
-	private int buscaMaxEnviados(Plato plato) {
+	public int buscaMaxEnviados(Plato plato) {
 		int max = 0;
 		for(int i = 0; i< productosEnMesa.size();i++){
 			 if((productosEnMesa.get(i).getProd() instanceof Plato) 
@@ -1471,7 +1497,7 @@ public class InterfazPlatos extends JFrame {
 	 * @param i
 	 * @param cant
 	 */
-	private void actualizaEnProductosEnMesa(int idUnico ,String id, int cant) {
+	public void actualizaEnProductosEnMesa(int idUnico ,String id, int cant) {
 		boolean enc  = false;
 		int i = 0;
 		while(i < productosEnMesa.size() && !enc){

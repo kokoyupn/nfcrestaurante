@@ -12,6 +12,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -37,6 +39,8 @@ import sockets.ClienteFichero;
 import sockets.EscuchaCliente;
 import sockets.OperacionesSocketsSinBD;
 import sockets.ShutdownHook;
+import tpv.Mesa;
+import tpv.Plato;
 import tpv.Producto;
 import tpv.Restaurante;
 
@@ -46,7 +50,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 	private static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	private boolean esPantallaCompleta;
 	private static Restaurante unRestaurante;
-	
+	private static String clave = "";
 
 	
 	public VentanaLogin(){
@@ -150,7 +154,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		private static final long serialVersionUID = 1L;
 		
 		private JTextField textFieldnumero = new JTextField();
-		private String clave = "";
+		
 		
 		public TecladoParaLogin(){
 			
@@ -387,6 +391,7 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		boolean parar=false;
 		//Restaurante
 		int restaurante = Integer.parseInt(platos.nextToken());
+		ArrayList<Producto> aEnviar= new ArrayList<Producto>();
 		String numeroMesa=platos.nextToken();
 		String numeroPersonas = platos.nextToken();
 		if (restaurante==0){
@@ -430,14 +435,19 @@ public class VentanaLogin extends JFrame implements ActionListener{
 				
 				if (extras.equals(""))
 					extras="No configurable"; 
-				unRestaurante.añadirProductoEnMesa("M"+numeroMesa,producto, extras, comentario);
-
+				unRestaurante.añadirProductoEnMesaTrue("M"+numeroMesa,producto, extras, comentario);
+				aEnviar.add(producto);
 			}	
 		}
 		numeroMesa= "M"+numeroMesa;
 		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
-		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 1);
-		operacion.actualizarMesaBD(numeroMesa, unRestaurante.getIdCamareroDadaMesa(numeroMesa), Integer.parseInt(numeroPersonas), 1);
+		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, clave, Integer.parseInt(numeroPersonas), 2);
+		operacion.actualizarMesaBD(numeroMesa, clave, Integer.parseInt(numeroPersonas), 2);
+		
+		////////////////////////
+		
+        unRestaurante.addComandaAMesa(numeroMesa, clave, aEnviar);
+				
 		}
 		else {
 			System.out.println("\n Esos platos no corresponden a este restaurante");
