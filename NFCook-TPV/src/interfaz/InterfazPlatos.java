@@ -1310,7 +1310,7 @@ public class InterfazPlatos extends JFrame {
 			if (mesa.getIdMesa().equals(idMesa)){
 				mesa.setProductosEnMesa(productosEnMesa);
 				mesa.actualizarDineroTotal();
-				idCam = mesa.getIdCamarero();
+				//idCam = mesa.getIdCamarero();
 				mesa.cerrarMesa();
 				enc = true;
 				}
