@@ -206,7 +206,7 @@ public class Mapas extends FragmentActivity
 			ubicacion = new Location("gps");
 			ubicacion.setLatitude(40.4164904);
 		    ubicacion.setLongitude(-3.7031825);
-		    Toast.makeText(getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
+		    //Toast.makeText(getApplicationContext(), "Ubicación no encontrada", Toast.LENGTH_SHORT).show();
 		}else{
 			//Toast.makeText(getApplicationContext(), "Mostrando ubicación actual", Toast.LENGTH_SHORT).show();
 			if(restaurantes != null)
