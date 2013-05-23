@@ -17,14 +17,12 @@ import fragments.CuentaFragment;
 import fragments.PantallaInicialRestaurante;
 import fragments.PedidoFragment;
 import fragments.ContenidoTabsSuperioresFragment;
-
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
-
 import adapters.PagerAdapter;
 import alertDialogPersonalizado.ActionItem;
 import alertDialogPersonalizado.QuickAction;
@@ -61,6 +59,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
@@ -73,7 +72,6 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import facebook.FacebookPublicarYLogin;
 
 /**
@@ -426,12 +424,6 @@ public class InicializarRestaurante extends FragmentActivity
     	
     }
     
-    private void inicializarTabsSuperiores(){
-    	// Creamos los tabs inferiores y los inicializamos
-		tabsSuperiores = (TabHost)findViewById(R.id.tabhostSuperior);
-		tabsSuperiores.setup();
-    }
-    
     public void ActualizaValorEstrellas(RatingBar rating){
     	rating.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
 
@@ -516,7 +508,11 @@ public class InicializarRestaurante extends FragmentActivity
 		this.resultado = f;
 	}
 	
-    
+	private void inicializarTabsSuperiores(){
+    	// Creamos los tabs inferiores y los inicializamos
+		tabsSuperiores = (TabHost)findViewById(R.id.tabhostSuperior);
+		tabsSuperiores.setup();
+    }
     
     // Metodo encargado crear los tabs superiores con la informacion referente a las categorias del restaurante
 	private void cargarTabsSuperiores(){
@@ -618,12 +614,6 @@ public class InicializarRestaurante extends FragmentActivity
         
         miViewPager.setVisibility(View.GONE);
         
-//        // Ponemos el color del texto en blanco
-//        for(int i=0;i<=listFragments.size()-1;i++) 
-//		{ 
-//            TextView tv = (TextView) tabsSuperiores.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
-//            tv.setTextColor(Color.parseColor("#FFFFFF"));
-//        }
         for(int i=0;i<listFragments.size();i++){
 	        tabsSuperiores.getTabWidget().getChildAt(i).setOnClickListener(new OnClickListener() {
 				
@@ -649,9 +639,7 @@ public class InicializarRestaurante extends FragmentActivity
 			        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			        ft.replace(R.id.FrameLayoutPestanas, f);
 			        ft.commit();
-			        
-			        postabSuperiorPulsado = tabsSuperiores.getCurrentTab();
-			        
+			        			        
 			        // Ponemos el título a la actividad
 			        // Recogemos ActionBar
 			        ActionBar actionbar = getActionBar();
@@ -830,12 +818,11 @@ public class InicializarRestaurante extends FragmentActivity
     // Metodo encargado de definir la acción de cada tab cuando sea seleccionado
 	public void onTabChanged(String tabId) {
 
-		if (miViewPager != null)
-			miViewPager.setVisibility(View.GONE);
-
 		if(tabs.getCurrentTabTag().equals("tabInicio")){
 			usandoTabsInferiores = true;
 			cambiarBackgroundTabsSuperiores();
+			if (miViewPager != null)
+				miViewPager.setVisibility(View.GONE);
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
 			 * ya no lo esté.
@@ -869,6 +856,8 @@ public class InicializarRestaurante extends FragmentActivity
 		}else if(tabId.equals("tabPedidoSincronizar")){
 			usandoTabsInferiores = true;
 			cambiarBackgroundTabsSuperiores();
+			if (miViewPager != null)
+				miViewPager.setVisibility(View.GONE);
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
 			 * ya no lo esté.
@@ -898,6 +887,8 @@ public class InicializarRestaurante extends FragmentActivity
 		}else if(tabId.equals("tabCuenta")){
 			usandoTabsInferiores = true;
 			cambiarBackgroundTabsSuperiores();
+			if (miViewPager != null)
+				miViewPager.setVisibility(View.GONE);
 			/*
 			 * Cambiamos el fondo del tab inferior que estuviese seleccionado para que ahora 
 			 * ya no lo esté.
@@ -1068,8 +1059,7 @@ public class InicializarRestaurante extends FragmentActivity
 	        	((ContenidoTabsSuperioresFragment) listFragments.get(0)).actualizar();
 		} else if (origen.equals("Pedido")){
 	        
-		}
-		else {
+		}else if (origen.equals("Calculadora")) {//calculadora
 			tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#c38838"));
 			tabs.getTabWidget().getChildAt(tabInferiorSeleccionado).setBackgroundColor(Color.parseColor("#906d35"));
 		}

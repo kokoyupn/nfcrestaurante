@@ -3,6 +3,7 @@ package usuario;
 import java.util.ArrayList;
 
 import baseDatos.HandlerDB;
+
 import com.example.nfcook.R;
 
 import fragments.PantallaInicialRestaurante;
@@ -15,6 +16,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -334,6 +336,9 @@ public class Calculadora extends Activity{
 	        // Si selecciona sobre aceptar, lanzamos la pantalla calculadora
 	        ventanaEmergente.setPositiveButton("Aceptar", new  DialogInterface.OnClickListener() { // si le das al aceptar
 	          	public void onClick(DialogInterface dialog, int whichButton) {
+	          		Intent intent = new Intent();
+	                intent.putExtra("Origen", "Calculadora");
+	                setResult(RESULT_OK, intent);
 	          		finish();
 	          	}
 	        });
