@@ -77,7 +77,7 @@ public class Cobro {
 				//Rellenamos los extras si es un plato
 				if(producto instanceof Plato){
 					textoACamarero += "+" + ((Plato)producto).getExtrasMarcados().replace(",","+");
-				}else textoACamarero += "+ No configurable" ;
+				}else textoACamarero += "+No configurable" ;
 
 				//Rellenamos las observaciones
 				if(producto.getObservaciones().equals("")){//Si es vacio metemos una barra baja
