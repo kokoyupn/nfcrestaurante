@@ -1,6 +1,13 @@
-package com.example.nfcook_camarero;
+package recoger;
 
 import java.util.StringTokenizer;
+
+import com.example.nfcook_camarero.R;
+import com.example.nfcook_camarero.SonidoManager;
+import com.example.nfcook_camarero.R.id;
+import com.example.nfcook_camarero.R.layout;
+import com.example.nfcook_camarero.R.menu;
+import com.example.nfcook_camarero.R.raw;
 
 import fragments.PantallaMesasFragment;
 
@@ -37,8 +44,8 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     TextView mInfoText;
     private static final int MESSAGE_SENT = 1;
     Context context;
-    HandlerGenerico sqlRestaurante;
-	SQLiteDatabase dbRestaurante;
+    private static HandlerGenerico sqlRestaurante;
+	private static SQLiteDatabase dbRestaurante;
 	
 	private static HandlerGenerico sqlMesas;
 	private static SQLiteDatabase dbMesas;
@@ -65,12 +72,10 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
-        procesarCuenta("a");
     	
 		//El numero de la mesa se obtiene de la pantalla anterior
-		Bundle bundle = getIntent().getExtras();
-		numMesa = bundle.getString("NumMesa");
-		restaurante = bundle.getString("Restaurante");
+		numMesa = PantallaMesasFragment.dameMesa();
+		restaurante = PantallaMesasFragment.dameRestaurante();
 		    
 		//Creamos la instacia del manager de sonido
 		sonidoManager = new SonidoManager(getApplicationContext());
@@ -150,6 +155,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	        NdefMessage msg = (NdefMessage) rawMsgs[0];        
 	        
 	        procesarCuentas(new String(msg.getRecords()[0].getPayload()));
+	       // Toast.makeText(getApplicationContext(),new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
 	        
 	        //Sonido para confirmar el pedido sincronizado
 	        sonidoManager.play(sonido);
@@ -159,7 +165,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	    }
 
 	/***
-	 * Obtiene la cuenta de las cuentas separadas por &
+	 * Obtiene la cuenta de las cuentas separadas por ¬
 	 * Formato: rest & numMesaX / cuentaX & numMesaY / cuentaY & numMesaZ cuentaZ
 	 * @param string
 	 * @return
@@ -168,12 +174,12 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 		
 		boolean mesaEncontrada = false;
 		String cuenta = "";
-		StringTokenizer st = new StringTokenizer(cuentas,"&");
+		StringTokenizer st = new StringTokenizer(cuentas,"¬");
 		
 		if (estoyEnRestauranteCorrecto(st.nextToken())){
 	
 			while(st.hasMoreElements() && !mesaEncontrada){
-				StringTokenizer stCuenta = new StringTokenizer(st.nextToken(),"/");
+				StringTokenizer stCuenta = new StringTokenizer(st.nextToken(),"|");
 				String numMesaCuenta = stCuenta.nextToken();
 				cuenta = stCuenta.nextToken();
 				mesaEncontrada = numMesaCuenta.equals(numMesa);
@@ -189,7 +195,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	//FORMATO: id+extras*observaciones*nombrePlato*precio*numPersonas*idUnico*idCamarero*fechaHora@siguientePlato(Igual)
     private void procesarCuenta(String string) {
 
-    	string = "@fh8+Poco hecha, Roquefort, Patatas Fritas*_*PLATO ESTRELLA: Director`s Choice*10.85*5*2*idCamarero*fechaHora@";/* +
+    	/*string = "@fh8+Poco hecha, Roquefort, Patatas Fritas*_*PLATO ESTRELLA: Director`s Choice*10.85*5*2*idCamarero*fechaHora@";/* +
     			"@fh3+No configurable*_*nombrePlato*4.76*3*61*idCamarero*fechaHora" +
     			"@fh10+extra1+extra2*OBS*nombrePlato*2.2*4*62*idCamarero*fechaHora";*/
     	
@@ -266,7 +272,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 		    		System.out.println("era null");
 		    	else
 		    		System.out.println(c.getString(2));
-		    	
+		    	System.out.println("Platos base de datos: ");
 		    	System.out.println(c.getString(1));
 		    	System.out.println(c.getString(3));
 		    	System.out.println(c.getString(4));
@@ -286,12 +292,11 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 
    
 	private boolean estoyEnRestauranteCorrecto(String id){
-		
 		abrirBaseDatos();
 		
 		// Campos que quieres recuperar
-		String[] campos = new String[] { "Numero" };
-		String[] datos = new String[] { restaurante };
+		String[] campos = new String[] {"Numero"};
+		String[] datos = new String[] {restaurante};
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
 
 		cursorPedido.moveToFirst();
@@ -336,10 +341,5 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
              startActivity(intent);
          } else finish();
          return true;
-    }
-
-
-	
-    
-  
+    }  
 }

@@ -1,14 +1,8 @@
 package com.example.nfcook_camarero;
-
-
-
-
-import fragments.PantallaMesasFragment;
 import baseDatos.HandlerGenerico;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -209,6 +202,9 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
             switch (msg.what) {
             case MESSAGE_SENT:
             	Toast.makeText(getApplicationContext(), "Pedido Sincronizado", Toast.LENGTH_LONG).show();
+            	Mesa.actualizarSincronizadosBaseMesas();
+        		//Notificas que has borrado un elemento del adapter y que repinte la lista
+        		Mesa.actualizaListPlatos();
             	cerrarVentana();
                 break;
             }
