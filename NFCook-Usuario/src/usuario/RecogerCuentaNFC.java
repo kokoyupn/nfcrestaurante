@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import baseDatos.HandlerDB;
+
 import com.example.nfcook.R;
 
-import fragments.PantallaInicialRestaurante;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -34,6 +34,8 @@ import android.widget.Toast;
 public class RecogerCuentaNFC extends Activity implements
 		DialogInterface.OnDismissListener {
 
+	
+	
 	private ProgressDialog progressDialogSinc;
 	private String restaurante;
 	private HandlerDB sqlCuenta, sqlMiBase, sqlRestaurante;
@@ -49,6 +51,12 @@ public class RecogerCuentaNFC extends Activity implements
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
+	
+	public static ArrayList<ContentValues> mensajes; 
+	public static String mensaje="";
+	
+	public static boolean enviarPorEmail;
+	
 	private static String abreviaturaRest; 
 
 	/**
@@ -69,7 +77,8 @@ public class RecogerCuentaNFC extends Activity implements
 		@Override
 		protected void onPreExecute() {
 			abrirBasesDeDatos();
-			progressDialogSinc.show(); // Mostramos el diálogo antes de comenzar
+			progressDialogSinc.show();
+			
 		}
 
 		/**
@@ -82,6 +91,7 @@ public class RecogerCuentaNFC extends Activity implements
 			if (dispositivoCompatible) {
 				try {
 					leerTagNFC();
+					
 				} catch (IOException e1) {
 					leidoBienDeTag = false;
 					e1.printStackTrace();
@@ -110,7 +120,9 @@ public class RecogerCuentaNFC extends Activity implements
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		enviarPorEmail = false;
+		
 		setContentView(R.layout.sincronizar_pedido_nfc);
 		
 		// Ponemos el título a la actividad
@@ -265,7 +277,8 @@ public class RecogerCuentaNFC extends Activity implements
 	 * @param cuenta
 	 */
 	private void decodificarPlatos(String cuenta) {
-
+		mensajes = new ArrayList<ContentValues>();
+		
 		// separamos por platos
 		StringTokenizer stPlatos = new StringTokenizer(cuenta,"@");
 			
@@ -297,7 +310,19 @@ public class RecogerCuentaNFC extends Activity implements
         	platoCuenta.put("Restaurante",restaurante);
         	platoCuenta.put("IdHijo", 0);
     		dbCuenta.insert("Cuenta", null, platoCuenta);
-    	}		
+    		ContentValues mensajeCuenta = new ContentValues();
+    		mensajeCuenta.put("Plato", cursor.getString(1));
+    		mensajeCuenta.put("PrecioPlato",cursor.getDouble(2));
+    		mensajes.add(mensajeCuenta);
+    	}	
+    	
+    	
+    	//if (enviarPorEmail){
+        	
+        	
+        		
+        	
+    	//}
 	}	
 	
     private void borrarCuentaActual() {
@@ -450,5 +475,7 @@ public class RecogerCuentaNFC extends Activity implements
 		// Cerramos la conexion
 		mfc.close();
 	}
-
+	
+	
 }
+
