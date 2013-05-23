@@ -440,13 +440,14 @@ public class VentanaLogin extends JFrame implements ActionListener{
 			}	
 		}
 		numeroMesa= "M"+numeroMesa;
+		String claveS = "1235";
 		OperacionesSocketsSinBD operacion = new OperacionesSocketsSinBD();
-		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, clave, Integer.parseInt(numeroPersonas), 2);
-		operacion.actualizarMesaBD(numeroMesa, clave, Integer.parseInt(numeroPersonas), 2);
+		operacion.actualizarMesaBDLLegadaExterna(null, numeroMesa, claveS, Integer.parseInt(numeroPersonas), 2);
+		operacion.actualizarMesaBD(numeroMesa, claveS, Integer.parseInt(numeroPersonas), 2);
 		
 		////////////////////////
 		
-        unRestaurante.addComandaAMesa(numeroMesa, clave, aEnviar);
+        unRestaurante.addComandaAMesa(numeroMesa, claveS, aEnviar);
 				
 		}
 		else {
