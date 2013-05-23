@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import usuario.InicializarRestaurante;
+import usuario.Mail;
 import usuario.RecogerCuentaNFC;
 import usuario.RecogerCuentaQR;
 import baseDatos.HandlerDB;
@@ -20,6 +21,7 @@ import adapters.PadreListCuenta;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -33,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,6 +60,10 @@ public class CuentaFragment extends Fragment{
 	private static boolean paypalInicializado;
 	
 	private static boolean botonPayPalPulsado;
+	
+	public Builder ventanaEmergente;
+	private TextView text;
+	private EditText edit;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -284,7 +291,87 @@ public class CuentaFragment extends Fragment{
 		m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 		m.commitAllowingStateLoss();
 		if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
+		lanzarAlertDialogCuentaElectronica();
+		
 	}
+	
+	public void lanzarAlertDialogCuentaElectronica()
+	{
+    	ventanaEmergente = new AlertDialog.Builder(CuentaFragment.this.getActivity());
+        View vistaAviso = LayoutInflater.from(CuentaFragment.this.getActivity()).inflate(R.layout.aviso_envio_mail_cuenta, null);
+        
+    	//Anadimos los botones de enviar y cancelar al alert Dialog
+        onClickBotonAceptarAlertDialog(ventanaEmergente);
+        onClickBotonCancelarAlertDialog(ventanaEmergente);
+        ventanaEmergente.setView(vistaAviso);
+        ventanaEmergente.show();
+    	
+        text = (TextView) vistaAviso.findViewById(R.id.textViewCuentaElectronica);
+        text.setText("Si quiere recibir su ticket en formato electrónico introduzca su email: ");
+        edit = (EditText) vistaAviso.findViewById(R.id.editTextCuentaElectronica);
+	}
+
+public void onClickBotonAceptarAlertDialog(Builder ventanaEmergente){
+
+	
+	ventanaEmergente.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+		
+
+		public void onClick(DialogInterface dialog, int which) {
+				
+				RecogerCuentaNFC.enviarPorEmail = true;
+				
+				Mail m = new Mail();
+	            m.setUser("busyrm@gmail.com");// username 
+	            m.setPass("widowmaker");// password
+
+	            
+	            String[] toArr = {edit.getText().toString()}; 
+	            
+	            m.setTo(toArr); 
+	            m.setFrom("busyrm@gmail.com"); 
+	            m.setSubject("Ticket de su cuenta"); 
+	            
+	            Double precioTotal = 0.0;
+	            if(restaurante.equals("Foster"))
+	            	RecogerCuentaNFC.mensaje+= "Foster's Hollywood\n";
+	            else
+	            	RecogerCuentaNFC.mensaje+= "VIPS\n";
+	            for(int i=0;i<RecogerCuentaNFC.mensajes.size();i++)
+	            {
+	            	String m1 = RecogerCuentaNFC.mensajes.get(i).getAsString("Plato");
+	            	String m2 = RecogerCuentaNFC.mensajes.get(i).getAsString("PrecioPlato");
+	            	precioTotal = RecogerCuentaNFC.mensajes.get(i).getAsDouble("PrecioPlato") + precioTotal;
+	            	RecogerCuentaNFC.mensaje+= "\n" + m1 + " " + m2 + " €";
+	            }
+	            RecogerCuentaNFC.mensaje+= "\n------------------------------";
+	            RecogerCuentaNFC.mensaje+= "\n" + "Total: " + " " + precioTotal + " €";
+	            m.setBody(RecogerCuentaNFC.mensaje); 
+
+	            try { 
+	              //m.addAttachment("/sdcard/filelocation"); //archivos adjuntos
+
+	              if(m.send()) { 
+	                Toast.makeText(CuentaFragment.this.getActivity(), "Email enviado correctamente.", Toast.LENGTH_LONG).show(); 
+	              } else { 
+	                Toast.makeText(CuentaFragment.this.getActivity(), "Email no enviado.", Toast.LENGTH_LONG).show();//Si usuario y enviante no coinciden 
+	              } 
+	            } catch(Exception e) { 
+	              Toast.makeText(CuentaFragment.this.getActivity(), "Error en el envio del email", Toast.LENGTH_LONG).show(); //Si ha habido fallos 
+	            } 
+	          }
+
+	        }); 
+			
+	      } 
+
+public void onClickBotonCancelarAlertDialog(AlertDialog.Builder ventanaEmergente){
+	ventanaEmergente.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+		
+		public void onClick(DialogInterface dialog, int which) {
+		}
+	});
+}
 	
 	/**
 	 * Crea el onClick la imagen botonQR
