@@ -5,7 +5,7 @@
     android:layout_height="wrap_content" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="65dp"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:text="Nombre del Platoppppppppppppp"
+            android:text="Nombre del Plato"
             android:textColor="@color/negro"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/extras"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Aquí van los extras"
                 android:textColor="@color/negro" />
@@ -59,9 +59,8 @@
 
             <TextView
                 android:id="@+id/observaciones"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:text="Aquí van las observaciones"
                 android:textColor="@color/negro" />
         </LinearLayout>
@@ -69,8 +68,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
         android:layout_marginRight="10dp"
         android:gravity="top|right"
         android:orientation="vertical" >

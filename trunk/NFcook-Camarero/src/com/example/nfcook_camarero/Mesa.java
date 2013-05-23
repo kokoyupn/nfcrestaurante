@@ -128,6 +128,8 @@ public class Mesa extends Activity {
 	  	    platos.setOnItemClickListener(new OnItemClickListener() {
 	  	    	
 	  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
+	  	    	//Si un plato ya esta sincronizado no tiene sentido poder editarlo
+					if(!Mesa.sincronizado(posicion)){
 	  	    			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Mesa.this);
 		  	    		ventanaEmergente.setNegativeButton("Cancelar", null);
 		  	    		onClickBotonAceptarAlertDialog(ventanaEmergente, posicion);
@@ -143,6 +145,9 @@ public class Mesa extends Activity {
 		  				cargarExpandableListExtras(posicion);
 		  				ventanaEmergente.setView(vistaAviso);
 		  				ventanaEmergente.show();
+					}else
+						   Toast.makeText(getApplicationContext(),"Plato ya sincronizado",Toast.LENGTH_SHORT).show();
+					
 	  	    	}
 	  	    });
 	  	    
@@ -364,6 +369,21 @@ public class Mesa extends Activity {
 		//Boton AñadirBebida--------------------------------------------------------------
 	}
 
+	
+	private static boolean sincronizado(int pos) {
+		importarBaseDatatosMesa();
+    	
+		String[] campos = new String[]{"Sincro"};
+    	
+    	String[] numeroDeMesa = new String[]{numMesa,String.valueOf(adapter.getIdPlatoUnico(pos))};
+    	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=? AND IdUnico=?",numeroDeMesa, null,null, null);
+    	c.moveToNext();
+    	if(c.getInt(0) == 1)
+    		return true;
+    	else 
+    		return false;	        				
+	}
+
 	/**
 	 * Obtiene los elementos del aArrayList, en funcion de la base de datos y del contenido 
 	 * de la mesa actual, que servirá para confeccionar el adapter de la ListView.
@@ -438,8 +458,7 @@ public class Mesa extends Activity {
 			
 			public void onClick(DialogInterface dialog, int which) {
 				
-				//Si un plato ya esta sincronizado no tiene sentido poder editarlo
-				if(!sincronizado(posicion)){
+				
 					importarBaseDatatosMesa();
 					String nuevosExtrasMarcados = null;
 					
@@ -471,23 +490,9 @@ public class Mesa extends Activity {
 			        sqlMesas.close();
 					
 			        actualizaListPlatos();
-			   }else
-				   Toast.makeText(getApplicationContext(),"Plato ya sincronizado",Toast.LENGTH_SHORT).show();
-			}
+			   }
 
-			private boolean sincronizado(int pos) {
-				importarBaseDatatosMesa();
-	        	
-				String[] campos = new String[]{"Sincro"};
-	        	
-	        	String[] numeroDeMesa = new String[]{numMesa,String.valueOf(adapter.getIdPlatoUnico(pos))};
-	        	Cursor c = dbMesas.query("Mesas",campos, "NumMesa=? AND IdUnico=?",numeroDeMesa, null,null, null);
-	        	c.moveToNext();
-	        	if(c.getInt(0) == 1)
-	        		return true;
-	        	else 
-	        		return false;	        				
-			}
+			
 		});
 		
 	}
@@ -720,9 +725,6 @@ public class Mesa extends Activity {
     public void onActivityResult(int requestCode, int resultCode,Intent data)
     {
     	
-    	actualizarSincronizadosBaseMesas();
-		//Notificas que has borrado un elemento del adapter y que repinte la lista
-		actualizaListPlatos();
     	
     }
     /*Metodo que actualiza el campo Sincro de la base de datos Mesas tras sincronizar el pedido con el TPV*/
