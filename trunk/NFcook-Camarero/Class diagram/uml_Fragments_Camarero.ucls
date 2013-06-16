@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="fragments.PantallaMesasFragment" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/fragments/PantallaMesasFragment.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="624" width="341" x="17" y="-200"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="fragments.PantallaHistoricoFragment" project="NFcook-Camarero" 
+    file="/NFcook-Camarero/src/fragments/PantallaHistoricoFragment.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="294" x="408" y="-200"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="3">    
+    <bendpoint x="448" y="378"/>    
+    <bendpoint x="445" y="348"/>    
+    <bendpoint x="429" y="336"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="4" name="propiaInstancia"/>      
+      <multiplicity id="5" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
