@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="basesDeDatos.Operaciones" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/basesDeDatos/Operaciones.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="97" x="259" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="basesDeDatos.Conexion" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/basesDeDatos/Conexion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="259" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="interfaz.InterfazPlatos" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/InterfazPlatos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="103" x="2309" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="interfaz.InterfazPlatos.MiRender" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/InterfazPlatos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="2444" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="interfaz.VentanaMesas" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/VentanaMesas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="108" x="1820" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="interfaz.VentanaLogin.TecladoParaLogin" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/VentanaLogin.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="126" x="2443" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="interfaz.PlatoCelda" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/PlatoCelda.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="386" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="interfaz.JPanelBordesRedondos" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/JPanelBordesRedondos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="161" x="1079" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="interfaz.InterfazPlatos.TecladoAlfaNumerico" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/InterfazPlatos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="145" x="2571" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="interfaz.BotonMesa" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/BotonMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="88" x="2055" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="interfaz.VentanaLogin" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/VentanaLogin.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="101" x="2376" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="interfaz.InterfazPlatos.TecladoNumerico" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/InterfazPlatos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="123" x="2756" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="interfaz.VentanaFichar" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/VentanaFichar.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="105" x="1280" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="interfaz.InterfazPlatos.TablaNoEditable" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/InterfazPlatos.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="114" x="2290" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="interfaz.BotonMesa.TecladoParaNumeroPersonas" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/BotonMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="195" x="1820" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="interfaz.BotonMesa.EventosRatonBotones" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/interfaz/BotonMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="149" x="2055" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="sockets.MensajeMesasVisitadas" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeMesasVisitadas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="163" x="2609" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="sockets.MensajeTomaFichero" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeTomaFichero.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="145" x="1425" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="sockets.Mensaje" project="NFCook-TPV" file="/NFCook-TPV/src/sockets/Mensaje.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="3286" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="sockets.MensajeMesaVisitadaCobrar" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeMesaVisitadaCobrar.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="188" x="3174" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="sockets.MensajeArrayConsultas" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeArrayConsultas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="160" x="2974" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="sockets.MensajeCobrarMesa" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeCobrarMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="3402" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="sockets.ClienteFichero" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/ClienteFichero.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="105" x="1610" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="sockets.OperacionesSocketsSinBD" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/OperacionesSocketsSinBD.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="178" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="sockets.EscuchaCliente" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/EscuchaCliente.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="112" x="650" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="sockets.ShutdownHook" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/ShutdownHook.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="110" x="802" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="sockets.MensajeEstadoMesa" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeEstadoMesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="3960" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="sockets.MensajeConsulta" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeConsulta.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="2812" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="sockets.MensajeDameFichero" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeDameFichero.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="147" x="3584" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="sockets.MensajeMesaVisitada" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/sockets/MensajeMesaVisitada.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="149" x="3771" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="tpv.Restaurante" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Restaurante.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="94" x="2309" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="tpv.Cobro.ComparadorPrecio" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/Cobro.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="132" x="1481" y="409"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="tpv.TuplaProdEnv" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/TuplaProdEnv.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="101" x="1939" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="tpv.Producto" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Producto.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="2250" y="409"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="35" language="java" name="tpv.Bebida" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Bebida.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="2187" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="36" language="java" name="tpv.Cobro" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Cobro.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="1526" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="37" language="java" name="tpv.Plato" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Plato.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="2314" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="38" language="java" name="tpv.AuxDeshacerRehacer" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/AuxDeshacerRehacer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="149" x="2080" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="39" language="java" name="tpv.Comanda" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Comanda.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="1653" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="40" language="java" name="tpv.ObjetoDeImpresion" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/ObjetoDeImpresion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="133" x="1882" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="41" language="java" name="tpv.FechaYHora" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/FechaYHora.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="92" x="1653" y="409"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="42" language="java" name="tpv.HistoricoComandasMesas" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/HistoricoComandasMesas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="174" x="2095" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="43" language="java" name="tpv.Mesa" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Mesa.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="1968" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="44" language="java" name="tpv.Restaurante.MiComparator" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/Restaurante.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="105" x="2452" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="45" language="java" name="tpv.Imprimir" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Imprimir.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="952" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="46" language="java" name="tpv.Mail" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/Mail.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="87" x="1755" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="47" language="java" name="tpv.QRCodeJava" project="NFCook-TPV" file="/NFCook-TPV/src/tpv/QRCodeJava.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="97" x="513" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <enumeration id="48" language="java" name="tpv.Mesa.estadoMesa" project="NFCook-TPV" 
+    file="/NFCook-TPV/src/tpv/Mesa.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1847" y="344"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </enumeration>  
+  <association id="49">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="50" name="comandasMesas"/>      
+      <multiplicity id="51" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="42" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="52">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="53">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="54" name="unRestaurante"/>      
+      <multiplicity id="55" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="56">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="12"/>  
+  </nesting>  
+  <association id="57">    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="58" name="prod">        
+        <position height="18" width="30" x="2133" y="380"/>      
+      </attribute>      
+      <multiplicity id="59" minimum="0" maximum="1">        
+        <position height="16" width="23" x="2168" y="380"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="60">    
+    <bendpoint x="2930" y="223"/>    
+    <bendpoint x="2930" y="316"/>    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="61" name="productosFavoritos">        
+        <position height="18" width="102" x="2378" y="422"/>      
+      </attribute>      
+      <multiplicity id="62" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="63">    
+    <bendpoint x="2259" y="316"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="64" name="productoATabla">        
+        <position height="18" width="83" x="2205" y="369"/>      
+      </attribute>      
+      <multiplicity id="65" minimum="0" maximum="1">        
+        <position height="16" width="23" x="2287" y="369"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="66">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <nesting id="67">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="6"/>  
+  </nesting>  
+  <nesting id="68">    
+    <end type="SOURCE" refId="43"/>    
+    <end type="TARGET" refId="48"/>  
+  </nesting>  
+  <association id="69">    
+    <bendpoint x="1768" y="130"/>    
+    <bendpoint x="1768" y="223"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="70" name="estadoImagenPulsada">        
+        <position height="18" width="113" x="1650" y="177"/>      
+      </attribute>      
+      <multiplicity id="71" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1766" y="179"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="48" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="72">    
+    <bendpoint x="1938" y="515"/>    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="73" name="cobro">        
+        <position height="18" width="36" x="2113" y="447"/>      
+      </attribute>      
+      <multiplicity id="74" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="2152" y="447"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="75">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="15"/>  
+  </nesting>  
+  <generalization id="76">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="77">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="78">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="79" name="ventanaPlatos"/>      
+      <multiplicity id="80" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="81">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="16"/>  
+  </nesting>  
+  <association id="82">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="83" name="horaEnvioYFecha"/>      
+      <multiplicity id="84" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="41" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="85">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="86" name="unRestaurante"/>      
+      <multiplicity id="87" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="88">    
+    <end type="SOURCE" refId="38" navigable="false">      
+      <attribute id="89" name="prod">        
+        <position height="18" width="30" x="2220" y="384"/>      
+      </attribute>      
+      <multiplicity id="90" minimum="0" maximum="1">        
+        <position height="16" width="23" x="2259" y="390"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="91">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="92">    
+    <end type="SOURCE" refId="37"/>    
+    <end type="TARGET" refId="34"/>  
+  </generalization>  
+  <nesting id="93">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="44"/>  
+  </nesting>  
+  <nesting id="94">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="9"/>  
+  </nesting>  
+  <association id="95">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="96" name="comanda">        
+        <position height="18" width="52" x="2046" y="408"/>      
+      </attribute>      
+      <multiplicity id="97" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="2100" y="410"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="98">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="99" name="mesasRestaurante"/>      
+      <multiplicity id="100" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="43" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="101">    
+    <bendpoint x="2234" y="130"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="102" name="ventanaMesas"/>      
+      <multiplicity id="103" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="104">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="105">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="106" name="auxiliarDeshacer"/>      
+      <multiplicity id="107" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="38" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="108">    
+    <bendpoint x="1789" y="130"/>    
+    <bendpoint x="1789" y="223"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="109" name="estado">        
+        <position height="18" width="41" x="1797" y="192"/>      
+      </attribute>      
+      <multiplicity id="110" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1841" y="193"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="48" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="111">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="112" name="productosEnMesa"/>      
+      <multiplicity id="113" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="114">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="34"/>  
+  </generalization>  
+  <nesting id="115">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </nesting>  
+  <generalization id="116">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="117">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="118" name="ventanaMesas"/>      
+      <multiplicity id="119" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="120">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="121">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="122" name="estado"/>      
+      <multiplicity id="123" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="48" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="124">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <association id="125">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="126" name="horaEnvioYFecha"/>      
+      <multiplicity id="127" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="41" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="128">    
+    <end type="SOURCE" refId="36"/>    
+    <end type="TARGET" refId="32"/>  
+  </nesting>  
+  <association id="129">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="130" name="auxiliarRehacer"/>      
+      <multiplicity id="131" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="38" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="132">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="133" name="dtm"/>      
+      <multiplicity id="134" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="135">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="136" name="miRestaurante"/>      
+      <multiplicity id="137" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="138">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="139">    
+    <bendpoint x="2909" y="223"/>    
+    <bendpoint x="2909" y="316"/>    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="140" name="productosRestaurante">        
+        <position height="18" width="116" x="2379" y="440"/>      
+      </attribute>      
+      <multiplicity id="141" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="142">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="143" name="unRestaurante"/>      
+      <multiplicity id="144" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="145">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="146" name="productosEnMesa"/>      
+      <multiplicity id="147" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
