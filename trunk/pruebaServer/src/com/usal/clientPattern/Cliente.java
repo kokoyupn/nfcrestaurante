@@ -42,7 +42,7 @@ public class Cliente extends Observable implements Runnable {
             conectado = true;
             // inicia la lectura desde el servidor
             Thread t = new Thread(this);
-            // llama al metodo run de esta clase
+            // llama al metodo run de esta clase     
             t.start(); 
         }
     }
