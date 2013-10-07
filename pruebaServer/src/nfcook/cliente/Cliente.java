@@ -1,4 +1,4 @@
-package com.usal.clientPattern;
+package nfcook.cliente;
 
 import java.net.Socket;
 import java.io.File;
@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
 
-import com.usal.serverPattern.FicheroServidor;
-
+import nfcook.servidor.FicheroServidor;
 
 public class Cliente extends Observable implements Runnable {
 
