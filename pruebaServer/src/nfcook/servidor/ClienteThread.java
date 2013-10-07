@@ -1,7 +1,3 @@
-//ClientThread.java
-//© Usman Saleem, 2002 and Beyond
-//usman_saleem@yahoo.com
-
 package nfcook.servidor;
 
 import java.net.Socket;
