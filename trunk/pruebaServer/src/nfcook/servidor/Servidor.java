@@ -1,7 +1,3 @@
-//Server.java
-//© Usman Saleem, 2002 and beyond.
-//usman_saleem@yahoo.com
-
 package nfcook.servidor;
 
 import java.net.ServerSocket;
