@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
 
+import com.usal.serverPattern.FicheroServidor;
+
 
 public class Client extends Observable implements Runnable {
 
@@ -102,20 +104,7 @@ public class Client extends Observable implements Runnable {
             	
             	System.out.println("Server:"+msg.toString());	
             	
-            	File f = new File("pruebaN.txt");			    
-			    if (f.length() > 0) {
-			    	f.delete();
-			        f = new File("pruebaN.txt");
-			    }
-			    OutputStream os = new FileOutputStream (f);
-			    int n = 0;
-			    byte buf[] = new byte [3000];
-			    while ((n = ois.read(buf)) >= 0)  {// =-1 si no hay mas datos
-			    	os.write(buf, 0, n); // server.get
-			    	System.out.println ("... "+n);
-			    }
-			   //os.flush();
-			    os.close();
+            	recibirFichero();			  
 			    
 			 //notify observers, vuelta del echo del servidor//
 			 //this.setChanged();
@@ -129,6 +118,39 @@ public class Client extends Observable implements Runnable {
 		}
          finally { connected = false; }
     }
+    
+    
+    public void recibirFichero(){
+        try{
+            // Se envía un mensaje de petición de fichero.
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            FicheroCliente mensaje = new FicheroCliente("pruebaN.txt");
+            oos.writeObject(mensaje);
+
+            // Se abre un fichero para empezar a copiar lo que se reciba.
+            FileOutputStream fos = new FileOutputStream(mensaje.nombreFichero + "_copia");
+            FicheroServidor mensajeRecibido;
+            Object mensajeAux;
+            do {
+                mensajeAux = ois.readObject(); // Se lee el mensaje en una variabla auxiliar
+                if (mensajeAux instanceof FicheroServidor){ // Si es del tipo esperado, se trata
+                    mensajeRecibido = (FicheroServidor) mensajeAux;                    
+                    fos.write(mensajeRecibido.contenidoFichero, 0, mensajeRecibido.bytesValidos); // Se escribe en el fichero
+                } else {
+                    // Si no es del tipo esperado, se marca error y se termina el bucle
+                    System.err.println("Mensaje no esperado " + mensajeAux.getClass().getName());
+                    break;
+                }
+            } while (!mensajeRecibido.ultimoMensaje);
+
+            fos.close();
+            ois.close();
+            
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    
 
     public boolean isConnected() {
 		return connected;
