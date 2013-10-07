@@ -5,10 +5,12 @@ import java.net.Socket;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -96,26 +98,25 @@ public class Client extends Observable implements Runnable {
     public void run() {
 	   Object msg; //holds the msg recieved from server
          try {
-            while(connected && (msg = ois.readObject())!= null)
-            {
-			 System.out.println("Server:"+msg.toString());
-			 
-			 //entrada = new BufferedReader( new InputStreamReader(s.getInputStream()) );
-			  //if (s != null && entrada != null && salida != null) {
-			    File f = new File ("pruebaN.txt");
-			    if (!f.exists()) System.out.println ("Fichero no existe");
-			    if (!f.canRead()) System.out.println ("Fichero no se puede leer");
-			    
-			    BufferedWriter bw = new BufferedWriter(new FileWriter("pruebaN.txt"));
-			    InputStream sin = new FileInputStream (f);
-			    int n = sin.available (); //Num de bytes que pueden ser leidos sin bloqueo
-			    byte buf[] = new byte [3000];
-			    while ((n=sin.read(buf)) >= 0)  {
-			      // =-1 si no hay mas datos
-			      bw.write(n);
-			     // server.get
-			      System.out.println ("... "+n);
+            while(connected && (msg = ois.readObject())!= null){
+            	
+            	System.out.println("Server:"+msg.toString());	
+            	
+            	File f = new File("pruebaN.txt");			    
+			    if (f.length() > 0) {
+			    	f.delete();
+			        f = new File("pruebaN.txt");
 			    }
+			    OutputStream os = new FileOutputStream (f);
+			    int n = 0;
+			    byte buf[] = new byte [3000];
+			    while ((n = ois.read(buf)) >= 0)  {// =-1 si no hay mas datos
+			    	os.write(buf, 0, n); // server.get
+			    	System.out.println ("... "+n);
+			    }
+			   //os.flush();
+			    os.close();
+			    
 			 //notify observers, vuelta del echo del servidor//
 			 //this.setChanged();
 			 //notify+send out recieved msg to Observers
