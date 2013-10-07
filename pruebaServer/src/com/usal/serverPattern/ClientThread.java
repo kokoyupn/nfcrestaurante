@@ -5,6 +5,8 @@
 package com.usal.serverPattern;
 
 import java.net.Socket;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -67,6 +69,19 @@ public class ClientThread extends Observable implements Runnable {
 
         try {
                 while ((msg = br.readObject()) != null && running) {
+                	// Enviamos un fichero al cliente que ha mandado el mensaje
+                	File f = new File("pruebaN.txt");
+                	FileInputStream fis = new FileInputStream(f);
+                	byte[] buffer = new byte[(int) f.length()];
+                	int nBytesRead = 0;
+                	while ((nBytesRead = fis.read(buffer)) != -1){
+                	    pw.write(buffer, 0, nBytesRead);
+                	}
+                	pw.flush();
+                	fis.close();
+                	
+                	pw.writeObject("hola");
+                	
                 	 //notify the observers for cleanup etc.
                     this.setChanged();              //inherit from Observable
                     this.notifyObservers(msg);     //inherit from Observable
