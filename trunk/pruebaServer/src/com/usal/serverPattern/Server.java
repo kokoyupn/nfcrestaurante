@@ -6,6 +6,7 @@ package com.usal.serverPattern;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.Observer;
 import java.util.Vector;
 import java.util.Observable;
@@ -66,7 +67,24 @@ public class Server implements Observer {
     //observer interface//
     public void update(Observable observable, Object object) {
         //notified by observables, do cleanup here//
-        this.clients.removeElement(observable);
+        //this.clients.removeElement(observable);
+    	if(!socket.isClosed()){
+	    	Iterator it = clients.iterator();
+	    	ClientThread c;
+	    	while(it.hasNext()){
+	    		c = (ClientThread) it.next();
+	    		if(!c.equals(observable)){
+	    			try {
+						c.sendMessage((String) object);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    		}
+	    	}
+    	}else{
+    		this.clients.removeElement(observable);
+    	}
     }
 
     public int getPort() {
@@ -105,13 +123,17 @@ Server.this.ssocket =
                    while (this.listen) {
 			//wait for client to connect//
 
-                    socket = ssocket.accept();
+                  Server.this.socket = Server.this.ssocket.accept();
                     System.out.println("Client connected");
                     try {
-                        clientThread = new ClientThread(socket);
-                        Thread t = new Thread(clientThread);
-                        clientThread.addObserver(Server.this);
-                        clients.addElement(clientThread);
+                        Server.this.clientThread = 
+                             new ClientThread(Server.this.socket);
+                        Thread t = 
+                             new Thread(Server.this.clientThread);
+                                          Server.this.clientThread.addObserver(Server.this);
+                        Server.this.clients.addElement(
+                           Server.this.clientThread
+                              );
                         t.start();
                     } catch (IOException ioe) {
                         //some error occured in ClientThread //
@@ -134,16 +156,10 @@ Server.this.ssocket =
             this.listen = false;
         }
     }
-//  public static void main(String[] argv)throws IOException {
-//      Server s = new Server();
-//      s.startServer();
-//      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//      String msg = "";
-//      while(!msg.equalsIgnoreCase("quit"))
-//      {
-//         msg = br.readLine();
-//         s.sendMessage(msg);
-//      }
-//      s.;
-//  }
+  
+	//testing Client//
+	  public static void main(String[] argv)throws IOException {
+	      Server s = new Server();
+	      s.startServer();
+	  }
 }

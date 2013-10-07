@@ -6,6 +6,7 @@ package com.usal.serverPattern;
 
 import java.net.Socket;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,14 +19,12 @@ public class ClientThread extends Observable implements Runnable {
     private ObjectInputStream br;
 
     /** For writing output to socket. */
-    private PrintWriter pw;
+    private ObjectOutputStream pw;
 
     /** Socket object representing client connection */
 
     private Socket socket;
     private boolean running;
-    
-    private String mensaje;
 
     public ClientThread(Socket socket) throws IOException {
         this.socket = socket;
@@ -34,7 +33,7 @@ public class ClientThread extends Observable implements Runnable {
         try {
             br = new ObjectInputStream(socket.getInputStream());
             
-            pw = new PrintWriter(socket.getOutputStream(), true);
+            pw = new ObjectOutputStream(socket.getOutputStream());
             running = true; //set status
         }
         catch (IOException ioe) {
@@ -42,11 +41,6 @@ public class ClientThread extends Observable implements Runnable {
         }
     }
 	
-    public void sendMessage(Object msg) throws IOException
-    {
-		pw.println(msg);
-    }
-    
     /** 
      *Stops clients connection
      */
@@ -59,20 +53,30 @@ public class ClientThread extends Observable implements Runnable {
     }
 
     public void run() {
-        Object msg; //will hold message sent from client
+        Object msg = ""; //will hold message sent from client
 
-	pw.println("Welcome to Java based Server");
+        try {
+			pw.writeObject("Bienvenido puto TOPOR");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 
 	  //start listening message from client//
 
         try {
                 while ((msg = br.readObject()) != null && running) {
+                	 //notify the observers for cleanup etc.
+                    this.setChanged();              //inherit from Observable
+                    this.notifyObservers(msg);     //inherit from Observable
+                    
                     //provide your server's logic here//
 			
                     //right now it is acting as an ECHO server//
 
-                    pw.println("HOLA"); //echo msg back to client//
+                    //pw.println(msg); //echo msg back to client//
+                    System.out.println(msg);
                 }
                 running = false;
             }
@@ -91,5 +95,10 @@ public class ClientThread extends Observable implements Runnable {
         //notify the observers for cleanup etc.
         this.setChanged();              //inherit from Observable
         this.notifyObservers(this);     //inherit from Observable
+    }
+    
+    public void sendMessage(String msg) throws IOException
+    {
+    	pw.writeObject(msg);
     }
 }
