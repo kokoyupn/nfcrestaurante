@@ -70,22 +70,63 @@ public class ClientThread extends Observable implements Runnable {
         try {
                 while ((msg = br.readObject()) != null && running) {
                 	// Enviamos un fichero al cliente que ha mandado el mensaje
+                	// Una variable auxiliar para marcar cuando se envía el último mensaje
+                	boolean enviadoUltimo = false;
+                	
+                	// Se abre el fichero.
                 	File f = new File("pruebaN.txt");
                 	FileInputStream fis = new FileInputStream(f);
-                	byte[] buffer = new byte[(int) f.length()];
-                	int nBytesRead = 0;
-                	while ((nBytesRead = fis.read(buffer)) != -1){
-                	    pw.write(buffer, 0, nBytesRead);
+                	            
+                	// Se instancia y rellena un mensaje de envio de fichero
+                	FicheroServidor mensaje = new FicheroServidor();
+                	mensaje.nombreFichero = "pruebaN.txt";
+                	            
+                	// Se leen los primeros bytes del fichero en un campo del mensaje
+                	int leidos = fis.read(mensaje.contenidoFichero);
+                	            
+                	// Bucle mientras se vayan leyendo datos del fichero
+                	while (leidos > -1)
+                	{               
+                	    // Se rellena el número de bytes leidos
+                	    mensaje.bytesValidos = leidos;
+                	                
+                	    // Si no se han leido el máximo de bytes, es porque el fichero
+                	    // se ha acabado y este es el último mensaje
+                	    if (leidos < FicheroServidor.LONGITUD_MAXIMA)
+                	    {
+                	         // Se marca que este es el último mensaje
+                	        mensaje.ultimoMensaje = true;
+                	        enviadoUltimo=true; 
+                	    }
+                	    else
+                	        mensaje.ultimoMensaje = false;
+                	                
+                	    // Se envía por el socket   
+                	    pw.writeObject(mensaje);
+                	                
+                	    // Si es el último mensaje, salimos del bucle.
+                	    if (mensaje.ultimoMensaje)
+                	        break;
+                	                
+                	    // Se crea un nuevo mensaje
+                	    mensaje = new FicheroServidor();
+                	    mensaje.nombreFichero = "pruebaN.txt";
+                	                
+                	    // y se leen sus bytes.
+                	    leidos = fis.read(mensaje.contenidoFichero);
                 	}
-                	pw.flush();
-                	fis.close();
+                	            
+                	// En caso de que el fichero tenga justo un múltiplo de bytes de MensajeTomaFichero.LONGITUD_MAXIMA,
+                	// no se habrá enviado el mensaje marcado como último. Lo hacemos ahora.
+                	if (enviadoUltimo==false)
+                	{
+                	    mensaje.ultimoMensaje=true;
+                	    mensaje.bytesValidos=0;
+                	    pw.writeObject(mensaje);
+                	}
+                	// Se cierra el ObjectOutputStream
+                	pw.close();
                 	
-                	pw.writeObject("hola");
-                	
-                	 //notify the observers for cleanup etc.
-                    this.setChanged();              //inherit from Observable
-                    this.notifyObservers(msg);     //inherit from Observable
-                    
                     //provide your server's logic here//
 			
                     //right now it is acting as an ECHO server//
