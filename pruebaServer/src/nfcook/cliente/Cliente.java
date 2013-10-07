@@ -56,7 +56,7 @@ public class Cliente extends Observable implements Runnable {
     /**
      * Cerramos la conexion del cliente con el servidor
      */
-    public void disconnect() {
+    public void desconectar() {
     	if(socket != null && conectado){
     		try {
     			socket.close();
@@ -152,6 +152,6 @@ public class Cliente extends Observable implements Runnable {
            msg = br.readLine();
            c.enviarMensaje(msg);
         }
-        c.disconnect();
+        c.desconectar();
     }
 }
