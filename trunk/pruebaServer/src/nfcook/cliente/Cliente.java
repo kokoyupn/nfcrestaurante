@@ -13,7 +13,9 @@ import java.util.Observable;
 import nfcook.servidor.FicheroServidor;
 
 public class Cliente extends Observable implements Runnable {
-
+	
+	
+	private static Cliente cliente = null; 
     private Socket socket;
     private ObjectInputStream ois; 
     private ObjectOutputStream oos;
@@ -22,8 +24,15 @@ public class Cliente extends Observable implements Runnable {
     private int port=5000; 
     private String hostName="192.168.200.119";
 
-    public Cliente() {
+    private Cliente() {
     	conectado = false;
+    }
+    
+    public static Cliente getInstancia(){
+    	if(cliente == null){
+    		cliente  = new Cliente();
+    	}
+    	return cliente;
     }
 
     /**
