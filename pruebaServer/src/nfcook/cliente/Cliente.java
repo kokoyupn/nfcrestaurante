@@ -45,7 +45,7 @@ public class Cliente extends Observable implements Runnable {
             socket = new Socket(hostName,port);                
             //Creamos una conenexion para enviar objetos al servidor
             oos = new ObjectOutputStream(socket.getOutputStream());
-            //Creamos un buffer para recibir mensajes de texto del servidor
+            //Creamos un buffer para objetos del servidor
             ois = new ObjectInputStream(socket.getInputStream());
             conectado = true;
             // inicia la lectura desde el servidor
@@ -86,7 +86,7 @@ public class Cliente extends Observable implements Runnable {
             while(conectado && (msg = ois.readObject())!= null){            	
             	// Si es del tipo fichero recibe el fichero
             	if (msg instanceof FicheroServidor) 
-            		recibirFichero(msg);	
+            		recibirFicheroBaseDatos(msg);	
             	// Si es de tipo String se muestra por pantalla
                 else if (msg instanceof String) 
                 	System.out.println("Server: " + msg.toString());                    
@@ -106,10 +106,10 @@ public class Cliente extends Observable implements Runnable {
     /**
      * Metodo encargado de recibir un fichero enviado por el servidor
      */
-    public void recibirFichero(Object mensaje){
+    public void recibirFicheroBaseDatos(Object mensaje){
         try{
             // Se envía un mensaje de petición de fichero.
-            File f = new File ("pruebaN.txt");
+            File f = new File ("MiBase.db");
 
             // Se abre un fichero para empezar a copiar lo que se reciba.
             FileOutputStream fos = new FileOutputStream(f);
