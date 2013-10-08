@@ -1,6 +1,10 @@
 package nfcook.mensajes;
 
-public abstract class Mensaje {
+import java.io.Serializable;
+
+public abstract class Mensaje implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	protected Asunto asunto;
 	
