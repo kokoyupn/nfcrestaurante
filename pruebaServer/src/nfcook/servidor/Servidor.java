@@ -18,6 +18,7 @@ public class Servidor implements Observer {
 	 * @author Abel
 	 *
 	 */
+	
 	private class StartServerThread extends Thread {
         private boolean escucha;
 
@@ -61,6 +62,8 @@ public class Servidor implements Observer {
         }
     }
     
+	private static Servidor instanciaServidor = null;
+	
 	private Socket cliente;
     @SuppressWarnings("rawtypes")
 	private Vector clientes;
@@ -74,10 +77,17 @@ public class Servidor implements Observer {
     private boolean escuchando;
 
     @SuppressWarnings("rawtypes")
-	public Servidor() {
+	private Servidor(int port) {
         clientes = new Vector();
-        port = 5000;
+        this.port = port;
         escuchando = false;
+    }
+    
+    public static Servidor getInstancia(int port){
+    	if( instanciaServidor == null){
+    		instanciaServidor = new Servidor(port);
+    	}
+    	return instanciaServidor;
     }
 
     public void startServer() {
@@ -139,7 +149,7 @@ public class Servidor implements Observer {
   
 	//testing Client//
 	public static void main(String[] argv)throws IOException {
-		Servidor s = new Servidor();
+		Servidor s = Servidor.getInstancia(5000);
 	    s.startServer();
 	}
 }
