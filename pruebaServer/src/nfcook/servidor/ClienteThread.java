@@ -123,7 +123,7 @@ public class ClienteThread extends Observable implements Runnable {
     	MensajeFichero mensajeEnviar = new MensajeFichero(mensaje.getNombreFichero(), mensaje.getRutaFichero());
     	            
     	// Se leen los primeros bytes del fichero en un campo del mensaje
-    	int leidos = fis.read(mensaje.getContenidoFichero());
+    	int leidos = fis.read(mensajeEnviar.getContenidoFichero());
     	            
     	// Bucle mientras se vayan leyendo datos del fichero
     	while (leidos > -1){               
@@ -141,7 +141,7 @@ public class ClienteThread extends Observable implements Runnable {
     	    }
     	    
     	    // Se envía por el socket   
-    	    oos.writeObject(mensaje);
+    	    oos.writeObject(mensajeEnviar);
     	                
     	    // Si es el último mensaje, salimos del bucle.
     	    if (mensajeEnviar.isUltimoMensaje()){
@@ -152,7 +152,7 @@ public class ClienteThread extends Observable implements Runnable {
     	    mensajeEnviar = new MensajeFichero(mensaje.getNombreFichero(), mensaje.getRutaFichero());
     	                
     	    // y se leen sus bytes.
-    	    leidos = fis.read(mensaje.getContenidoFichero());
+    	    leidos = fis.read(mensajeEnviar.getContenidoFichero());
     	}
     	            
     	// En caso de que el fichero tenga justo un múltiplo de bytes de MensajeTomaFichero.LONGITUD_MAXIMA,
