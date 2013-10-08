@@ -1,6 +1,6 @@
 package nfcook.mensajes;
 
-public class MensajeFichero extends Mensaje{
+public class MensajeFichero implements Mensaje{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,6 @@ public class MensajeFichero extends Mensaje{
     private final static int LONGITUD_MAXIMA = 10;
 	
 	public MensajeFichero(String nombreFichero, String rutaFichero) {
-		super(Asunto.FICHERO);
 		this.nombreFichero = nombreFichero;
 		this.rutaFichero = rutaFichero;
 	}
