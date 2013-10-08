@@ -91,7 +91,7 @@ public class ClienteThread extends Observable implements Runnable {
     	 * Codigo de prueba en el que mandamos un fichero al cliente cuando nos manda una peticion
     	 */
     	try {
-			enviarFicheroBaseDatos("pruebaN.txt");
+			enviarFicheroBaseDatos("MiBase.db");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
