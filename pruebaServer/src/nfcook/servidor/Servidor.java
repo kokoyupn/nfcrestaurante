@@ -8,6 +8,8 @@ import java.util.Vector;
 import java.util.Observable;
 import java.io.*;
 
+import nfcook.mensajes.Mensaje;
+import nfcook.mensajes.MensajeAviso;
 
 public class Servidor implements Observer {
 	
@@ -126,11 +128,19 @@ public class Servidor implements Observer {
 	    	while(it.hasNext()){
 	    		clienteThread = (ClienteThread) it.next();
 	    		if(!clienteThread.equals(observable)){
-	    			try {
-	    				clienteThread.enviaMensaje(object.toString());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+	    			if (object instanceof MensajeAviso){
+	    				try {
+							clienteThread.enviarMensaje((Mensaje) object);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+	            	}else{
+		    			try {
+		    				clienteThread.enviarMensaje((Mensaje) object);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+	            	}
 	    		}
 	    	}
     	}else{
