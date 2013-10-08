@@ -112,11 +112,14 @@ public class Cliente extends Observable implements Runnable {
             // Se abre un fichero para empezar a copiar lo que se reciba.
             FileOutputStream fos = new FileOutputStream(f);
 
+            // Ya tenemos leida la primera parte del mensaje
+        	fos.write(mensaje.getContenidoFichero(), 0, mensaje.getBytesValidos()); // Se escribe en el fichero
+
             while(!mensaje.isUltimoMensaje()){
-            	fos.write(mensaje.getContenidoFichero(), 0, mensaje.getBytesValidos()); // Se escribe en el fichero
             	 if (!mensaje.isUltimoMensaje()){
             		 mensaje = (MensajeFichero) ois.readObject(); // Se lee el mensaje en una variabla auxiliar 
             	 }
+            	 fos.write(mensaje.getContenidoFichero(), 0, mensaje.getBytesValidos()); // Se escribe en el fichero
             }
 
             fos.flush();
