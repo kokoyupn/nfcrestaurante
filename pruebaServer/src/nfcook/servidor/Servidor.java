@@ -127,7 +127,7 @@ public class Servidor implements Observer {
 	    		clienteThread = (ClienteThread) it.next();
 	    		if(!clienteThread.equals(observable)){
 	    			try {
-	    				clienteThread.enviaMensaje((String) object);
+	    				clienteThread.enviaMensaje(object.toString());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
