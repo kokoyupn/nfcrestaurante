@@ -46,7 +46,21 @@ public class MensajeFichero extends Mensaje{
 
 	public byte[] getContenidoFichero() {
 		return contenidoFichero;
-	}	
+	}
+	
+	public static int getLongitudMaxima() {
+		return LONGITUD_MAXIMA;
+	}
+
+	public void setUltimoMensaje(boolean ultimoMensaje) {
+		this.ultimoMensaje = ultimoMensaje;
+	}
+
+	public void setBytesValidos(int bytesValidos) {
+		this.bytesValidos = bytesValidos;
+	}
+	
+	
 	
 	
 	

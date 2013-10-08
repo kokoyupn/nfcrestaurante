@@ -8,6 +8,9 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.util.Observable;
 
+import nfcook.mensajes.Mensaje;
+import nfcook.mensajes.MensajeFichero;
+
 public class ClienteThread extends Observable implements Runnable {
 	
     private ObjectInputStream ois;
@@ -51,8 +54,10 @@ public class ClienteThread extends Observable implements Runnable {
         	// El cliente comienza a escuchar al servidor
             while ((msg = ois.readObject()) != null && funcionando){
             	// Procesamos la peticion del cliente
-            	procesarPeticion(msg);
-                System.out.println("Peticion: " + msg);
+            	if(msg instanceof Mensaje)
+            		procesarPeticion((Mensaje) msg);
+            	else
+            		System.err.println("Mensaje del cliente no esperado " + msg.getClass().getName());
             }
             
             // El cliente no tiene va a realizar mas peticiones
@@ -86,70 +91,75 @@ public class ClienteThread extends Observable implements Runnable {
     	oos.writeObject(msg);
     }
     
-    public void procesarPeticion(Object msg){
+    public void procesarPeticion(Mensaje msg){
     	/**
     	 * Codigo de prueba en el que mandamos un fichero al cliente cuando nos manda una peticion
     	 */
-    	try {
-			enviarFicheroBaseDatos("MiBase.db");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	if (msg instanceof MensajeFichero){
+    		try {
+    			enviarFicheroBaseDatos((MensajeFichero) msg);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	// Si es de tipo String se muestra por pantalla
+        //else if (msg instanceof String) 
+        	//System.out.println("Server: " + msg.toString());                    
+    	// Si no es del tipo esperado, se marca error y se termina el bucle
+    	else 
+    		System.err.println("Mensaje del cliente no esperado " + msg.getClass().getName());
     }
     
     // Metodo encargado de enviar el fichero de una base de datos al cliente que la ha solicitado
-    public void enviarFicheroBaseDatos(String nombre) throws IOException{
+    public void enviarFicheroBaseDatos(MensajeFichero mensaje) throws IOException{
     	// Variable auxiliar para indicar cual es el ultimo mensaje
     	boolean enviadoUltimo = false;
     	
     	// Se abre el fichero.
-    	File f = new File(nombre);
+    	File f = new File(mensaje.getRutaFichero() + mensaje.getNombreFichero());
     	FileInputStream fis = new FileInputStream(f);
     	            
     	// Se instancia y rellena un mensaje de envio de fichero
-    	FicheroServidor mensaje = new FicheroServidor();
-    	mensaje.nombreFichero = nombre;
+    	MensajeFichero mensajeEnviar = new MensajeFichero(mensaje.getNombreFichero(), mensaje.getRutaFichero());
     	            
     	// Se leen los primeros bytes del fichero en un campo del mensaje
-    	int leidos = fis.read(mensaje.contenidoFichero);
+    	int leidos = fis.read(mensaje.getContenidoFichero());
     	            
     	// Bucle mientras se vayan leyendo datos del fichero
     	while (leidos > -1){               
     	    // Se rellena el número de bytes leidos
-    	    mensaje.bytesValidos = leidos;
+    		mensajeEnviar.setBytesValidos(leidos);
     	                
     	    // Si no se han leido el máximo de bytes, es porque el fichero
     	    // se ha acabado y este es el último mensaje
-    	    if (leidos < FicheroServidor.LONGITUD_MAXIMA){
+    	    if (leidos < MensajeFichero.getLongitudMaxima()){
     	         // Se marca que este es el último mensaje
-    	        mensaje.ultimoMensaje = true;
+    	    	mensajeEnviar.setUltimoMensaje(true);
     	        enviadoUltimo=true; 
     	    }else{
-    	        mensaje.ultimoMensaje = false;
+    	    	mensajeEnviar.setUltimoMensaje(false);
     	    }
     	    
     	    // Se envía por el socket   
     	    oos.writeObject(mensaje);
     	                
     	    // Si es el último mensaje, salimos del bucle.
-    	    if (mensaje.ultimoMensaje){
+    	    if (mensajeEnviar.isUltimoMensaje()){
     	    	break;
     	    }
     	    
     	    // Se crea un nuevo mensaje
-    	    mensaje = new FicheroServidor();
-    	    mensaje.nombreFichero = nombre;
+    	    mensajeEnviar = new MensajeFichero(mensaje.getNombreFichero(), mensaje.getRutaFichero());
     	                
     	    // y se leen sus bytes.
-    	    leidos = fis.read(mensaje.contenidoFichero);
+    	    leidos = fis.read(mensaje.getContenidoFichero());
     	}
     	            
     	// En caso de que el fichero tenga justo un múltiplo de bytes de MensajeTomaFichero.LONGITUD_MAXIMA,
     	// no se habrá enviado el mensaje marcado como último. Lo hacemos ahora.
     	if (enviadoUltimo == false){
-    	    mensaje.ultimoMensaje = true;
-    	    mensaje.bytesValidos = 0;
+    		mensajeEnviar.setUltimoMensaje(true);
+    		mensajeEnviar.setBytesValidos(0);
     	    oos.writeObject(mensaje);
     	}
     	
