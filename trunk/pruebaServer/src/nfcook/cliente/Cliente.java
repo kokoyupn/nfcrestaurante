@@ -5,15 +5,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Observable;
 
-import nfcook.servidor.FicheroServidor;
+import nfcook.mensajes.Mensaje;
+import nfcook.mensajes.MensajeFichero;
 
 public class Cliente extends Observable implements Runnable {
-	
 	
 	private static Cliente cliente = null; 
     private Socket socket;
@@ -56,7 +54,7 @@ public class Cliente extends Observable implements Runnable {
     }
 
 
-    public void enviarMensaje(String msg) throws IOException{
+    public void enviarMensaje(Mensaje msg) throws IOException{
 		if(conectado) {
 	        oos.writeObject(msg);
         } else throw new IOException("No estas conectado al servidor");
@@ -85,8 +83,8 @@ public class Cliente extends Observable implements Runnable {
          try {
             while(conectado && (msg = ois.readObject())!= null){            	
             	// Si es del tipo fichero recibe el fichero
-            	if (msg instanceof FicheroServidor) 
-            		recibirFicheroBaseDatos(msg);	
+            	if (msg instanceof MensajeFichero) 
+            		recibirFicheroBaseDatos((MensajeFichero) msg);	
             	// Si es de tipo String se muestra por pantalla
                 else if (msg instanceof String) 
                 	System.out.println("Server: " + msg.toString());                    
@@ -106,20 +104,18 @@ public class Cliente extends Observable implements Runnable {
     /**
      * Metodo encargado de recibir un fichero enviado por el servidor
      */
-    public void recibirFicheroBaseDatos(Object mensaje){
+    public void recibirFicheroBaseDatos(MensajeFichero mensaje){
         try{
             // Se envía un mensaje de petición de fichero.
-            File f = new File ("MiBase.db");
+            File f = new File (mensaje.getRutaFichero() + mensaje.getNombreFichero());
 
             // Se abre un fichero para empezar a copiar lo que se reciba.
             FileOutputStream fos = new FileOutputStream(f);
-            FicheroServidor mensajeRecibido;
-            
+
             do {
-                mensajeRecibido = (FicheroServidor) mensaje;
-                fos.write(mensajeRecibido.contenidoFichero, 0, mensajeRecibido.bytesValidos); // Se escribe en el fichero
-                if (!mensajeRecibido.ultimoMensaje) mensaje = ois.readObject(); // Se lee el mensaje en una variabla auxiliar
-            } while (!mensajeRecibido.ultimoMensaje);
+                fos.write(mensaje.getContenidoFichero(), 0, mensaje.getBytesValidos()); // Se escribe en el fichero
+                if (!mensaje.isUltimoMensaje()) mensaje = (MensajeFichero) ois.readObject(); // Se lee el mensaje en una variabla auxiliar
+            } while (!mensaje.isUltimoMensaje());
 
             fos.flush();
             fos.close();            
@@ -153,7 +149,7 @@ public class Cliente extends Observable implements Runnable {
 
 	//testing Client//
     public static void main(String[] argv)throws IOException {
-        Cliente c = new Cliente();
+        /*Cliente c = new Cliente();
         c.conectar("192.168.200.119",5000);
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String msg = "";
@@ -161,6 +157,6 @@ public class Cliente extends Observable implements Runnable {
            msg = br.readLine();
            c.enviarMensaje(msg);
         }
-        c.desconectar();
+        c.desconectar();*/
     }
 }
