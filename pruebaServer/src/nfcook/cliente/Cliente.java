@@ -20,7 +20,7 @@ public class Cliente extends Observable implements Runnable {
 
     private boolean conectado; // estado del cliente
     private int port=5000; 
-    private String hostName="192.168.200.119";
+    private String hostName="192.168.200.122";
 
     private Cliente() {
     	conectado = false;
