@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Observable;
 
 import nfcook.mensajes.Mensaje;
+import nfcook.mensajes.MensajeAviso;
 import nfcook.mensajes.MensajeFichero;
 
 public class ClienteThread extends Observable implements Runnable {
@@ -54,10 +55,11 @@ public class ClienteThread extends Observable implements Runnable {
         	// El cliente comienza a escuchar al servidor
             while ((msg = ois.readObject()) != null && funcionando){
             	// Procesamos la peticion del cliente
-            	if(msg instanceof Mensaje)
+            	if(msg instanceof Mensaje){
             		procesarPeticion((Mensaje) msg);
-            	else
+            	}else{
             		System.err.println("Mensaje del cliente no esperado " + msg.getClass().getName());
+            	}
             }
             
             // El cliente no tiene va a realizar mas peticiones
@@ -87,7 +89,7 @@ public class ClienteThread extends Observable implements Runnable {
      * @param msg
      * @throws IOException
      */
-    public void enviaMensaje(String msg) throws IOException{
+    public void enviarMensaje(Mensaje msg) throws IOException{
     	oos.writeObject(msg);
     }
     
@@ -101,6 +103,8 @@ public class ClienteThread extends Observable implements Runnable {
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
+    	}else if (msg instanceof MensajeAviso){
+    		enviarAviso((MensajeAviso) msg);
     	}
     	// Si es de tipo String se muestra por pantalla
         //else if (msg instanceof String) 
@@ -165,5 +169,11 @@ public class ClienteThread extends Observable implements Runnable {
     	
     	// Cerramos el fichero
     	fis.close();
+    }
+    
+    public void enviarAviso(MensajeAviso mensaje){
+    	// Avisamos al resto de los clientes de los cambios
+    	this.setChanged();
+    	this.notifyObservers(mensaje);
     }
 }
