@@ -43,22 +43,24 @@ public class PantallaInformacionFragment extends Fragment {
 
 	    listaRestaurantes.setAdapter(adapterInformacion);
 	    
+	    listaRestaurantes.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            	onClickRestaurante(position);
+           }
+        });
+	    
 	    return vista;
 	}
 	
-	public void onClickRestaurante(){
-		listaRestaurantes.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            	// al hacer click en un restaurante iremos a su descripción
+	public void onClickRestaurante(int position){
+		// al hacer click en un restaurante iremos a su descripción detallada
 
-            	//nos llevara a la pantalla siguiente          	
-            	PadreListInformacion pulsado = restaurantes.get(position);
+    	//nos llevara a la pantalla siguiente          	
+    	PadreListInformacion pulsado = restaurantes.get(position);
 
-            	Intent intentInfoRest = new Intent(PantallaInformacionFragment.this.getActivity(), InfoRestaurante.class);
-            	intentInfoRest.putExtra("Restaurante", pulsado.getNombreRestaurante()); // Pasamos el restaurante pulsado
+    	Intent intentInfoRest = new Intent(PantallaInformacionFragment.this.getActivity(), InfoRestaurante.class);
+    	intentInfoRest.putExtra("Restaurante", pulsado.getNombreRestaurante()); // Pasamos el restaurante pulsado
 
-        		startActivity(intentInfoRest);
-           }
-        });
+		startActivity(intentInfoRest);
 	}
 }
