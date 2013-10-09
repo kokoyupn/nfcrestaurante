@@ -21,7 +21,7 @@
         </activity>
         
         <activity
-            android:name=".Informacion"
+            android:name=".InfoRestaurante"
             android:screenOrientation="portrait">
 
         </activity>
