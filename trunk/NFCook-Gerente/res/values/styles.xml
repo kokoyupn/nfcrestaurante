@@ -1,0 +1,24 @@
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Light" />
+	<color name="blanco">#FFFFFF</color>
+	<color name="negro">#000000</color>
+	
+	<color name="azul">#BFE4F2</color>
+	<color name="verde">#00F355</color>
+	<color name="amarillo">#FCFF03</color>
+	
+	<color name="naranja2">#DC7712</color>
+	<color name="naranja3">#FFC284</color>
+	<color name="naranja4">#FFD8B0</color>
+	 
+	<color name="azul2">#3F7CEE</color>
+	<color name="azul3">#AED5FF</color>
+	<color name="azul4">#90C6FF</color>
+	
+	<color name="verde2">#1F5724</color>
+	<color name="verde3">#7AB081</color>
+	<color name="verde4">#A9CBAD</color>
+    
+
+</resources>
