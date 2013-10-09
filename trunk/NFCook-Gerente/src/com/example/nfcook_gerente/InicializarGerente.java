@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -20,40 +19,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 import fragments.PantallaInformacionFragment;
 
+
+/**
+ * @author: Alejandro Moran
+ * 
+ * Esta clase contendrá todo lo necesario para la
+ * pantalla inicial (tras la de Login)
+ * 
+**/
 public class InicializarGerente extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
 	
-	// Tabs con las mesas y el histórico
+	// Tabs: Informacion, Estadisticas y Clasificacion de platos
 	private TabHost tabs;
 	private ViewPager miViewPager;
 	private MiViewPagerAdapter miPagerAdapter;
 	private long anteriorPulsacion;
 	private ArrayList<Fragment> listFragments;
 	
-	 /**
-     * A simple factory that returns dummy views to the Tabhost
-     * @author mwho
-     */
+	
     class TabFactory implements TabContentFactory {
  
         private final Context mContext;
  
-        /**
-         * @param context
-         */
         public TabFactory(Context context) {
             mContext = context;
         }
  
-        /** (non-Javadoc)
-         * @see android.widget.TabHost.TabContentFactory#createTabContent(java.lang.String)
-         */
         public View createTabContent(String tag) {
             View v = new View(mContext);
             v.setMinimumWidth(0);
             v.setMinimumHeight(0);
             return v;
         }
- 
     }
 	
 	@Override
@@ -91,15 +88,10 @@ public class InicializarGerente extends FragmentActivity implements OnTabChangeL
 	    }
 	}
 	
-	/*Metodo que realiza la accion del boton introducido en el ActionBar (Sincronizar)*/
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	finish();
-    	return false;	
-    }
 	
-	// Metodo encargado de inicializar los tabs inferiores
+	// Metodo encargado de inicializar los tabs
     private void inicializarTabs(){
-    	// Creamos los tabs inferiores y los inicializamos
+    	// Creamos los tabs y los inicializamos
 		tabs = (TabHost)findViewById(android.R.id.tabhost);
         tabs.setup();
     }

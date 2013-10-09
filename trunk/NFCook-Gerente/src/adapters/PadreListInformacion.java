@@ -12,7 +12,6 @@ import java.util.ArrayList;
  * @author Alejandro Moran
  *
  */
-
 public class PadreListInformacion {
 	
 	private String nombreRestaurante;
