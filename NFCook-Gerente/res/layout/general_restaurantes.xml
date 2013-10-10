@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FrameLayoutGeneralRestaurantes"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/verde3" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/listViewRestaurantes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp" >
+        </ListView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:gravity="bottom" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5" >
+
+            <Button
+                android:id="@+id/buttonAceptar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickAceptar"
+                android:text="Aceptar"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:gravity="right" >
+
+            <Button
+                android:id="@+id/botonComparar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.33"
+                android:onClick="onClickComparar"
+                android:text="Comparar"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5" >
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:onClick="onClickCancelar"
+                android:text="Cancelar"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/todosLosRestaurantes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Todos los restaurantes" />
+
+</FrameLayout>
