@@ -3,17 +3,11 @@ package com.example.nfcook_gerente;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import baseDatos.HandlerGenerico;
-
-import com.example.nfcook_gerente.InicializarGerente;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -21,7 +15,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import baseDatos.HandlerGenerico;
 
 public class MainActivity extends Activity {
 
@@ -83,7 +77,7 @@ public class MainActivity extends Activity {
 		   // Contiene la contraseña que introduces por pantalla en el editText
 		   password = (EditText) findViewById(R.id.editTextPass);
 		
-		  Intent intent = new Intent(this, InicializarGerente.class);
+		  Intent intent = new Intent(this, GeneralRestaurantes.class);
      	  intent.putExtra("usuario", "Foster");
      	  intent.putExtra("Restaurante", "Foster");
      	  startActivityForResult(intent,0);  
