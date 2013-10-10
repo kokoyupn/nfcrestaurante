@@ -2,6 +2,8 @@ package com.example.nfcook_gerente;
 
 import java.util.ArrayList;
 
+import com.example.nfcook_gerente.InicializarGerente.TabFactory;
+
 import adapters.MiViewPagerAdapter;
 import android.content.Context;
 import android.graphics.Color;
@@ -26,12 +28,12 @@ import fragments.InformacionRestauranteFragment;
  * Esta clase contendrá toda la información de un restaurante.
  * 
  * Se accede a ella al seleccionar un restaurante, 
- * en la lista mostrada en el Tab Información.
+ * en la lista inicial.
  * 
 **/
 public class InfoRestaurante extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
 
-	// Tabs: Informacion, Empleados y Estadisticas
+	// Tabs: Informacion, Empleados, Estadisticas y Clasificacion de platos
 	private TabHost tabs;
 	private ViewPager miViewPager;
 	private MiViewPagerAdapter miPagerAdapter;
@@ -115,6 +117,12 @@ public class InfoRestaurante extends FragmentActivity implements OnTabChangeList
         spec = tabs.newTabSpec("tabEstadisticas");
         spec.setContent(new TabFactory(this));
         spec.setIndicator("ESTADÍSTICAS", null);
+        tabs.addTab(spec);
+        
+        // Creamos el tab4 --> Clasificación de platos
+        spec = tabs.newTabSpec("tabClasificacionPlatos");
+        spec.setContent(new TabFactory(this));
+        spec.setIndicator("CLASIFICACIÓN DE PLATOS", null);
         tabs.addTab(spec);
         
         for(int i=0;i<=tabs.getChildCount();i++) 

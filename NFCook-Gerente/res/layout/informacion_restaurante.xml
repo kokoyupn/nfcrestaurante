@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" 
     android:background="@color/verde3">
                 
-    <FrameLayout
-            android:id="@+id/infoRestaurante"
-            android:layout_width="match_parent"
+    <TextView
+            android:id="@+id/nombreRestaurante"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="47dp" >
-
-        </FrameLayout>
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    
+    <ImageView
+        android:id="@+id/imagenLogo"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+		android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/nombreRestaurante" 
+        android:src="@drawable/ic_nfcook" />
+    
+    <TextView
+            android:id="@+id/telefonoRestaurante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/nombreRestaurante" />
 	
-</FrameLayout>
+	<TextView
+            android:id="@+id/direccionRestaurante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/telefonoRestaurante" />
+	
+	
+</RelativeLayout>
