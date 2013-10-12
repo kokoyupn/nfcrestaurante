@@ -1,5 +1,10 @@
 package adapters;
-
+/**
+ * Esta clase tiene los datos necesarios contenidos en una fila de la pantalla después de login del gerente
+ *  
+ * @author Guille
+ *
+ */
 public class PadreListRestaurantes {
 	
 	private String nombreRestaurante,calle,imagen;

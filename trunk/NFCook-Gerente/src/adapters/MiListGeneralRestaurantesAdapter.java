@@ -15,6 +15,12 @@ import android.widget.TextView;
 
 import com.example.nfcook_gerente.R;
 
+/**
+ * Esta clase es el adapter para la lista de la pantalla general de gerente
+ * 
+ * @author Guille
+ *
+ */
 
 public class MiListGeneralRestaurantesAdapter extends BaseAdapter{
 
@@ -50,7 +56,8 @@ public class MiListGeneralRestaurantesAdapter extends BaseAdapter{
 	    if(convertView == null) {
 			vista = l_Inflater.inflate(R.layout.contenido_lista_restaurantes,null);
 	    }
-	             
+	    
+	    //Obtenemos el restaurante para poder sacar posteriormente los datos         
 	    final PadreListRestaurantes unRestaurante = restaurantes.get(position);
  	    
 	    TextView nombre = (TextView) vista.findViewById(R.id.nombreRestaurante);
@@ -75,8 +82,8 @@ public class MiListGeneralRestaurantesAdapter extends BaseAdapter{
 	    	nombre.setPadding(0, 0, 0, 0);
 	    }
 	    
+	    //establecemos el oyente del check para actualizar los datos de ese restaurante
 	    check.setOnClickListener(new OnClickListener() {
-			
 	    	@Override
 			public void onClick(View v) {
 	    		if (check.isChecked()){
@@ -85,10 +92,9 @@ public class MiListGeneralRestaurantesAdapter extends BaseAdapter{
 			}
 		});
 	    
-	    ImageView imagen = (ImageView) vista.findViewById(R.id.imagenRestaurante);
-	    
+	    //obtenemos la imagen y la cargamos en su lugar
+	    ImageView imagen = (ImageView) vista.findViewById(R.id.imagenRestaurante);    
 	    int img = context.getResources().getIdentifier(unRestaurante.getImagen(),"drawable", context.getPackageName());
-	    
 	    imagen.setImageResource(img);
 
 	    return vista;
