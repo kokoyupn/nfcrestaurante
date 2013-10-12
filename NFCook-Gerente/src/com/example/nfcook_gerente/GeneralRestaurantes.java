@@ -17,6 +17,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
+/**
+ * Clase que se encarga de cargar el adapter y de la pantalla inicial del gerente
+ * También se establecen los onClick de los botones y su comportamiento (Cuando aparecer y desaparecer)
+ * Lee de base de datos los restaurantes y los carga en el ArrayList restaurantes
+ * 
+ * @author Guille
+ *
+ */
+
+
+
 public class GeneralRestaurantes extends Activity {
 	private static MiListGeneralRestaurantesAdapter  adapterListGeneralRestaurantes;
 	private ListView listViewRestaurantes;
@@ -41,10 +52,12 @@ public class GeneralRestaurantes extends Activity {
 	    listViewRestaurantes.setOnItemClickListener(new OnItemClickListener() {
   	    	
   	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-  	    	// Iniciamos la nueva actividad
-  	    		Intent intent = new Intent(GeneralRestaurantes.this, GraficaGeneral.class);
-  	    		intent.putExtra("tipo", "porAnio");//TODO necesario?
-  	    		startActivity(intent);
+	  	    	// Iniciamos la nueva actividad
+	  	  		Intent intent = new Intent(GeneralRestaurantes.this, InfoRestaurante.class);
+	  	  		/*pasar los datos necesarios
+	  	  		  intent.putExtra("nombreRestaurante",restaurantes.get(posicion).getNombreRestaurante());
+	  	  		 */
+	  	  		startActivity(intent);
   	    	}
 	    });
 	}
@@ -113,5 +126,10 @@ public class GeneralRestaurantes extends Activity {
 		listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
 	}
 	
-
+	public void onClickTodos(View vista) {	
+		// Iniciamos la nueva actividad
+		Intent intent = new Intent(GeneralRestaurantes.this, GraficaGeneral.class);
+		intent.putExtra("tipo", "porAnio");//TODO necesario?
+		startActivity(intent);
+	}
 }

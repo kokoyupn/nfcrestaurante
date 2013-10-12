@@ -81,6 +81,7 @@
         android:id="@+id/todosLosRestaurantes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onClickTodos"
         android:text="Todos los restaurantes" />
 
 </FrameLayout>

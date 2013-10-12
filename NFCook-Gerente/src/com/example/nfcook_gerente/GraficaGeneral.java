@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import com.jjoe64.graphview.CustomLabelFormatter;
+import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -162,7 +162,7 @@ public class GraficaGeneral extends Activity{
 		});
  
 		//Si queremos grafico de barras cambiar LineGraphView por BarGraphView
-		GraphView graphView = new LineGraphView(this, "Todos los restaurantes"); 
+		GraphView graphView = new BarGraphView(this, "Todos los restaurantes"); 
 		graphView.addSeries(exampleSeries); // data
 	
 		//cambiamos el estilo
