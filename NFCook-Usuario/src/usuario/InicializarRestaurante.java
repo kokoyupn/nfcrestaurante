@@ -930,8 +930,10 @@ public class InicializarRestaurante extends FragmentActivity
 			     */
 			    tabs.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#906d35"));
 				lanzarVentanaEmergenteParaIndicarNumeroComensales();
+				usandoTabsInferiores = false;
 			}else{
 				lanzarVentanaEmergenteAvisoSeNecesitaMinimoUnPedido();
+				usandoTabsInferiores = false;
 			}
 		}
 	}
