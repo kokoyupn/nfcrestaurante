@@ -4,6 +4,8 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="11" />
@@ -16,6 +18,12 @@
         
         <activity
             android:name=".InicializarGerente"
+            android:windowSoftInputMode="adjustResize|adjustPan"
+            android:screenOrientation="portrait">
+        </activity>
+        
+        <activity
+            android:name=".GeneralRestaurantes"
             android:windowSoftInputMode="adjustResize|adjustPan"
             android:screenOrientation="portrait">
         </activity>

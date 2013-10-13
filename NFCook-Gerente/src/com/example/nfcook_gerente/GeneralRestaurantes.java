@@ -14,7 +14,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 
 /**
@@ -52,11 +51,14 @@ public class GeneralRestaurantes extends Activity {
 	    listViewRestaurantes.setOnItemClickListener(new OnItemClickListener() {
   	    	
   	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
-	  	    	// Iniciamos la nueva actividad
+	  	    	// Iniciamos la nueva actividad y le pasamos los datos del restaurante
 	  	  		Intent intent = new Intent(GeneralRestaurantes.this, InfoRestaurante.class);
-	  	  		/*pasar los datos necesarios
-	  	  		  intent.putExtra("nombreRestaurante",restaurantes.get(posicion).getNombreRestaurante());
-	  	  		 */
+	  	  		intent.putExtra("nombre", restaurantes.get(posicion).getNombreRestaurante());
+	  	  		intent.putExtra("calle", restaurantes.get(posicion).getCalle());
+	  	  		intent.putExtra("telefono", restaurantes.get(posicion).getTelefono());
+	  	  		intent.putExtra("logo", restaurantes.get(posicion).getImagen());
+	  	  		intent.putExtra("id", restaurantes.get(posicion).getIdRestaurante());
+
 	  	  		startActivity(intent);
   	    	}
 	    });
@@ -65,11 +67,11 @@ public class GeneralRestaurantes extends Activity {
 
 	public ArrayList<PadreListRestaurantes> obtenerRestaurantes() {
 		ArrayList<PadreListRestaurantes> restaurantes = new ArrayList<PadreListRestaurantes>();
-		restaurantes.add(new PadreListRestaurantes("Vips Princesa",3,"Calle Princesa 3", "vips"));
-		restaurantes.add(new PadreListRestaurantes("Vips Alcalá",4,"Calle Alcalá45", "vips"));
-		restaurantes.add(new PadreListRestaurantes("Vips San Chinarro",5,"Calle Del muerto 22", "vips"));
-		restaurantes.add(new PadreListRestaurantes("Foster Princesa",6,"Calle Princesa 3", "logo_foster"));
-		restaurantes.add(new PadreListRestaurantes("Foster Alcalá",7,"Calle Alcalá 5", "logo_foster"));
+		restaurantes.add(new PadreListRestaurantes("Vips Princesa",3,"Calle Princesa 3", "vips", "+34608088230"));
+		restaurantes.add(new PadreListRestaurantes("Vips Alcalá",4,"Calle Alcalá45", "vips", "+34914155424"));
+		restaurantes.add(new PadreListRestaurantes("Vips San Chinarro",5,"Calle Del muerto 22", "vips", "+34915556677"));
+		restaurantes.add(new PadreListRestaurantes("Foster Princesa",6,"Calle Princesa 3", "logo_foster", "+34915643322"));
+		restaurantes.add(new PadreListRestaurantes("Foster Alcalá",7,"Calle Alcalá 5", "logo_foster", "+34914678900"));
 		return restaurantes;
 	}
 	

@@ -7,16 +7,17 @@ package adapters;
  */
 public class PadreListRestaurantes {
 	
-	private String nombreRestaurante,calle,imagen;
+	private String nombreRestaurante, calle, imagen, telefono;
 	private int idRestaurante;
 	private boolean checkVisibles, isSelected;
 	
 
-	public PadreListRestaurantes(String nombreRestaurante, int idRestaurante, String calle, String imagen) {
+	public PadreListRestaurantes(String nombreRestaurante, int idRestaurante, String calle, String imagen, String telefono) {
 		this.nombreRestaurante = nombreRestaurante;
 		this.idRestaurante = idRestaurante;
 		this.calle = calle;
 		this.imagen = imagen;
+		this.telefono = telefono;
 		checkVisibles = false;
 		isSelected =false;
 	}
@@ -56,5 +57,10 @@ public class PadreListRestaurantes {
 
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
+	}
+
+
+	public String getTelefono() {
+		return telefono;
 	}
 }
