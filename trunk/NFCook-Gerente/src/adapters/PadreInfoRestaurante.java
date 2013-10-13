@@ -15,14 +15,15 @@ import java.util.ArrayList;
  */
 public class PadreInfoRestaurante {
 
-	private String nombreRestaurante, telefono, direccion;
+	private String nombreRestaurante, telefono, direccion, logo;
 	private ArrayList<Integer> repetidos;
 
 	
-	public PadreInfoRestaurante(String nombreRestaurante, String telefono, String direccion, int id){
+	public PadreInfoRestaurante(String nombreRestaurante, String telefono, String direccion, String logo, int id){
 		this.nombreRestaurante = nombreRestaurante;
 		this.telefono = telefono;
 		this.direccion = direccion;
+		this.logo = logo;
 		repetidos=new ArrayList<Integer>();
 		repetidos.add(id);
 	}

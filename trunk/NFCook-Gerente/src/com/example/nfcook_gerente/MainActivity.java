@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 	  public void onClickBotonInvisible(View boton)
 	  {
 		  //Iniciamos la nueva actividad
-	   	  Intent intent = new Intent(this, InicializarGerente.class);
+	   	  Intent intent = new Intent(this, GeneralRestaurantes.class);
        	  intent.putExtra("usuario", "Foster");
        	  intent.putExtra("Restaurante","Foster");
        	  startActivityForResult(intent,0); 

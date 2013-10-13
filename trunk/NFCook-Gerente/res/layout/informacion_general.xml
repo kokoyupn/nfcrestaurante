@@ -6,7 +6,7 @@
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     android:layout_marginTop="5dp" 
-    android:background="@color/verde3">
+    android:background="@color/verde5">
 
         <ListView
             android:id="@+id/listaRestaurantes"

@@ -2,8 +2,6 @@ package com.example.nfcook_gerente;
 
 import java.util.ArrayList;
 
-import com.example.nfcook_gerente.InicializarGerente.TabFactory;
-
 import adapters.MiViewPagerAdapter;
 import android.content.Context;
 import android.graphics.Color;
@@ -39,6 +37,8 @@ public class InfoRestaurante extends FragmentActivity implements OnTabChangeList
 	private MiViewPagerAdapter miPagerAdapter;
 	private long anteriorPulsacion;
 	private ArrayList<Fragment> listFragments;
+	private Bundle bundleInfoRestaurante;
+	
 	
 	class TabFactory implements TabContentFactory {
 		 
@@ -69,6 +69,9 @@ public class InfoRestaurante extends FragmentActivity implements OnTabChangeList
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);*/
         
+        // Recogemos la información para pasarla como argumento más adelante
+        bundleInfoRestaurante = getIntent().getExtras(); // Nombre, teléfono, calle, logo, idRestaurante
+
         inicializarTabs();
         cargarTabs();
 		
@@ -149,7 +152,8 @@ public class InfoRestaurante extends FragmentActivity implements OnTabChangeList
         listFragments = new ArrayList<Fragment>();
         // Añadir todos los fragmentos implementados en otras clases x.class
 
-        listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName()));  
+        // pasarle los argumentos necesarios a cada fragment
+        listFragments.add(Fragment.instantiate(InfoRestaurante.this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));  
         //listFragments.add(Fragment.instantiate(this, PantallaEstadisticasFragment.class.getName()));
         miPagerAdapter  = new MiViewPagerAdapter(super.getSupportFragmentManager(), listFragments);
       
