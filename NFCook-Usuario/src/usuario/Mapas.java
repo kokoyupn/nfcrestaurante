@@ -342,7 +342,7 @@ public class Mapas extends FragmentActivity
 						"www.fostershollywood.es/princesa", true, true, true, false, false);
 				restaurantes.add(rest4);
 				
-				Restaurante rest5 = new Restaurante("Foster's Hollywood Av. Europa", 
+				Restaurante rest5 = new Restaurante("Foster's Hollywood Avenida de Europa", 
 						new MarkerOptions()
 							.position(new LatLng(40.438927,-3.793313))
 							.title("Foster's Hollywood Avenida de Europa")
