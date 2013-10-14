@@ -16,8 +16,8 @@
             android:id="@+id/listViewRestaurantes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@color/verde5"
             android:dividerHeight="5dp"
-            android:divider="@color/verde3"
             android:padding="5dp" >
 
         </ListView>
