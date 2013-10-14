@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/verde3" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/fotoEmpleado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="5dp" />
+        
+        <TextView
+            android:id="@+id/datosEmpleado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20sp" />
+
+    </FrameLayout>
+    
+	
+    
+    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="bottom|center_horizontal"
+	        android:orientation="vertical" >
+
+	        <com.androidplot.xy.XYPlot
+	            android:id="@+id/graficaIngresos"
+	            android:layout_width="match_parent"
+	            android:layout_height="600px"
+	            android:layout_gravity="center_horizontal"
+	            android:layout_marginBottom="5dp" />
+
+	        <FrameLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="center_horizontal" >
+
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent" >
+
+	                <Button
+	                    android:id="@+id/anio"
+	                    style="?android:attr/buttonStyleSmall"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Button" />
+
+	                <Button
+	                    android:id="@+id/mes"
+	                    style="?android:attr/buttonStyleSmall"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Button" />
+
+	                <Button
+	                    android:id="@+id/dia"
+	                    style="?android:attr/buttonStyleSmall"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Button" />
+
+	            </LinearLayout>
+
+	        </FrameLayout>
+
+	    </LinearLayout>
+
+</FrameLayout>

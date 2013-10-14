@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:orientation="vertical" 
+     android:background="#BFEFFF" >
+
+    
+    <AutoCompleteTextView
+	     android:id="@+id/autoCompleteTextViewBuscadorEmpleados	"
+	     android:layout_width="match_parent"
+	     android:layout_height="wrap_content"
+	     android:background="?android:attr/editTextBackground"
+	     android:drawableLeft="@drawable/buscarempleado"
+	     android:ems="15"
+	     android:hint="Buscar"
+	     android:textSize="20dp" >
+	
+	     <requestFocus />
+	 </AutoCompleteTextView>
+
+    <ListView
+        android:id="@+id/listaEmpleados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+    
+</LinearLayout>
