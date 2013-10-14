@@ -16,12 +16,12 @@
 	<color name="azul3">#AED5FF</color>
 	<color name="azul4">#90C6FF</color>
 	<color name="azulCamarero">#63B8FF</color>
+	<color name="azulEnlaces">#59a5e5</color>
 	
 	<color name="verde2">#1F5724</color>
 	<color name="verde3">#7AB081</color>
 	<color name="verde4">#A9CBAD</color>
 	<color name="verde5">#CAE0CD</color>
-	
-	
+		
 
 </resources>
