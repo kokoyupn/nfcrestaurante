@@ -5,8 +5,10 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,12 +78,13 @@ public class MainActivity extends Activity {
 		  usuario = (EditText) findViewById(R.id.editTextUsuario);
 		   // Contiene la contraseña que introduces por pantalla en el editText
 		   password = (EditText) findViewById(R.id.editTextPass);
-		
+		  
 		  Intent intent = new Intent(this, GeneralRestaurantes.class);
      	  intent.putExtra("usuario", "Foster");
      	  intent.putExtra("Restaurante", "Foster");
-     	  startActivityForResult(intent,0);  
-	/*	 
+     	  startActivityForResult(intent,0);
+     	    
+		 /*
 	   usuario = (EditText) findViewById(R.id.editTextUsuario);
 	   // Contiene la contraseña que introduces por pantalla en el editText
 	   password = (EditText) findViewById(R.id.editTextPass);
