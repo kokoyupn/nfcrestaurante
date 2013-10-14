@@ -68,10 +68,10 @@ public class GeneralRestaurantes extends Activity {
 
 	public ArrayList<PadreListRestaurantes> obtenerRestaurantes() {
 		ArrayList<PadreListRestaurantes> restaurantes = new ArrayList<PadreListRestaurantes>();
-		restaurantes.add(new PadreListRestaurantes("Vips Princesa",3,"Calle de la Princesa 5", "vips", "vips_princesa5", "+34912752063"));
-		restaurantes.add(new PadreListRestaurantes("Vips Alcalá",4,"Calle Alcalá 23", "vips", "vips_princesa5", "+34912759631"));
+		restaurantes.add(new PadreListRestaurantes("Vips Princesa",3,"Calle de la Princesa 5, 28008, Madrid", "vips", "vips_princesa5", "+34912752063"));
+		restaurantes.add(new PadreListRestaurantes("Vips Alcalá",4,"Calle Alcalá 23, Madrid", "vips", "vips_princesa5", "+34912759631"));
 		restaurantes.add(new PadreListRestaurantes("Vips San Chinarro",5,"Calle Del muerto 22", "vips", "vips_princesa5", "+34915556677"));
-		restaurantes.add(new PadreListRestaurantes("Foster Princesa",6,"Calle de la Princesa 13", "logo_foster", "foster_princesa13", "+34915591914"));
+		restaurantes.add(new PadreListRestaurantes("Foster Princesa",6,"Calle de la Princesa 13, Madrid", "logo_foster", "foster_princesa13", "+34915591914"));
 		restaurantes.add(new PadreListRestaurantes("Foster Alcalá",7,"Calle Alcalá 5", "logo_foster", "foster_princesa13","+34914678900"));
 		return restaurantes;
 	}
