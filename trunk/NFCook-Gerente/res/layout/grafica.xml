@@ -3,7 +3,7 @@
     android:id="@+id/FrameLayoutGeneralRestaurantes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/verde3" >
+    android:background="@color/verde5" >
 
     <LinearLayout
         android:id="@+id/contenedor"

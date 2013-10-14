@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
  
@@ -98,8 +97,7 @@ public class GeneralRestaurantes extends Activity {
 	
 	public void onClickAceptar(View vista) {		
 		ArrayList<String> seleccionados = recorreSeleccionados();
-		for(int i =0; i< seleccionados.size(); i ++)
-			Log.i("----------------------> "+i,seleccionados.get(i));
+		//TODO
 	}
 	
 	private ArrayList<String> recorreSeleccionados() {
