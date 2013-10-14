@@ -55,7 +55,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	     
 	    // teléfono restaurante
 	    TextView telefonoRes = (TextView) vista.findViewById(R.id.telefonoRestaurante);
-	    telefonoRes.setText(Html.fromHtml("<b>Tel.: </b>" + "<u>" + telefonoRestaurante + "</u>")); 
+	    telefonoRes.setText(Html.fromHtml("<b><font color= #000000>Tel.: </font></b>" + "<u>" + telefonoRestaurante + "</u>")); 
 	    telefonoRes.setOnClickListener(new View.OnClickListener() {
 	        public void onClick(View arg0) {
 	        	onClickPhoneCall(); 
@@ -64,7 +64,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    
 	    // dirección restaurante
 	    TextView calleRes = (TextView) vista.findViewById(R.id.direccionRestaurante);
-	    calleRes.setText(Html.fromHtml("<b>Dir.: </b>" + "<u>" + calleRestaurante + "</u>")); 
+	    calleRes.setText(Html.fromHtml("<b><font color= #000000>Dir.: </font></b>" + "<u>" + calleRestaurante + "</u>")); 
 	    calleRes.setOnClickListener(new View.OnClickListener() {
 	        public void onClick(View arg0) {
 	        	onClickDirections();
