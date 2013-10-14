@@ -83,17 +83,8 @@ public class InfoRestaurante extends FragmentActivity implements OnTabChangeList
         	tabs.setCurrentTab(0); 
         
 	}
-		
-	public void onBackPressed() {
-	    long tiempoActual = System.currentTimeMillis();
-	    if(tiempoActual - anteriorPulsacion > 2000){
-	    	Toast.makeText(getApplicationContext(),"Pulse de nuevo para salir",Toast.LENGTH_SHORT).show();	
-	    	anteriorPulsacion = tiempoActual;
-	    } else{
-	        super.onBackPressed();
-	    }
-	}
-
+	
+	// onBackPressed() al pulsar atras que haga algo, quitado
 	
 	// Metodo encargado de inicializar los tabs
     private void inicializarTabs(){
