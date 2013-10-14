@@ -16,72 +16,82 @@
             android:id="@+id/listViewRestaurantes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp" >
+            android:dividerHeight="5dp"
+            android:divider="@color/verde3"
+            android:padding="5dp" >
+
         </ListView>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:gravity="bottom" >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5" >
+            android:layout_margin="5dp"
+            android:layout_weight="0.5"
+            android:onClick="onCLickComparar" >
 
-            <Button
+            <ImageView
                 android:id="@+id/buttonAceptar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.33"
                 android:onClick="onClickAceptar"
-                android:text="Aceptar"
-                android:visibility="visible" />
+                android:src="@drawable/validar"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="0.33"
             android:gravity="right" >
 
-            <Button
+            <ImageView
                 android:id="@+id/botonComparar"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="0.33"
                 android:onClick="onClickComparar"
-                android:text="Comparar"
-                android:visibility="visible" />
+                android:src="@drawable/boton_comparar" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="0.5" >
 
-            <Button
+            <ImageView
                 android:id="@+id/buttonCancelar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:layout_weight="0.33"
                 android:onClick="onClickCancelar"
-                android:text="Cancelar"
-                android:visibility="visible" />
+                android:src="@drawable/cancelar"
+                android:visibility="gone" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <Button
+    <ImageView
         android:id="@+id/todosLosRestaurantes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
         android:onClick="onClickTodos"
-        android:text="Todos los restaurantes" />
+        android:src="@drawable/boton_grafica_general" />
 
 </FrameLayout>

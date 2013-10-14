@@ -14,15 +14,16 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
-
-/**
+ 
+/** 
  * Clase que se encarga de cargar el adapter y de la pantalla inicial del gerente
  * También se establecen los onClick de los botones y su comportamiento (Cuando aparecer y desaparecer)
  * Lee de base de datos los restaurantes y los carga en el ArrayList restaurantes
  * 
- * @author Guille
- *
+ * @author Guille 
+ *     
  */
 
 
@@ -63,7 +64,7 @@ public class GeneralRestaurantes extends Activity {
 	  	  		startActivity(intent);
   	    	}
 	    });
-	}
+	} 
 
 
 	public ArrayList<PadreListRestaurantes> obtenerRestaurantes() {
@@ -78,18 +79,18 @@ public class GeneralRestaurantes extends Activity {
 	
 	public void onClickComparar(View vista) {
 		
-	    Button botonAceptar = (Button) findViewById(R.id.buttonAceptar);
-	    Button botonCancelar = (Button) findViewById(R.id.buttonCancelar);
-	    Button botonComparar = (Button) findViewById(R.id.botonComparar);
+	    ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
+	    ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
+	    ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
 		
 		for(int i =0; i< restaurantes.size(); i ++)
 			restaurantes.get(i).setCheckVisibles(true);
 		
     	botonComparar.setVisibility(8); 
     	botonAceptar.setVisibility(0);
-    	botonAceptar.setWidth(vista.getWidth()/2);
+    	//botonAceptar.setWidth(vista.getWidth()/2);
     	botonCancelar.setVisibility(0);
-    	botonCancelar.setWidth(vista.getWidth()/2);
+    	//botonCancelar.setWidth(vista.getWidth()/2);
     	
 		adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
 		listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
@@ -112,9 +113,9 @@ public class GeneralRestaurantes extends Activity {
 
 
 	public void onClickCancelar(View vista) {
-		Button botonAceptar = (Button) findViewById(R.id.buttonAceptar);
-	    Button botonCancelar = (Button) findViewById(R.id.buttonCancelar);
-	    Button botonComparar = (Button) findViewById(R.id.botonComparar);
+		ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
+		ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
+		ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
 		
 		for(int i =0; i< restaurantes.size(); i ++){
 			restaurantes.get(i).setCheckVisibles(false);

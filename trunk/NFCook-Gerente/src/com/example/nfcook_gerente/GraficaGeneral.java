@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -24,7 +26,7 @@ public class GraficaGeneral extends Activity{
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		setContentView(R.layout.grafica);
-	
+		
 		Bundle bundle = getIntent().getExtras();
 		tipo = bundle.getString("tipo"); 
 		
@@ -80,16 +82,16 @@ public class GraficaGeneral extends Activity{
 		
 		// init example series data
 		GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {
-			new GraphViewData(1, 2.0d)
-			, new GraphViewData(2, 1.5d)
-			, new GraphViewData(3, 2.5d)
-			, new GraphViewData(4, 1.0d)
-			, new GraphViewData(5, 3.0d)
-			, new GraphViewData(6, 2.0d)
-			, new GraphViewData(7, 3.5d)
-			, new GraphViewData(8, 2.0d)
-			, new GraphViewData(9, 1.2d)
-			, new GraphViewData(10, 4.0d)
+			new GraphViewData(1, 2.0)
+			, new GraphViewData(2, 1.5)
+			, new GraphViewData(3, 2.5)
+			, new GraphViewData(4, 1.0)
+			, new GraphViewData(5, 3.0)
+			, new GraphViewData(6, 2.0)
+			, new GraphViewData(7, 3.5)
+			, new GraphViewData(8, 2.0)
+			, new GraphViewData(9, 1.2)
+			, new GraphViewData(10, 4.0)
 			, new GraphViewData(11, 2.9d)
 			, new GraphViewData(12, 3.9d)
 			, new GraphViewData(13, 2.0d)
@@ -107,30 +109,42 @@ public class GraficaGeneral extends Activity{
 		});
 
 		//Si queremos grafico de barras cambiar LineGraphView por BarGraphView
-		GraphView graphView = new LineGraphView(this, "Todos los restaurantes"); 
+		GraphView graphView = new LineGraphView(this, ""); 
 		graphView.addSeries(exampleSeries); // data
 		
-		// set view port, start=0, size=10
-		graphView.setViewPort(1, 24);
-		graphView.setScrollable(true);
-		// optional - activate scaling / zooming
-		graphView.setScalable(true);
+//		// set view port, start=0, size=10
+//		graphView.setViewPort(1, 24);
+//		graphView.setScrollable(true);
+//		// optional - activate scaling / zooming
+//		graphView.setScalable(true);
+	
+		//calculo el tamaño que tiene que tener el texto en funcion de la grafica
+		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
+		int ancho = layout.getWidth();
+		int tamañoTexto = ancho / 24; //24 = numHorizontalLabels
+		
 	
 		//cambiamos el estilo
-		graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-		graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLUE);
+		graphView.getGraphViewStyle().setGridColor(Color.GRAY);
+		graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.RED);
 		graphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-		graphView.getGraphViewStyle().setTextSize(30);
+		graphView.getGraphViewStyle().setVerticalLabelsWidth((int) (graphView.getGraphViewStyle().getTextSize()*3.5)); 
+//		graphView.getGraphViewStyle().setTextSize(30);
 	    graphView.getGraphViewStyle().setNumHorizontalLabels(24);
+	    
 		
 		//Cambiamos el color del fondo
 		graphView.setBackgroundColor(Color.GREEN);
 		
 		//buscamos el la zona donde va la gráfica y le cargaos la que acabamos de crear
-		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
+//		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
 		layout.addView(graphView);
 
 	}
+	
+	
+	
+	
 	
 	private void cargarAlMes(){
 		// init example series data
@@ -159,21 +173,27 @@ public class GraficaGeneral extends Activity{
 			, new GraphViewData(22, 4.0d)
 			, new GraphViewData(23, 2.9d)
 			, new GraphViewData(24, 3.9d)
+			, new GraphViewData(25, 4.9d)
+			, new GraphViewData(26, 3.0d)
+			, new GraphViewData(27, 2.3d)
+			, new GraphViewData(28, 3.1d)
+			, new GraphViewData(29, 1.9d)
+			, new GraphViewData(30, 2.9d)
 		});
  
 		//Si queremos grafico de barras cambiar LineGraphView por BarGraphView
-		GraphView graphView = new BarGraphView(this, "Todos los restaurantes"); 
+		GraphView graphView = new BarGraphView(this, ""); 
 		graphView.addSeries(exampleSeries); // data
 	
 		//cambiamos el estilo
-		graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-		graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLUE);
+		graphView.getGraphViewStyle().setGridColor(Color.DKGRAY);
+		graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.RED);
 		graphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-		graphView.getGraphViewStyle().setTextSize(30);
-	    graphView.getGraphViewStyle().setNumHorizontalLabels(24); //TODO poner todos los dias
+		//graphView.getGraphViewStyle().setTextSize(30);
+	    graphView.getGraphViewStyle().setNumHorizontalLabels(30); 
 		
 		//Cambiamos el color del fondo
-		graphView.setBackgroundColor(Color.GREEN);
+		graphView.setBackgroundColor(Color.GRAY);
 		
 		//buscamos el la zona donde va la gráfica y le cargaos la que acabamos de crear
 		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
@@ -198,12 +218,12 @@ public class GraficaGeneral extends Activity{
 		});
 
 		//Si queremos grafico de barras cambiar LineGraphView por BarGraphView
-		GraphView graphView = new LineGraphView(this, "Todos los restaurantes"); 
+		GraphView graphView = new LineGraphView(this, ""); 
 		graphView.addSeries(exampleSeries); // data
 	
 		//cambiamos el estilo
-		graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-		graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLUE);
+		graphView.getGraphViewStyle().setGridColor(Color.GRAY);
+		graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.RED);
 		graphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
 		graphView.getGraphViewStyle().setTextSize(30);
 		graphView.getGraphViewStyle().setNumHorizontalLabels(12);
@@ -213,9 +233,9 @@ public class GraficaGeneral extends Activity{
 		
 		
 		//Modificamos los ejes
-		graphView.setHorizontalLabels(new String[] {  "enero", "febrero", "marzo", "abril"
-													, "mayo", "junio", "julio", "agosto"
-													, "septiembre", "octubre", "noviembre", "diciembre"});  
+		graphView.setHorizontalLabels(new String[] {  "E", "F", "M", "A"
+													, "M", "J", "J", "A"
+													, "S", "O", "N", "D"});  
 		//graphView.setVerticalLabels(new String[] {"high", "middle", "low"}); 
 		//modificarEjes(graphView);
 		
