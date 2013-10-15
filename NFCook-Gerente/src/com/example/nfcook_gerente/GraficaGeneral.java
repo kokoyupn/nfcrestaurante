@@ -111,6 +111,10 @@ public class GraficaGeneral extends Activity{
 		//Si queremos grafico de barras cambiar LineGraphView por BarGraphView
 		GraphView graphView = new LineGraphView(this, ""); 
 		graphView.addSeries(exampleSeries); // data
+		//Sombreamos por debajo del gráfico
+		graphView.setBackgroundColor(Color.CYAN); 
+		((LineGraphView) graphView).setDrawBackground(true);
+
 		
 //		// set view port, start=0, size=10
 //		graphView.setViewPort(1, 24);
@@ -123,6 +127,7 @@ public class GraficaGeneral extends Activity{
 		int ancho = layout.getWidth();
 		int tamañoTexto = ancho / 24; //24 = numHorizontalLabels
 		
+		
 	
 		//cambiamos el estilo
 		graphView.getGraphViewStyle().setGridColor(Color.GRAY);
@@ -133,8 +138,8 @@ public class GraficaGeneral extends Activity{
 	    graphView.getGraphViewStyle().setNumHorizontalLabels(24);
 	    
 		
-		//Cambiamos el color del fondo
-		graphView.setBackgroundColor(Color.GREEN);
+//		//Cambiamos el color del fondo
+//		graphView.setBackgroundColor(Color.GREEN);
 		
 		//buscamos el la zona donde va la gráfica y le cargaos la que acabamos de crear
 //		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
