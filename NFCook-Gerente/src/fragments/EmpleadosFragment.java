@@ -26,29 +26,36 @@ import baseDatos.HandlerGenerico;
 import com.example.nfcook_gerente.InfoEmpleado;
 import com.example.nfcook_gerente.R;
 
+
+/**
+ * 
+ * @author roberto
+ *
+ * Clase con el contenido del tab referente a los empleados.
+ * 
+ * Contiene un buscador de empleados y una lista con todos ellos, 
+ * en la que aparece su foto, nombre, puesto e identificador.
+ *
+ */
+
+
 public class EmpleadosFragment extends Fragment{
 	
 	private View vista;
 	
 	private HandlerGenerico sqlEmpleados;
 	private static SQLiteDatabase dbEmpleados;
-	
-	private AutoCompleteTextView buscador;
-
 	private HandlerGenerico sqlBuscador;
 	private SQLiteDatabase dbBuscador;
 	
-	 private static String idEmpleado;
+	private AutoCompleteTextView buscador;
+	
+	private static String idEmpleado;
 	 
-	 private ListView listaEmpleados;
-
+	private ListView listaEmpleados;
 	private MiEmpleadosAdapter adapterListaEmpleados;
-
 	private ArrayList<PadreListaEmpleados> elementosListaEmpleados;
 
-
-
-	
 	@Override  
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		

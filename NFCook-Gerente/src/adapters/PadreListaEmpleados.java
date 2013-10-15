@@ -1,6 +1,13 @@
 package adapters;
 
-
+/**
+ * 
+ * @author roberto
+ *
+ * Esta clase contiene el tipo de objeto que contiene el arrayList para 
+ * crear el adapter de la lista de los empleados de un restaurante.
+ *
+ */
 
 public class PadreListaEmpleados {
 	

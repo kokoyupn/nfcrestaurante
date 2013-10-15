@@ -15,7 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import baseDatos.HandlerGenerico;
 
- 
+ /**
+  * 
+  * @author roberto
+  * 
+  * Esta clase contiene los metodos necesarios para el adapter 
+  * del buscador de los empleados.
+  *
+  */
 
 public class MiCursorAdapterBuscadorEmpleados extends CursorAdapter{
 		

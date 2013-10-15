@@ -2,46 +2,44 @@ package com.example.nfcook_gerente;
 
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 
-import adapters.PadreListaEmpleados;
+
+
+
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import baseDatos.HandlerGenerico;
 
 import com.androidplot.xy.*;
 
-public class InfoEmpleado extends Activity {
 
-	
-	private String idEmpleado;
+/**
+ * 
+ * @author roberto
+ *
+ * Esta clase contiene los datos de cada empleado junto con su foto y 
+ * una grafica con su facturacion, seleccionable por dias, meses o años.
+ * 
+ */
+
+
+public class InfoEmpleado extends Activity {
 	
 	private XYPlot mySimpleXYPlot;
-
 	private HandlerGenerico sqlEmpleados;
-
 	private SQLiteDatabase dbEmpleados;
-	
 	
 	private String fechaNacimiento;
 	private String domicilio;
@@ -51,12 +49,13 @@ public class InfoEmpleado extends Activity {
 	private String nombre;
 	private String foto;
 	private String apellido1;
+	private String idEmpleado;
 	
-	ImageView imageViewFoto;
-	FrameLayout contenedorFoto;
-	TextView nombreYApellidos;
-	Button dia, mes, anio;
-	//Spinner rango;
+	private ImageView imageViewFoto;
+	private FrameLayout contenedorFoto;
+	private TextView nombreYApellidos;
+	private Button dia, mes, anio;
+
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -65,26 +64,12 @@ public class InfoEmpleado extends Activity {
 		
 		Bundle bundle = getIntent().getExtras();
 		idEmpleado = bundle.getString("IdEmpleado");
-		/*nombre = "Pepe";
-		apellido1 = "garcia";
-		apellido2="martin";*/
 		
 		importarBaseDatos();
-		
-		
 		cargarInfoEmpleado();
-		
 		mostrarInfo();
-		
 		funcionalidadCalendario();
-		
 		funcionalidadBotones();
-		
-		
-		
-		
-		
-		
 	}
 	
 	private void funcionalidadBotones() {
@@ -170,8 +155,9 @@ public class InfoEmpleado extends Activity {
 		
 		
 		nombreYApellidos = (TextView)findViewById(R.id.datosEmpleado);
-		nombreYApellidos.setText(nombre + '\n' + apellido1 + '\n' + apellido2 + '\n' +
-				puesto + '\n' + dni + '\n' + domicilio + '\n' + fechaNacimiento);
+		nombreYApellidos.setText(nombre + '\n' + apellido1 + '\n' + apellido2 + '\n' + '\n' +
+				"Puesto:\n" + " " + puesto + '\n' + "DNI:\n" + " " + dni + '\n' + 
+				"Domicilio:\n" + " " + domicilio + '\n' + "Fecha de nacimiento:\n" + " " + fechaNacimiento);
 	    
 		//Display display = getWindowManager().getDefaultDisplay();
 		//int ancho = display.getWidth();
@@ -189,6 +175,9 @@ public class InfoEmpleado extends Activity {
 			Cursor c = dbEmpleados.query("Empleados",campos, "idEmpleado=?",datos, null, null,null);
 		    
 		   c.moveToNext();
+		   nombre = c.getString(1);
+		   apellido1 = c.getString(2);
+		   apellido2 = c.getString(3);
 		   foto = c.getString(0);
 		   puesto = c.getString(4);
 		   idEmpleado = c.getString(5);

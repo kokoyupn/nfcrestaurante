@@ -15,6 +15,15 @@ import android.widget.TextView;
 import android.view.LayoutInflater;
 
 
+/**
+ * 
+ * @author roberto
+ * 
+ * Esta clase contiene el adater para contenido de la lista con 
+ * todos los empleados de un restaurante.
+ *
+ */
+
 public class MiEmpleadosAdapter extends BaseAdapter{
 	private ArrayList<PadreListaEmpleados> contenido;
 	private Activity activity;
