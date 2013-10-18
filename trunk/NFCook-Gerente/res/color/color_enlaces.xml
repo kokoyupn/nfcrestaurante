@@ -3,6 +3,6 @@
     <item android:state_pressed="true"
           android:color="@color/blanco"/> <!-- pressed -->
     <item android:state_focused="true"
-          android:color="#ff0000ff"/> <!-- focused -->
+          android:color="@color/azulEnlaces"/> <!-- focused -->
     <item android:color="@color/azulEnlaces"/> <!-- default -->
 </selector>
