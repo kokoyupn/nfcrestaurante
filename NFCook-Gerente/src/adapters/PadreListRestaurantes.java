@@ -7,15 +7,17 @@ package adapters;
  */
 public class PadreListRestaurantes {
 	
-	private String nombreRestaurante, calle, imagen, telefono, imagenFachada;
+	private String nombreRestaurante, calle, cp, poblacion, imagen, telefono, imagenFachada;
 	private int idRestaurante;
 	private boolean checkVisibles, isSelected;
 	
 
-	public PadreListRestaurantes(String nombreRestaurante, int idRestaurante, String calle, String imagen, String imagenFachada, String telefono) {
+	public PadreListRestaurantes(String nombreRestaurante, int idRestaurante, String calle, String cp, String poblacion, String imagen, String imagenFachada, String telefono) {
 		this.nombreRestaurante = nombreRestaurante;
 		this.idRestaurante = idRestaurante;
 		this.calle = calle;
+		this.cp = cp;
+		this.poblacion = poblacion;
 		this.imagen = imagen;
 		this.imagenFachada = imagenFachada;
 		this.telefono = telefono;
@@ -34,6 +36,14 @@ public class PadreListRestaurantes {
 
 	public String getCalle() {
 		return calle;
+	}
+	
+	public String getCP() {
+		return cp;
+	}
+	
+	public String getPoblacion() {
+		return poblacion;
 	}
 
 	public String getImagen() {

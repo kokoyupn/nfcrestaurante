@@ -18,8 +18,9 @@ import android.support.v4.app.FragmentPagerAdapter;
  * 
  * En las pestañas de la interfaz de camarero se guarda por orden:
  * 0-> Información
- * 1-> Estadísticas
- * 2-> Clasificación de platos
+ * 1-> Empleados
+ * 2-> Estadísticas
+ * 3-> Clasificación de platos
  * 
  * Cuando el TabHost o el ViewPager necesite acceder a un Fragment
  * invocará a getItem.

@@ -25,10 +25,10 @@ import com.example.nfcook_gerente.R;
 /**
  * @author: Alejandro Moran
  * 
- * Esta clase implementar· el fragment de la informaciÛn de un restaurante.
+ * Esta clase implementar√° el fragment de la informaci√≥n de un restaurante.
  * 
- * Implementa LocationListener para poder obtener la ubicaciÛn actual
- * al seleccionar la opciÛn de Maps, para realizar la ruta de su posiciÛn
+ * Implementa LocationListener para poder obtener la ubicaci√≥n actual
+ * al seleccionar la opci√≥n de Maps, para realizar la ruta de su posici√≥n
  * hasta el restaurante.
  * 
  * **/
@@ -41,11 +41,13 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    vista = inflater.inflate(R.layout.informacion_restaurante, container, false);
 	    
-	    // Leemos la informaciÛn del restaurante 
+	    // Leemos la informaci√≥n del restaurante 
 	    Bundle bundleInfo = getActivity().getIntent().getExtras();
 	    String nombreRestaurante = bundleInfo.getString("nombre");
 	    telefonoRestaurante = bundleInfo.getString("telefono"); // global porque lo utilizaremos en onClick
 	    calleRestaurante = bundleInfo.getString("calle"); // global porque lo utilizaremos en onClick
+	    String cp = bundleInfo.getString("cp");
+	    String poblacion = bundleInfo.getString("poblacion");
 	    String logoRestaurante = bundleInfo.getString("logo");
 	    String imagenFachada = bundleInfo.getString("imagen");
 	    
@@ -53,30 +55,33 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    TextView nombreRes = (TextView) vista.findViewById(R.id.nombreRestaurante);
 	    nombreRes.setText(nombreRestaurante); 
 	     
-	    // telÈfono restaurante
+	    // tel√©fono restaurante
 	    TextView telefonoRes = (TextView) vista.findViewById(R.id.telefonoRestaurante);
-	    telefonoRes.setText(Html.fromHtml("<b><font color= #000000>Tel.: </font></b>" + "<u>" + telefonoRestaurante + "</u>")); 
+	    telefonoRes.setText(Html.fromHtml("<u>" + telefonoRestaurante + "</u>")); 
 	    telefonoRes.setOnClickListener(new View.OnClickListener() {
 	        public void onClick(View arg0) {
 	        	onClickPhoneCall(); 
 	        }
 	    });
 	    
-	    // direcciÛn restaurante
-	    TextView calleRes = (TextView) vista.findViewById(R.id.direccionRestaurante);
-	    calleRes.setText(Html.fromHtml("<b><font color= #000000>Dir.: </font></b>" + "<u>" + calleRestaurante + "</u>")); 
+	    // direcci√≥n restaurante
+	    TextView calleRes = (TextView) vista.findViewById(R.id.calleRestaurante);
+	    calleRes.setText(calleRestaurante); 
 	    calleRes.setOnClickListener(new View.OnClickListener() {
 	        public void onClick(View arg0) {
 	        	onClickDirections();
 	        }
 	    });
 	   
-	    // logo restaurante
-	    ImageView logoRes = (ImageView) vista.findViewById(R.id.imagenLogo);
-	    int img = getResources().getIdentifier(logoRestaurante, "drawable", getActivity().getPackageName());
-	    logoRes.setImageResource(img);
+	    // CP restaurante
+	    TextView cpRes = (TextView) vista.findViewById(R.id.cpRestaurante);
+	    cpRes.setText(cp);
 	    
-	    // botÛn llamar
+	    // poblacion restaurante
+	    TextView poblacionRes = (TextView) vista.findViewById(R.id.poblacionRestaurante);
+	    poblacionRes.setText(poblacion);
+	    
+	    // bot√≥n llamar
 	    Button botonLlamar = (Button) vista.findViewById(R.id.llamar);
 	    botonLlamar.setOnClickListener(new View.OnClickListener() {
 	        public void onClick(View arg0) {
@@ -84,7 +89,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	        }
 	    });
 	    
-	    // botÛn mapas
+	    // bot√≥n mapas
 	    Button botonMapas = (Button) vista.findViewById(R.id.direcciones);
 	    botonMapas.setOnClickListener(new View.OnClickListener() {
 	        public void onClick(View arg0) {
@@ -101,7 +106,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	}
 	
 	
-	// Este mÈtodo nos permitir· obtener la ubicaciÛn actual y llamar· a Maps con la ruta hasta al restaurante
+	// Este m√©todo nos permitir√° obtener la ubicaci√≥n actual y llamar√° a Maps con la ruta hasta al restaurante
 	private void onClickDirections(){
 
 	    	double latitudOrigen = 0.0;
@@ -109,7 +114,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    	LocationManager locationManager;
 	    	Location miUbicacion;
 	    	
-	    	// cogemos nuestra localizaciÛn actual
+	    	// cogemos nuestra localizaci√≥n actual
 	    	locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 	    	miUbicacion = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	    	
@@ -131,7 +136,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	}
 	
 	
-	// En este mÈtodo llamaremos a ACTION_CALL para llamar al pulsar el n˙mero de telÈfono o el botÛn
+	// En este m√©todo llamaremos a ACTION_CALL para llamar al pulsar el n√∫mero de tel√©fono o el bot√≥n
 	private void onClickPhoneCall(){
 		try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -144,9 +149,9 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	}
 
 	
-	/* MÈtodos para LocationListener
+	/* M√©todos para LocationListener
 	 * no hace falta rellenarlos porque son solo para realizar acciones
-	 * al cambio de localizaciÛn, al estar disabled, enabled, o al cambiar el estado.
+	 * al cambio de localizaci√≥n, al estar disabled, enabled, o al cambiar el estado.
 	 */
 	public void onLocationChanged(Location location) {}
 
