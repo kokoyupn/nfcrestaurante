@@ -1,78 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FrameLayoutContenedorTabs"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/FrameLayoutPestanas" >
-    
+    android:layout_gravity="center"
+    android:background="@color/verde5" >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <TabHost
-            android:id="@android:id/tabhost"
+            android:id="@+id/tabhost"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
             <LinearLayout
+                android:id="@+id/linearLayoutContenidoTabsSup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
-                <TabWidget
-                    android:id="@android:id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#c38838" >
-                </TabWidget>
+				<HorizontalScrollView
+				    android:id="@+id/horizontalScroll"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:fillViewport="true"
+				    android:scrollbars="none" >
 
+	                <TabWidget
+	                    android:id="@android:id/tabs"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:scrollbars="horizontal" >
+	
+	                </TabWidget>
+				</HorizontalScrollView>
                 <FrameLayout
                     android:id="@android:id/tabcontent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_width="0dp"
+                    android:layout_height="0dp" >
 
                     <LinearLayout
                         android:id="@+id/tab1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" >
                     </LinearLayout>
-
+                    
                     <LinearLayout
                         android:id="@+id/tab2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" >
                     </LinearLayout>
-
+                    
                     <LinearLayout
                         android:id="@+id/tab3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" >
                     </LinearLayout>
-
+                    
                     <LinearLayout
                         android:id="@+id/tab4"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" >
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/tab5"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-                    </LinearLayout>
+                    
                 </FrameLayout>
-                
+
                 <android.support.v4.view.ViewPager
-	                android:id="@+id/viewpager"
-	                android:layout_width="fill_parent"
-	                android:layout_height="0dp"
-	                android:layout_weight="1" />
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+
+            </android.support.v4.view.ViewPager>
             </LinearLayout>
         </TabHost>
-      </LinearLayout>
- </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
