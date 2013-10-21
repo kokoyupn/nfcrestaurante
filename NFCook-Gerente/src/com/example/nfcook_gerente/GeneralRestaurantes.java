@@ -63,7 +63,7 @@ public class GeneralRestaurantes extends Activity {
   	    	
   	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
 	  	    	// Iniciamos la nueva actividad y le pasamos los datos del restaurante
-	  	  		Intent intent = new Intent(GeneralRestaurantes.this, InfoRestaurante.class);
+	  	  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
 	  	  		intent.putExtra("nombre", restaurantes.get(posicion).getNombreRestaurante());
 	  	  		intent.putExtra("calle", restaurantes.get(posicion).getCalle());
 	  	  		intent.putExtra("cp", restaurantes.get(posicion).getCP());
