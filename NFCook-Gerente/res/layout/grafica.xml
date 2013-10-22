@@ -30,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:onClick="onClickAlDia"
             android:src="@drawable/boton_al_dia" />
 
         <ImageView
@@ -38,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:onClick="onClickAlMes"
             android:src="@drawable/boton_al_mes" />
 
         <ImageView
@@ -46,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:onClick="onClickAlAnio"
             android:src="@drawable/boton_al_anio" />
 
     </LinearLayout>

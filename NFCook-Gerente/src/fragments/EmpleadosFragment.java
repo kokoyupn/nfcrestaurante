@@ -141,11 +141,11 @@ public class EmpleadosFragment extends Fragment{
 			}
 		 
 		 	buscador = (AutoCompleteTextView)vista.findViewById(R.id.autoCompleteTextViewBuscadorEmpleados);
-			Cursor c =  dbBuscador.rawQuery("SELECT IdEmpleado AS _id,Nombre AS item" + 
+			Cursor c =  dbBuscador.rawQuery("SELECT IdEmpleado AS _id,Nombre AS Item" + 
 		    			" FROM Empleados" + 
-		    			" WHERE Nombre LIKE '%" + "%' ", null);
+		    			" WHERE Nombre LIKE '%" + "%' or Apellido1 LIKE '%"+"%'", null);
 			buscador.setAdapter(new MiCursorAdapterBuscadorEmpleados(getActivity(), c, CursorAdapter.NO_SELECTION));
-		    buscador.setThreshold(1);
+		    buscador.setThreshold(2);
 			
 			buscador.setOnItemClickListener(new OnItemClickListener() {
 		

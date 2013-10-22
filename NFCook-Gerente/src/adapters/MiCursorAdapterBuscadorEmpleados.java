@@ -71,10 +71,10 @@ public class MiCursorAdapterBuscadorEmpleados extends CursorAdapter{
 	  
 	     importarBaseDatatos();
 	     
-	     currentCursor = db.rawQuery("SELECT IdEmpleado AS _id,Nombre AS item" +
+	     currentCursor = db.rawQuery("SELECT IdEmpleado AS _id,Nombre AS Item" +
 	       " FROM Empleados" + 
-	       " WHERE Nombre LIKE '%" + args + "%' ", null);
-	     
+	       " WHERE Nombre LIKE '%" +args+ "%'  or Apellido1 LIKE '%" +args+ "%' or Apellido2 LIKE '%" +args+ "%'", null);
+	    // 
 	     /** Ejemplo para usar el like con varias condiciones
 	      * if (name.length() != 0) {
 
