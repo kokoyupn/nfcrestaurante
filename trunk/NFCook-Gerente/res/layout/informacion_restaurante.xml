@@ -2,204 +2,225 @@
 
 <ScrollView  
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" 
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/verde5">
-
-<RelativeLayout
+    
+<RelativeLayout 
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" 
-    android:background="@color/verde5">
-        
-    <TextView
-            android:id="@+id/nombreRestaurante"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-           	android:layout_marginRight="5dp"
-            android:textSize="22sp"
-            android:textStyle="bold"/>
-   
-    <RelativeLayout 
-		android:id="@+id/layoutImagenRestaurante"
-	    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    
+	<RelativeLayout
+	    android:id="@+id/layoutInfoRestaurante"
+	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-		android:layout_toRightOf="@+id/nombreRestaurante"
-		android:layout_alignTop="@+id/nombreRestaurante" 
-	    android:layout_alignParentRight="true" >
+	    android:orientation="vertical" 
+	    android:background="@color/verde5">
+	        
+	    <TextView
+	            android:id="@+id/nombreRestaurante"
+	            android:layout_width="180dp"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="15dp"
+	            android:layout_marginTop="10dp"
+	            android:layout_marginBottom="20dp"
+	           	android:layout_marginRight="5dp"
+	            android:textSize="22sp"
+	            android:textStyle="bold"/>
+	   
+	    <RelativeLayout 
+			android:id="@+id/layoutImagenRestaurante"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/nombreRestaurante"
+			android:layout_alignTop="@+id/nombreRestaurante" 
+		    android:layout_alignParentRight="true" >
+		    
+			<ImageView
+			        android:id="@+id/imagenRestaurante"
+			        android:layout_width="220dp"
+			       	android:layout_height="160dp"
+			        android:layout_marginTop="10dp"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"			
+			        android:src="@drawable/ic_launcher" />
+			
+			<RatingBar 
+			    	android:id="@+id/ratingRestaurante"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_marginTop="10dp"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"			
+			        android:numStars="5"
+	       			android:stepSize="1.0" 
+	       			android:layout_below="@id/imagenRestaurante" 
+	       			android:layout_alignLeft="@id/imagenRestaurante" 
+				    android:isIndicator="false"
+				    style="@style/starRatingBar" />
+			
+		</RelativeLayout>
+			
+		<RelativeLayout 
+		    android:id="@+id/textoLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/nombreRestaurante"
+		    android:layout_toLeftOf="@+id/layoutImagenRestaurante"            
+		    android:layout_alignParentLeft="true"             
+		    android:orientation="vertical" > 
+	    
+	    <RelativeLayout 
+		    android:id="@+id/textoCalleLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"             
+		    android:orientation="vertical" > 
 	    
 		<ImageView
-		        android:id="@+id/imagenRestaurante"
-		        android:layout_width="220dp"
-		       	android:layout_height="160dp"
+			        android:id="@+id/iconoCalle"
+			        android:layout_width="32dp"
+			       	android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"
+		            android:layout_alignParentLeft="true"             
+			        android:src="@drawable/ic_calle" />
+		
+		<TextView
+	            android:id="@+id/calleRestaurante"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+	            android:textSize="18sp"
+				android:layout_toRightOf="@+id/iconoCalle"
+				android:textIsSelectable="true" />
+		
+		</RelativeLayout>
+		
+	    <RelativeLayout 
+		    android:id="@+id/textoCPLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/textoCalleLayout"
+		    android:layout_alignParentLeft="true"             
+		    android:orientation="vertical" >
+		
+		<ImageView
+		        android:id="@+id/iconoCP"
+		        android:layout_width="32dp"
+		       	android:layout_height="27dp"
 		        android:layout_marginTop="10dp"
 				android:layout_marginLeft="5dp"
-				android:layout_marginRight="5dp"			
-		        android:src="@drawable/ic_launcher" />
-	</RelativeLayout>
+				android:layout_marginRight="5dp"
+	            android:layout_alignParentLeft="true"             
+		        android:src="@drawable/ic_cp" />
 		
-	<RelativeLayout 
-	    android:id="@+id/textoLayout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/nombreRestaurante"
-	    android:layout_toLeftOf="@+id/layoutImagenRestaurante"            
-	    android:layout_alignParentLeft="true"             
-	    android:orientation="vertical" > 
-    
-    <RelativeLayout 
-	    android:id="@+id/textoCalleLayout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"             
-	    android:orientation="vertical" > 
-    
-	<ImageView
-		        android:id="@+id/iconoCalle"
+		<TextView
+	            android:id="@+id/cpRestaurante"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+	            android:textSize="18sp"	   
+				android:textIsSelectable="true" 
+				android:layout_toRightOf="@+id/iconoCP"  />
+		
+		</RelativeLayout>
+		
+		<RelativeLayout 
+		    android:id="@+id/textoPoblacionLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/textoCPLayout"
+		    android:layout_alignParentLeft="true"             
+		    android:orientation="vertical" >
+		
+		<ImageView
+		        android:id="@+id/iconoPoblacion"
+		        android:layout_width="32dp"
+		       	android:layout_height="28dp"
+		        android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+	            android:layout_alignParentLeft="true"             
+		        android:src="@drawable/ic_poblacion" />
+		
+		<TextView
+	            android:id="@+id/poblacionRestaurante"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+	            android:textSize="18sp"	   
+				android:textIsSelectable="true" 
+				android:layout_toRightOf="@+id/iconoPoblacion"  />
+		
+		</RelativeLayout>
+		
+		<RelativeLayout 
+		    android:id="@+id/textoTelefonoLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"             
+		    android:layout_below="@id/textoPoblacionLayout"
+		    android:orientation="vertical" > 
+	    
+		<ImageView
+		        android:id="@+id/iconoTelefono"
 		        android:layout_width="32dp"
 		       	android:layout_height="wrap_content"
 		        android:layout_marginTop="10dp"
 				android:layout_marginLeft="5dp"
 				android:layout_marginRight="5dp"
 	            android:layout_alignParentLeft="true"             
-		        android:src="@drawable/ic_calle" />
-	
-	<TextView
-            android:id="@+id/calleRestaurante"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="18sp"
-			android:layout_toRightOf="@+id/iconoCalle"
-			android:textIsSelectable="true" />
-	
+		        android:src="@drawable/ic_telefono" />
+		
+		 <TextView
+	            android:id="@+id/telefonoRestaurante"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+	            android:textSize="18sp"
+				android:layout_toRightOf="@+id/iconoTelefono"
+				android:textIsSelectable="true"
+				android:clickable="true"
+	            android:textColor="@color/color_enlaces" />
+		
+		</RelativeLayout>
+		
+		</RelativeLayout>
+
 	</RelativeLayout>
-	
-    <RelativeLayout 
-	    android:id="@+id/textoCPLayout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/textoCalleLayout"
-	    android:layout_alignParentLeft="true"             
-	    android:orientation="vertical" >
-	
-	<ImageView
-	        android:id="@+id/iconoCP"
-	        android:layout_width="32dp"
-	       	android:layout_height="27dp"
-	        android:layout_marginTop="10dp"
-			android:layout_marginLeft="5dp"
-			android:layout_marginRight="5dp"
-            android:layout_alignParentLeft="true"             
-	        android:src="@drawable/ic_cp" />
-	
-	<TextView
-            android:id="@+id/cpRestaurante"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="18sp"	   
-			android:textIsSelectable="true" 
-			android:layout_toRightOf="@+id/iconoCP"  />
-	
-	</RelativeLayout>
-	
-	<RelativeLayout 
-	    android:id="@+id/textoPoblacionLayout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/textoCPLayout"
-	    android:layout_alignParentLeft="true"             
-	    android:orientation="vertical" >
-	
-	<ImageView
-	        android:id="@+id/iconoPoblacion"
-	        android:layout_width="32dp"
-	       	android:layout_height="28dp"
-	        android:layout_marginTop="10dp"
-			android:layout_marginLeft="5dp"
-			android:layout_marginRight="5dp"
-            android:layout_alignParentLeft="true"             
-	        android:src="@drawable/ic_poblacion" />
-	
-	<TextView
-            android:id="@+id/poblacionRestaurante"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="18sp"	   
-			android:textIsSelectable="true" 
-			android:layout_toRightOf="@+id/iconoPoblacion"  />
-	
-	</RelativeLayout>
-	
-	<RelativeLayout 
-	    android:id="@+id/textoTelefonoLayout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"             
-	    android:layout_below="@id/textoPoblacionLayout"
-	    android:orientation="vertical" > 
-    
-	<ImageView
-	        android:id="@+id/iconoTelefono"
-	        android:layout_width="32dp"
-	       	android:layout_height="wrap_content"
-	        android:layout_marginTop="10dp"
-			android:layout_marginLeft="5dp"
-			android:layout_marginRight="5dp"
-            android:layout_alignParentLeft="true"             
-	        android:src="@drawable/ic_telefono" />
-	
-	 <TextView
-            android:id="@+id/telefonoRestaurante"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="18sp"
-			android:layout_toRightOf="@+id/iconoTelefono"
-			android:textIsSelectable="true"
-			android:clickable="true"
-            android:textColor="@color/color_enlaces" />
-	
-	</RelativeLayout>
-	
-	</RelativeLayout>
-	
-	
+
 	<RelativeLayout 
 	    android:id="@+id/botonesLayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:gravity="center|bottom"
-	    android:layout_alignParentBottom="true"
-	    android:layout_below="@id/textoLayout"
-	    android:orientation="vertical" > 
-   
-		<Button
-	            android:id="@+id/llamar"
-	            android:layout_width="80dp"
-	       		android:layout_height="65dp"
-	            android:layout_marginLeft="15dp"
-	            android:layout_marginTop="20dp"
-	            android:layout_marginBottom="10dp"
-	            android:background="@drawable/ic_llamar2"/>
-		
-		<Button
-	            android:id="@+id/direcciones"
-	            android:layout_width="75dp"
-	        	android:layout_height="75dp"
-	            android:layout_marginLeft="25dp"
-	            android:layout_marginTop="20dp"
-	            android:layout_marginBottom="10dp"
-	            android:layout_toRightOf="@+id/llamar"
-	            android:background="@drawable/ic_maps"/>
-
-	</RelativeLayout>
+	    android:layout_below="@+id/layoutInfoRestaurante"
+	    android:orientation="vertical" >  
+	   
+			<Button
+		            android:id="@+id/llamar"
+		            android:layout_width="80dp"
+		       		android:layout_height="65dp"
+		            android:layout_marginLeft="15dp"
+		           	android:layout_marginTop="40dp"
+		            android:layout_marginBottom="10dp"
+		            android:background="@drawable/ic_llamar2"/>
+			
+			<Button
+		            android:id="@+id/direcciones"
+		            android:layout_width="75dp"
+		        	android:layout_height="75dp"
+		            android:layout_marginLeft="25dp"
+		           	android:layout_marginTop="40dp"
+		            android:layout_marginBottom="10dp"
+		            android:layout_toRightOf="@+id/llamar"
+		            android:background="@drawable/ic_maps"/>
 	
-</RelativeLayout>
+		</RelativeLayout>
+			
+	
+	</RelativeLayout>
 </ScrollView>
 

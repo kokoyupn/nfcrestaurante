@@ -9,10 +9,12 @@ public class PadreListRestaurantes {
 	
 	private String nombreRestaurante, calle, cp, poblacion, imagen, telefono, imagenFachada;
 	private int idRestaurante;
+	private float rating;
 	private boolean checkVisibles, isSelected;
 	
 
-	public PadreListRestaurantes(String nombreRestaurante, int idRestaurante, String calle, String cp, String poblacion, String imagen, String imagenFachada, String telefono) {
+	public PadreListRestaurantes(String nombreRestaurante, int idRestaurante, String calle, String cp, String poblacion, String imagen, String imagenFachada, String telefono, float rating) {
+
 		this.nombreRestaurante = nombreRestaurante;
 		this.idRestaurante = idRestaurante;
 		this.calle = calle;
@@ -21,6 +23,7 @@ public class PadreListRestaurantes {
 		this.imagen = imagen;
 		this.imagenFachada = imagenFachada;
 		this.telefono = telefono;
+		this.rating = rating;
 		checkVisibles = false;
 		isSelected =false;
 	}
@@ -77,5 +80,9 @@ public class PadreListRestaurantes {
 
 	public String getTelefono() {
 		return telefono;
+	}
+	
+	public float getRating() {
+		return rating;
 	}
 }

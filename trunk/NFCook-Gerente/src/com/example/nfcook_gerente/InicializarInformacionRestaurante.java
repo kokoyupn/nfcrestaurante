@@ -19,6 +19,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
+import fragments.ClasificacionPlatosFragment;
 import fragments.InformacionRestauranteFragment;
 
 
@@ -52,7 +53,8 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
             mContext = context;
         }
  
-        public View createTabContent(String tag) {
+        @Override
+		public View createTabContent(String tag) {
             View v = new View(mContext);
             v.setMinimumWidth(0);
             v.setMinimumHeight(0);
@@ -127,8 +129,8 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabClasificacionPlatos"));
         tabs.addTab(spec);
         //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
-        listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));
-       
+        listFragments.add(Fragment.instantiate(this, ClasificacionPlatosFragment.class.getName()));
+
      	// Determinamos el ancho y largo de cada tab superior (120dp) y además le ponemos el fondo a cada uno
      	for(int i=0;i<listFragments.size();i++){
      		tabs.getTabWidget().getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(120,60));
@@ -172,7 +174,8 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     	return tabContentView;
     }
     
-    protected void onSaveInstanceState(Bundle instanceState) {
+    @Override
+	protected void onSaveInstanceState(Bundle instanceState) {
         // Guardar en "tab" la pestaña seleccionada.
         instanceState.putString("tab", tabs.getCurrentTabTag());
         super.onSaveInstanceState(instanceState);
@@ -227,14 +230,17 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 		return null;
 	}
 
+	@Override
 	public void onPageScrollStateChanged(int arg0) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void onPageSelected(int pos) {
 		// TODO Auto-generated method stub
 		tabs.setCurrentTab(pos);

@@ -13,7 +13,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -23,10 +22,14 @@ import android.widget.ListView;
  
 /** 
 =======
+ 
+/** 
+=======
 import android.widget.Toast;
  
 /** 
 >>>>>>> .r521
+>>>>>>> .r526
  * Clase que se encarga de cargar el adapter y de la pantalla inicial del gerente
  * También se establecen los onClick de los botones y su comportamiento (Cuando aparecer y desaparecer)
  * Lee de base de datos los restaurantes y los carga en el ArrayList restaurantes
@@ -61,7 +64,8 @@ public class GeneralRestaurantes extends Activity {
 	    
 	    listViewRestaurantes.setOnItemClickListener(new OnItemClickListener() {
   	    	
-  	    	public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
+  	    	@Override
+			public void onItemClick(AdapterView<?> arg0, View vista,int posicion, long id){
 	  	    	// Iniciamos la nueva actividad y le pasamos los datos del restaurante
 	  	  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
 	  	  		intent.putExtra("nombre", restaurantes.get(posicion).getNombreRestaurante());
@@ -71,6 +75,7 @@ public class GeneralRestaurantes extends Activity {
 	  	  		intent.putExtra("telefono", restaurantes.get(posicion).getTelefono());
 	  	  		intent.putExtra("imagen",restaurantes.get(posicion).getImagenFachada());
 	  	  		intent.putExtra("id", restaurantes.get(posicion).getIdRestaurante());
+	  	  		intent.putExtra("rating", restaurantes.get(posicion).getRating());
 	  	  		
 	  	  		startActivity(intent);
   	    	}
@@ -81,12 +86,12 @@ public class GeneralRestaurantes extends Activity {
 	public ArrayList<PadreListRestaurantes> obtenerRestaurantes() {
 
 		ArrayList<PadreListRestaurantes> restaurantes = new ArrayList<PadreListRestaurantes>();
-		restaurantes.add(new PadreListRestaurantes("Vips Princesa",3,"Calle de la Princesa 5", "28008", "Madrid", "vips", "vips_princesa5", "+34912752063"));
-		restaurantes.add(new PadreListRestaurantes("Vips Goya",4,"Calle Goya 67", "28020", "Madrid", "vips", "vips_goya67", "+34912752213"));
-		restaurantes.add(new PadreListRestaurantes("Vips Sanchinarro",5,"Avenida de Burgos 119", "28050", "Madrid", "vips", "vips_sanchinarro119", "+34915556677"));
-		restaurantes.add(new PadreListRestaurantes("Foster Princesa",6,"Calle de la Princesa 13", "28039", "Madrid", "logo_foster", "foster_princesa13", "+34915591914"));
-		restaurantes.add(new PadreListRestaurantes("Foster Ópera",7,"Plaza Isabel II 3", "28076", "Madrid", "logo_foster", "foster_opera3","+34914678900"));
-	
+		restaurantes.add(new PadreListRestaurantes("Vips Princesa",3,"Calle de la Princesa 5", "28008", "Madrid", "vips", "vips_princesa5", "+34912752063", 5));
+		restaurantes.add(new PadreListRestaurantes("Vips Goya",4,"Calle Goya 67", "28020", "Madrid", "vips", "vips_goya67", "+34912752213", 4));
+		restaurantes.add(new PadreListRestaurantes("Vips Sanchinarro",5,"Avenida de Burgos 119", "28050", "Madrid", "vips", "vips_sanchinarro119", "+34915556677", 3));
+		restaurantes.add(new PadreListRestaurantes("Foster Princesa",6,"Calle de la Princesa 13", "28039", "Madrid", "logo_foster", "foster_princesa13", "+34915591914", 5));
+		restaurantes.add(new PadreListRestaurantes("Foster Ópera",7,"Plaza Isabel II 3", "28076", "Madrid", "logo_foster", "foster_opera3","+34914678900", 3));
+
 		//Importamos la base de datos
 //		try {
 //			sqlRestaurantes = new HandlerGenerico(getApplicationContext(),
@@ -137,14 +142,12 @@ public class GeneralRestaurantes extends Activity {
 		
     	botonComparar.setVisibility(8); 
     	botonAceptar.setVisibility(0);
-
     	//botonAceptar.setWidth(vista.getWidth()/2);
 
     	botonCancelar.setVisibility(0);
 
+
     	//botonCancelar.setWidth(vista.getWidth()/2);
-
-
     	
 		adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
 		listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
