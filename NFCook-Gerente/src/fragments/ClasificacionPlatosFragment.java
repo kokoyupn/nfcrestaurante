@@ -2,9 +2,9 @@ package fragments;
 
 import java.util.ArrayList;
 
-
 import com.example.nfcook_gerente.PlatoClasificacion;
-
+import com.example.nfcook_gerente.R;
+import com.example.nfcook_gerente.R.color;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,10 +38,11 @@ public class ClasificacionPlatosFragment extends Fragment {
 		platosFavoritosOrdenados.add(new PlatoClasificacion("Foster", "Bacon Cheese Fries", "fh1", 9, 40));
 
 		// Tabla de clasificacion de platos
-		tablaClasificacion = (TableLayout) findViewById(R.id.tableLayout);
+		tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
 		
 		completaTablaPlatos("Demanda");
 		
+		return vista;
 	}
 	
 public void onClickDemanda(View vista){

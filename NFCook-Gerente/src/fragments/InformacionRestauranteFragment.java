@@ -1,5 +1,7 @@
 package fragments;
 
+import com.example.nfcook_gerente.R;
+
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
