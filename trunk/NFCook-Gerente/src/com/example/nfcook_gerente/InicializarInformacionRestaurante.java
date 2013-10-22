@@ -20,7 +20,9 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import fragments.ClasificacionPlatosFragment;
+import fragments.EmpleadosFragment;
 import fragments.InformacionRestauranteFragment;
+import fragments.IngresosFragment;
 
 
 /**
@@ -34,13 +36,14 @@ import fragments.InformacionRestauranteFragment;
 **/
 public class InicializarInformacionRestaurante extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
 
-	// Tabs: Informacion, Empleados, Estadisticas y Clasificacion de platos
+	// Tabs: Informacion, Empleados, Ingresos y Clasificacion de platos
 	private TabHost tabs;
 	private View tabContentView;
 	private ViewPager miViewPager;
 	private PagerAdapter miPagerAdapter;
 	private ArrayList<Fragment> listFragments;
 	private Bundle bundleInfoRestaurante;
+	private boolean sinInfo;
 	
 	private int ultimoTabSeleccionado;
 	
@@ -72,10 +75,12 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         // Recogemos la información para pasarla como argumento más adelante
         bundleInfoRestaurante = getIntent().getExtras(); // Nombre, teléfono, calle, logo, idRestaurante
 
+        sinInfo = bundleInfoRestaurante.getBoolean("sinInfo");
+        
         inicializarTabs();
         cargarTabsEInicializarViewPages();
         
-		// Marcamos el tab de informacion como inicial
+		// Marcamos el tab de informacion como inicialo el de empleados si se han seleccionado varios restaurantes
         tabs.setCurrentTab(0);
         ultimoTabSeleccionado = 0;
 	    tabs.getTabWidget().getChildAt(ultimoTabSeleccionado).setBackgroundColor(Color.parseColor("#CAE0CD"));
@@ -95,37 +100,49 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     private void cargarTabsEInicializarViewPages(){
     	// Creamos la lista que contendra todos los fragments a cargar en funcion del tab
     	listFragments = new ArrayList<Fragment>();
+    	TabHost.TabSpec spec = null;
     	
-    	// Creamos el tab1 --> Información
-    	TabHost.TabSpec spec = tabs.newTabSpec("tabInformacion");     
-        // Hacemos referencia a su layout correspondiente
-        spec.setContent(R.id.tab1);
-        // Preparamos la vista del tab con el layout que hemos preparado
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabInformacion"));
-        // Lo añadimos
-        tabs.addTab(spec);
-		// Creamos el fragment de cada tab
-        listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));  
-
+    	if(!sinInfo){
+	    	// Creamos el tab1 --> Información
+    		spec = tabs.newTabSpec("tabInformacion");     
+	        // Hacemos referencia a su layout correspondiente
+	        spec.setContent(R.id.tab1);
+	        // Preparamos la vista del tab con el layout que hemos preparado
+	        spec.setIndicator(prepararTabView(getApplicationContext(),"tabInformacion"));
+	        // Lo añadimos
+	        tabs.addTab(spec);
+			// Creamos el fragment de cada tab
+	        listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));  
+    	}
+    	
         // Creamos el tab2 --> Empleados
         spec = tabs.newTabSpec("tabEmpleados");
-        spec.setContent(R.id.tab2);
+        if(sinInfo)
+        	spec.setContent(R.id.tab1);
+        else 
+	        spec.setContent(R.id.tab2);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabEmpleados"));
         tabs.addTab(spec);
         //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
-        listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));
+        listFragments.add(Fragment.instantiate(this, EmpleadosFragment.class.getName(), bundleInfoRestaurante));
    
-        // Creamos el tab3 --> Estadisticas
-        spec = tabs.newTabSpec("tabEstadisticas");
-        spec.setContent(R.id.tab3);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabEstadisticas"));
+        // Creamos el tab3 --> Ingresos
+        spec = tabs.newTabSpec("tabIngresos");
+        if(sinInfo)
+        	spec.setContent(R.id.tab2);
+        else 
+	        spec.setContent(R.id.tab3);
+        spec.setIndicator(prepararTabView(getApplicationContext(),"tabIngresos"));
         tabs.addTab(spec);
         //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
-        listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));
+        listFragments.add(Fragment.instantiate(this, IngresosFragment.class.getName(), bundleInfoRestaurante));
      
         // Creamos el tab4 --> Clasificación de platos
         spec = tabs.newTabSpec("tabClasificacionPlatos");
-        spec.setContent(R.id.tab4);
+        if(sinInfo)
+        	spec.setContent(R.id.tab3);
+        else 
+	        spec.setContent(R.id.tab4);
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabClasificacionPlatos"));
         tabs.addTab(spec);
         //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
@@ -162,8 +179,8 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     		textoTab.setText("EMPLEADOS");
      		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
     		//imagenTab.setImageResource(getResources().getIdentifier("pedido","drawable",this.getPackageName()));
-    	}else if(nombreTab.equals("tabEstadisticas")){
-    		textoTab.setText("ESTADÍSTICAS");
+    	}else if(nombreTab.equals("tabIngresos")){
+    		textoTab.setText("INGRESOS");
      		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
     		//imagenTab.setImageResource(getResources().getIdentifier("pagar","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabClasificacionPlatos")){

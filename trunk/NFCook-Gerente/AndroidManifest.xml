@@ -38,7 +38,16 @@
         <activity
             android:name=".InfoRestaurante"
             android:screenOrientation="portrait">
-
+        </activity>
+        
+        <activity
+            android:name=".InfoEmpleado"
+            android:screenOrientation="portrait">
+        </activity>
+        
+         <activity
+            android:name=".InicializarInformacionRestaurante"
+            android:screenOrientation="portrait">
         </activity>
         
          <activity

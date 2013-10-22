@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/boton_entrar"
+    android:orientation="vertical" >
+
+<Button
+    android:id="@+id/selectedDayMonthYear"
+    android:layout_width="wrap_content"
+    android:layout_height="20dp"
+    android:layout_gravity="center"
+    android:background="@drawable/boton_invisible"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:visibility="invisible"
+    android:textColor="#FFFFFF" >
+
+    </Button>
+        <Button
+            android:id="@+id/currentMonth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buscarempleado"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#4682B4" >
+
+        </Button>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" >
+
+        <ImageView
+            android:id="@+id/calendarheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/foster_opera3" >
+        </ImageView>
+    </LinearLayout>
+<LinearLayout 
+        android:orientation="vertical" android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <android.gesture.GestureOverlayView
+                android:id="@+id/gestures" android:layout_width="fill_parent"
+                android:layout_height="fill_parent" android:gestureStrokeType="multiple"
+                android:eventsInterceptionEnabled="true" android:orientation="vertical">
+
+    <GridView
+        android:id="@+id/calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="7"
+        android:stretchMode="columnWidth" >
+    </GridView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center_vertical"
+        android:gravity="bottom"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/prevMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:src="@drawable/ic_llamar" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_vertical|center"
+            android:layout_weight="0.66"
+            android:gravity="center"
+            android:text="Press any day to schedule an event"
+            android:textColor="#4682B4" />
+
+        <ImageView
+            android:id="@+id/nextMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.30"
+            android:src="@drawable/ic_nfcook" />
+
+    </LinearLayout>
+</android.gesture.GestureOverlayView>
+</LinearLayout>
+</LinearLayout>

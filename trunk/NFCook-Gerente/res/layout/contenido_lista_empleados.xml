@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imagenEmpleado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/bordes_redondeados_login" />
 
     <FrameLayout

@@ -20,16 +20,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
  
-/** 
-=======
- 
-/** 
-=======
+
 import android.widget.Toast;
  
 /** 
->>>>>>> .r521
->>>>>>> .r526
  * Clase que se encarga de cargar el adapter y de la pantalla inicial del gerente
  * También se establecen los onClick de los botones y su comportamiento (Cuando aparecer y desaparecer)
  * Lee de base de datos los restaurantes y los carga en el ArrayList restaurantes
@@ -74,8 +68,12 @@ public class GeneralRestaurantes extends Activity {
 	  	  		intent.putExtra("poblacion", restaurantes.get(posicion).getPoblacion());
 	  	  		intent.putExtra("telefono", restaurantes.get(posicion).getTelefono());
 	  	  		intent.putExtra("imagen",restaurantes.get(posicion).getImagenFachada());
-	  	  		intent.putExtra("id", restaurantes.get(posicion).getIdRestaurante());
+	  	  		intent.putExtra("ids", restaurantes.get(posicion).getIdRestaurante() + "");
 	  	  		intent.putExtra("rating", restaurantes.get(posicion).getRating());
+	  	  		//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
+	  	  		intent.putExtra("esGeneral", false);
+	  	  		//variable que indica si tiene que aparecer el tab de informacion o no
+	  	  		intent.putExtra("sinInfo", false);
 	  	  		
 	  	  		startActivity(intent);
   	    	}
@@ -142,27 +140,39 @@ public class GeneralRestaurantes extends Activity {
 		
     	botonComparar.setVisibility(8); 
     	botonAceptar.setVisibility(0);
-    	//botonAceptar.setWidth(vista.getWidth()/2);
-
     	botonCancelar.setVisibility(0);
-
-
-    	//botonCancelar.setWidth(vista.getWidth()/2);
     	
 		adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
 		listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
 	}
 	
 	public void onClickAceptar(View vista) {		
-		ArrayList<String> seleccionados = recorreSeleccionados();
-		//TODO
+		ArrayList<Integer> seleccionados = recorreSeleccionados();
+		
+		// Iniciamos la nueva actividad y le pasamos los datos del restaurante
+  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
+  		
+  		String ids = "";
+  		for(int i =0; i< seleccionados.size(); i ++){
+  			ids = ids + seleccionados.get(i).toString() + ",";
+  		}
+  		//Quitamos la última coma
+  		ids = ids.substring(0, ids.length()-1);
+
+  		intent.putExtra("ids", ids);
+		//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
+  		intent.putExtra("esGeneral", false);
+  		//variable que indica si tiene que aparecer el tab de informacion o no
+  		intent.putExtra("sinInfo", true);
+  		
+  		startActivity(intent);
 	}
 	
-	private ArrayList<String> recorreSeleccionados() {
-		ArrayList<String> seleccionados =new ArrayList<String>();
+	private ArrayList<Integer> recorreSeleccionados() {
+		ArrayList<Integer> seleccionados =new ArrayList<Integer>();
 		for(int i =0; i< restaurantes.size(); i ++){
 			if(restaurantes.get(i).isSelected())
-				seleccionados.add(restaurantes.get(i).getNombreRestaurante());//Puede ser por el id mejor
+				seleccionados.add(restaurantes.get(i).getIdRestaurante());
 		}
 		return seleccionados;
 	}
@@ -187,9 +197,31 @@ public class GeneralRestaurantes extends Activity {
 	}
 	
 	public void onClickTodos(View vista) {	
-		// Iniciamos la nueva actividad
-		Intent intent = new Intent(GeneralRestaurantes.this, GraficaGeneral.class);
-		intent.putExtra("tipo", "porAnio");
-		startActivity(intent);
+		ArrayList<Integer> todos = dameIds();
+		
+		// Iniciamos la nueva actividad y le pasamos los datos del restaurante
+  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
+  		
+  		String ids = "";
+  		for(int i =0; i< todos.size(); i ++){
+  			ids = ids + todos.get(i).toString() + ",";
+  		}
+  		//Quitamos la última coma
+  		ids = ids.substring(0, ids.length()-1);
+
+  		intent.putExtra("ids", ids);
+		//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
+  		intent.putExtra("esGeneral", true);
+  		//variable que indica si tiene que aparecer el tab de informacion o no
+  		intent.putExtra("sinInfo", true);
+	  		
+  		startActivity(intent);
+	}
+	
+	private ArrayList<Integer> dameIds() {
+		ArrayList<Integer> todos =new ArrayList<Integer>();
+		for(int i =0; i< restaurantes.size(); i ++)
+			todos.add(restaurantes.get(i).getIdRestaurante());
+		return todos;
 	}
 }
