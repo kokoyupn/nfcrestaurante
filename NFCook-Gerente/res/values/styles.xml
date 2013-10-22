@@ -23,5 +23,10 @@
 	<color name="verde4">#A9CBAD</color>
 	<color name="verde5">#CAE0CD</color>
 		
+	<style name="starRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@layout/ratingstars</item>
+        <item name="android:minHeight">30dip</item>
+        <item name="android:maxHeight">30dip</item>
+    </style>
 
 </resources>

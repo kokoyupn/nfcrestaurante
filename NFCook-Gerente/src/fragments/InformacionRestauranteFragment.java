@@ -17,9 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
-
-import com.example.nfcook_gerente.R;
 
 
 /**
@@ -50,16 +49,22 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    String poblacion = bundleInfo.getString("poblacion");
 	    String logoRestaurante = bundleInfo.getString("logo");
 	    String imagenFachada = bundleInfo.getString("imagen");
+	    float ratingRestaurante = bundleInfo.getFloat("rating");
 	    
 	    // nombre restaurante
 	    TextView nombreRes = (TextView) vista.findViewById(R.id.nombreRestaurante);
 	    nombreRes.setText(nombreRestaurante); 
+	    
+	    // rating restaurante
+	    RatingBar ratingRes = (RatingBar) vista.findViewById(R.id.ratingRestaurante);
+	    ratingRes.setRating(ratingRestaurante);
 	     
 	    // teléfono restaurante
 	    TextView telefonoRes = (TextView) vista.findViewById(R.id.telefonoRestaurante);
 	    telefonoRes.setText(Html.fromHtml("<u>" + telefonoRestaurante + "</u>")); 
 	    telefonoRes.setOnClickListener(new View.OnClickListener() {
-	        public void onClick(View arg0) {
+	        @Override
+			public void onClick(View arg0) {
 	        	onClickPhoneCall(); 
 	        }
 	    });
@@ -68,7 +73,8 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    TextView calleRes = (TextView) vista.findViewById(R.id.calleRestaurante);
 	    calleRes.setText(calleRestaurante); 
 	    calleRes.setOnClickListener(new View.OnClickListener() {
-	        public void onClick(View arg0) {
+	        @Override
+			public void onClick(View arg0) {
 	        	onClickDirections();
 	        }
 	    });
@@ -84,7 +90,8 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    // botón llamar
 	    Button botonLlamar = (Button) vista.findViewById(R.id.llamar);
 	    botonLlamar.setOnClickListener(new View.OnClickListener() {
-	        public void onClick(View arg0) {
+	        @Override
+			public void onClick(View arg0) {
 	        	onClickPhoneCall(); 	        	
 	        }
 	    });
@@ -92,7 +99,8 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    // botón mapas
 	    Button botonMapas = (Button) vista.findViewById(R.id.direcciones);
 	    botonMapas.setOnClickListener(new View.OnClickListener() {
-	        public void onClick(View arg0) {
+	        @Override
+			public void onClick(View arg0) {
 	        	onClickDirections(); 	        	
 	        }
 	    });
@@ -153,12 +161,16 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	 * no hace falta rellenarlos porque son solo para realizar acciones
 	 * al cambio de localización, al estar disabled, enabled, o al cambiar el estado.
 	 */
+	@Override
 	public void onLocationChanged(Location location) {}
 
+	@Override
 	public void onProviderDisabled(String provider) {}
 
+	@Override
 	public void onProviderEnabled(String provider) {}
 
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {}
 	
 	

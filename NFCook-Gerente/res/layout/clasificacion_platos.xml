@@ -1,0 +1,109 @@
+<ScrollView  
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/verde5" >
+    
+	<TableLayout 
+ 		android:id="@+id/tableLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	   	android:layout_marginLeft="15dp"
+	    android:layout_marginRight="15dp" >
+	
+	    <TableRow
+	        android:id="@+id/tableRowButtons"
+	        android:layout_width="match_parent"
+	        android:layout_height="50dp"
+	        android:layout_marginTop="20dp"
+	        android:layout_marginBottom="20dp"
+	        android:layout_gravity="top"
+	        android:gravity="top"  >
+	        
+  		    <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_weight="0.5" >
+
+            <Button
+                android:id="@+id/buttonFacturacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickFacturacion"
+                android:text="Facturacion"
+                android:visibility="visible" />
+
+        	</LinearLayout>
+        
+  		    <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_weight="0.5" >
+
+            <Button
+                android:id="@+id/buttonDemanda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickDemanda"
+                android:text="Demanda"
+                android:visibility="visible" />
+
+       		</LinearLayout>
+  		</TableRow>
+  		
+  		<TableRow
+	        android:id="@+id/tableRowHead"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+
+		    <TextView
+		            android:id="@+id/posicion"
+	            	android:layout_width="wrap_content"
+	            	android:layout_height="wrap_content"
+	            	android:text="Pos"
+	            	android:layout_weight="0.2"
+	            	android:gravity="center_horizontal"
+	            	android:textAppearance="?android:attr/textAppearanceMedium"
+	            	android:textColor="@color/blanco"
+	            	android:textStyle="bold"
+	               	android:background="@color/head_style" />
+		    
+		    <TextView
+		            android:id="@+id/nombre"
+	            	android:layout_width="wrap_content"
+	            	android:layout_height="wrap_content"
+		            android:text="Nombre" 	            	
+	            	android:layout_weight="0.2"
+	            	android:gravity="center_horizontal"
+	            	android:textAppearance="?android:attr/textAppearanceMedium"
+	            	android:textColor="@color/blanco"
+	            	android:textStyle="bold"
+	            	android:background="@color/head_style" />
+		    
+		    <TextView
+		            android:id="@+id/opcion"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="Opcion"	            	
+	           		android:layout_weight="0.2"
+	           		android:gravity="center_horizontal"
+	           		android:textAppearance="?android:attr/textAppearanceMedium"
+	           		android:textColor="@color/blanco"
+	            	android:textStyle="bold"
+	            	android:background="@color/head_style" />
+		    
+		    <TextView
+		            android:id="@+id/fotoPlato"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="Foto"	            	
+	            	android:layout_weight="0.2"
+	            	android:gravity="center_horizontal"
+	            	android:textAppearance="?android:attr/textAppearanceMedium"
+	            	android:textColor="@color/blanco"
+	            	android:textStyle="bold"
+	            	android:background="@color/head_style"/>
+
+			</TableRow>
+  		</TableLayout>
+</ScrollView>
