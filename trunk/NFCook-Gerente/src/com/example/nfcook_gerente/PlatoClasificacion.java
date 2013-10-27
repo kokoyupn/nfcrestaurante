@@ -3,7 +3,7 @@ package com.example.nfcook_gerente;
 public class PlatoClasificacion {
 
 	private String restaurante, nombre, foto;
-	private int precio, cantidadPedido;
+	private int precio, cantidadPedido, facturacion;
 	
 	public PlatoClasificacion (String restaurante, String nombre, String foto, int precio, int cantidadPedido){
 		this.restaurante = restaurante;
@@ -11,7 +11,7 @@ public class PlatoClasificacion {
 		this.foto = foto;
 		this.precio = precio;
 		this.cantidadPedido = cantidadPedido;
-		
+		this.facturacion = (precio * cantidadPedido);
 	}
 
 	public String getRestaurante() {
@@ -33,6 +33,9 @@ public class PlatoClasificacion {
 	public int getCantidadPedido() {
 		return cantidadPedido;
 	}
-	
+
+	public int getFacturacion() {
+		return facturacion;
+	}
 	
 }
