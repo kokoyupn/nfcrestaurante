@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onClickFacturacion"
-                android:background="@drawable/ic_facturacion2"
+                android:background="@color/boton_facturacion_style"
                 android:visibility="visible"  />
             
         	</LinearLayout>
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onClickDemanda"
-                android:background="@drawable/ic_demanda"
+                android:background="@color/boton_demanda_style"
                 android:visibility="visible" />
 
        		</LinearLayout>
