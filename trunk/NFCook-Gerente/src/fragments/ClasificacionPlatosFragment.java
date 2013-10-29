@@ -2,7 +2,6 @@ package fragments;
 
 import java.util.ArrayList;
 
-import com.example.clasificacion.R;
 import com.example.nfcook_gerente.PlatoClasificacion;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,10 +26,13 @@ public class ClasificacionPlatosFragment extends Fragment {
 	private TableRow rowPlato;
 	private ImageView fotoPlato;
 	private TextView posPlato, nombrePlato;
-	
+	private View vista;
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+	    vista = inflater.inflate(R.layout.clasificacion_platos, container, false);
 
 		// Quitamos barra de titulo de la aplicacion
         getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
