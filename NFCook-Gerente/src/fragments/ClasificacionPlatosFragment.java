@@ -37,10 +37,6 @@ public class ClasificacionPlatosFragment extends Fragment {
 
 	    vista = inflater.inflate(R.layout.clasificacion_platos, container, false);
 
-		// Quitamos barra de titulo de la aplicacion
-        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-
 		/* Consultaremos la base de datos de favoritos y la utilizaremos para mostrar los datos
 		* Habrá que mirar solo por el restaurante recibido
 		*/
