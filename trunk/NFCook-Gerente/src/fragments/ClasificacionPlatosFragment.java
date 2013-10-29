@@ -3,8 +3,6 @@ package fragments;
 import java.util.ArrayList;
 
 import com.example.nfcook_gerente.PlatoClasificacion;
-import com.example.nfcook_gerente.R;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -13,6 +11,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -39,6 +38,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 		// Quitamos barra de titulo de la aplicacion
         getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+
 		/* Consultaremos la base de datos de favoritos y la utilizaremos para mostrar los datos
 		* Habrá que mirar solo por el restaurante recibido
 		*/
@@ -54,6 +54,22 @@ public class ClasificacionPlatosFragment extends Fragment {
 		// Tabla de clasificacion de platos
 		tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
 		
+		Button botonDemanda = (Button) vista.findViewById(R.id.buttonDemanda);
+	    botonDemanda.setOnClickListener(new View.OnClickListener() {
+	        @Override
+			public void onClick(View arg0) {
+	        	onClickDemanda(); 	        	
+	        }
+	    });
+
+	    Button botonFacturacion = (Button) vista.findViewById(R.id.buttonFacturacion);
+	    botonFacturacion.setOnClickListener(new View.OnClickListener() {
+	        @Override
+			public void onClick(View arg0) {
+	        	onClickFacturacion(); 	        	
+	        }
+	    });
+
 		ordenaPlatos(0); // 0 = Demanda
 		completaTablaPlatos(platosFavoritos); 
     	Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por demanda",Toast.LENGTH_SHORT).show();	
@@ -61,7 +77,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 		return vista;
 	}
 	
-public void onClickDemanda(View vista){
+	public void onClickDemanda(){
 		
 		// Ordenaremos los platos en funcion de su demanda
 		ordenaPlatos(0); // 0 = Demanda	
@@ -75,7 +91,7 @@ public void onClickDemanda(View vista){
 	}
 	
 	
-	public void onClickFacturacion(View vista){
+	public void onClickFacturacion(){
 		
 		// Ordenaremos los platos en funcion de su facturacion
 		ordenaPlatos(1); // 1 = Facturacion
