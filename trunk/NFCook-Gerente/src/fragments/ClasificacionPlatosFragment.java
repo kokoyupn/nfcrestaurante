@@ -2,7 +2,9 @@ package fragments;
 
 import java.util.ArrayList;
 
-import android.R;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -17,6 +19,7 @@ import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import baseDatos.HandlerGenerico;
 
 import com.example.nfcook_gerente.PlatoClasificacion;
 
@@ -29,7 +32,8 @@ public class ClasificacionPlatosFragment extends Fragment {
 	private TextView posPlato, nombrePlato;
 	private View vista;
 	private Button botonFacturacion, botonDemanda;
-
+	private HandlerGenerico sqlRestaurantes;
+	private SQLiteDatabase dbRestaurantes;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,12 +45,13 @@ public class ClasificacionPlatosFragment extends Fragment {
 		*/
 		platosFavoritos = new ArrayList<PlatoClasificacion>();
 		
-		platosFavoritos.add(new PlatoClasificacion("Foster", "Hollywood Combo", "fh2", 12, 40)); // facturacion 480
-		platosFavoritos.add(new PlatoClasificacion("Foster", "Bacon Cheese Fries", "fh1", 9, 41)); // facturacion 369
-		platosFavoritos.add(new PlatoClasificacion("Foster", "Nachos San Fernando", "fh3", 10, 30)); // facturacion 300
-		platosFavoritos.add(new PlatoClasificacion("Foster", "Iberian Ribs", "fh9", 15, 25)); // facturacion 375
-		platosFavoritos.add(new PlatoClasificacion("Foster", "Director Choice", "fh11", 11, 55)); // facturacion 605
-
+//		platosFavoritos.add(new PlatoClasificacion("Foster", "Hollywood Combo", "fh2", 12, 40)); // facturacion 480
+//		platosFavoritos.add(new PlatoClasificacion("Foster", "Bacon Cheese Fries", "fh1", 9, 41)); // facturacion 369
+//		platosFavoritos.add(new PlatoClasificacion("Foster", "Nachos San Fernando", "fh3", 10, 30)); // facturacion 300
+//		platosFavoritos.add(new PlatoClasificacion("Foster", "Iberian Ribs", "fh9", 15, 25)); // facturacion 375
+//		platosFavoritos.add(new PlatoClasificacion("Foster", "Director Choice", "fh11", 11, 55)); // facturacion 605
+//		
+		importarBaseDatos();
 
 			// Tabla de clasificacion de platos
 			tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
@@ -70,6 +75,43 @@ public class ClasificacionPlatosFragment extends Fragment {
 	    onClickDemanda(true);
 	    
 		return vista;
+	}
+	
+	
+	public void importarBaseDatos(){
+		//Importamos la base de datos
+		try {
+			sqlRestaurantes = new HandlerGenerico(getActivity().getApplicationContext(),
+					"/data/data/com.example.nfcook_gerente/databases/",
+					"MiBaseFav.db"); 
+			dbRestaurantes = sqlRestaurantes.open();
+		} catch (SQLiteException e) {
+			System.out.println("CATCH");
+			Toast.makeText(getActivity().getApplicationContext(),
+					"NO EXISTE LA BASE DE DATOS", Toast.LENGTH_SHORT).show(); 
+		}
+		
+		//Leemos los datos de la base de datos
+		try{
+		String[] campos = new String[]{"Restaurante","Nombre","Foto","Precio","CantidadPedido"};
+	   
+		Cursor c = dbRestaurantes.query("Restaurantes", campos, null, null, null, null,null);
+	    
+		//Cargamos los datos en la los atributos correspondientes de la clase
+		platosFavoritos = new ArrayList<PlatoClasificacion>();
+		while(c.moveToNext()){
+			platosFavoritos.add(new PlatoClasificacion(	c.getString(0),	// restaurante
+														c.getString(1),	// nombre
+														c.getString(2), // foto
+														c.getInt(3), 	// precio
+														c.getInt(4))); 	// cantidadPedido
+														
+		}
+	   
+		}catch(Exception e){
+			System.out.println("Error en la carga de Clasificacion de Platos");
+		}
+		
 	}
 	
 	
