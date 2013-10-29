@@ -2,25 +2,23 @@ package fragments;
 
 import java.util.ArrayList;
 
-import com.example.nfcook_gerente.PlatoClasificacion;
-import com.example.nfcook_gerente.R;
-
+import android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TableLayout.LayoutParams;
+
+import com.example.nfcook_gerente.PlatoClasificacion;
 
 public class ClasificacionPlatosFragment extends Fragment {
 
@@ -30,6 +28,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 	private ImageView fotoPlato;
 	private TextView posPlato, nombrePlato;
 	private View vista;
+	private Button botonFacturacion, botonDemanda;
 
 	
 	@Override
@@ -49,41 +48,46 @@ public class ClasificacionPlatosFragment extends Fragment {
 		platosFavoritos.add(new PlatoClasificacion("Foster", "Director Choice", "fh11", 11, 55)); // facturacion 605
 
 
-		// Tabla de clasificacion de platos
-		tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
-		
-		Button botonDemanda = (Button) vista.findViewById(R.id.buttonDemanda);
-	    botonDemanda.setOnClickListener(new View.OnClickListener() {
-	        @Override
-			public void onClick(View arg0) {
-	        	onClickDemanda(); 	        	
-	        }
-	    });
+			// Tabla de clasificacion de platos
+			tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
+			
+			botonDemanda = (Button) findViewById(R.id.buttonDemanda);
+		    botonDemanda.setOnClickListener(new View.OnClickListener() {
+		        @Override
+				public void onClick(View arg0) {
+		        	onClickDemanda(false); 	        	
+		        }
+		    });
+	
+		    botonFacturacion = (Button) findViewById(R.id.buttonFacturacion);
+		    botonFacturacion.setOnClickListener(new View.OnClickListener() {
+		        @Override
+				public void onClick(View arg0) {
+		        	onClickFacturacion(); 	        	
+		        }
+		    });
 
-	    Button botonFacturacion = (Button) vista.findViewById(R.id.buttonFacturacion);
-	    botonFacturacion.setOnClickListener(new View.OnClickListener() {
-	        @Override
-			public void onClick(View arg0) {
-	        	onClickFacturacion(); 	        	
-	        }
-	    });
-
-		ordenaPlatos(0); // 0 = Demanda
-		completaTablaPlatos(platosFavoritos); 
-    	Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por demanda",Toast.LENGTH_SHORT).show();	
-		
+	    onClickDemanda(true);
+	    
 		return vista;
 	}
 	
-	public void onClickDemanda(){
+	
+	public void onClickDemanda(boolean primeraVez){
 		
 		// Ordenaremos los platos en funcion de su demanda
 		ordenaPlatos(0); // 0 = Demanda	
 		
 		// borramos desde 2 porque la primera son los botones y la segunda la cabecera de la tabla
-		tablaClasificacion.removeViews(2, platosFavoritos.size()); 
+		if (!primeraVez)
+			tablaClasificacion.removeViews(2, platosFavoritos.size()); 
 		
 		completaTablaPlatos(platosFavoritos);
+	    botonDemanda.setBackgroundResource(getResources().getIdentifier("ic_demandaclickado", "drawable", getActivity().getPackageName()));
+	    botonFacturacion.setBackgroundResource(getResources().getIdentifier("ic_facturacion2", "drawable", getActivity().getPackageName()));
+	    botonDemanda.refreshDrawableState();
+		botonFacturacion.refreshDrawableState();
+		
     	Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por demanda",Toast.LENGTH_SHORT).show();	
 
 	}
@@ -98,8 +102,14 @@ public class ClasificacionPlatosFragment extends Fragment {
 		tablaClasificacion.removeViews(2, platosFavoritos.size());
 		
 		completaTablaPlatos(platosFavoritos); 
-    	Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por facturación",Toast.LENGTH_SHORT).show();	
+		botonFacturacion.setBackgroundResource(getResources().getIdentifier("ic_facturacion2clickado", "drawable", getActivity().getPackageName()));
+	    botonDemanda.setBackgroundResource(getResources().getIdentifier("ic_demanda", "drawable", getActivity().getPackageName()));
+		botonDemanda.refreshDrawableState();
+		botonFacturacion.refreshDrawableState();
+
+		Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por facturación",Toast.LENGTH_SHORT).show();	
 	}
+	
 	
 	
 	/*
