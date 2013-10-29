@@ -3,6 +3,8 @@ package fragments;
 import java.util.ArrayList;
 
 import com.example.nfcook_gerente.PlatoClasificacion;
+import com.example.nfcook_gerente.R;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -36,8 +38,6 @@ public class ClasificacionPlatosFragment extends Fragment {
 
 		// Quitamos barra de titulo de la aplicacion
         getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
 		/* Consultaremos la base de datos de favoritos y la utilizaremos para mostrar los datos
 		* Habrá que mirar solo por el restaurante recibido
@@ -52,7 +52,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 
 
 		// Tabla de clasificacion de platos
-		tablaClasificacion = (TableLayout) findViewById(R.id.tableLayout);
+		tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
 		
 		ordenaPlatos(0); // 0 = Demanda
 		completaTablaPlatos(platosFavoritos); 
