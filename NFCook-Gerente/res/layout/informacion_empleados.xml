@@ -1,55 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>    
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/verde5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+<LinearLayout 	android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/verde5" >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical" >
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp" >
+            android:layout_height="match_parent" >
 
             <ImageView
                 android:id="@+id/fotoEmpleado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
                 android:layout_marginLeft="5dp" />
 
             <TextView
                 android:id="@+id/datosEmpleado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
                 android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/botonCalendario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Calendario" />
+
         </FrameLayout>
 
-        <CalendarView
-            android:id="@+id/calendario"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/azul" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/periodoElegido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/negro" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_gravity="bottom|center_horizontal"
         android:orientation="vertical" >
+        
+        <com.example.nfcook_gerente.MultitouchPlot
+            android:id="@+id/graficaIngresos"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_gravity="center_horizontal"
+            title="Grafica"/>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,62 +89,28 @@
 
                 <Button
                     android:id="@+id/dibDia"
-                    style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/dibMes"
-                    style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Button" />
 
                 <Button
                     android:id="@+id/dibAnio"
-                    style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Button" />
+
             </LinearLayout>
         </FrameLayout>
 
-        <com.androidplot.xy.XYPlot
-            android:id="@+id/graficaIngresos"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp" />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <Spinner
-                    android:id="@+id/selDia"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <Spinner
-                    android:id="@+id/selMes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Spinner
-                    android:id="@+id/selAnio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-               
-            </LinearLayout>
-
-        </FrameLayout>
+        
 
     </LinearLayout>
+</LinearLayout>
+</ScrollView>
 
-</FrameLayout>
