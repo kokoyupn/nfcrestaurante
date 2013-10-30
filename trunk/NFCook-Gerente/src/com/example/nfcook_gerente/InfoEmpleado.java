@@ -12,6 +12,8 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -31,7 +33,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import baseDatos.HandlerGenerico;
 
-import com.androidplot.xy.*;
+import com.androidplot.series.XYSeries;
+import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.SizeMetrics;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYStepMode;
+
 
 import android.widget.CalendarView.OnDateChangeListener;
 import auxiliares.ObjetoAuxGrafica;
@@ -50,7 +59,7 @@ import auxiliares.ObjetoAuxGrafica;
 @SuppressLint("SimpleDateFormat")
 public class InfoEmpleado extends Activity {
 	
-	private XYPlot mySimpleXYPlot;
+	private MultitouchPlot mySimpleXYPlot;
 	private HandlerGenerico sqlEmpleados,sqlEmpleado,sqlFicha,sqlIngresos;
 	private SQLiteDatabase dbEmpleados,dbEmpleado,dbFicha,dbIngresos;
 	
@@ -66,13 +75,12 @@ public class InfoEmpleado extends Activity {
 	 
 	
 	private ImageView imageViewFoto;
-	private FrameLayout contenedorFoto;
 	private TextView nombreYApellidos;
-	private Spinner selDia, selMes, selAnio;
-	private Button dibDia, dibMes, dibAnio;
-	private CalendarView calendario;
+	private Button dibDia, dibMes, dibAnio,botonCalendario;
 	private String [] spinnerDia,spinnerMes;
 	private ArrayList<String> spinnerAnio;
+	private TextView periodoElegido;
+	
 	
 	
 	
@@ -88,50 +96,55 @@ public class InfoEmpleado extends Activity {
 		cargarInfoEmpleado();
 		mostrarInfo();
 		funcionalidadCalendario();
-		cargarSpinners();
 		dibujarGrafica();
 	}
 	
-	private void cargarSpinners() {
+	
+
+	private void cargarSpinners(String distincion,Spinner selDia,Spinner selMes, Spinner selAnio) {
 		
-		//Se carga el spinner de los dias del mes
-		spinnerDia = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14",
-				"15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
-		selDia = (Spinner) findViewById(R.id.selDia);
-		ArrayAdapter adapterDia = new ArrayAdapter(this,android.R.layout.simple_spinner_item, spinnerDia);
-		selDia.setAdapter(adapterDia);
-		selDia.setOnItemSelectedListener( 
-                new AdapterView.OnItemSelectedListener() 
-                {
-                     public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
-                     {   
-                    	 diaElegido = spinnerDia[position];                           
-                     }  
-                     public void onNothingSelected(AdapterView<?> parent) 
-                     {
-                         
-                     }
-               }
-                );
+		if(distincion.equals("dia")){
+			//Se carga el spinner de los dias del mes
+			spinnerDia = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14",
+					"15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
+			//selDia = (Spinner) findViewById(R.id.selDia);
+			ArrayAdapter adapterDia = new ArrayAdapter(this,android.R.layout.simple_spinner_item, spinnerDia);
+			selDia.setAdapter(adapterDia);
+			selDia.setOnItemSelectedListener( 
+	                new AdapterView.OnItemSelectedListener() 
+	                {
+	                     public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
+	                     {   
+	                    	 diaElegido = spinnerDia[position];                           
+	                     }  
+	                     public void onNothingSelected(AdapterView<?> parent) 
+	                     {
+	                         
+	                     }
+	               }
+	                );
+		}
 		
-		//Se carga el spinner de los meses
-		spinnerMes = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12"};
-		selMes = (Spinner) findViewById(R.id.selMes);
-		ArrayAdapter adapterMes = new ArrayAdapter(this,android.R.layout.simple_spinner_item, spinnerMes);
-		selMes.setAdapter(adapterMes);
-		selMes.setOnItemSelectedListener( 
-                new AdapterView.OnItemSelectedListener() 
-                {
-                     public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
-                     {   
-                    	 mesElegido = spinnerMes[position];                           
-                     }  
-                     public void onNothingSelected(AdapterView<?> parent) 
-                     {
-                         
-                     }
-               }
-                );
+		if( distincion.equals("mes") || distincion.equals("dia") ){
+			//Se carga el spinner de los meses
+			spinnerMes = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12"};
+			//selMes = (Spinner) findViewById(R.id.selMes);
+			ArrayAdapter adapterMes = new ArrayAdapter(this,android.R.layout.simple_spinner_item, spinnerMes);
+			selMes.setAdapter(adapterMes);
+			selMes.setOnItemSelectedListener( 
+	                new AdapterView.OnItemSelectedListener() 
+	                {
+	                     public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
+	                     {   
+	                    	 mesElegido = spinnerMes[position];                           
+	                     }  
+	                     public void onNothingSelected(AdapterView<?> parent) 
+	                     {
+	                         
+	                     }
+	               }
+	                );
+		}
 		
 		
 		//Se carga el spinner de los anios que tienes recogidos en la base de datos
@@ -142,7 +155,7 @@ public class InfoEmpleado extends Activity {
 			if( ! spinnerAnio.contains(c.getString(0)))
 				spinnerAnio.add(c.getString(0));	    	
 	    }
-		selAnio = (Spinner) findViewById(R.id.selAnio);
+		//selAnio = (Spinner) findViewById(R.id.selAnio);
 		ArrayAdapter adapterAnio = new ArrayAdapter(this,android.R.layout.simple_spinner_item, spinnerAnio);
 		selAnio.setAdapter(adapterAnio);
 		
@@ -163,24 +176,17 @@ public class InfoEmpleado extends Activity {
 		
 	}
 	
-	public void dibujarGrafica(){
-		
-		mySimpleXYPlot = (XYPlot) findViewById(R.id.graficaIngresos);
-		
-		dibDia = (Button)findViewById(R.id.dibDia);
-		dibMes = (Button)findViewById(R.id.dibMes);
-		dibAnio = (Button)findViewById(R.id.dibAnio);
-		dibDia.setText("Dia");
-		dibMes.setText("Mes");
-		dibAnio.setText("Anio");
-		
-		dibDia.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	mySimpleXYPlot.clear();
+	
+	
+	protected void onClickBotonAceptarAlertDialogDia(final MultitouchPlot grafica,final Builder ventanaEmergenteSpinners) {
+		ventanaEmergenteSpinners.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				
+				grafica.clear();
             	
-            	String[] campos = new String[]{"Hora","Importe"};
-     		    String[] datos = new String[]{diaElegido,mesElegido,anioElegido};
-    			Cursor c = dbIngresos.query("Ingresos",campos, "Dia=? AND Mes=? AND Anio=?",datos, null, null,null);
+            	String[] campos = new String[]{"Hora","Importe","IdEmpleado"};
+     		    String[] datos = new String[]{diaElegido,mesElegido,anioElegido,idEmpleado};
+    			Cursor c = dbIngresos.query("Ingresos",campos, "Dia=? AND Mes=? AND Anio=? AND IdEmpleado=?",datos, null, null,null);
     		    
     			//Se llena un arrayList con la cantidad de 
     			ArrayList<ObjetoAuxGrafica> temporal = new ArrayList<ObjetoAuxGrafica>();
@@ -205,7 +211,7 @@ public class InfoEmpleado extends Activity {
 	    		    }
     		    }
     		    Collections.sort(temporal);//Ordena el arrayList en funcion del campo "tiempo" del objeto que ocupa cada posicion
-    		        		    
+    		        		  
     		    Number [] ejeY = new Number[temporal.size()+1];//Para que empiece en el cero el eje Y
     		    ejeY[0] = 0;
     		    Number [] ejeX = new Number[temporal.size()+1];
@@ -218,27 +224,51 @@ public class InfoEmpleado extends Activity {
     		    //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
     		    XYSeries series1 = new SimpleXYSeries(
             			Arrays.asList(ejeX),
-                        Arrays.asList(ejeY),  // Array de datos
+                       Arrays.asList(ejeY),  // Array de datos
                         "Facturacion"); // Nombre de la primera serie
-                
+                        
                 //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-                LineAndPointFormatter formato = 
-                		new LineAndPointFormatter( Color.rgb(0, 200, 0),Color.rgb(0, 100, 0),Color.rgb(150, 190, 150), null );
+                LineAndPointFormatter formato = new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(0, 100, 0), Color.rgb(150, 190, 150));              
          
                 //Una vez definida la serie (datos y estilo), la añadimos al panel
-                mySimpleXYPlot.addSeries(series1, formato);
-                mySimpleXYPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas las escriba sin decimales
-                mySimpleXYPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
-                mySimpleXYPlot.redraw();
-            }});	
+                grafica.addSeries(series1, formato);
+                
+                //EjeX
+                grafica.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
+                grafica.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+                //grafica.setRangeStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+                grafica.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
+                //EjeY
+                Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
+                grafica.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+                
+                grafica.setDomainLabel("Hora");
+                grafica.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE));
+                grafica.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
+                grafica.setTitle(diaElegido + "/" + mesElegido + "/"+ anioElegido);
+                
+                grafica.disableAllMarkup();
+                grafica.redraw();
+                
+                periodoElegido = (TextView) findViewById(R.id.periodoElegido);
+                periodoElegido.setText("Fecha de la grafica: " + 
+                		diaElegido + "/" + mesElegido + "/"+ anioElegido);
+                		
 		
-		dibMes.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	mySimpleXYPlot.clear();
+			}
+		});	
+	}
+	
+	
+	protected void onClickBotonAceptarAlertDialogMes(final MultitouchPlot grafica,final Builder ventanaEmergenteSpinners) {
+		ventanaEmergenteSpinners.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+		
+				grafica.clear();
             	
-            	String[] campos = new String[]{"Dia","Importe"};
-     		    String[] datos = new String[]{mesElegido,anioElegido};
-    			Cursor c = dbIngresos.query("Ingresos",campos, "Mes=? AND Anio=?",datos, null, null,null);
+            	String[] campos = new String[]{"Dia","Importe","IdEmpleado"};
+     		    String[] datos = new String[]{mesElegido,anioElegido,idEmpleado};
+    			Cursor c = dbIngresos.query("Ingresos",campos, "Mes=? AND Anio=? AND IdEmpleado=?",datos, null, null,null);
     		    
     			ArrayList<ObjetoAuxGrafica> temporal = new ArrayList<ObjetoAuxGrafica>();
     		    while(c.moveToNext()){
@@ -270,28 +300,55 @@ public class InfoEmpleado extends Activity {
     		    	ejeX[i+1] = Double.parseDouble(temporal.get(i).getTiempo());
     		    }
             	
+    		    //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
     		    XYSeries series1 = new SimpleXYSeries(
             			Arrays.asList(ejeX),
                         Arrays.asList(ejeY),  // Array de datos
                         "Facturacion"); // Nombre de la primera serie
-                
+                        
                 //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-                LineAndPointFormatter formato = 
-                		new LineAndPointFormatter( Color.rgb(0, 200, 0),Color.rgb(0, 100, 0),Color.rgb(150, 190, 150), null );
+                LineAndPointFormatter formato = new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(0, 100, 0), Color.rgb(150, 190, 150));              
+                
+    	         
          
-                //Una vez definida la serie (datos y estilo), la añadimos al panel
-                mySimpleXYPlot.addSeries(series1, formato);
-                mySimpleXYPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas las escriba sin decimales
-                mySimpleXYPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
-                mySimpleXYPlot.redraw();
-            }});
-		dibAnio.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	mySimpleXYPlot.clear();
+    		    //Una vez definida la serie (datos y estilo), la añadimos al panel
+                grafica.addSeries(series1, formato);
+                
+                //EjeX
+                grafica.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
+                grafica.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+                //grafica.setRangeStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+                grafica.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
+                //EjeY
+                Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
+                grafica.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+                
+                grafica.setDomainLabel("Dia");
+                grafica.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE));
+                grafica.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
+                grafica.setTitle(mesElegido + "/"+ anioElegido);
+                
+                grafica.disableAllMarkup();
+                grafica.redraw();
+                
+                periodoElegido = (TextView) findViewById(R.id.periodoElegido);
+                periodoElegido.setText("Fecha de la grafica: " + mesElegido + "/"+ anioElegido);
+		
+			}
+		});	
+	}
+	
+	
+	
+	protected void onClickBotonAceptarAlertDialogAnio(final MultitouchPlot grafica,final Builder ventanaEmergenteSpinners) {
+		ventanaEmergenteSpinners.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+		
+				grafica.clear();
             	
-            	String[] campos = new String[]{"Mes","Importe"};
-     		    String[] datos = new String[]{anioElegido};
-    			Cursor c = dbIngresos.query("Ingresos",campos, "Anio=?",datos, null, null,null);
+            	String[] campos = new String[]{"Mes","Importe","IdEmpleado"};
+     		    String[] datos = new String[]{anioElegido,idEmpleado};
+    			Cursor c = dbIngresos.query("Ingresos",campos, "Anio=? AND IdEmpleado=?",datos, null, null,null);
     		    
     			ArrayList<ObjetoAuxGrafica> temporal = new ArrayList<ObjetoAuxGrafica>();
     		    while(c.moveToNext()){
@@ -323,23 +380,103 @@ public class InfoEmpleado extends Activity {
     		    	ejeX[i+1] = Double.parseDouble(temporal.get(i).getTiempo());
     		    }
             	
+    		    //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
     		    XYSeries series1 = new SimpleXYSeries(
             			Arrays.asList(ejeX),
                         Arrays.asList(ejeY),  // Array de datos
                         "Facturacion"); // Nombre de la primera serie
-                
+                        
                 //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-                LineAndPointFormatter formato = 
-                		new LineAndPointFormatter( Color.rgb(0, 200, 0),Color.rgb(0, 100, 0),Color.rgb(150, 190, 150), null );
+                LineAndPointFormatter formato = new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(0, 100, 0), Color.rgb(150, 190, 150));              
+         
          
                 //Una vez definida la serie (datos y estilo), la añadimos al panel
-                mySimpleXYPlot.addSeries(series1, formato);
-                mySimpleXYPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas las escriba sin decimales
-                mySimpleXYPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
-                mySimpleXYPlot.redraw();
+                grafica.addSeries(series1, formato);
+                
+                //EjeX
+                grafica.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
+                grafica.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+                //grafica.setRangeStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+                grafica.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
+                //EjeY
+                Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
+                grafica.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+                
+                grafica.setDomainLabel("Mes");
+                grafica.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE));
+                grafica.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
+                grafica.setTitle(anioElegido);
+                
+                grafica.disableAllMarkup();
+                grafica.redraw();
+                
+                periodoElegido = (TextView) findViewById(R.id.periodoElegido);
+                periodoElegido.setText("Fecha de la grafica: " + anioElegido);
+		
+			}
+		});	
+	}
+	
+	public void dibujarGrafica(){
+		
+		mySimpleXYPlot = (MultitouchPlot) findViewById(R.id.graficaIngresos);
+		mySimpleXYPlot.setRangeLabel("Euros");
+		dibDia = (Button)findViewById(R.id.dibDia);
+		dibMes = (Button)findViewById(R.id.dibMes);
+		dibAnio = (Button)findViewById(R.id.dibAnio);
+		
+		dibDia.setText("Dia");
+		dibMes.setText("Mes");
+		dibAnio.setText("Anio");
+		
+		dibDia.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	
+            	AlertDialog.Builder ventanaEmergenteSpinners = new AlertDialog.Builder(InfoEmpleado.this);
+            	ventanaEmergenteSpinners.setNegativeButton("Cancelar", null);
+            	
+            	View vistaAviso = LayoutInflater.from(InfoEmpleado.this).inflate(R.layout.ventana_emergente_spinners_dia, null);
+				Spinner selDia = (Spinner)vistaAviso.findViewById(R.id.selDia);
+				Spinner selMes = (Spinner)vistaAviso.findViewById(R.id.selMes);
+				Spinner selAnio = (Spinner)vistaAviso.findViewById(R.id.selAnio);
+				ventanaEmergenteSpinners.setView(vistaAviso);
+				cargarSpinners("dia",selDia,selMes,selAnio);
+				onClickBotonAceptarAlertDialogDia(mySimpleXYPlot,ventanaEmergenteSpinners);
+				ventanaEmergenteSpinners.show();
+				
             }});
 		
-	}
+		dibMes.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	
+            	AlertDialog.Builder ventanaEmergenteSpinners = new AlertDialog.Builder(InfoEmpleado.this);
+            	ventanaEmergenteSpinners.setNegativeButton("Cancelar", null);
+            	
+            	View vistaAviso = LayoutInflater.from(InfoEmpleado.this).inflate(R.layout.ventana_emergente_spinners_mes, null);
+				Spinner selMes = (Spinner)vistaAviso.findViewById(R.id.selMes);
+				Spinner selAnio = (Spinner)vistaAviso.findViewById(R.id.selAnio);
+				ventanaEmergenteSpinners.setView(vistaAviso);
+				cargarSpinners("mes",null,selMes,selAnio);
+				onClickBotonAceptarAlertDialogMes(mySimpleXYPlot,ventanaEmergenteSpinners);
+				ventanaEmergenteSpinners.show();
+				
+           }});
+		dibAnio.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	
+            	AlertDialog.Builder ventanaEmergenteSpinners = new AlertDialog.Builder(InfoEmpleado.this);
+            	ventanaEmergenteSpinners.setNegativeButton("Cancelar", null);
+            	
+            	View vistaAviso = LayoutInflater.from(InfoEmpleado.this).inflate(R.layout.ventana_emergente_spinners_anio, null);
+				Spinner selAnio = (Spinner)vistaAviso.findViewById(R.id.selAnio);
+				ventanaEmergenteSpinners.setView(vistaAviso);
+				cargarSpinners("anio",null,null,selAnio);
+				onClickBotonAceptarAlertDialogAnio(mySimpleXYPlot,ventanaEmergenteSpinners);
+				ventanaEmergenteSpinners.show();
+				
+            }});
+		
+	}   	
 
 	
 
@@ -350,8 +487,8 @@ public class InfoEmpleado extends Activity {
 		
 		nombreYApellidos = (TextView)findViewById(R.id.datosEmpleado);
 		nombreYApellidos.setText(nombre + " " + apellido1 + " " + apellido2 + '\n' +
-				"Puesto:\n" + " " + puesto + '\n' + "DNI:\n" + " " + dni + '\n' + 
-				"Domicilio:\n" + " " + domicilio + '\n' + "Fecha de nacimiento:\n" + " " + fechaNacimiento);
+				"Puesto:" + " " + puesto + '\n' + "DNI:" + " " + dni + '\n' + 
+				"Domicilio:" + " " + domicilio + '\n' + "Fecha de nacimiento:" + " " + fechaNacimiento);
 	    
 		//Display display = getWindowManager().getDefaultDisplay();
 		//int ancho = display.getWidth();
@@ -392,86 +529,100 @@ public class InfoEmpleado extends Activity {
 	@SuppressLint({ "NewApi", "SimpleDateFormat" })
 	private void funcionalidadCalendario() {
 		
-		calendario = (CalendarView)findViewById(R.id.calendario);
-		
-		calendario.setFirstDayOfWeek(0x00000002);//Es el lunes el 0x00000002
-		
-		calendario.setOnDateChangeListener(new OnDateChangeListener() {
-
-            @SuppressLint("SimpleDateFormat")
-			@Override
-            public void onSelectedDayChange(CalendarView view, int year, int month,int dayOfMonth) {
-            	try{
-            		//El calendario empieza los meses en 0 como un array
-            		month++;
-            		
-	            	//Cálculo de las horas reales del empleado por contrato
-	            	String[] campos = new String[]{"HorasContrato"};
-	     		    String[] datos = new String[]{idEmpleado};
-	    			Cursor c = dbEmpleados.query("Empleados",campos, "idEmpleado=?",datos, null, null,null);
-	    		    c.moveToNext();
-	    		    int horasContrato = Integer.parseInt(c.getString(0));
-	    		    
-	    		    //Cálculo de las horas que trabaja el empleado en realidad
-	    		    String dia = null;
-	    		    String mes = null;
-	    		    if(dayOfMonth < 10){
-	    		    	dia = "0" + Integer.toString(dayOfMonth); 
-	    		    }else{
-	    		    	dia = Integer.toString(dayOfMonth);
-	    		    }
-	    		    
-	    		    if(month < 10){
-	    		    	mes = "0" + Integer.toString(month);    		    	
-	    		    }else{
-	    		    	mes = Integer.toString(month);
-	    		    }
-	    		    String fecha = dia + "/" + mes + "/" + year;
-	    		    String[] campos1 = new String[]{"IdEmpleado","Entrada","Salida"};
-	     		    String[] datos1 = new String[]{idEmpleado,fecha};
-	    			Cursor cu = dbEmpleado.query("Empleado",campos1, "IdEmpleado=? AND Fecha=?",datos1, null, null,null);
-	    			
-	    			if(cu.moveToNext() != false){
-		    			
-		    			SimpleDateFormat formatoFecha = new SimpleDateFormat("HH:mm:ss");
-	    				Date entrada = formatoFecha.parse(cu.getString(1));
-	    				Date salida = formatoFecha.parse(cu.getString(2));
-	
-	    				long diferencia = salida.getTime() - entrada.getTime(); 
-	    				int diasReales = (int) (diferencia / (1000*60*60*24));  
-	    				int horasReales = (int) ((diferencia - (1000*60*60*24*diasReales)) / (1000*60*60)); 
-	    				
-		    			/*
-		    			 * Con esto una vez se pone de un color, se queda de ese color a no ser que se cambie
-		    		    if(horasReales >= horasContrato){
-		    		    	calendario.setSelectedWeekBackgroundColor(Color.GREEN);
-		    		    }else{
-		    		    	calendario.setSelectedWeekBackgroundColor(Color.RED);
-		    		    }*/
-		    		    
-		    		     
-		                AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InfoEmpleado.this);
-		                ventanaEmergente.setNegativeButton("Aceptar", null);
-		                View vistaAviso = LayoutInflater.from(InfoEmpleado.this).inflate(R.layout.ventana_emergente_horas_trabajadas, null);
-		  				TextView texto = (TextView)vistaAviso.findViewById(R.id.texto);
-		  				String empleado = nombre + " " + apellido1 + " " + apellido2;
-		  				texto.setText( empleado + '\n' + 
-			  	    			"Ha trabajado: " + Integer.toString(horasReales) + " horas el dia: " + fecha + ".\n" +
-			  	    					"Sus horas por contrato son: " + Integer.toString(horasContrato));
-			  	    	ventanaEmergente.setView(vistaAviso);
-			  	    	ventanaEmergente.show();
-	    			}else{
-	    				String empleado = nombre + " " + apellido1 + " " + apellido2;
-	    				Toast.makeText(getApplicationContext(), empleado + " el dia " + fecha + " no ha trabajado", 0).show();
-			    		   
-	    			}
-	
-	            }catch(Exception e){
-	            	System.out.print("Error en la resta de horas del calendario");
-	            }
-            	
+		botonCalendario = (Button)findViewById(R.id.botonCalendario);
+		botonCalendario.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+				AlertDialog.Builder ventanaEmergenteCalendario = new AlertDialog.Builder(InfoEmpleado.this);
+				ventanaEmergenteCalendario.setNegativeButton("Aceptar", null);
+				
+		        View vistaAviso = LayoutInflater.from(InfoEmpleado.this).inflate(R.layout.ventana_emergente_calendario, null);
+				CalendarView calendario = (CalendarView)vistaAviso.findViewById(R.id.calendario);
+				TextView encabezado = (TextView) vistaAviso.findViewById(R.id.tituloCalendario);
+				encabezado.setText("Calendario");
+				
+				
+				calendario.setFirstDayOfWeek(0x00000002);//Es el lunes el 0x00000002
+				ventanaEmergenteCalendario.setView(vistaAviso);
+				ventanaEmergenteCalendario.show();
+				   
+				calendario.setOnDateChangeListener(new OnDateChangeListener() {
+					@SuppressLint("SimpleDateFormat")
+					@Override
+		            public void onSelectedDayChange(CalendarView view, int year, int month,int dayOfMonth) {
+		            	try{
+		            		//El calendario empieza los meses en 0 como un array
+		            		month++;
+		            		
+			            	//Cálculo de las horas reales del empleado por contrato
+			            	String[] campos = new String[]{"HorasContrato"};
+			     		    String[] datos = new String[]{idEmpleado};
+			    			Cursor c = dbEmpleados.query("Empleados",campos, "idEmpleado=?",datos, null, null,null);
+			    		    c.moveToNext();
+			    		    int horasContrato = Integer.parseInt(c.getString(0));
+			    		    
+			    		    //Cálculo de las horas que trabaja el empleado en realidad
+			    		    String dia = null;
+			    		    String mes = null;
+			    		    if(dayOfMonth < 10){
+			    		    	dia = "0" + Integer.toString(dayOfMonth); 
+			    		    }else{
+			    		    	dia = Integer.toString(dayOfMonth);
+			    		    }
+			    		    
+			    		    if(month < 10){
+			    		    	mes = "0" + Integer.toString(month);    		    	
+			    		    }else{
+			    		    	mes = Integer.toString(month);
+			    		    }
+			    		    String fecha = dia + "/" + mes + "/" + year;
+			    		    String[] campos1 = new String[]{"IdEmpleado","Entrada","Salida"};
+			     		    String[] datos1 = new String[]{idEmpleado,fecha};
+			    			Cursor cu = dbEmpleado.query("Empleado",campos1, "IdEmpleado=? AND Fecha=?",datos1, null, null,null);
+			    			
+			    			if(cu.moveToNext() != false){
+				    			
+				    			SimpleDateFormat formatoFecha = new SimpleDateFormat("HH:mm:ss");
+			    				Date entrada = formatoFecha.parse(cu.getString(1));
+			    				Date salida = formatoFecha.parse(cu.getString(2));
+			
+			    				long diferencia = salida.getTime() - entrada.getTime(); 
+			    				int diasReales = (int) (diferencia / (1000*60*60*24));  
+			    				int horasReales = (int) ((diferencia - (1000*60*60*24*diasReales)) / (1000*60*60)); 
+			    				
+				    			/*
+				    			 * Con esto una vez se pone de un color, se queda de ese color a no ser que se cambie
+				    		    if(horasReales >= horasContrato){
+				    		    	calendario.setSelectedWeekBackgroundColor(Color.GREEN);
+				    		    }else{
+				    		    	calendario.setSelectedWeekBackgroundColor(Color.RED);
+				    		    }*/
+				    		    
+				    		     
+				                AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(InfoEmpleado.this);
+				                ventanaEmergente.setNegativeButton("Aceptar", null);
+				                View vistaAviso = LayoutInflater.from(InfoEmpleado.this).inflate(R.layout.ventana_emergente_horas_trabajadas, null);
+				  				TextView texto = (TextView)vistaAviso.findViewById(R.id.texto);
+				  				String empleado = nombre + " " + apellido1 + " " + apellido2;
+				  				texto.setText( empleado + '\n' + 
+					  	    			"Ha trabajado: " + Integer.toString(horasReales) + " horas el dia: " + fecha + ".\n" +
+					  	    					"Sus horas por contrato son: " + Integer.toString(horasContrato));
+					  	    	ventanaEmergente.setView(vistaAviso);
+					  	    	ventanaEmergente.show();
+			    			}else{
+			    				String empleado = nombre + " " + apellido1 + " " + apellido2;
+			    				Toast.makeText(getApplicationContext(), empleado + " el dia " + fecha + " no ha trabajado", 0).show();
+					    		   
+			    			}
+			
+			            }catch(Exception e){
+			            	System.out.print("Error en la resta de horas del calendario");
+			            }
+		            	
+		            }
+		        });
             }
-        });
+		      
+		 });
 		
 		
 		/*Calendar nextYear = Calendar.getInstance();
