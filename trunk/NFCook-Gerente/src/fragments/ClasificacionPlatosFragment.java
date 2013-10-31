@@ -56,7 +56,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 			// Tabla de clasificacion de platos
 			tablaClasificacion = (TableLayout) vista.findViewById(R.id.tableLayout);
 			
-			botonDemanda = (Button) findViewById(R.id.buttonDemanda);
+			botonDemanda = (Button) vista.findViewById(R.id.buttonDemanda);
 		    botonDemanda.setOnClickListener(new View.OnClickListener() {
 		        @Override
 				public void onClick(View arg0) {
@@ -64,7 +64,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 		        }
 		    });
 	
-		    botonFacturacion = (Button) findViewById(R.id.buttonFacturacion);
+		    botonFacturacion = (Button) vista.findViewById(R.id.buttonFacturacion);
 		    botonFacturacion.setOnClickListener(new View.OnClickListener() {
 		        @Override
 				public void onClick(View arg0) {
