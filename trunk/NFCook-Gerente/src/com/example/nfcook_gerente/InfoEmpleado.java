@@ -41,7 +41,6 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYStepMode;
 
-
 import android.widget.CalendarView.OnDateChangeListener;
 import auxiliares.ObjetoAuxGrafica;
 
