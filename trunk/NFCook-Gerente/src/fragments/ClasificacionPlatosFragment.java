@@ -22,6 +22,7 @@ import android.widget.Toast;
 import baseDatos.HandlerGenerico;
 
 import com.example.nfcook_gerente.PlatoClasificacion;
+import com.example.nfcook_gerente.R;
 
 public class ClasificacionPlatosFragment extends Fragment {
 
