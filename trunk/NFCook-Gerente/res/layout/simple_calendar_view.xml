@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/foster_opera3" >
+            android:src="@drawable/foster_princesa13" >
         </ImageView>
     </LinearLayout>
 <LinearLayout 

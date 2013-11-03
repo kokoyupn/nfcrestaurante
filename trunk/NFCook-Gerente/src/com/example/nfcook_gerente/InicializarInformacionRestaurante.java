@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
@@ -69,6 +68,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     public void onCreate(Bundle savedInstanceState) {
 		//Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs);
 
@@ -148,9 +148,8 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
         listFragments.add(Fragment.instantiate(this, ClasificacionPlatosFragment.class.getName()));
 
-     	// Determinamos el ancho y largo de cada tab superior (120dp) y además le ponemos el fondo a cada uno
+     	// Ponemos el fondo a cada uno de los tabs
      	for(int i=0;i<listFragments.size();i++){
-     		tabs.getTabWidget().getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(120,60));
 	        tabs.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#A9CBAD"));
      	}
      	
@@ -172,19 +171,19 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     	textoTab.setTextColor(Color.BLACK);
     	// Asignamos el título e icono para cada tab
     	if(nombreTab.equals("tabInformacion")){
-     		textoTab.setText("INFORMACIÓN");
+     		textoTab.setText("  INFORMACIÓN  ");
      		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
      		//imagenTab.setImageResource(getResources().getIdentifier("inicio","drawable",this.getPackageName()));
      	}else if(nombreTab.equals("tabEmpleados")){
-    		textoTab.setText("EMPLEADOS");
+    		textoTab.setText("  EMPLEADOS  ");
      		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
     		//imagenTab.setImageResource(getResources().getIdentifier("pedido","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabIngresos")){
-    		textoTab.setText("INGRESOS");
+    		textoTab.setText("  INGRESOS  ");
      		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
     		//imagenTab.setImageResource(getResources().getIdentifier("pagar","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabClasificacionPlatos")){
-    		textoTab.setText("CLASIFICACIÓN\nDE PLATOS");
+    		textoTab.setText("  CLASIFICACIÓN  \nDE PLATOS");
      		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
     		//imagenTab.setImageResource(getResources().getIdentifier("calculadora","drawable",this.getPackageName()));
     	}
@@ -236,11 +235,10 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         ft.replace(R.id.FrameLayoutContenedorTabs, f);
         ft.commit();
         
-        //TODO Si queremos darle un titulo en el action bar
-		//Ponemos el título a la actividad
+        //Ponemos el título a la actividad
 		//Recogemos ActionBar
-		//ActionBar actionbar = getActionBar();
-		//actionbar.setTitle(" CONFIGURE SU MENÚ...");		
+//		ActionBar actionbar = getActionBar();
+//		actionbar.setTitle(" INFORMACIÓN DEL RESTAURANTE...");		
 	}
     
 	public View createTabContent(String tag) {

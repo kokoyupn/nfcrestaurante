@@ -67,6 +67,7 @@ public class GeneralRestaurantes extends Activity {
 	  	  		intent.putExtra("cp", restaurantes.get(posicion).getCP());
 	  	  		intent.putExtra("poblacion", restaurantes.get(posicion).getPoblacion());
 	  	  		intent.putExtra("telefono", restaurantes.get(posicion).getTelefono());
+	  	  		intent.putExtra("logo",restaurantes.get(posicion).getImagen());
 	  	  		intent.putExtra("imagen",restaurantes.get(posicion).getImagenFachada());
 	  	  		intent.putExtra("ids", restaurantes.get(posicion).getIdRestaurante() + "");
 	  	  		intent.putExtra("rating", restaurantes.get(posicion).getRating());
