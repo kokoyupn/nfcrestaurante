@@ -1,7 +1,5 @@
 package fragments;
 
-import com.example.nfcook_gerente.R;
-
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,6 +19,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.nfcook_gerente.R;
 
 
 /**
@@ -42,6 +42,8 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    vista = inflater.inflate(R.layout.informacion_restaurante, container, false);
 	    
+	    //getActivity().getActionBar().setTitle("  INFORMACION DEL RESTAURANTE");
+	    
 	    // Leemos la información del restaurante 
 	    Bundle bundleInfo = getActivity().getIntent().getExtras();
 	    String nombreRestaurante = bundleInfo.getString("nombre");
@@ -49,9 +51,14 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    calleRestaurante = bundleInfo.getString("calle"); // global porque lo utilizaremos en onClick
 	    String cp = bundleInfo.getString("cp");
 	    String poblacion = bundleInfo.getString("poblacion");
-	    String logoRestaurante = bundleInfo.getString("logo");
+	    String logo = bundleInfo.getString("logo");
 	    String imagenFachada = bundleInfo.getString("imagen");
 	    float ratingRestaurante = bundleInfo.getFloat("rating");
+	    
+	    // logo restaurante
+	    ImageView logoRes = (ImageView) vista.findViewById(R.id.logo_restaurante); 
+	    int imagen = getResources().getIdentifier(logo, "drawable", getActivity().getPackageName());
+	    logoRes.setImageResource(imagen);
 	    
 	    // nombre restaurante
 	    TextView nombreRes = (TextView) vista.findViewById(R.id.nombreRestaurante);
@@ -60,7 +67,8 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    // rating restaurante
 	    RatingBar ratingRes = (RatingBar) vista.findViewById(R.id.ratingRestaurante);
 	    ratingRes.setRating(ratingRestaurante);
-	     
+	    //ratingRes.setEnabled(false);
+		
 	    // teléfono restaurante
 	    TextView telefonoRes = (TextView) vista.findViewById(R.id.telefonoRestaurante);
 	    telefonoRes.setText(Html.fromHtml("<u>" + telefonoRestaurante + "</u>")); 
@@ -109,7 +117,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	    
 	    // imagen fachada restaurante
 	    ImageView imagenRes = (ImageView) vista.findViewById(R.id.imagenRestaurante); 
-	    int imagen = getResources().getIdentifier(imagenFachada, "drawable", getActivity().getPackageName());
+	    imagen = getResources().getIdentifier(imagenFachada, "drawable", getActivity().getPackageName());
 	    imagenRes.setImageResource(imagen);
 		
 	    return vista;

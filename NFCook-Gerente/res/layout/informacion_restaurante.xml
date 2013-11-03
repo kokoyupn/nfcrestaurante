@@ -5,22 +5,42 @@
     android:layout_height="fill_parent"
     android:background="@color/verde5" >
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/logo_foster_fondo" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/nombreRestaurante"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Foster&apos;s Hollywood de Alcalá 2230"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp" >
+
+            <ImageView
+                android:id="@+id/logo_restaurante"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/logo_foster" />
+
+            <TextView
+                android:id="@+id/nombreRestaurante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Foster&apos;s Hollywood de Alcalá 2230"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,9 +55,9 @@
 
                 <ImageView
                     android:id="@+id/imagenRestaurante"
-                    android:layout_width="192dp"
-                    android:layout_height="221dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_width="156dp"
+                    android:layout_height="175dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/ic_launcher" />
 
@@ -52,15 +72,13 @@
                     android:id="@+id/textoCalleLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:orientation="horizontal" >
 
                     <ImageView
                         android:id="@+id/iconoCalle"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/ic_calle" />
 
@@ -78,15 +96,13 @@
                     android:id="@+id/textoCPLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:orientation="horizontal" >
 
                     <ImageView
                         android:id="@+id/iconoCP"
                         android:layout_width="32dp"
                         android:layout_height="27dp"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="10dp"
                         android:src="@drawable/ic_cp" />
@@ -104,15 +120,13 @@
                     android:id="@+id/textoPoblacionLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:orientation="horizontal" >
 
                     <ImageView
                         android:id="@+id/iconoPoblacion"
                         android:layout_width="32dp"
                         android:layout_height="28dp"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="10dp"
                         android:src="@drawable/ic_poblacion" />
@@ -130,15 +144,13 @@
                     android:id="@+id/textoTelefonoLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:orientation="horizontal" >
 
                     <ImageView
                         android:id="@+id/iconoTelefono"
                         android:layout_width="32dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="10dp"
                         android:src="@drawable/ic_telefono" />
@@ -165,7 +177,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginTop="20dp"
-            android:isIndicator="false"
+            android:isIndicator="true"
             android:numStars="5"
             android:stepSize="1.0" />
 
@@ -182,8 +194,8 @@
 
         <Button
             android:id="@+id/llamar"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/ic_llamar2" />
 
