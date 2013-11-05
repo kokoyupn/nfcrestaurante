@@ -212,9 +212,9 @@ public class Calculadora extends Activity{
   			}
         	
         	// Creamos la imagen que se desliza y va pasando y aplicamos su adapter (ViewPager)
-        	MiViewPagerAdapter miImagenDeslizanteAdpater = new MiViewPagerAdapter(this, platos, personas.size());
+        	MiViewPagerAdapter miImagenDeslizanteAdapter = new MiViewPagerAdapter(this, platos, personas.size());
       	  	ViewPager imagenDeslizante = (ViewPager) findViewById(R.id.imagenDeslizanteCalculadora);
-	      	imagenDeslizante.setAdapter(miImagenDeslizanteAdpater);
+	      	imagenDeslizante.setAdapter(miImagenDeslizanteAdapter);
 	      	imagenDeslizante.setCurrentItem(0);
 	      	
 	      	// Creamos su oyente
@@ -325,7 +325,7 @@ public class Calculadora extends Activity{
 		if(imageViewInfoAyuda.getVisibility() == 0){
 			imageViewInfoAyuda.performClick();
 		}else{
-	        // Creamos y lanzamos la ventana emergente para conocer el nº de comensales
+	        // Creamos y lanzamos la ventana emergente
 			AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(Calculadora.this); 
 	        // Creamos su vista, aprovechando un layout existente
 	        View vistaVentanaEmergente = LayoutInflater.from(getApplicationContext()).inflate(R.layout.aviso_continuar_pedido, null); 

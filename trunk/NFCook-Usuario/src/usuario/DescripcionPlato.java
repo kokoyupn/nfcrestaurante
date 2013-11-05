@@ -3,16 +3,28 @@ package usuario;
 import java.util.ArrayList;
 
 
+
+
+
+
+
+
 import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
+import adapters.MiGridViewCalculadoraAdapter;
+import adapters.MiGridViewRepartirPlatoCalculadoraAdapter;
+import adapters.MiGridViewSeleccionarIngredientesPlato;
 import adapters.PadreExpandableListEditar;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,6 +33,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -28,6 +41,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,12 +49,14 @@ import android.widget.Toast;
 
 public class DescripcionPlato extends Activity {
 	
+	private static ArrayList<Boolean> ingredientesMarcado;
+	private ArrayList<String> ingredientes;
+	
 	private static int identificadorUnicoHijoPedido;
 	 
 	private int cantidad;
 	double precioPlato;
 	private String restaurante, nombrePlato, idPlato;
-	private AutoCompleteTextView actwObservaciones;
 	private TextView textViewPrecio;
 	private EditText editTextUnidades;
 	private static ExpandableListView expandableListExtras;
@@ -78,11 +94,9 @@ public class DescripcionPlato extends Activity {
         TextView textViewNombre = (TextView) findViewById(R.id.nombrePlato);
         TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlatoeditar);
         ImageView imageViewPlato = (ImageView) findViewById(R.id.imagenPlato);
-        actwObservaciones = (AutoCompleteTextView)findViewById(R.id.AutoCompleteTextViewOpciones);
         
-        Button botonConfirmar = (Button) findViewById(R.id.botonOpcion);
         Button botonEditar = (Button) findViewById(R.id.botonOpcionEditar);
-        botonConfirmar.setVisibility(Button.VISIBLE);
+        
         botonEditar.setVisibility(Button.INVISIBLE);
      
         // Importamos la base de datos para su posterior lectura
@@ -97,7 +111,7 @@ public class DescripcionPlato extends Activity {
         nombrePlato = bundle.getString("nombrePlato");
         restaurante =bundle.getString("nombreRestaurante");
         // Hacemos una consulta en la base de datos sobre el plato seleccionado   
-        String[] campo1=new String[]{"Extras","Precio","Foto","Descripcion","Id"};
+        String[] campo1=new String[]{"Extras","Precio","Foto","Descripcion","Id","Ingredientes"};
         String[] datos = new String[]{restaurante, nombrePlato};
         Cursor cursor =db.query("Restaurantes",campo1,"Restaurante =? AND Nombre=?",datos,null,null,null);  
   
@@ -111,6 +125,7 @@ public class DescripcionPlato extends Activity {
         String imagePlato = cursor.getString(2);
         String descripcionPlato = cursor.getString(3);
         idPlato = cursor.getString(4);
+        String ingredientesBusqueda = cursor.getString(5);
         
         if (!extrasBusqueda.equals("")){
             String[] tokens = extrasBusqueda.split("/");
@@ -207,6 +222,51 @@ public class DescripcionPlato extends Activity {
         
         cargarEstrella();
         
+        ingredientes = new ArrayList<String>();
+        ingredientesMarcado = new ArrayList<Boolean>();
+  
+    	if (!ingredientesBusqueda.equals("")){
+    		String[] tokens = ingredientesBusqueda.split("%");
+    		for (int i=0; i<tokens.length; i++){
+    			ingredientes.add(tokens[i]);
+    			ingredientesMarcado.add(true);
+    		}
+    	}
+        
+        
+        ImageView botonIngredientes = (ImageView) findViewById(R.id.botonIngredientes);
+        botonIngredientes.setOnClickListener(new View.OnClickListener() {
+			
+
+			public void onClick(View v) {
+				
+				if(ingredientes.size() == 0){
+		    		Toast.makeText(getApplicationContext(), "Ingredientes no disponibles", Toast.LENGTH_SHORT).show();
+				}else{
+			
+					/*************PREPARAMOS EL LAYOUT DE LA VENTANA EMERGENTE**************/
+					AlertDialog.Builder ventanaEmergente = new AlertDialog.Builder(DescripcionPlato.this);           
+					// Creamos la vista que tendrá la ventana de elección de ingredientes
+					View vistaVentanaEmergente = LayoutInflater.from(DescripcionPlato.this).inflate(R.layout.ventana_emergente_elegir_ingredientes, null);
+					// Añadimos el botón Aceptar
+					ventanaEmergente.setNegativeButton("Aceptar", null);
+					
+					GridView gridViewEleccionIngredientes = (GridView) vistaVentanaEmergente.findViewById(R.id.gridViewElegirIngredientes);
+					MiGridViewSeleccionarIngredientesPlato miGridViewSeleccionarIngredientesPlato = new MiGridViewSeleccionarIngredientesPlato(DescripcionPlato.this, ingredientes, ingredientesMarcado );
+					gridViewEleccionIngredientes.setAdapter(miGridViewSeleccionarIngredientesPlato);
+					
+					
+					// Aplicamos la vista a la ventana y la lanzamos
+					ventanaEmergente.setView(vistaVentanaEmergente);
+					ventanaEmergente.show();
+					/********************FIN VENTANA EMERGENTE REPARTO*********************/
+				}
+			}
+		});
+        
+        ImageView botonConfirmar = (ImageView) findViewById(R.id.imageConfirmarPlato);
+        botonConfirmar.setVisibility(Button.VISIBLE);
+        
 	}
 
 	public void onClickBotonMenos(View v){
@@ -293,9 +353,7 @@ public class DescripcionPlato extends Activity {
     	String observaciones = null;
     	String nuevosExtrasMarcados = null;
     	String extrasBinarios = null;
-    	if(!actwObservaciones.getText().toString().equals("")){
-        	observaciones = actwObservaciones.getText().toString();
-    	}
+
     	if(adapterExpandableListExtras!=null){ //Es un plato con extras
     		nuevosExtrasMarcados = adapterExpandableListExtras.getExtrasMarcados();
     		if(nuevosExtrasMarcados == null){
@@ -332,6 +390,7 @@ public class DescripcionPlato extends Activity {
     		Toast.makeText(getApplicationContext(),"Termine de configurar su plato antes", Toast.LENGTH_SHORT).show();
     	}
     }
+    
     
     //  para el atras del action bar
     @Override

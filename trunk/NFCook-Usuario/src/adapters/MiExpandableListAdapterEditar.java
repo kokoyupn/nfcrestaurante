@@ -7,6 +7,7 @@ import usuario.DescripcionPlato;
 import usuario.DescripcionPlatoEditar;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.nfcook.R;
+import com.example.nfcook.R.color;
 
 
 /**
@@ -173,7 +175,8 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
 		
 		TextView textViewNombreCategoria = (TextView) convertView.findViewById(R.id.textViewPadre);
 		textViewNombreCategoria.setText(padresExpandableList.get(groupPosition).getCategoriaExtra());
-        
+		
+		
         if(padresExpandableList.get(groupPosition).isExpandido()){
         	if(esEditar){
         		DescripcionPlatoEditar.expandeGrupoLista(groupPosition);
@@ -181,6 +184,9 @@ public class MiExpandableListAdapterEditar extends BaseExpandableListAdapter {
         		DescripcionPlato.expandeGrupoLista(groupPosition);
         	}
         }
+        //255,204,153
+        //Le damos color al fondo del padre de la expandablelist
+		convertView.setBackgroundColor(Color.rgb(255,204,153));
 		return convertView;
 
 	}
