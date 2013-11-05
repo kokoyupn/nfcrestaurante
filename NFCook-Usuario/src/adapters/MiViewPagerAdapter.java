@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Clase encargada de implementar el adpater de la imágen deslizante colocada en la parte
+ * Clase encargada de implementar el adapter de la imágen deslizante colocada en la parte
  * inferior central de la pantalla calculadora. Por ella pueden pasar todos los platos
  * que han consumido los comensales.
  * 

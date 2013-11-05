@@ -4,19 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffdd8d" >
-    
-    <AutoCompleteTextView
-        android:id="@+id/AutoCompleteTextViewOpciones"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginRight="93dp"
-        android:ems="15"
-        android:hint="Nada especial"
-        android:textSize="12dp" >
-
-        <requestFocus />
-    </AutoCompleteTextView>
 
     <Button
         android:id="@+id/botonOpcionEditar"
@@ -28,25 +15,24 @@
         android:onClick="onClickConfirmarEditar"
         android:text="Editar" />
 
-    <Button
-        android:id="@+id/botonOpcion"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
+    <ImageView
+        android:id="@+id/imageConfirmarPlato"
+        android:layout_width="57dp"
+        android:layout_height="57dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginRight="5dp"
         android:onClick="onClickConfirmar"
-        android:text="Confirmar" />
+        android:src="@drawable/validar" />
 
-    <TextView
-        android:id="@+id/textViewOpciones"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_marginBottom="45dp"
-        android:layout_marginLeft="10dp"
-        android:text="Introduzca sus observaciones"
-        android:textSize="14dp" />
+    <ImageView
+        android:id="@+id/botonIngredientes"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginRight="50dp"
+        android:src="@drawable/icono_ingredientes" />
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -171,7 +157,9 @@
         <ExpandableListView
             android:id="@+id/expandableExtras"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:cacheColorHint="?android:attr/colorBackgroundCacheHint" >
+
         </ExpandableListView>
 
     </FrameLayout>
