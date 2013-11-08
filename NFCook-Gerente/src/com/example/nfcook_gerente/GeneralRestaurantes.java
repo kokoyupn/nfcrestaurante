@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -39,7 +40,7 @@ public class GeneralRestaurantes extends Activity {
 	private ListView listViewRestaurantes;
 	private ArrayList<PadreListRestaurantes> restaurantes;
 	private HandlerGenerico sqlRestaurantes;
-	private SQLiteDatabase dbRestaurantes;
+	private SQLiteDatabase dbRestaurantes; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,100 @@ public class GeneralRestaurantes extends Activity {
 	  	  		startActivity(intent);
   	    	}
 	    });
+	    
+	    //Establecemos los oyentes de los botones
+	    final ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
+	    botonComparar.setOnClickListener(new OnClickListener() {
+			public void onClick(View vista) {
+			 	ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
+			    ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
+				
+				for(int i =0; i< restaurantes.size(); i ++)
+					restaurantes.get(i).setCheckVisibles(true);
+				
+		    	botonComparar.setVisibility(8); 
+		    	botonAceptar.setVisibility(0);
+		    	botonCancelar.setVisibility(0);
+		    	
+				adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
+				listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);				
+			}
+		});
+		
+	    
+	    ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
+	    botonAceptar.setOnClickListener(new OnClickListener() {
+			public void onClick(View vista) {
+				ArrayList<Integer> seleccionados = recorreSeleccionados();
+				if (seleccionados.size() > 0){//ha seleccionado alguno
+					// Iniciamos la nueva actividad y le pasamos los datos del restaurante
+			  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
+			  		
+			  		String ids = "";
+			  		for(int i =0; i< seleccionados.size(); i ++){
+			  			ids = ids + seleccionados.get(i).toString() + ",";
+			  		}
+			  		//Quitamos la última coma
+			  		ids = ids.substring(0, ids.length()-1);
+	
+			  		intent.putExtra("ids", ids);
+					//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
+			  		intent.putExtra("esGeneral", false);
+			  		//variable que indica si tiene que aparecer el tab de informacion o no
+			  		intent.putExtra("sinInfo", true);
+			  		
+			  		startActivity(intent);
+				}else{
+					Toast.makeText(getApplicationContext(), "Debe seleccionar al menos un restaurante",  Toast.LENGTH_LONG).show();		
+				}
+			}
+	    });
+
+		final ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
+		botonCancelar.setOnClickListener(new OnClickListener() {
+			public void onClick(View vista) {
+				ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
+				ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
+				
+				for(int i =0; i< restaurantes.size(); i ++){
+					restaurantes.get(i).setCheckVisibles(false);
+					restaurantes.get(i).setSelected(false);
+				}
+				
+		    	botonComparar.setVisibility(0); 
+		    	botonAceptar.setVisibility(8);
+		    	botonCancelar.setVisibility(8);
+		    	
+				adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
+				listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
+			}
+		});
+	    
+		
+		final ImageView botonTodos = (ImageView) findViewById(R.id.todosLosRestaurantes);
+		botonTodos.setOnClickListener(new OnClickListener() {
+			public void onClick(View vista) {
+				ArrayList<Integer> todos = dameIds();
+				
+				// Iniciamos la nueva actividad y le pasamos los datos del restaurante
+		  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
+		  		
+		  		String ids = "";
+		  		for(int i =0; i< todos.size(); i ++){
+		  			ids = ids + todos.get(i).toString() + ",";
+		  		}
+		  		//Quitamos la última coma
+		  		ids = ids.substring(0, ids.length()-1);
+
+		  		intent.putExtra("ids", ids);
+				//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
+		  		intent.putExtra("esGeneral", true);
+		  		//variable que indica si tiene que aparecer el tab de informacion o no
+		  		intent.putExtra("sinInfo", true);
+			  		
+		  		startActivity(intent);
+			}
+		});
 	} 
 
 
@@ -130,44 +225,7 @@ public class GeneralRestaurantes extends Activity {
 		return restaurantes;
 	}
 	
-	public void onClickComparar(View vista) {
-		
-	    ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
-	    ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
-	    ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
-		
-		for(int i =0; i< restaurantes.size(); i ++)
-			restaurantes.get(i).setCheckVisibles(true);
-		
-    	botonComparar.setVisibility(8); 
-    	botonAceptar.setVisibility(0);
-    	botonCancelar.setVisibility(0);
-    	
-		adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
-		listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
-	}
 	
-	public void onClickAceptar(View vista) {		
-		ArrayList<Integer> seleccionados = recorreSeleccionados();
-		
-		// Iniciamos la nueva actividad y le pasamos los datos del restaurante
-  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
-  		
-  		String ids = "";
-  		for(int i =0; i< seleccionados.size(); i ++){
-  			ids = ids + seleccionados.get(i).toString() + ",";
-  		}
-  		//Quitamos la última coma
-  		ids = ids.substring(0, ids.length()-1);
-
-  		intent.putExtra("ids", ids);
-		//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
-  		intent.putExtra("esGeneral", false);
-  		//variable que indica si tiene que aparecer el tab de informacion o no
-  		intent.putExtra("sinInfo", true);
-  		
-  		startActivity(intent);
-	}
 	
 	private ArrayList<Integer> recorreSeleccionados() {
 		ArrayList<Integer> seleccionados =new ArrayList<Integer>();
@@ -177,47 +235,7 @@ public class GeneralRestaurantes extends Activity {
 		}
 		return seleccionados;
 	}
-
-
-	public void onClickCancelar(View vista) {
-		ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
-		ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
-		ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
-		
-		for(int i =0; i< restaurantes.size(); i ++){
-			restaurantes.get(i).setCheckVisibles(false);
-			restaurantes.get(i).setSelected(false);
-		}
-		
-    	botonComparar.setVisibility(0); 
-    	botonAceptar.setVisibility(8);
-    	botonCancelar.setVisibility(8);
-    	
-		adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
-		listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
-	}
 	
-	public void onClickTodos(View vista) {	
-		ArrayList<Integer> todos = dameIds();
-		
-		// Iniciamos la nueva actividad y le pasamos los datos del restaurante
-  		Intent intent = new Intent(GeneralRestaurantes.this, InicializarInformacionRestaurante.class);
-  		
-  		String ids = "";
-  		for(int i =0; i< todos.size(); i ++){
-  			ids = ids + todos.get(i).toString() + ",";
-  		}
-  		//Quitamos la última coma
-  		ids = ids.substring(0, ids.length()-1);
-
-  		intent.putExtra("ids", ids);
-		//Pasar la variable para indicar que no es la opcion de todos los rest. (false)
-  		intent.putExtra("esGeneral", true);
-  		//variable que indica si tiene que aparecer el tab de informacion o no
-  		intent.putExtra("sinInfo", true);
-	  		
-  		startActivity(intent);
-	}
 	
 	private ArrayList<Integer> dameIds() {
 		ArrayList<Integer> todos =new ArrayList<Integer>();
