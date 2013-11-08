@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -259,5 +260,11 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 	public void onPageSelected(int pos) {
 		// TODO Auto-generated method stub
 		tabs.setCurrentTab(pos);
+	}
+	
+	@Override
+	public void onPause () {
+		super.onPause();
+		Log.v("pause", "onPause"); 
 	}
 }
