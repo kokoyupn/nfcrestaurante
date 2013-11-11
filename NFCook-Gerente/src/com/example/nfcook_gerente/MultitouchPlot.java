@@ -3,9 +3,11 @@ package com.example.nfcook_gerente;
 import android.content.Context;
 import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 
 import com.androidplot.series.XYSeries;
 import com.androidplot.xy.BoundaryMode;
@@ -25,7 +27,7 @@ import com.androidplot.xy.XYSeriesFormatter;
  */
 public class MultitouchPlot extends XYPlot implements OnTouchListener
 {
-
+	
 	// Definition of the touch states
 	static final private int NONE = 0;
 	static final private int ONE_FINGER_DRAG = 1;
@@ -97,7 +99,7 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 					firstFinger = new PointF(motionEvent.getX(), motionEvent.getY());
 					mode = ONE_FINGER_DRAG;
 					break;
-	
+				
 				case MotionEvent.ACTION_POINTER_DOWN: //second finger
 				{
 					distBetweenFingers = distance(motionEvent);
@@ -108,8 +110,6 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 				}
 	
 				case MotionEvent.ACTION_POINTER_UP: //end zoom
-					//should I count pointers and change mode after only one is left?
-	
 					mode = ONE_FINGER_DRAG;
 	
 					break;
@@ -122,14 +122,18 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 						final PointF oldFirstFinger = firstFinger;
 						firstFinger = new PointF(motionEvent.getX(), motionEvent.getY());
 						lastScrolling = oldFirstFinger.x - firstFinger.x;
+						
 						scroll(lastScrolling);
-						fixBoundariesForScroll();
+						fixBoundariesForScroll();//Fija los límites del scroll para que no puedas seguir desplazando a la derecha o izquierda si no hay mas gráfica
 	
 						setDomainBoundaries(newMinX, newMaxX, BoundaryMode.FIXED);
 						redraw();
+						
 					}
 					else if(mode == TWO_FINGERS_DRAG)
 					{
+						this.getParent().requestDisallowInterceptTouchEvent(true);//Bloquea el scroll
+				        
 						calculateMinMaxVals();
 	
 						final float oldDist = distBetweenFingers;
@@ -144,6 +148,7 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 						fixBoundariesForZoom();
 						setDomainBoundaries(newMinX, newMaxX, BoundaryMode.FIXED);
 						redraw();
+						
 					}
 					break;
 			}

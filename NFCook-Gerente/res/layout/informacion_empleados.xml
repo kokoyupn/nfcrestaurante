@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>    
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@color/verde5"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/verde5" >
 
-<LinearLayout 	android:layout_width="match_parent"
+<LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="10dp"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -24,12 +27,119 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp" />
 
-            <TextView
-                android:id="@+id/datosEmpleado"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/imagenNombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_empleado" />
+
+                    <TextView
+                        android:id="@+id/nombreEmpleado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="TextView" />
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/imagenPuesto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_puesto" />
+
+                    <TextView
+                        android:id="@+id/puestoEmpleado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="TextView" />
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/imageDni"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_id" />
+
+                    <TextView
+                        android:id="@+id/dni"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="TextView" />
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/imagenDomicilioEmpleado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_calle" />
+
+                    <TextView
+                        android:id="@+id/domicilioEmpleado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="TextView" />
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/imagenNacimiento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_nacimiento" />
+
+                    <TextView
+                        android:id="@+id/nacimiento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="TextView" />
+
+                </LinearLayout>
+	 </LinearLayout>
+
+            
 
         </LinearLayout>
 
@@ -41,8 +151,8 @@
                 android:id="@+id/botonCalendario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Calendario" />
+                android:background="@drawable/ic_calendario"
+                android:layout_gravity="center_horizontal" />
 
         </FrameLayout>
 
@@ -72,7 +182,7 @@
         <com.example.nfcook_gerente.MultitouchPlot
             android:id="@+id/graficaIngresos"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="550dp"
             android:layout_gravity="center_horizontal"
             title="Grafica"/>
 
@@ -80,30 +190,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            
             android:layout_marginTop="5dp" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:gravity="center_horizontal" >
 
                 <Button
                     android:id="@+id/dibDia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
+                    android:background="@drawable/boton_al_dia" />
 
                 <Button
                     android:id="@+id/dibMes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
+                    android:background="@drawable/boton_al_mes" />
 
                 <Button
                     android:id="@+id/dibAnio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
+                    android:background="@drawable/boton_al_anio" />
 
             </LinearLayout>
         </FrameLayout>
