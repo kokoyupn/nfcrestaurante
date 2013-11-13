@@ -559,10 +559,21 @@ public class SincronizarPedidoNFC extends Activity implements
 	
 	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes) throws UnsupportedEncodingException {
 
+		//create the message in according with the standard
+	    String lang = "en";
+	    byte[] langBytes = lang.getBytes("US-ASCII");
+	    int langLength = langBytes.length;
+	    byte[] payload = new byte[1 + langLength + pedidoCodificadoEnBytes.size()];
+
 	    //create the message in according with the standard
-	    byte[] payload = new byte[pedidoCodificadoEnBytes.size()];
-	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
-	    	payload[i] = pedidoCodificadoEnBytes.get(i);
+	    payload[0] = (byte) langLength;
+	    
+	    for (int i = 0; i < langLength; i++){
+	    	payload[i+1] = langBytes[i];
+	    }
+	    
+	    for (int i = langLength; i < pedidoCodificadoEnBytes.size(); i++){
+	    	payload[i+1] = pedidoCodificadoEnBytes.get(i);
 	    }
 
 	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
