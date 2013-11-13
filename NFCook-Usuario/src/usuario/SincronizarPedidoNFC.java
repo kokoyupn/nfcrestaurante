@@ -557,13 +557,15 @@ public class SincronizarPedidoNFC extends Activity implements
 	 * @throws FormatException
 	 */
 	
-	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes) throws UnsupportedEncodingException {
+	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
 
 		//create the message in according with the standard
 	    String lang = "en";
 	    byte[] langBytes = lang.getBytes("US-ASCII");
 	    int langLength = langBytes.length;
-	    byte[] payload = new byte[1 + langLength + pedidoCodificadoEnBytes.size()];
+	    byte[] payload = new byte[ndef.getMaxSize()];
+	    
+	    System.out.println("TAM: " + ndef.getMaxSize());
 
 	    //create the message in according with the standard
 	    payload[0] = (byte) langLength;
@@ -575,6 +577,10 @@ public class SincronizarPedidoNFC extends Activity implements
 	    for (int i = langLength; i < pedidoCodificadoEnBytes.size(); i++){
 	    	payload[i+1] = pedidoCodificadoEnBytes.get(i);
 	    }
+	    
+	    for (int i = langLength + pedidoCodificadoEnBytes.size() ; i < pedidoCodificadoEnBytes.size(); i++){
+	    	payload[i+1] = 0;
+	    }
 
 	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
 	    return recordNFC;
@@ -582,11 +588,11 @@ public class SincronizarPedidoNFC extends Activity implements
 
 	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
 
-	    NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes) };
-	    NdefMessage message = new NdefMessage(records); 
 	    Ndef ndef = Ndef.get(mytag);
 	    ndef.connect();
 	    if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)) {
+	    	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, ndef) };
+		    NdefMessage message = new NdefMessage(records); 
 	    	ndef.writeNdefMessage(message);
 	    }
 	    ndef.close();
