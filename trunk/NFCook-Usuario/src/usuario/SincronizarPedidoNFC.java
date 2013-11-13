@@ -379,7 +379,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	private String damePedidoActual() {
 		String listaPlatosStr = "";
 		String[] campos = new String[] { "Id", "ExtrasBinarios",
-				"Observaciones", "Restaurante" };// Campos que quieres recuperar
+				"IngredientesBinario", "Restaurante" };// Campos que quieres recuperar
 		String[] datosRestaurante = new String[] { restaurante };
 		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?",
 				datosRestaurante, null, null, null);
@@ -398,13 +398,13 @@ public class SincronizarPedidoNFC extends Activity implements
 
 			// compruebo si hay observaciones y envio *Observaciones si hay y si
 			// no ""
-			String observaciones = cursorPedido.getString(2);
-			if (observaciones == null)
-				observaciones = "";
+			String ingredientesBinario = cursorPedido.getString(2);
+			if (ingredientesBinario == null)
+				ingredientesBinario = "";
 			else
-				observaciones = "*" + observaciones;
+				ingredientesBinario = "*" + ingredientesBinario;
 
-			listaPlatosStr += idplato + extrasBinarios + observaciones + "@";
+			listaPlatosStr += idplato + extrasBinarios + ingredientesBinario + "@";
 		}
 
 		Toast.makeText(this,"Pedido: " + listaPlatosStr,Toast.LENGTH_LONG).show();
@@ -427,8 +427,8 @@ public class SincronizarPedidoNFC extends Activity implements
 		pedidoCodificadoEnBytes = new ArrayList<Byte>();
 
 		// el comienzo del array será el ultimo bloque escrito falle o no falle
-		for (int i = 0; i < copiaUltimoBloque.size(); i++)
-			pedidoCodificadoEnBytes.add(copiaUltimoBloque.get(i));
+		/*for (int i = 0; i < copiaUltimoBloque.size(); i++)
+			pedidoCodificadoEnBytes.add(copiaUltimoBloque.get(i));*/
 		
 		// separamos por platos
 		StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr, "@");
