@@ -353,6 +353,7 @@ public class DescripcionPlato extends Activity {
     	String observaciones = null;
     	String nuevosExtrasMarcados = null;
     	String extrasBinarios = null;
+    	String ingredientesBinarios = null;
 
     	if(adapterExpandableListExtras!=null){ //Es un plato con extras
     		nuevosExtrasMarcados = adapterExpandableListExtras.getExtrasMarcados();
@@ -364,6 +365,15 @@ public class DescripcionPlato extends Activity {
     	if(bienEditado){
     		if(adapterExpandableListExtras!=null)
     			extrasBinarios = adapterExpandableListExtras.getExtrasBinarios();
+    		if(ingredientesMarcado.size() > 0){
+    			ingredientesBinarios = "";
+    			for(int i=0; i<ingredientesMarcado.size(); i++){
+    				if(ingredientesMarcado.get(i)) // == true
+    					ingredientesBinarios += "1";
+    				else						   // == false
+    					ingredientesBinarios += "0";
+    			}
+    		}
     		
     		sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
          	dbPedido=sqlPedido.open();
@@ -375,6 +385,7 @@ public class DescripcionPlato extends Activity {
             	plato.put("Observaciones", observaciones);
             	plato.put("Extras", nuevosExtrasMarcados);
             	plato.put("ExtrasBinarios", extrasBinarios);
+            	plato.put("IngredientesBinarios", ingredientesBinarios);
             	plato.put("PrecioPlato",precioPlato);
             	plato.put("IdHijo", identificadorUnicoHijoPedido + "");
             	identificadorUnicoHijoPedido++;
