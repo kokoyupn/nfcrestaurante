@@ -408,7 +408,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			listaPlatosStr += idplato + extrasBinarios + ingredientesBinarios + "@";
 		}
 
-		Toast.makeText(this,"Pedido: " + listaPlatosStr,Toast.LENGTH_LONG).show();
+		System.out.println("Pedido: " + listaPlatosStr);
 		
 		return listaPlatosStr;
 	}
