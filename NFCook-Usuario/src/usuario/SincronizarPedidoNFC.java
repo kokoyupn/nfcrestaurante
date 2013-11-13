@@ -25,8 +25,10 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.TagLostException;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -588,14 +590,52 @@ public class SincronizarPedidoNFC extends Activity implements
 
 	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
 
-	    Ndef ndef = Ndef.get(mytag);
-	    ndef.connect();
-	    if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)) {
-	    	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, ndef) };
-		    NdefMessage message = new NdefMessage(records); 
-	    	ndef.writeNdefMessage(message);
+		try {
+			Ndef ndef = Ndef.get(mytag);
+			if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
+				NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes,null) };
+			    NdefMessage message = new NdefMessage(records); 
+	    
+		        // If the tag is already formatted, just write the message to it
+		        if(ndef != null) {
+		            ndef.connect();
+		 
+		            // Make sure the tag is writable
+		            if(!ndef.isWritable()) {
+		                System.out.println("tag no es writable");
+		            }
+		 
+		            try {// Write the data to the tag		                
+		                ndef.writeNdefMessage(message);
+		            } catch (TagLostException tle) {
+		            	System.out.println("tag lost exception al escribir");
+		            } catch (IOException ioe) {
+		            	System.out.println("error IO al escribir");
+		            } catch (FormatException fe) {
+		            	System.out.println("error format al escribir");
+		            }
+		        // If the tag is not formatted, format it with the message
+		        } else {
+		            NdefFormatable format = NdefFormatable.get(mytag);
+		            if(format != null) {
+		                try {
+		                    format.connect();
+		                    format.format(message);
+		                } catch (TagLostException tle) {
+		                	System.out.println("tag lost exception al formatear");
+		                } catch (IOException ioe) {
+		                	System.out.println("error IO al formatear");
+		                } catch (FormatException fe) {
+		                	System.out.println("error format al formatear");
+		                }
+		            } else {
+		            	System.out.println("format es null");
+		            }
+		        }
+			}
+	    } catch(Exception e) {
+	    	System.out.println("ultimo try");
 	    }
-	    ndef.close();
 	}
 	
 	
