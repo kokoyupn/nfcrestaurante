@@ -127,7 +127,7 @@ public class SincronizarPedidoNFC extends Activity implements
 				// si ha sincronizado mal entra xq para el la tag no esta corrupta
 				codificarPedido(damePedidoActual());
 				try {
-					//escribirEnTagNFC(pedidoCodificadoEnBytes);
+					escribirEnTagNFC(pedidoCodificadoEnBytes);
 			
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -210,14 +210,14 @@ public class SincronizarPedidoNFC extends Activity implements
 		Intent intent = new Intent();
 		intent.putExtra("Origen", "Pedido");
 		setResult(RESULT_CANCELED, intent);
-			if (!tagCorrupta) {
-				if (leidoBienDeTag) {
-					if (!esCuenta){
-						if (escritoBienEnTag){
+			//if (!tagCorrupta) {
+			//	if (leidoBienDeTag) {
+			//		if (!esCuenta){
+					//	if (escritoBienEnTag){
 							enviarPedidoACuenta();
 							setResult(RESULT_OK, intent);
 							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
-						} else {
+					/*	} else {
 							if (heCalculadoTam) {
 								if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
 								else if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
@@ -225,12 +225,13 @@ public class SincronizarPedidoNFC extends Activity implements
 								if (restauranteCorrecto) Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 								else Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
 							}
-						}
-					} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
-				} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-			} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizo mal",Toast.LENGTH_LONG).show();
+						}*/
+					//} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
+			//	} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+			//} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizo mal",Toast.LENGTH_LONG).show();
 		cerrarBasesDeDatos();
-		if (!heSincronizadoMalAntes) finish();
+		//if (!heSincronizadoMalAntes) 
+			finish();
 	}
 
 	/**
@@ -379,7 +380,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	private String damePedidoActual() {
 		String listaPlatosStr = "";
 		String[] campos = new String[] { "Id", "ExtrasBinarios",
-				"IngredientesBinario", "Restaurante" };// Campos que quieres recuperar
+				"IngredientesBinarios", "Restaurante" };// Campos que quieres recuperar
 		String[] datosRestaurante = new String[] { restaurante };
 		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?",
 				datosRestaurante, null, null, null);
@@ -398,13 +399,13 @@ public class SincronizarPedidoNFC extends Activity implements
 
 			// compruebo si hay observaciones y envio *Observaciones si hay y si
 			// no ""
-			String ingredientesBinario = cursorPedido.getString(2);
-			if (ingredientesBinario == null)
-				ingredientesBinario = "";
+			String ingredientesBinarios = cursorPedido.getString(2);
+			if (ingredientesBinarios == null)
+				ingredientesBinarios = "";
 			else
-				ingredientesBinario = "*" + ingredientesBinario;
+				ingredientesBinarios = "*" + ingredientesBinarios;
 
-			listaPlatosStr += idplato + extrasBinarios + ingredientesBinario + "@";
+			listaPlatosStr += idplato + extrasBinarios + ingredientesBinarios + "@";
 		}
 
 		Toast.makeText(this,"Pedido: " + listaPlatosStr,Toast.LENGTH_LONG).show();
@@ -415,7 +416,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	/**
 	 * Codifica el pedido (listaDePlatos) y lo devuelve con un formato de
 	 * ArrayList<Byte>. Para ello va separando mediante StringTokenizer los
-	 * platos, obteniendo su id, extras y observaciones.
+	 * platos, obteniendo su id, extras e ingredientes.
 	 * 
 	 * @param copia
 	 * @param listaPlatosStr
@@ -445,7 +446,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			// extras
 			if (plato.contains("+")) {
 				String extras = stTodoSeparado.nextToken();
-				ArrayList<Byte> alExtras = codificaExtrasUObservaciones(extras);
+				ArrayList<Byte> alExtras = codificaExtrasEIngredientes(extras);
 				// tamaño de los extras que habra que leer
 				pedidoCodificadoEnBytes.add((byte) alExtras.size());
 				pedidoCodificadoEnBytes.addAll(alExtras);
@@ -454,11 +455,11 @@ public class SincronizarPedidoNFC extends Activity implements
 
 			// comentarios
 			if (plato.contains("*")) {
-				String comentario = stTodoSeparado.nextToken();
-				ArrayList<Byte> alComentario = codificaExtrasUObservaciones(comentario);
+				String ingredientes = stTodoSeparado.nextToken();
+				ArrayList<Byte> alIngredientes = codificaExtrasEIngredientes(ingredientes);
 				// tamaño de comentarios que habra que leer
-				pedidoCodificadoEnBytes.add((byte) alComentario.size());
-				pedidoCodificadoEnBytes.addAll(alComentario);
+				pedidoCodificadoEnBytes.add((byte) alIngredientes.size());
+				pedidoCodificadoEnBytes.addAll(alIngredientes);
 			} else
 				pedidoCodificadoEnBytes.add((byte) 0);
 
@@ -495,7 +496,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	 * @param extras
 	 * @return
 	 */
-	private ArrayList<Byte> codificaExtrasUObservaciones(String cod) {
+	private ArrayList<Byte> codificaExtrasEIngredientes(String cod) {
 
 		ArrayList<Byte> al = new ArrayList<Byte>();
 		int relleno = 0;
