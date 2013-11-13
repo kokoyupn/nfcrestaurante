@@ -578,7 +578,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	    	payload[i+1] = pedidoCodificadoEnBytes.get(i);
 	    }
 	    
-	    for (int i = langLength + pedidoCodificadoEnBytes.size() ; i < pedidoCodificadoEnBytes.size(); i++){
+	    for (int i = langLength + pedidoCodificadoEnBytes.size() ; i < ndef.getMaxSize(); i++){
 	    	payload[i+1] = 0;
 	    }
 
