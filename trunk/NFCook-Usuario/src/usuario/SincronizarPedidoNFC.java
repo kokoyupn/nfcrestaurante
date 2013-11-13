@@ -216,9 +216,9 @@ public class SincronizarPedidoNFC extends Activity implements
 			//	if (leidoBienDeTag) {
 			//		if (!esCuenta){
 					//	if (escritoBienEnTag){
-							enviarPedidoACuenta();
+							//enviarPedidoACuenta();
 							setResult(RESULT_OK, intent);
-							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
+							//Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
 					/*	} else {
 							if (heCalculadoTam) {
 								if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
