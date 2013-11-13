@@ -565,7 +565,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	    String lang = "en";
 	    byte[] langBytes = lang.getBytes("US-ASCII");
 	    int langLength = langBytes.length;
-	    byte[] payload = new byte[ndef.getMaxSize()];
+	    byte[] payload = new byte[ndef.getMaxSize()-50];
 	    
 	    System.out.println("TAM: " + ndef.getMaxSize());
 
@@ -576,12 +576,12 @@ public class SincronizarPedidoNFC extends Activity implements
 	    	payload[i+1] = langBytes[i];
 	    }
 	    
-	    for (int i = langLength; i < pedidoCodificadoEnBytes.size(); i++){
-	    	payload[i+1] = pedidoCodificadoEnBytes.get(i);
+	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
+	    	payload[i+langLength+1] = pedidoCodificadoEnBytes.get(i);
 	    }
 	    
-	    for (int i = langLength + pedidoCodificadoEnBytes.size() ; i < ndef.getMaxSize(); i++){
-	    	payload[i+1] = 0;
+	    for (int i = langLength + pedidoCodificadoEnBytes.size() - 1 ; i < ndef.getMaxSize() - 100; i++){
+	    	payload[i+2] = 0;
 	    }
 
 	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
@@ -593,7 +593,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		try {
 			Ndef ndef = Ndef.get(mytag);
 			if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
-				NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes,null) };
+				NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes,ndef) };
 			    NdefMessage message = new NdefMessage(records); 
 	    
 		        // If the tag is already formatted, just write the message to it
