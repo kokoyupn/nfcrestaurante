@@ -13,7 +13,6 @@ import java.util.StringTokenizer;
 import java.util.Iterator;
 
 import baseDatos.HandlerGenerico;
-
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -30,9 +29,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.nfc.FormatException;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -64,7 +66,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	int numeroRestaurante;
 	String abreviatura;
 	SQLiteDatabase dbMesas,dbMiBase,dbEquivalencia;
-	ArrayList<Byte> mensaje;
+	byte[] mensaje;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
@@ -98,7 +100,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	  protected Void doInBackground(Void... params) {	  		  
 		  SystemClock.sleep(1000);
 		  // si es Mifare Classic
-		  if (esMFC) {
+	//	  if (esMFC) {
 				try {   
 					read(mytag);//Se ha detectado la tag procedemos a leerla
 					//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
@@ -113,7 +115,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 					//Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
 					e.printStackTrace();
 				}
-			 }
+	//		 }
 		
 		  return null;
 	  }
@@ -257,103 +259,123 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private void read(Tag tag) throws IOException, FormatException {	
+	private byte[] read(Tag tag) throws IOException, FormatException {	
 		
-		/*Variables para borrar la tarjeta */
-		String aux = "";
-		aux += "255";
-		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
-		
-		ArrayList<Byte> al= new ArrayList<Byte>();
-		al.add((byte) numeroRestaurante);
-		pedidoCodificadoEnBytes.addAll(al);
-		
-		al = new ArrayList<Byte>();
-		al.add((byte) Integer.parseInt(aux));
-		pedidoCodificadoEnBytes.addAll(al);
-		
-		
-		
-		
-		mensaje = new ArrayList<Byte>();
-			
-		// Obtiene la instacia de la tarjeta nfc
-		MifareClassic mfc = MifareClassic.get(tag);
-										
-		// Establece la conexion
-		mfc.connect();
-		
-		boolean sectorValido = false;		
+		 /*
+         * See NFC forum specification for "Text Record Type Definition" at 3.2.1
+         *
+         * http://www.nfc-forum.org/specs/
+         *
+         * bit_7 defines encoding
+         * bit_6 reserved for future use, must be 0
+         * bit_5..0 length of IANA language code
+         */
+		Ndef ndef = Ndef.get(tag);
+		NdefMessage message = ndef.getCachedNdefMessage();
+		byte[] mensajeEnBytes = message.toByteArray();
+		byte[] mensajeEnBytesBueno = new byte[mensajeEnBytes.length-7];
+		// Con este "for" eliminamos los datos inservibles del array de bytes
+		for (int i=0; i<mensajeEnBytes.length-7; i++){
+			mensajeEnBytesBueno[i] = mensajeEnBytes[i+7];
+		}
 
-		//----------Borrado de la tarjeta
-		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
-		int recorrerString = 0;	
-		
-		// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
-		// se escribe mandando bloques de 16 bytes
-		int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
-		if (numMod16 != 0){
-			int huecos = 16-numMod16;
-			for (int i = 0; i < huecos; i++)
-				pedidoCodificadoEnBytes.add((byte) 0);
-		}
-		
-		//Variable usada para saber por el bloque que vamos
-		int numBloque = 0;
-		// el texto que ha escrito el usuario
-		byte[] textoByte = null;
-		String texto="";// Variable usada para concatenar el mensaje leido
-				
-		// Recorremos todos los sectores y bloques leyendo el mensaje
-		   
-		while (numBloque < mfc.getBlockCount()) {
-			if (sePuedeLeerEnBloque(numBloque)) {
-			
-				// Cada sector tiene 4 bloques
-				int numSector = numBloque / 4;
-				//Validamos el sector con la A porque las tarjetas que tenemos usan el bit A en vez del B
-				
-				sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
-	
-				if (sectorValido) {//Si es un sector valido
-				
-						textoByte=mfc.readBlock(numBloque); //leemos un bloque entero
-						
-						for (int i=0; i<MifareClassic.BLOCK_SIZE; i++)
-							{texto=texto+(char)textoByte[i];//Concatenamos el contenido del bloque en el string ya que de la tarjeta lo leemos en bytes
-							 		  mensaje.add(textoByte[i]);
-							}
-						
-						// si es menor significa que queda por escribir cosas
-						if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
-							// recorremos con un for para obtener bloques de 16 bytes
-							byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
-							for (int j=0; j<MifareClassic.BLOCK_SIZE; j++)
-								datosAlBloque[j] = pedidoCodificadoEnBytes.get(j+recorrerString);
-							// avanzo para el siguiente bloque
-							recorrerString += MifareClassic.BLOCK_SIZE;
-							// escribimos en el bloque
-							mfc.writeBlock(numBloque, datosAlBloque);
-						} else {
-							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
-							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
-							mfc.writeBlock(numBloque, ceros);
-						}
-			} 	
-				numBloque++;
-			}
-			else {
-				numBloque++;
-				 }
-				
-			
-		}
-		leidoBienEnTag = true; 				 
-		// Cerramos la conexion
-		mfc.close();
-		
-		
+		return mensajeEnBytesBueno;
 	}
+		/*Variables para borrar la tarjeta */
+//		String aux = "";
+//		aux += "255";
+//		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
+//		
+//		ArrayList<Byte> al= new ArrayList<Byte>();
+//		al.add((byte) numeroRestaurante);
+//		pedidoCodificadoEnBytes.addAll(al);
+//		
+//		al = new ArrayList<Byte>();
+//		al.add((byte) Integer.parseInt(aux));
+//		pedidoCodificadoEnBytes.addAll(al);
+//		
+//		
+//		
+//		
+//		mensaje = new ArrayList<Byte>();
+//			
+//		// Obtiene la instacia de la tarjeta nfc
+//		MifareClassic mfc = MifareClassic.get(tag);
+//										
+//		// Establece la conexion
+//		mfc.connect();
+//		
+//		boolean sectorValido = false;		
+//
+//		//----------Borrado de la tarjeta
+//		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
+//		int recorrerString = 0;	
+//		
+//		// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
+//		// se escribe mandando bloques de 16 bytes
+//		int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
+//		if (numMod16 != 0){
+//			int huecos = 16-numMod16;
+//			for (int i = 0; i < huecos; i++)
+//				pedidoCodificadoEnBytes.add((byte) 0);
+//		}
+//		
+//		//Variable usada para saber por el bloque que vamos
+//		int numBloque = 0;
+//		// el texto que ha escrito el usuario
+//		byte[] textoByte = null;
+//		String texto="";// Variable usada para concatenar el mensaje leido
+//				
+//		// Recorremos todos los sectores y bloques leyendo el mensaje
+//		   
+//		while (numBloque < mfc.getBlockCount()) {
+//			if (sePuedeLeerEnBloque(numBloque)) {
+//			
+//				// Cada sector tiene 4 bloques
+//				int numSector = numBloque / 4;
+//				//Validamos el sector con la A porque las tarjetas que tenemos usan el bit A en vez del B
+//				
+//				sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
+//	
+//				if (sectorValido) {//Si es un sector valido
+//				
+//						textoByte=mfc.readBlock(numBloque); //leemos un bloque entero
+//						
+//						for (int i=0; i<MifareClassic.BLOCK_SIZE; i++)
+//							{texto=texto+(char)textoByte[i];//Concatenamos el contenido del bloque en el string ya que de la tarjeta lo leemos en bytes
+//							 		  mensaje.add(textoByte[i]);
+//							}
+//						
+//						// si es menor significa que queda por escribir cosas
+//						if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
+//							// recorremos con un for para obtener bloques de 16 bytes
+//							byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
+//							for (int j=0; j<MifareClassic.BLOCK_SIZE; j++)
+//								datosAlBloque[j] = pedidoCodificadoEnBytes.get(j+recorrerString);
+//							// avanzo para el siguiente bloque
+//							recorrerString += MifareClassic.BLOCK_SIZE;
+//							// escribimos en el bloque
+//							mfc.writeBlock(numBloque, datosAlBloque);
+//						} else {
+//							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
+//							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
+//							mfc.writeBlock(numBloque, ceros);
+//						}
+//			} 	
+//				numBloque++;
+//			}
+//			else {
+//				numBloque++;
+//				 }
+//				
+//			
+//		}
+//		leidoBienEnTag = true; 				 
+//		// Cerramos la conexion
+//		mfc.close();
+//		
+//		
+//	}
 
 
 	/**
@@ -408,61 +430,95 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 
 	/**Decodificamos el contenido leido de la tag separando cada plato y añadiendolo a las mesas.
 	 * */
-	private void decodificar(ArrayList<Byte> mensaje) {
-		
-	//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
-		Iterator<Byte> itPlatos = mensaje.iterator();
-		Iterator<Byte> iteradorAux = mensaje.iterator();
-		
-		boolean correcto=false;
-		boolean parar=false;
-		int numRestaurante;
-		int n;
-		while(iteradorAux.hasNext() && !correcto){
-			   n = decodificaByte(iteradorAux.next());
-			    correcto= n==255;
-			  }
-		
-	if (correcto){
-		numRestaurante = decodificaByte(itPlatos.next());
-		if(numeroRestaurante==numRestaurante )
-		{
-		while(itPlatos.hasNext() && !parar){
-			
-			// id
-			int id = decodificaByte(itPlatos.next());
-			//El mensaje termina con un -1 en la tag
-			parar= id==255;
-			
-			if(!parar){//Si no ha acabado el mensaje
-				// extras
-				int numExtras =  decodificaByte(itPlatos.next());
-				String extras = "";
-				
-				for (int i = 0; i < numExtras; i++ )
-					extras += decToBin(itPlatos.next());
-							
-				// comentario
-				int numComentario =  decodificaByte(itPlatos.next());
-				String comentario = "";
-				
-				for (int i = 0; i < numComentario; i++)
-					comentario += (char)decodificaByte(itPlatos.next());
-				//Añadimos el plato
-				añadirPlatos(restaurante,abreviatura+id,extras,comentario);
-			}//if parar		
-		 }//while
-		}//if
+	private void decodificar(byte[] mensaje) {
 	
-		else{
-					
-			restauranteIncorrecto=true;
-		}
-		}
-		else { 
-			datosMalos=true;
+		boolean correcto = false;
+		boolean parar = false;
+		
+		int numRestaurante;//FALTA POR HACER
+		
+		while(!correcto){
 			
+			int id = decodificaByte(mensaje[0]);
+			if(id == 255){
+				correcto = true;
+			}else{
+			
+				int numBytesExtras = decodificaByte(mensaje[1]);
+				
+				String extrasBinarios = "";
+				for(int i=0; i < numBytesExtras; i++){
+					extrasBinarios += decToBin(mensaje[i+2]);
+				}
+				
+				int numBytesIngredientes = decodificaByte(mensaje[2 + numBytesExtras]);
+				
+				String ingredientesBinarios = "";
+				for(int i=0; i < numBytesIngredientes; i++){
+					ingredientesBinarios += decToBin(mensaje[i+2+numBytesExtras+1]);
+				}
+				
+				//Añadimos el plato
+				//TODO
+				añadirPlatos(restaurante,abreviatura+id,extrasBinarios,ingredientesBinarios);
+			}
 		}
+		
+		
+		
+//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
+//		Iterator<Byte> itPlatos = mensaje.iterator();
+//		Iterator<Byte> iteradorAux = mensaje.iterator();
+//		
+//		boolean correcto=false;
+//		boolean parar=false;
+//		int numRestaurante;
+//		int n;
+//		while(iteradorAux.hasNext() && !correcto){
+//			   n = decodificaByte(iteradorAux.next());
+//			    correcto= n==255;
+//			  }
+//		
+//	if (correcto){
+//		numRestaurante = decodificaByte(itPlatos.next());
+//		if(numeroRestaurante==numRestaurante )
+//		{
+//		while(itPlatos.hasNext() && !parar){
+//			
+//			// id
+//			int id = decodificaByte(itPlatos.next());
+//			//El mensaje termina con un -1 en la tag
+//			parar= id==255;
+//			
+//			if(!parar){//Si no ha acabado el mensaje
+//				// extras
+//				int numExtras =  decodificaByte(itPlatos.next());
+//				String extras = "";
+//				
+//				for (int i = 0; i < numExtras; i++ )
+//					extras += decToBin(itPlatos.next());
+//							
+//				// comentario
+//				int numComentario =  decodificaByte(itPlatos.next());
+//				String comentario = "";
+//				
+//				for (int i = 0; i < numComentario; i++)
+//					comentario += (char)decodificaByte(itPlatos.next());
+//				//Añadimos el plato
+//				añadirPlatos(restaurante,abreviatura+id,extras,comentario);
+//			}//if parar		
+//		 }//while
+//		}//if
+//	
+//		else{
+//					
+//			restauranteIncorrecto=true;
+//		}
+//		}
+//		else { 
+//			datosMalos=true;
+//			
+//		}
 		
 	
 	}
