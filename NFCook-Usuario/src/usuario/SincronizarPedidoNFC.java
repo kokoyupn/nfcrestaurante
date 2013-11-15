@@ -562,26 +562,26 @@ public class SincronizarPedidoNFC extends Activity implements
 	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
 
 		//create the message in according with the standard
-	    String lang = "en";
-	    byte[] langBytes = lang.getBytes("US-ASCII");
-	    int langLength = langBytes.length;
-	    byte[] payload = new byte[ndef.getMaxSize()-50];
+	    //String lang = "en";
+	    //byte[] langBytes = lang.getBytes("US-ASCII");
+	    //int langLength = langBytes.length;
+	    byte[] payload = new byte[ndef.getMaxSize()-8];
 	    
 	    System.out.println("TAM: " + ndef.getMaxSize());
 
 	    //create the message in according with the standard
-	    payload[0] = (byte) langLength;
+	    //payload[0] = (byte) langLength;
 	    
-	    for (int i = 0; i < langLength; i++){
+	    /*for (int i = 0; i < langLength; i++){
 	    	payload[i+1] = langBytes[i];
-	    }
+	    }*/
 	    
 	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
-	    	payload[i+langLength+1] = pedidoCodificadoEnBytes.get(i);
+	    	payload[i] = pedidoCodificadoEnBytes.get(i);
 	    }
 	    
-	    for (int i = langLength + pedidoCodificadoEnBytes.size() - 1 ; i < ndef.getMaxSize() - 100; i++){
-	    	payload[i+2] = 0;
+	    for (int i = pedidoCodificadoEnBytes.size() ; i < ndef.getMaxSize() - 8; i++){
+	    	payload[i] = 0;
 	    }
 
 	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
