@@ -374,8 +374,8 @@ public class SincronizarPedidoNFC extends Activity implements
 	 * Prepara el pedido en un string para que sea facil su tratamiento a la
 	 * hora de escribir en la tag. Obtiene de la base de datos el pedido a
 	 * sincronizar con la siguiente forma:
-	 * "id_plato@id_plato+extras@5*Obs@id_plato+extras*Obs@";
-	 * "1@2@3@4+10010@5*Con tomate@1+01001*Con azucar@2+10010*Sin macarrones@";
+	 * "id_plato@id_plato+extras@5*ingredientes@id_plato+extras*ingredientes@";
+	 * "1@2@3@4+10010@5*01011@1+01001*1111@2+10010*1000100@";
 	 * 
 	 * @return
 	 */
@@ -399,8 +399,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			else
 				extrasBinarios = "+" + extrasBinarios;
 
-			// compruebo si hay observaciones y envio *Observaciones si hay y si
-			// no ""
+			// compruebo si hay ingredientes y envio *Ingre si no ""
 			String ingredientesBinarios = cursorPedido.getString(2);
 			if (ingredientesBinarios == null)
 				ingredientesBinarios = "";
@@ -409,8 +408,6 @@ public class SincronizarPedidoNFC extends Activity implements
 
 			listaPlatosStr += idplato + extrasBinarios + ingredientesBinarios + "@";
 		}
-
-		System.out.println("Pedido: " + listaPlatosStr);
 		
 		return listaPlatosStr;
 	}
