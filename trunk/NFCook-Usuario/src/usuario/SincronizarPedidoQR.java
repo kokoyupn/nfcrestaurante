@@ -35,9 +35,8 @@ public class SincronizarPedidoQR extends Activity {
  
 	private HandlerDB sqlCuenta, sqlPedido, sqlRestaurante;
 	private SQLiteDatabase dbCuenta, dbPedido, dbRestaurante;
-	private String restaurante;
+	private String restaurante, abreviaturaRest, codigoRest;
 	private boolean fueGeneradoBienQR;
-	private String abreviaturaRest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -213,19 +212,19 @@ public class SincronizarPedidoQR extends Activity {
 			sqlPedido = new HandlerDB(getApplicationContext(), "Pedido.db");
 			dbPedido = sqlPedido.open();
 		} catch (SQLiteException e) {
-			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosPedido)");
+			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR QR");
 		}
 		try {
 			sqlCuenta = new HandlerDB(getApplicationContext(), "Cuenta.db");
 			dbCuenta = sqlCuenta.open();
 		} catch (SQLiteException e) {
-			System.out.println("NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)");
+			System.out.println("NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR QR");
 		}
 		try {
 			sqlRestaurante = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
 			dbRestaurante = sqlRestaurante.open();
 		} catch (SQLiteException e) {
-			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR NFC (cargarBaseDeDatosResta)");
+			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR QR");
 		}
 	}
 	
@@ -274,52 +273,65 @@ public class SincronizarPedidoQR extends Activity {
 	}
 	
 	/** 
-	 * Prepara el pedido en un string para que sea facil su tratamiento a la hora de escribir en la tag.
-	 * Obtiene de la base de datos el pedido a sincronizar con la siguiente forma:
-	 * "id_plato@id_plato+extras@5*Obs@id_plato+extras*Obs@";	
-	 * "1@2@3@4+10010@5*Con tomate@1+01001*Con azucar@2+10010*Sin macarrones@";	
-	 * 
+	 * Devuelve un string con el id del restaurante + el pedido
 	 * @return
 	 */
 	private String damePedidoStr() {
-		String listaPlatosStr = dameCodigoRestaurante();
+		obtenerCodigoYAbreviaturaRestaurante();
+    	return codigoRest + "@" + damePedidoActual();
+	}
+	
+	/**
+	 * Prepara el pedido en un string para que sea facil su tratamiento a la
+	 * hora de escribir en la tag. Obtiene de la base de datos el pedido a
+	 * sincronizar con la siguiente forma:
+	 * "id_plato@id_plato+extras@5*ingredientes@id_plato+extras*ingredientes@";
+	 * "1@2@3@4+10010@5*01011@1+01001*1111@2+10010*1000100@";
+	 * 
+	 * @return
+	 */
+	private String damePedidoActual() {
+		String listaPlatosStr = "";
+		String[] campos = new String[] { "Id", "ExtrasBinarios",
+				"IngredientesBinarios", "Restaurante" };// Campos que quieres recuperar
+		String[] datosRestaurante = new String[] { restaurante };
+		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?",
+				datosRestaurante, null, null, null);
+
+		while (cursorPedido.moveToNext()) {
+
+			// le quito fh o v para introducir solo el id numerico en la tag
+			String idplato = cursorPedido.getString(0).substring(abreviaturaRest.length());
+
+			// compruebo si hay extras y envio +Extras si hay y si no ""
+			String extrasBinarios = cursorPedido.getString(1);
+			if (extrasBinarios == null)
+				extrasBinarios = "";
+			else
+				extrasBinarios = "+" + extrasBinarios;
+
+			// compruebo si hay ingredientes y envio *Ingre si no ""
+			String ingredientesBinarios = cursorPedido.getString(2);
+			if (ingredientesBinarios == null)
+				ingredientesBinarios = "";
+			else
+				ingredientesBinarios = "*" + ingredientesBinarios;
+
+			listaPlatosStr += idplato + extrasBinarios + ingredientesBinarios + "@";
+		}
 		
-		String[] campos = new String[]{"Id","ExtrasBinarios","Observaciones","Restaurante"};//Campos que quieres recuperar
-		String[] datosRestaurante = new String[]{restaurante};	
-		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
-    	
-    	while(cursorPedido.moveToNext()){
-    		
-    		// le quito fh o v para introducir solo el id numerico en la tag
-    		String idplato = cursorPedido.getString(0).substring(abreviaturaRest.length());
-    		
-        	// compruebo si hay extras y envio +Extras si hay y si no ""
-    		String extrasBinarios = cursorPedido.getString(1);
-    		if (extrasBinarios == null) extrasBinarios = "";
-    		else extrasBinarios = "+" + extrasBinarios;
-    		
-    		// compruebo si hay observaciones y envio *Observaciones si hay y si no ""
-    		String observaciones = cursorPedido.getString(2);
-    		if (observaciones == null) observaciones = "";
-    		else observaciones = "*" + observaciones;
-    		
-    		listaPlatosStr += idplato + extrasBinarios + observaciones +"@";     	
-    	}
-    	
-    	return listaPlatosStr;
+		return listaPlatosStr;
 	}
 
-	private String dameCodigoRestaurante() {
+	private void obtenerCodigoYAbreviaturaRestaurante() {
 		// Campos que quieres recuperar
 		String[] campos = new String[] { "Numero", "Abreviatura" };
 		String[] datos = new String[] { restaurante };
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
 		
 		cursorPedido.moveToFirst();
-		String codigoRest = cursorPedido.getString(0) + "@";
+		codigoRest = cursorPedido.getString(0);
 		abreviaturaRest = cursorPedido.getString(1);
-		
-		return codigoRest;
 	}
 
 }
