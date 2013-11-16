@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
 import java.util.Iterator;
-
+import java.util.StringTokenizer;
 import baseDatos.HandlerGenerico;
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
@@ -30,7 +29,6 @@ import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
@@ -53,29 +51,23 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	Tag mytag;
 	Context ctx;
 	String[][] mTechLists;
-	boolean leidoBienEnTag;
-	boolean esMFC;
+	boolean leidoBienEnTag, esMFC,  datosMalos,restauranteIncorrecto;
 	ProgressDialog	progressDialogSinc;
 	
 	//Variables usadas para añadir la lista de platos a la base de datos mesas
-	HandlerGenerico sqlMesas,sqlrestaurante,sqlEquivalencia;
-	String numMesa;
-	String idCamarero;
-	String numPersonas; 
-	String restaurante;
-	int numeroRestaurante;
-	String abreviatura;
-	SQLiteDatabase dbMesas,dbMiBase,dbEquivalencia;
-	byte[] mensaje;
+	HandlerGenerico sqlMesas,sqlRestaurante,sqlEquivalencia;	
+	SQLiteDatabase dbMesas,dbRestaurante,dbEquivalencia;
+	String numMesa, idCamarero, numPersonas, restaurante, codigoRest, abreviaturaRest;
+	
+	ArrayList<Byte> mensajeEnBytesBueno;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
+	
 	//Fecha y hora
-	String formatteHour;
-    String formatteDate;
+	String formatteHour, formatteDate;
     
-    boolean datosMalos,restauranteIncorrecto;
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas (decodificacion de pedido, lectura NFC y 
 	 * añadir a la base de datos Mesas) mientras se muestra un progress dialog. 
@@ -104,7 +96,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 				try {   
 					read(mytag);//Se ha detectado la tag procedemos a leerla
 					//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
-					decodificar(mensaje);
+					decodificar(mensajeEnBytesBueno);
 					//Sonido de confirmacion
 					sonidoManager.play(sonido);
 					}
@@ -133,6 +125,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	/**Creamos la actividad, en esta lo que vamos a hacer es detectar una tarjeta Nfc en el momento en que se detecte leeremos su contenido y mostraremos un progress Dialog 
 	 * hasta que se finalize la lectura, mas tarde se decodificaran estos platos y se añadiran a la base de datos mesas.
 	 */
+	@SuppressLint("SimpleDateFormat")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sincronizacion_lecturanfc);
@@ -177,35 +170,33 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //Cargamos el sonido
         sonido=sonidoManager.load(R.raw.confirm);
-        //Obtengo los datos del restaurante su numero y abreviatura
-        try{ //Abrimos la base de datos para consultarla
- 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Equivalencia_Restaurantes.db"); 
- 	        dbEquivalencia = sqlEquivalencia.open();
- 	     
- 	    }catch(SQLiteException e){
- 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos equivalencia",Toast.LENGTH_SHORT).show();
- 	       }
- 	   
- 	   try{
- 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
- 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
- 		   String[] campos = new String[]{"Numero","Abreviatura"};
- 		   String[] datos = new String[]{restaurante};
- 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
- 		   Cursor c = dbEquivalencia.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
- 	  	   
- 	  	   c.moveToFirst();
-        	 
- 	  	   numeroRestaurante = c.getInt(0);
- 	  	   abreviatura = c.getString(1);
- 	  	   
- 	  	   System.out.println("NUMERO"+numeroRestaurante+"ABREVIATURA"+abreviatura);
- 	  	
- 		}catch(Exception e){ }
-        
-        
+       
+        //obtenemos el codigo y la abreviatura del rest
+  		try {
+  			sqlEquivalencia = new HandlerGenerico(getApplicationContext(), "Equivalencia_Restaurantes.db");
+  			dbEquivalencia = sqlEquivalencia.open();
+  		} catch (SQLiteException e) {
+  			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR QR");
+  		}
+  		obtenerCodigoYAbreviaturaRestaurante();
+  		dbEquivalencia.close();
+                
 		// creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
+	}
+	
+	/**
+	 * MEtodo que da valor al codigo y a la abreviatura del restaurante
+	 */
+	private void obtenerCodigoYAbreviaturaRestaurante() {
+		// Campos que quieres recuperar
+		String[] campos = new String[] { "Numero", "Abreviatura" };
+		String[] datos = new String[] { restaurante };
+		Cursor cursorPedido = dbEquivalencia.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
+		
+		cursorPedido.moveToFirst();
+		codigoRest = cursorPedido.getString(0);
+		abreviaturaRest = cursorPedido.getString(1);
 	}
 	
 	/**
@@ -259,7 +250,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private byte[] read(Tag tag) throws IOException, FormatException {	
+	private void read(Tag tag) throws IOException, FormatException {	
 		
 		 /*
          * See NFC forum specification for "Text Record Type Definition" at 3.2.1
@@ -273,13 +264,11 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		Ndef ndef = Ndef.get(tag);
 		NdefMessage message = ndef.getCachedNdefMessage();
 		byte[] mensajeEnBytes = message.toByteArray();
-		byte[] mensajeEnBytesBueno = new byte[mensajeEnBytes.length-7];
+		mensajeEnBytesBueno = new ArrayList<Byte>();
 		// Con este "for" eliminamos los datos inservibles del array de bytes
 		for (int i=0; i<mensajeEnBytes.length-7; i++){
-			mensajeEnBytesBueno[i] = mensajeEnBytes[i+7];
+			mensajeEnBytesBueno.add(mensajeEnBytes[i+7]);
 		}
-
-		return mensajeEnBytesBueno;
 	}
 		/*Variables para borrar la tarjeta */
 //		String aux = "";
@@ -377,16 +366,6 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 //		
 //	}
 
-
-	/**
-	 * Metedo encargado de comprobar si se puede o no escribir en un bloque pasado por parametro
-	 * @param numBloque
-	 * @return
-	 */
-	private boolean sePuedeLeerEnBloque(int numBloque) {
-		return (numBloque+1) % 4 != 0 && numBloque != 0 ; 
-	}
-
 	/**Con este método detectamos la presencia de la tarjeta tag y establecemos la conexión
 	 * luego procedemos a añadir los platos a la base de datos mesas decodificandolos.
 	 */
@@ -430,41 +409,37 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 
 	/**Decodificamos el contenido leido de la tag separando cada plato y añadiendolo a las mesas.
 	 * */
-	private void decodificar(byte[] mensaje) {
+	private void decodificar(ArrayList<Byte> mensaje) {
+		//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
+		Iterator<Byte> itPlatos = mensaje.iterator();
+		boolean parar=false;
+		int numRestaurante; //TODO FALTA POR HACER
+		//numRestaurante = decodificaByte(itPlatos.next());  ID DEL REST
+		
+		while(itPlatos.hasNext() && !parar){					
+
+			int id = decodificaByte(itPlatos.next());
+			
+			parar = id==255;//El mensaje termina con un -1 en la tag
 	
-		boolean correcto = false;
-		boolean parar = false;
-		
-		int numRestaurante;//FALTA POR HACER
-		
-		while(!correcto){
-			
-			int id = decodificaByte(mensaje[0]);
-			if(id == 255){
-				correcto = true;
-			}else{
-			
-				int numBytesExtras = decodificaByte(mensaje[1]);
-				
-				String extrasBinarios = "";
-				for(int i=0; i < numBytesExtras; i++){
-					extrasBinarios += decToBin(mensaje[i+2]);
-				}
-				
-				int numBytesIngredientes = decodificaByte(mensaje[2 + numBytesExtras]);
-				
+			if(!parar){ //Si no ha acabado el mensaje
+				// extras
+				int numBytesExtras =  decodificaByte(itPlatos.next());
+				String extrasBinarios = "";				
+				for (int i = 0; i < numBytesExtras; i++ )
+					extrasBinarios += decToBin(itPlatos.next());
+										
+				// ingredientes				
+				int numBytesIngredientes = decodificaByte(itPlatos.next());
 				String ingredientesBinarios = "";
 				for(int i=0; i < numBytesIngredientes; i++){
-					ingredientesBinarios += decToBin(mensaje[i+2+numBytesExtras+1]);
+					ingredientesBinarios += decToBin(itPlatos.next());
 				}
 				
 				//Añadimos el plato
-				//TODO
-				añadirPlatos(restaurante,abreviatura+id,extrasBinarios,ingredientesBinarios);
-			}
-		}
-		
-		
+				anadirPlatos(abreviaturaRest+id,extrasBinarios,ingredientesBinarios);
+			}//if parar             
+		 }//while
 		
 //Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
 //		Iterator<Byte> itPlatos = mensaje.iterator();
@@ -570,94 +545,121 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	}
 
 
-	public void añadirPlatos(String restaurante,String id,String extras,String observaciones)
-	{
-          
-    	
-            Cursor cursor = null;
-            String extrasFinal="";
-            
-          try{
-    			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
-    			dbMiBase = sqlrestaurante.open();
-    			
-    			
-        		//Campos que quiero recuperar de la base de datos
-    			String[] campos = new String[]{"Nombre","Precio","Extras"};
-    			//Datos que tengo para consultarla
-          		String[] datos = new String[]{restaurante,id};
-          		
-          		cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
-          		cursor.moveToFirst();       
-                dbMiBase.close();
-                // Voy a comprobar los extras que se han escogido comparando el codigo binario que leemos de la tarjeta y los extras de la base de datos.
-                //Obtengo los extras de la base de datos
-                String extrasBaseDatos= cursor.getString(2);
-                //Separo los distintos tipos de extras
-                StringTokenizer auxExtras= new StringTokenizer(extrasBaseDatos,"/");
-                StringTokenizer auxExtras2 = null;
-                String elemento = "";
-                
-                int numExtras=0;
-                if(!extras.equals("")){
-                //Recorrro cada uno de los elementos que se me han generado en el sring tokenizer que son de la forma Guarnicion:PatatasAsada,Ensalada
-                while (auxExtras.hasMoreElements())
-                	{auxExtras2= new StringTokenizer((String) auxExtras.nextElement(),":");
-                	 //Elimino el Guarnicion:/Salsa:/Guarnicion:
-                	 auxExtras2.nextElement();
-                     extrasFinal +=auxExtras2.nextElement()+",";
-                	}
-                //Extras final tiene todos los extras de ese plato separados por comas
-                auxExtras= new StringTokenizer(extrasFinal,",");
-                extrasFinal="";
-                //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
-                while (auxExtras.hasMoreElements())
-            	  { elemento= (String) auxExtras.nextElement();
-            	    if (extras.charAt(numExtras)=='1')
-            		   extrasFinal +=elemento+", ";
-            	    numExtras++;    	  
-            	  }
-                //Le quito la ultima coma al extra final para que quede estetico
-                if (extrasFinal!= "")
-                	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-2);
-                }
-    		}catch(SQLiteException e){
-    		 	System.out.println("Error lectura base de datos de MIBASE");
-    		}
-    		
-          
-      		
-      		try{
-       			//Abro base de datos para introducir los platos en esa mesa
-       			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
-       			dbMesas= sqlMesas.open();
-       			//Meto el plato en la base de datos Mesas
+	@SuppressLint("SdCardPath")
+	public void anadirPlatos(String idNFC, String extrasNFC, String ingredientesNFC){           
+       	
+		try{
+			sqlRestaurante =new HandlerGenerico(getApplicationContext(), "MiBase.db");
+			dbRestaurante = sqlRestaurante.open();
+		
+			//Campos que quiero recuperar de la base de datos y datos que tengo para consultarla
+			String[] campos = new String[]{"Nombre","Precio","Extras","Ingredientes"};
+	      	String[] datos = new String[]{restaurante, idNFC};
+	      	
+      		Cursor cursor = dbRestaurante.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
+      		cursor.moveToFirst();       
+      		dbRestaurante.close();			
+	
+	      	String extrasSeparadosPorComas = obtenerExtrasSeparadosPorComas(cursor.getString(2));
+	        String extrasFinales = compararExtrasQRconBD(extrasSeparadosPorComas, extrasNFC);
+	        String ingredientesFinales = compararIngredientesNFCconBD(cursor.getString(3), ingredientesNFC);
+	        
+	        try{	      	        	
+	        	sqlMesas = new HandlerGenerico(getApplicationContext(), "Mesas.db");
+	    		dbMesas = sqlMesas.open();
+	        	
+	   			//Meto el plato en la base de datos Mesas
 	       		ContentValues plato = new ContentValues();
 	        	int idUnico = PantallaMesasFragment.getIdUnico();
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
-	        	plato.put("IdPlato", id);
-	        	plato.put("Observaciones", observaciones);
-	        	plato.put("Extras",extrasFinal);
+	        	plato.put("IdPlato", idNFC);
+	        	if (ingredientesFinales.equals("")) plato.put("Observaciones", "Con todos los ingredientes");
+		        else plato.put("Observaciones", "Sin: " + ingredientesFinales);
+	        	if (extrasNFC.equals(""))	plato.put("Extras","Sin guarnición");
+		        else plato.put("Extras", extrasFinales);
 	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
 	        	plato.put("Nombre", cursor.getString(0));
 	        	plato.put("Precio",cursor.getDouble(1));
 	        	plato.put("Personas",numPersonas);
 	        	plato.put("IdUnico", idUnico);
 	        	plato.put("Sincro", 0);
-	        	dbMesas.insert("Mesas", null, plato);
+	        	dbMesas.insert("Mesas", null, plato);  	
 	        	dbMesas.close();
-	        	System.out.println("Añadido");
-	        	
-	        	//FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
-	        	Mesa.actualizarNumeroVecesPlatoPedido(id);
+		        
+		        //FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
+	        	Mesa.actualizarNumeroVecesPlatoPedido(idNFC);
 	        	Mesa.pintarBaseDatosMiFav();
-        	
-      		}catch(Exception e){
-    			//System.out.println("Error lectura base de datos de Mesas");
-    		}
-   
+	        	
+	      	}catch(Exception e){
+	    		System.out.println("Error en base de datos de Mesas en anadirPlatos QR");
+	      	}
+	        
+		}catch(SQLiteException e){
+	    		 System.out.println("Error en base de datos de MIBASE");
+		}
 	}
+
+	
+	private String compararExtrasQRconBD(String extrasSeparadosPorComasBD, String extrasQR) {
+		StringTokenizer extrasST = new StringTokenizer(extrasSeparadosPorComasBD, ",");
+	    String extras = "";
+	    int i = 0;
+	    //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
+	    while (extrasST.hasMoreElements()){ 
+	    	 String elem = (String) extrasST.nextElement();
+	    	 if (extrasQR.charAt(i)=='1')
+	    		 extras +=elem + ", ";
+	    	 i++;    	  
+	     }
+	     //Le quito la ultima coma al extra final para que quede estetico
+	     if (extras!= "")
+	        extras = extras.substring(0, extras.length()-2);
+	     
+	     return extras;
+	}
+
+	/**
+	 * Devuelve en un string los extras separados por comas
+	 */
+	private String obtenerExtrasSeparadosPorComas(String extrasBD) {
+		
+		String extras = "";   
+		
+		// Voy a comprobar los extras que se han escogido comparando el codigo binario que leemos de la tarjeta y los extras de la base de datos.
+        StringTokenizer auxExtrasPadre = new StringTokenizer(extrasBD,"/"); //Separo los distintos tipos de extras
+     
+        // quitamos el padre de los extras para que solo queden los extras separados por comas en extrasFinal
+        while (auxExtrasPadre.hasMoreElements()){
+        	StringTokenizer auxExtrasHijo = new StringTokenizer((String) auxExtrasPadre.nextElement(),":");   
+        	auxExtrasHijo.nextElement(); // eliminamos el padre
+            extras += auxExtrasHijo.nextElement() + ","; 
+        }
+	
+        return extras;
+	}
+	
+	/**
+	 * Compara los ingredientes de QR con los de la BD, devuelve los marcados
+	 */
+	private String compararIngredientesNFCconBD(String ingredientesBD, String ingredientesNFC) {
+		StringTokenizer ingredientesST = new StringTokenizer(ingredientesBD, "%");
+	    String ingredientes = "";
+	    int i = 0;
+	    //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
+	    while (ingredientesST.hasMoreElements()){ 
+	    	 String elem = (String) ingredientesST.nextElement();
+	    	 if (ingredientesNFC.charAt(i)=='0')
+	    		 ingredientes +=elem + ", ";
+	    	 i++;    	  
+	     }
+	     //Le quito la ultima coma al extra final para que quede estetico
+	     if (ingredientes!= "")
+	    	 ingredientes = ingredientes.substring(0, ingredientes.length()-2);
+	     
+	     return ingredientes;
+	}
+
 
  
 	/*Menu que usaremos para activar el NFC y el sbeam*/
@@ -669,6 +671,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
     }
     
    
+	@SuppressLint("InlinedApi")
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
         if (item.getItemId() == R.id.menu_nfc){
