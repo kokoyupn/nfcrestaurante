@@ -46,6 +46,7 @@ public class BaseDatosRestaurantes extends Activity {
        	desayunosVips.put("Precio", 3.95);
     	desayunosVips.put("Descripcion", "Dos de nuestras famosas tortitas, acompañadas de huevos revueltos o fritos, crujiente bacon y patatas recién fritas o `Home Fries´ (patatas caseras cocidas y fritas especiadas con óregano, ajo y pimentón).");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "Tortitas%Huevos Fritos%Huevos Revueltos%Bacon%Patatas Fritas");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -62,6 +63,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Precio", 2.95);
     	desayunosVips.put("Descripcion", "Crujientes churros recién hechos. Tómatelos como más te gusten, con o sin azúcar espolvoreada.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "Azúcar espolvoreada");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -78,6 +80,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Precio", 3.95);
     	desayunosVips.put("Descripcion", "El auténtico `Croissant French Toast´ bañado en leche y huevo, acompañado de rojadas de fresa y plátano naturales con un toque de canela y caramelo.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "Fresas%Plátano%Canela%Caramelo");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -94,6 +97,7 @@ public class BaseDatosRestaurantes extends Activity {
     	desayunosVips.put("Precio", 5.95);
     	desayunosVips.put("Descripcion", "El clásico desayuno inglés: Huevos revueltos o dos huevos fritos, bacon, patatas fritas o `Home Fries´, champiñones, tomate a la plancha, salchicha Lincolnshire y barrita de pan integral recién tostada. Acompañado de un zumo de naranja natural.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "Huevos revueltos%Huevos fritos%Bacon%Patatas fritas%Home Fries%Champiñones%Tomate a la plancha%Salchicha%Barrita integral%Zumo de naranja");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -110,6 +114,7 @@ public class BaseDatosRestaurantes extends Activity {
         desayunosVips.put("Precio", 3.75);
     	desayunosVips.put("Descripcion", "Jamón Ibérico con nuestra receta de tomate natural en un mollete de Antequera recién tostado y aceite de oliva virgen extra Carbonell.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -126,6 +131,7 @@ public class BaseDatosRestaurantes extends Activity {
         desayunosVips.put("Precio", 2.95);
     	desayunosVips.put("Descripcion", "Pan de pan integral tostado con queso de Burgos, finas láminas de pavo y rodajas de tomate.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "Queso de burgos%Pavo%Tomate");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -142,6 +148,7 @@ public class BaseDatosRestaurantes extends Activity {
         desayunosVips.put("Precio", 4.95);
     	desayunosVips.put("Descripcion", "Nuestras tortitas con fresas y kiwis en rodajas, cremosa leche condensada y sirope de fresa. ¡Tocarás el cielo!.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "Fresas%Kiwis%Leche condensada%Sirope de fresa");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -158,6 +165,7 @@ public class BaseDatosRestaurantes extends Activity {
         desayunosVips.put("Precio", 2.95);
     	desayunosVips.put("Descripcion", "Es un postre sano, ligero y refrescante. Una mezcla de Yogur Activia con mango, frambuesas y sirope de fresa.   Te encantará.");
     	desayunosVips.put("Favorito","star_no");
+    	desayunosVips.put("Ingredientes", "");
     	db.insert("Restaurantes", null, desayunosVips);
     	idVips++;
     	
@@ -176,6 +184,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 7.95);
         entrantesVips.put("Descripcion", "Crujientes alitas de pollo marinadas con la genuina salsa Buffalo, acompañadas de unas crudites de zanahoria y apio con una cremosa salsa de queso Gorgonzola.");
         entrantesVips.put("Favorito","star_no");
+        entrantesVips.put("Ingredientes", "Salsa Buffalo%Zanahoria%Apio%Queso gorgonzola");
         db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -191,6 +200,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 6.50);
      	entrantesVips.put("Descripcion", "Crujientes y dorados aros de cebolla con un toque de Parmesano, oregano y cayena, acompañados de dos salsas, Blooming Onion y nuestro secreto mejor guardado: la salsa especial VIPS.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Salsa Blooming Onion%Salsa especial VIPS");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -206,6 +216,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 7.25);
      	entrantesVips.put("Descripcion", "Crujientes croquetas de jamón Ibérico y Mozzarella empanadas con Panko, adornadas con tomate seco, cebolla crujiente y alcaparras fritas. Acompañadas de dos salsas: Barbacoa Ranch y salsa de tomate Concassé.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Salsa Barbacoa Ranch%Salsa de tomate Concassé");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -221,6 +232,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 8.95);
      	entrantesVips.put("Descripcion", "Fina masa de pan crujiente recién horneado con pechuga de pollo a la Barbacoa, pimientos asados rojos y amarillos, ajetes y crema agria con jugo de lima.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Pimientos rojos%Pimientos amarillos%Ajetes%Crema agria");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -236,6 +248,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 8.95);
      	entrantesVips.put("Descripcion", "Mezcla templada de carne de cangrejo del Atlántico Norte, quesos suaves y Mozzarella, pimiento rojo, pimienta y jugo de lima. Adornada con pico de gallo, ajetes, cilantro y acompañada de unas crujientes tortillas de harina de trigo.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Queso suave%Mozzarella%Pimiento rojo%Pimienta%Jugo de lima");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -251,6 +264,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 8.50);
      	entrantesVips.put("Descripcion", "Crujientes tortillas de maiz con una nueva mezcla de quesos con cebolla roja, chorizo picado, chiles jalapeños y nuestro toque especial de cilantro, ajetes y crema agria con jugo de lima.Si no te gustan picantes, puedes pedirlos sin chiles jalapeños.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Chiles jalapeños");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -266,6 +280,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 5.50);
      	entrantesVips.put("Descripcion", "Patatas sazonadas, fritas y doradas, servidas con salsa ali-oli y nuestra salsa secreta especial VIPS.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Salsa Ali-Oli%Salsa especial VIPS");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -281,6 +296,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 8.95);
      	entrantesVips.put("Descripcion", "Dos tortillas de harina de trigo rellenas de queso Cheddar y Mozzarella, pollo asado, verduras asadas (calabacín, champiñón Portobello, pimientos y cebolla).Acompañadas de una crema de lima.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Crema de lima");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
      	
@@ -296,6 +312,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 6.95);
      	entrantesVips.put("Descripcion", "Dos tortillas de harina de trigo rellenas de jamón York, dos tipos de queso Cheddar fundidos, y adornadas con pico de gallo y salsa de tomate y guacamole.");
      	entrantesVips.put("Favorito","star_no");
+     	entrantesVips.put("Ingredientes", "Pico de gallo");
      	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
       	
@@ -311,6 +328,7 @@ public class BaseDatosRestaurantes extends Activity {
         entrantesVips.put("Precio", 7.95);
       	entrantesVips.put("Descripcion", "Verduras asadas aromatizadas con un aceite de hierbas mezcladas con hojas frescas de albahaca.");
       	entrantesVips.put("Favorito","star_no");
+      	entrantesVips.put("Ingredientes", "");
       	db.insert("Restaurantes", null, entrantesVips);
     	idVips++;
     	
@@ -329,6 +347,7 @@ public class BaseDatosRestaurantes extends Activity {
         ensaladasVips.put("Precio", 9.50);
      	ensaladasVips.put("Descripcion", "Ligera y sabrosa ensalada a base de lechuga, queso Parmesano, croutons de pan y pollo crujiente. Aderezada con nuestra salsa César.");
      	ensaladasVips.put("Favorito","star_no");
+     	ensaladasVips.put("Ingredientes", "Queso parmesano%Croutons de pan%Pollo crujiente%Salsa César");
      	db.insert("Restaurantes", null, ensaladasVips);
      	idVips++;
      	
@@ -344,6 +363,7 @@ public class BaseDatosRestaurantes extends Activity {
         ensaladasVips.put("Precio", 9.95);
      	ensaladasVips.put("Descripcion", "Sabrosos dados de pollo con salsa de Bourbon y melaza, con mezcla de lechugas frescas, pimiento rojo, bacon crujiente y cebolla frita.");
      	ensaladasVips.put("Favorito","star_no");
+     	ensaladasVips.put("Ingredientes", "Salsa Bourbon%Salsa melaza%Pimiento rojo%Bacon%Cebolla");
      	db.insert("Restaurantes", null, ensaladasVips);
      	idVips++;
      	
@@ -359,6 +379,7 @@ public class BaseDatosRestaurantes extends Activity {
         ensaladasVips.put("Precio", 8.95);
      	ensaladasVips.put("Descripcion", "Ensalada de tomates: natural, Cherry y seco, con una mezcla de lechuga romana y rúcula, perlas de Mozzarella y aceitunas negras, aderezada con una vinagreta de especias.");
      	ensaladasVips.put("Favorito","star_no");
+     	ensaladasVips.put("Ingredientes", "Tomate natural%Tomate Cherry%Tomate seco%Lechuga romana%Rúcula%Mozzarella%Aceitunas%Vinagreta");
      	db.insert("Restaurantes", null, ensaladasVips);
      	idVips++;
      	
@@ -374,6 +395,7 @@ public class BaseDatosRestaurantes extends Activity {
         ensaladasVips.put("Precio", 9.75);
      	ensaladasVips.put("Descripcion", "Ensalada templada con pollo a la plancha, bacon crujiente y queso Gorgonzola sobre una variada mezcla de lechugas.");
      	ensaladasVips.put("Favorito","star_no");
+     	ensaladasVips.put("Ingredientes", "Pollo%Bacon%Queso gorgonzola%Lechuga");
      	db.insert("Restaurantes", null, ensaladasVips);
      	idVips++;
      	
@@ -389,6 +411,7 @@ public class BaseDatosRestaurantes extends Activity {
         ensaladasVips.put("Precio", 9.25);
      	ensaladasVips.put("Descripcion", "Ensalada templada con pollo a la plancha, bacon crujiente y queso Gorgonzola sobre una variada mezcla de lechugas.");
      	ensaladasVips.put("Favorito","star_no");
+     	ensaladasVips.put("Ingredientes", "Queso gorgonzola, Queso de cabra%Queso parmesano");
      	db.insert("Restaurantes", null, ensaladasVips);
      	idVips++;
        	
@@ -408,6 +431,7 @@ public class BaseDatosRestaurantes extends Activity {
         principalesVips.put("Precio", 9.95);
        	principalesVips.put("Descripcion", "Tiernísimas costillas de cerdo glaseadas con nuestra salsa barbacoa, acompañadas de unas crujientes patatas fritas, aros de cebolla y nuestra salsa Barbacoa Chipotle. ¡Echa la salsa por encima de las costillas y disfrútalas!");
        	principalesVips.put("Favorito","star_no");
+       	principalesVips.put("Ingredientes", "Salsa barbacoa%Patatas fritas%Aros de cebolla%Salsa Barbacoa Cipote");
        	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
  
@@ -423,6 +447,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 8.95);
      	principalesVips.put("Descripcion", "Fina masa de pan crujiente recién horneado con pechuga de pollo a la Barbacoa, pimientos asados rojos y amarillos, ajetes y crema agria con jugo de lima.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "Pimientos rojos%Pimientos amarillos%Ajetes%Crema agria");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -438,6 +463,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 9.95);
      	principalesVips.put("Descripcion", "Deliciosos langostinos con salsa Sriracha sobre un lecho de arroz vaporizado con puré de cilantro. Acompañados con cebolla caramelizada, tirabeques al vapor, pimientos rojos asados y espárragos.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -453,6 +479,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 9.95);
      	principalesVips.put("Descripcion", "Láminas de pasta de trigo rellenas de verduras asadas y crema de queso de Cabra y albahaca, gratinadas con una suave bechamel y queso Parmesano. Acompáñalas con una ensalada de lechugas y dados de tomate o con dos rebanadas de pan de ajo.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -468,6 +495,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 15.50);
      	principalesVips.put("Descripcion", "Jugoso y tierno lomo alto de novillo argentino acompañado con salsa Chimichurri y guarnición de patatas VIPS, espárragos, calabacín y tomate a la parrilla.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -483,6 +511,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.50);
      	principalesVips.put("Descripcion", "Lomo de Merluza rebozado con mayonesa de lima. Acompañado de una ensalada de lechugas frescas con pico de gallo aliñadas con una ligera salsa Ranch y crema de aceto.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -498,6 +527,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.95);
      	principalesVips.put("Descripcion", "Nuestras exclusivas Meat Balls con pasta y salsa de tomate. Acompañadas de queso Parmesano, Mozzarella, salsa Pesto y dos rebanadas de pan de ajo.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -513,6 +543,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.50);
      	principalesVips.put("Descripcion", "Dos pechugas de pollo cubiertas con salsa bechamel, empanadas y acompañadas de un huevo frito, mezcla de lechugas con tomate, patatas fritas y salsa de tomate Concassé.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -528,6 +559,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 10.95);
      	principalesVips.put("Descripcion", "Sabrosas tiras de pechuga de pollo con salsa agridulce de soja y piña, salteadas con pimientos, brócoli y anacardos. Servidas sobre una base de arroz blanco.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -543,6 +575,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 7.95);
      	principalesVips.put("Descripcion", "Verduras asadas aromatizadas con un aceite de hierbas mezcladas con hojas frescas de albahaca.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -558,6 +591,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  " con nuestro toque de orégano y pimentón),Pan rústico o barrita integral,Huevo frito,Arroz,Verduras salteadas,Espárragos verdes a la parrilla");        principalesVips.put("Precio", 11.95);
      	principalesVips.put("Descripcion", "Tierno filete de ternera acompañado de verduras salteadas y rodajas de tomate a la plancha.");
      	principalesVips.put("Favorito","star_no");
+     	principalesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, principalesVips);
      	idVips++;
      	
@@ -576,6 +610,7 @@ public class BaseDatosRestaurantes extends Activity {
         hamburguesasVips.put("Precio", 9.75);
      	hamburguesasVips.put("Descripcion", "La gran clásica acompaña de bacon, huevo y patatas fritas.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -594,6 +629,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"cebolla roja, pepinillo suave, tomate natural,lechuga Batavia y mayonesa."+
      			"¡Acompáñala con una fresca mezcla de lechugas y dados de tomate o patatas fritas!");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -609,6 +645,7 @@ public class BaseDatosRestaurantes extends Activity {
         hamburguesasVips.put("Precio", 7.50);
      	hamburguesasVips.put("Descripcion", "La gran clásica con queso fundido, acompañada de nuestras patatas fritas y un suculento huevo frito.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -624,6 +661,7 @@ public class BaseDatosRestaurantes extends Activity {
         hamburguesasVips.put("Precio", 10.75);
      	hamburguesasVips.put("Descripcion", "Jugosa carne 100% vacuno a la plancha con queso Brie fundido, cebolla crujiente, bacon y champiñón. Servida en pan brioche con una ligera mayonesa Dijón y patatas fritas.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -641,6 +679,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"con exquisito queso Gorgonzola, bacon, cebolla roja, pepinillo suave, tomate natural, lechuga y " +
      			"salsa de queso Azul.¡Una delicatessen para los amantes del queso!");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -656,6 +695,7 @@ public class BaseDatosRestaurantes extends Activity {
         hamburguesasVips.put("Precio", 9.75);
      	hamburguesasVips.put("Descripcion", "Deliciosa hamburguesa 100% vacuno con tomate fresco, queso fundido, finas rodajas de cebolla roja, lechuga Batavia y nuestra mayonesa de lima. Servida con nuestro pan brioche ligeramente tostado y salsa kétchup Heinz.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -671,6 +711,7 @@ public class BaseDatosRestaurantes extends Activity {
         hamburguesasVips.put("Precio", 10.75);
      	hamburguesasVips.put("Descripcion", "Doble hamburguesa en pan de mollete crujiente con bacon, rúcula y queso Provolone fundido, acompañadas de cebolla confitada y mayonesa de Chimichurri.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -686,6 +727,7 @@ public class BaseDatosRestaurantes extends Activity {
      	hamburguesasVips.put("Precio", 9.75);
      	hamburguesasVips.put("Descripcion", "Con queso fundido y dos lonchas de bacon crujiente, acompañada de patatas fritas.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -701,6 +743,7 @@ public class BaseDatosRestaurantes extends Activity {
         hamburguesasVips.put("Precio", 8.75);
      	hamburguesasVips.put("Descripcion", "La gran clásica con queso fundido, acompañada de nuestras patatas fritas.");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -718,6 +761,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"huevo frito,  cremoso queso Emmental, bacon, pepinillo suave, tomate natural y salsa especial VIPS." +
      			"¡Perfecta para disfrutar con patatas fritas y todo el sabor de nuestra salsa especial VIPS!");
      	hamburguesasVips.put("Favorito","star_no");
+     	hamburguesasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, hamburguesasVips);
      	idVips++;
      	
@@ -740,6 +784,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"Pesto y frescas hojas de albahaca y perejil en un pan de Focaccia recién horneado. Acompáñalo con " +
      			"tu guarnición favorita: ensalada o patatas fritas. ¡Nuevo Sandwich para hacerte la boca agua!");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -755,6 +800,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 7.95);
      	sadwichesVips.put("Descripcion", "Lonchas de jamón York y pavo cocido, acompañadas de huevos revueltos y una deliciosa mezca de quesos Cheddar fundidos.");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -772,6 +818,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"cebolla roja a la plancha, tomate y fresca lechuga en un delicado pan campesino con mayonesa de lima. " +
      			"Acompáñalo con tu guarnición favorita; ensalada o patatas fritas. ¡Nuevo Sandwich para hacerte la boca agua!");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -790,6 +837,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"Servido con crudités de apio y zanahoria para mojar en una salsa de queso Gorgonzola suave o si lo" +
      			" prefieres pídelo con ensalada o patatas fritas.¡Nuevo Sandwich para hacerte la boca agua!");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -805,6 +853,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 8.75);
      	sadwichesVips.put("Descripcion", "Nuestro gran clásico renovado, más irresistible que nunca con sus tres pisos de pollo a la plancha, bacon crujiente, tomates frescos y mayonesa. Ahora con el doble de queso y jamón York, acompañados por un cremoso queso Emmental Suizo, lechuga Batavia y más patatas fritas.");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -822,6 +871,7 @@ public class BaseDatosRestaurantes extends Activity {
      			"integral, mayonesa, queso y bacon tostado sin grasa. Servido con `crudités´ crujientes de zanahoria y " +
      			"apio y una cremosa salsa de queso Gorgonzola.");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -837,6 +887,7 @@ public class BaseDatosRestaurantes extends Activity {
 				  "(patatas caseras cocidas y fritas escediadas con orégano y pimentón),Patatas fritas");        sadwichesVips.put("Precio", 9.25);
      	sadwichesVips.put("Descripcion", "Nuestro sándwich gigante enrollado con una nueva receta. Pollo a la parrilla, el triple de jamón York y cremoso queso fundido, bacon, suave pepinillo agridulce, cebolla caramelizada y mayonesa con mostaza.  Acompañado de patatas fritas y salsa de mostaza y miel.");
      	sadwichesVips.put("Favorito","star_no");
+     	sadwichesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, sadwichesVips);
      	idVips++;
      	
@@ -855,6 +906,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 4.95);
      	dulcesVips.put("Descripcion", "Brownie con Helado de Vainilla");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -870,6 +922,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 3.95);
      	dulcesVips.put("Descripcion", "El auténtico `Croissant French Toast´ bañado en leche y huevo, acompañado de rojadas de fresa y plátano naturales con un toque de canela y caramelo. Servido con una bola de helado de vainilla.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -885,6 +938,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 4.95);
      	dulcesVips.put("Descripcion", "Irresistible crema de queso, con una base de galleta y mermelada de fresas.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -900,6 +954,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 4.75);
      	dulcesVips.put("Descripcion", "Combina una irresistible base de almendras con una crema de chocolate y mousse de chocolate con leche, coronada por trozos de Toblerone y acompañada de una bola de helado de vainilla.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -915,6 +970,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 4.95);
      	dulcesVips.put("Descripcion", "Porción de tarta de queso y galleta, bañada en sirope de fresa y adornada con una fresa.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -930,6 +986,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 4.95);
      	dulcesVips.put("Descripcion", "Nuestras tortitas con fresas y kiwis en rodajas, cremosa leche condensada y sirope de fresa. ¡Tocarás el cielo!.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -945,6 +1002,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 2.95);
      	dulcesVips.put("Descripcion", "Nuestras famosas tortitas a la plancha, acompañadas con nata y sirope de chocolate, caramelo o fresa a tu gusto. ¿Podrás con las tres?.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -960,6 +1018,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 3.0);
      	dulcesVips.put("Descripcion", "Helado de dulce de leche, yoguar Activia, plátano y nata, servido con trocitos de cookies y sirope de dulce de leche.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -975,6 +1034,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 3.0);
      	dulcesVips.put("Descripcion", "Date un capricho con nuestros vasitos de Cheesecake, Tiramisú, Brownie o el nuevo de Dulce de leche.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -990,6 +1050,7 @@ public class BaseDatosRestaurantes extends Activity {
         dulcesVips.put("Precio", 3.95);
      	dulcesVips.put("Descripcion", "Es un postre sano, ligero y refrescante. Una mezcla de Yogur Activia con mango, frambuesas y sirope de fresa.    Te encantará.");
      	dulcesVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, dulcesVips);
      	idVips++;
      	
@@ -1008,6 +1069,7 @@ public class BaseDatosRestaurantes extends Activity {
         batidosVips.put("Precio", 5.75);
      	batidosVips.put("Descripcion", "Delicioso batido de chocolate blanco y galletas Oreo, servido con nata.");
      	batidosVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, batidosVips);
      	idVips++;
      	
@@ -1023,6 +1085,7 @@ public class BaseDatosRestaurantes extends Activity {
         batidosVips.put("Precio", 5.75);
      	batidosVips.put("Descripcion", "Todo un clásico de la casa renovado. Más dulce, cremoso y con mayor cantidad. 4 Bolas de helado a elegir entre: Chocolate, fresa, vainilla, chocolate blanco, yogur con arándanos y chocolate belga y nuestro nuevo sabor de dulce de leche. Leche, nata líquida azucarada y nata montada con un toque de sirope. ¡Disfrutarás hasta el último sorbo!.");
      	batidosVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, batidosVips);
      	idVips++;
      	
@@ -1038,6 +1101,7 @@ public class BaseDatosRestaurantes extends Activity {
         batidosVips.put("Precio", 5.95);
      	batidosVips.put("Descripcion", "Irresistible combinación de tres bolas de helado de dulce de leche, yogur Activia, plátano y nata, servida con trocitos de cookies y sirope de dulce de leche.");
      	batidosVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, batidosVips);
      	idVips++;
      	
@@ -1053,6 +1117,7 @@ public class BaseDatosRestaurantes extends Activity {
         batidosVips.put("Precio", 5.95);
      	batidosVips.put("Descripcion", "Delicioso brownie bañado en sirope de chocolate, con mousse, palitos de chocolate y dos bolas de helado de chocolate y chocolate belga.");
      	batidosVips.put("Favorito","star_no");
+     	dulcesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, batidosVips);
      	idVips++;
      	
@@ -1071,6 +1136,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 1.95);
      	cafesChocolatesVips.put("Descripcion", "Elaborado con deliciosa leche condensada y café Espresso.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1086,6 +1152,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 4.75);
      	cafesChocolatesVips.put("Descripcion", "Mantenemos la receta original de 1942, el mejor café con un chorrito de whisky, azúcar moreno y nata batida.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1101,6 +1168,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 2.95);
      	cafesChocolatesVips.put("Descripcion", "Café con espuma de leche y una base de sirope de caramelo.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1116,6 +1184,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 2.95);
      	cafesChocolatesVips.put("Descripcion", "Una perfecta combinación entre sirope y mousse de chocolate, adornada con espuma de leche. Dale tu toque espolvoreando cacao en polvo o canela.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1131,6 +1200,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 2.95);
      	cafesChocolatesVips.put("Descripcion", "Servido con nata batida y sirope de chocolate.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1146,6 +1216,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 2.30);
      	cafesChocolatesVips.put("Descripcion", "Café Espresso con leche, adornado con una nube de espuma y canela en polvo.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1161,6 +1232,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 1.95);
      	cafesChocolatesVips.put("Descripcion", "El mejor chocolate a la taza elaborado de forma tradicional.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1176,6 +1248,7 @@ public class BaseDatosRestaurantes extends Activity {
         cafesChocolatesVips.put("Precio", 3.75);
      	cafesChocolatesVips.put("Descripcion", "Delicioso antojo de chocolate a la taza, con crema de avellanas, nata montada y virutas de chocolate negro.");
      	cafesChocolatesVips.put("Favorito","star_no");
+     	cafesChocolatesVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, cafesChocolatesVips);
      	idVips++;
      	
@@ -1194,6 +1267,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1209,6 +1283,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1224,6 +1299,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1239,6 +1315,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1254,6 +1331,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1269,6 +1347,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1284,6 +1363,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1299,6 +1379,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1314,6 +1395,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1329,6 +1411,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bebidasVips.put("Extras", "");
      	bebidasVips.put("Precio", 3.00);
      	bebidasVips.put("Favorito","star_no");
+     	bebidasVips.put("Ingredientes", "");
      	db.insert("Restaurantes", null, bebidasVips);
      	idVips++;
      	
@@ -1351,6 +1434,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n21.put("Extras", "");
      	n21.put("Precio", 8.35);
      	n21.put("Favorito","star_no");
+     	n21.put("Ingredientes", "Queso%Salsa Ranchera%Bacon");
      	db.insert("Restaurantes", null, n21);
      	idFoster++;
      	
@@ -1366,6 +1450,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n22.put("Extras", "");
      	n22.put("Precio", 11.55);
      	n22.put("Favorito","star_no");
+     	n22.put("Ingredientes", "Salsa ranchera%Salsa barbacoa");
      	db.insert("Restaurantes", null, n22);
      	idFoster++;
      	
@@ -1382,6 +1467,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n23.put("Extras", "");
      	n23.put("Precio", 9.20);
      	n23.put("Favorito","star_no");
+     	n23.put("Ingredientes", "Queso%Chili%Crema agria%Jalapeños");
      	db.insert("Restaurantes", null, n23);
      	idFoster++;
      	
@@ -1398,6 +1484,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n24.put("Extras", "Salsa:Ranchera,Barbacoa,Frambuesa,Mexicana");
      	n24.put("Precio", 7.10);
      	n24.put("Favorito","star_no");
+     	n24.put("Ingredientes", "Salsa BBQ-Ranch");
      	db.insert("Restaurantes", null, n24);
      	idFoster++;
      	
@@ -1416,6 +1503,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n25.put("Extras", "");
      	n25.put("Precio", 9.85);
      	n25.put("Favorito","star_no");
+     	n25.put("Ingredientes", "Queso de cabra%Jamón serrano%Tomate cherry%Pasas");
      	db.insert("Restaurantes", null, n25);
      	idFoster++;
      	
@@ -1432,6 +1520,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n26.put("Extras", "Salsa:Mostaza-Miel,Roquefor,Rosa,Aceite-Vinagre");
      	n26.put("Precio", 9.85);
      	n26.put("Favorito","star_no");
+     	n26.put("Ingredientes", "Pollo%Tomates secos%Nueces");
      	db.insert("Restaurantes", null, n26);
      	idFoster++;
      	
@@ -1447,6 +1536,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n27.put("Extras", "");
      	n27.put("Precio", 9.85);
      	n27.put("Favorito","star_no");
+     	n27.put("Ingredientes", "Pollo%Croutons%Queso Grana Padano%Salsa César");
      	db.insert("Restaurantes", null, n27);
      	idFoster++;
      	
@@ -1463,6 +1553,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n28.put("Extras", "Salsa:Roquefort,Rosa,Mostaza-Miel,Aceite-Vinagre");
      	n28.put("Precio", 9.85);
      	n28.put("Favorito","star_no");
+     	n28.put("Ingredientes", "Pollo%Bacon%Quesos%Tomate%Zanahoria");
      	db.insert("Restaurantes", null, n28);
      	idFoster++;
      	
@@ -1483,6 +1574,7 @@ public class BaseDatosRestaurantes extends Activity {
     	bb1.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Salsa:Roquefort,Barbacoa/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
     	bb1.put("Precio",10.85);
     	bb1.put("Favorito","star_no");
+    	bb1.put("Ingredientes", "Queso cheddar%Bacon%Tomate%Brotes baby%Cebolla morada%Mayonesa");
     	db.insert("Restaurantes", null, bb1);
      	idFoster++;
      	
@@ -1500,6 +1592,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb2.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb2.put("Precio",10.85);
      	bb2.put("Favorito","star_no");
+     	bb2.put("Ingredientes", "Queso cheddar%Bacon%Tomate%Brotes baby%Cebolla morada%Mayonesa");
      	db.insert("Restaurantes", null, bb2);
      	idFoster++;
      	
@@ -1517,6 +1610,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb3.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb3.put("Precio",10.85);
      	bb3.put("Favorito","star_no");
+     	bb3.put("Ingredientes", "Queso cheddar%Bacon%Tomate%Brotes baby%Cebolla morada%Mayonesa");
      	db.insert("Restaurantes", null, bb3);
      	idFoster++;
      	
@@ -1536,6 +1630,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb4.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb4.put("Precio",10.85);
      	bb4.put("Favorito","star_no");
+     	bb4.put("Ingredientes", "Queso Roquefort%Bacon%Tomate%Brotes baby%Cebolla morada");
      	db.insert("Restaurantes", null, bb4);
      	idFoster++;
      	
@@ -1554,6 +1649,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb5.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb5.put("Precio",10.85);
      	bb5.put("Favorito","star_no");
+     	bb5.put("Ingredientes", "Chili%Tomate%Brotes baby%Cebolla morada");
      	db.insert("Restaurantes", null, bb5);
      	idFoster++;
      	
@@ -1572,6 +1668,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb6.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb6.put("Precio",10.85);
      	bb6.put("Favorito","star_no");
+     	bb6.put("Ingredientes", "Tomate%Brotes baby%Cebolla morada%Mayonesa");
      	db.insert("Restaurantes", null, bb6);
      	idFoster++;
      	
@@ -1592,6 +1689,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb7.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb7.put("Precio",10.85);
      	bb7.put("Favorito","star_no");
+     	bb7.put("Ingredientes", "Salsa barbacoa%Tomate%Brotes baby%Cebolla morada");
      	db.insert("Restaurantes", null, bb7);
      	idFoster++;
      	
@@ -1611,6 +1709,7 @@ public class BaseDatosRestaurantes extends Activity {
      	bb8.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	bb8.put("Precio",10.85);
      	bb8.put("Favorito","star_no");
+     	bb8.put("Ingredientes", "Huevo%Bacon%Cebolla pochada%Tomate%Brotes baby");
      	db.insert("Restaurantes", null, bb8);
      	idFoster++;
      	
@@ -1628,6 +1727,7 @@ public class BaseDatosRestaurantes extends Activity {
      	b9.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
        	b9.put("Precio",10.85);
        	b9.put("Favorito","star_no");
+       	b9.put("Ingredientes", "Philadelphia%Cebolla caramelizada%Tomate%Brotes baby%Cebolla morada%Mayonesa");
        	db.insert("Restaurantes", null, b9);
      	idFoster++;
      	
@@ -1644,6 +1744,7 @@ public class BaseDatosRestaurantes extends Activity {
      	b10.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
        	b10.put("Precio",10.85);
        	b10.put("Favorito","star_no");
+       	b10.put("Ingredientes", "Queso de cabra%Jamón serrano%Tomate%Ajo frito");
        	db.insert("Restaurantes", null, b10);
      	idFoster++;
      	
@@ -1661,6 +1762,7 @@ public class BaseDatosRestaurantes extends Activity {
      	b11.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
        	b11.put("Precio",9.70);
        	b11.put("Favorito","star_no");
+       	b11.put("Ingredientes", "Queso cheddar%Bacon%Tomate%Brotes baby%Cebolla morada%Mayonesa");
        	db.insert("Restaurantes", null, b11);
      	idFoster++;
      	
@@ -1680,6 +1782,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n29.put("Extras", "Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n29.put("Precio", 15.85);
      	n29.put("Favorito","star_no");
+     	n29.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n29);
      	idFoster++;
      	
@@ -1696,6 +1799,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n30.put("Extras", "Salsa:Barbacoa,Cajun,Barbacoa-Miel/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n30.put("Precio", 15.45);
      	n30.put("Favorito","star_no");
+     	n30.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n30);
      	idFoster++;
      	
@@ -1715,6 +1819,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n31.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n31.put("Precio", 16.75);
      	n31.put("Favorito","star_no");
+     	n31.put("Ingredientes", "Pan de ajo%Salsa de champiñones");
      	db.insert("Restaurantes", null, n31);
      	idFoster++;
      	
@@ -1731,6 +1836,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n32.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n32.put("Precio", 18.65);
      	n32.put("Favorito","star_no");
+     	n32.put("Ingredientes", "Bacon%Cebolla%Pan de ajo%Salsa de champiñones");
      	db.insert("Restaurantes", null, n32);
      	idFoster++;
      	
@@ -1749,6 +1855,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n33.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n33.put("Precio", 12.45);
      	n33.put("Favorito","star_no");
+     	n33.put("Ingredientes", "Salsa de champiñones%Cebolla pochada%Quesos fundidos%Patatas fritas%Lechuga%Tomate%Jalapeños");
      	db.insert("Restaurantes", null, n33);
      	idFoster++;
      	
@@ -1766,6 +1873,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n34.put("Extras", "Carne:Poco hecha,Al punto,Muy hecha/Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n34.put("Precio", 14.60);
      	n34.put("Favorito","star_no");
+     	n34.put("Ingredientes", "Salsa Bourbon%Cebolla pochada%Tomates cherry");
      	db.insert("Restaurantes", null, n34);
      	idFoster++;
      	
@@ -1788,6 +1896,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n35.put("Extras", "");
      	n35.put("Precio", 14.50);
      	n35.put("Favorito","star_no");
+     	n35.put("Ingredientes", "Carne%Pollo%Cebolla%Pimientos%Crema agria");
      	db.insert("Restaurantes", null, n35);
      	idFoster++;
      	
@@ -1805,6 +1914,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n36.put("Extras", "");
      	n36.put("Precio", 9.95);
      	n36.put("Favorito","star_no");
+     	n36.put("Ingredientes", "Lechuga%Verduras%Pollo%Piña%Salsa Teriyaki%Arroz%Salsa Thai%Lima");
      	db.insert("Restaurantes", null, n36);
      	idFoster++;
      	
@@ -1822,6 +1932,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n37.put("Extras", "");
      	n37.put("Precio", 9.45);
      	n37.put("Favorito","star_no");
+     	n37.put("Ingredientes", "Salsa mexicana%Quesos fundidos%Crema agria%Especiado%Carne de vacuno");
      	db.insert("Restaurantes", null, n37);
      	idFoster++;
      	
@@ -1840,6 +1951,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n38.put("Extras", "");
      	n38.put("Precio", 9.95);
      	n38.put("Favorito","star_no");
+     	n38.put("Ingredientes", "Pollo%Quesos fundidos%Salsa satay%Salsa de tomatillo%Crema agria%Pico de gallo%Aros de cebolla");
      	db.insert("Restaurantes", null, n38);
      	idFoster++;
      	
@@ -1859,6 +1971,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n39.put("Extras", "");
      	n39.put("Precio", 12.30);
      	n39.put("Favorito","star_no");
+     	n39.put("Ingredientes", "Salsa barbacoa%Patatas fritas%Brotes baby%Tomates secos%Croutons%Salsa parmesana");
      	db.insert("Restaurantes", null, n39);
      	idFoster++;
      	
@@ -1876,6 +1989,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n40.put("Extras", "");
      	n40.put("Precio", 10.55);
      	n40.put("Favorito","star_no");
+     	n40.put("Ingredientes", "Crema de nata%Quesos%Cebolla caramelizada%Salsa búfalo%Pollo%Pan de ajo");
      	db.insert("Restaurantes", null, n40);
      	idFoster++;
      	
@@ -1893,6 +2007,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n41.put("Extras", "");
      	n41.put("Precio", 10.55);
      	n41.put("Favorito","star_no");
+     	n41.put("Ingredientes", "Salsa de soja%Sésamo");
      	db.insert("Restaurantes", null, n41);
      	idFoster++;
      	
@@ -1913,6 +2028,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n42.put("Extras", "Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n42.put("Precio", 9.10);
      	n42.put("Favorito","star_no");
+     	n42.put("Ingredientes", "Cebolla pochada%Quesos%Pico de gallo%Pepinillo%Cebolla morada%Col%Patatas fritas");
      	db.insert("Restaurantes", null, n42);
      	idFoster++;
      	
@@ -1930,6 +2046,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n43.put("Extras", "Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n43.put("Precio", 9.50);
      	n43.put("Favorito","star_no");
+     	n43.put("Ingredientes", "Salsa de champiñones%Cebolla pochada%Quesos%Pan de Ciabatta");
      	db.insert("Restaurantes", null, n43);
      	idFoster++;
      	
@@ -1946,6 +2063,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n44.put("Extras", "Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n44.put("Precio", 9.50);
      	n44.put("Favorito","star_no");
+     	n44.put("Ingredientes", "Lechuga%Salsa parmesana%Bacon%Pollo");
      	db.insert("Restaurantes", null, n44);
      	idFoster++;
      	
@@ -1962,6 +2080,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n45.put("Extras", "Guarnicion:Patatas Fritas,Patata Asada,Ensalada Green&Cheese,Ensalada Tomate y Lechuga");
      	n45.put("Precio", 9.10);
      	n45.put("Favorito","star_no");
+     	n45.put("Ingredientes", "Pavo%Queso cheddar%Tomate%Lechuga%Salsa ranchera");
      	db.insert("Restaurantes", null, n45);
      	idFoster++;
      	
@@ -1981,6 +2100,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n59.put("Extras", "");
      	n59.put("Precio", 5.35);
      	n59.put("Favorito","star_no");
+     	n59.put("Ingredientes", "Salsa de frutos del bosque");
      	db.insert("Restaurantes", null, n59);
      	idFoster++;
      	
@@ -1998,6 +2118,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n60.put("Extras", "");
      	n60.put("Precio", 5.35);
      	n60.put("Favorito","star_no");
+     	n60.put("Ingredientes", "Chocolate caliente%Nata%Helado de vainilla");
      	db.insert("Restaurantes", null, n60);
      	idFoster++;
      	
@@ -2015,6 +2136,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n61.put("Extras", "");
      	n61.put("Precio", 5.35);
      	n61.put("Favorito","star_no");
+     	n61.put("Ingredientes", "Chocolate caliente%Nata%Helado de vainilla");
      	db.insert("Restaurantes", null, n61);
      	idFoster++;
      	
@@ -2033,6 +2155,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n62.put("Extras", "");
      	n62.put("Precio", 5.35);
      	n62.put("Favorito","star_no");
+     	n62.put("Ingredientes", "Chocolate%Nata%Helado de vainilla");
      	db.insert("Restaurantes", null, n62);
      	idFoster++;
      	
@@ -2051,6 +2174,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n63.put("Extras", "");
      	n63.put("Precio", 5.35);
      	n63.put("Favorito","star_no");
+     	n63.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n63);
      	idFoster++;
      	
@@ -2067,6 +2191,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n64.put("Extras", "");
      	n64.put("Precio", 4.65);
      	n64.put("Favorito","star_no");
+     	n64.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n64);
      	idFoster++;
      	
@@ -2083,6 +2208,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n48.put("Extras", "");
      	n48.put("Precio", 3.00);
      	n48.put("Favorito","star_no");
+     	n48.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n48);
      	idFoster++;
      	
@@ -2098,6 +2224,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n49.put("Extras", "");
      	n49.put("Precio", 3.00);
      	n49.put("Favorito","star_no");
+     	n49.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n49);
      	idFoster++;
      	
@@ -2113,6 +2240,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n50.put("Extras", "");
      	n50.put("Precio", 3.00);
      	n50.put("Favorito","star_no");
+     	n50.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n50);
      	idFoster++;
      	
@@ -2128,6 +2256,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n51.put("Extras", "");
      	n51.put("Precio", 3.00);
      	n51.put("Favorito","star_no");
+     	n51.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n51);
      	idFoster++;
      	
@@ -2143,6 +2272,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n52.put("Extras", "");
      	n52.put("Precio", 3.00);
      	n52.put("Favorito","star_no");
+     	n52.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n52);
      	idFoster++;
      	
@@ -2158,6 +2288,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n53.put("Extras", "");
      	n53.put("Precio", 3.00);
      	n53.put("Favorito","star_no");
+     	n53.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n53);
      	idFoster++;
      	
@@ -2173,6 +2304,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n55.put("Extras", "");
      	n55.put("Precio", 3.00);
      	n55.put("Favorito","star_no");
+     	n55.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n55);
      	idFoster++;
      	
@@ -2188,6 +2320,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n56.put("Extras", "");
      	n56.put("Precio", 3.00);
      	n56.put("Favorito","star_no");
+     	n56.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n56);
      	idFoster++;
      	
@@ -2203,6 +2336,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n57.put("Extras", "");
      	n57.put("Precio", 3.00);
      	n57.put("Favorito","star_no");
+     	n57.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n57);
      	idFoster++;
      	
@@ -2218,6 +2352,7 @@ public class BaseDatosRestaurantes extends Activity {
      	n58.put("Extras", "");
      	n58.put("Precio", 3.00);
      	n58.put("Favorito","star_no");
+     	n58.put("Ingredientes", "");
      	db.insert("Restaurantes", null, n58);
      	idFoster++;
      	
