@@ -132,7 +132,7 @@ public class Handler extends SQLiteOpenHelper {
 			String query="CREATE TABLE Camareros(Nombre TEXT,Contraseña TEXT)";
 						db.execSQL(query);
 		}else if(DB_NAME=="Mesas.db"){
-			String query="CREATE TABLE Mesas(NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
+			String query="CREATE TABLE Mesas(Sincro TEXT, NumMesa TEXT,IdCamarero TEXT,IdPlato TEXT," +
 			"Ingredientes TEXT,Extras TEXT, FechaHora TEXT, Nombre TEXT, Precio INTEGER, Personas INTEGER, IdUnico INTEGER)";
 			db.execSQL(query);
 		}else if(DB_NAME=="Cuenta.db"){
@@ -140,8 +140,8 @@ public class Handler extends SQLiteOpenHelper {
 			"Ingredientes TEXT,Extras TEXT, PrecioPlato INTEGER)";
 			db.execSQL(query);
 		}else if(DB_NAME=="Pedido.db"){
-			String query="CREATE TABLE Pedido(Sincro TEXT, Restaurante TEXT,Id TEXT,IdHijo TEXT,Plato TEXT," +
-					"Ingredientes TEXT, IngredientesBinarios TEXT, Extras TEXT, ExtrasBinarios TEXT, PrecioPlato INTEGER)";
+			String query="CREATE TABLE Pedido(Restaurante TEXT,Id TEXT,IdHijo TEXT,Plato TEXT," +
+					"Ingredientes TEXT, Extras TEXT, PrecioPlato INTEGER)";
 			db.execSQL(query);
 		}
 		else if(DB_NAME=="Equivalencia_Restaurantes.db"){
