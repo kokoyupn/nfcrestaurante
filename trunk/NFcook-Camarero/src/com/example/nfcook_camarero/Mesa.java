@@ -10,6 +10,7 @@ import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListEditarAdapter;
 import adapters.MiListMesaAdapter;
 import adapters.PadreExpandableListEditar;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -391,7 +392,7 @@ public class Mesa extends Activity {
 		    
 		    while(c.moveToNext()){
 		    	if(primero){
-		    		elementos.add(new PadreListMesa(c.getString(0), c.getString(2), generarFraseIngredientes(c.getString(1)), Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+		    		elementos.add(new PadreListMesa(c.getString(0), generarFraseExtras(c.getString(2)), generarFraseIngredientes(c.getString(1)), Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    		primero=false;
 		    	}else{
 		    		int i = 0;
@@ -404,7 +405,7 @@ public class Mesa extends Activity {
 	    				String o = elementos.get(i).getObservaciones();
 	    				
 			    		if( n.equals(c.getString(0)) &&
-			    			e.equals(c.getString(2)) &&
+			    			e.equals(generarFraseExtras(c.getString(2))) &&
 			    			o.equals(generarFraseIngredientes(c.getString(1))) &&
 			    			sincronizado == c.getInt(6) ){
 			    				repetido = true;
@@ -414,7 +415,7 @@ public class Mesa extends Activity {
 			    			i++;
 		    		}
 		    		if(!repetido){
-		    			elementos.add(new PadreListMesa(c.getString(0) ,c.getString(2), generarFraseIngredientes(c.getString(1)),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+		    			elementos.add(new PadreListMesa(c.getString(0), generarFraseExtras(c.getString(2)), generarFraseIngredientes(c.getString(1)),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    		}
 		    	}
 		    	
@@ -428,19 +429,25 @@ public class Mesa extends Activity {
 		}
 	}
 	
+	private static String generarFraseExtras(String extras) {
+		return extras.charAt(0) + extras.substring(1, extras.length()).toLowerCase();
+	}
+
+
+	@SuppressLint("DefaultLocale")
 	private static String generarFraseIngredientes(String ingredientesBD) {
 		
 		if (ingredientesBD.equals("Con todos los ingredientes"))
 			return ingredientesBD;
 		
-		String ingredientesSin = "Sin ";		
+		String ingredientesSin = "";		
 		StringTokenizer ingredientesST = new StringTokenizer(ingredientesBD, ",");
 		
 		while(ingredientesST.hasMoreElements()){
-			ingredientesSin += ingredientesST.nextToken() + ", sin ";
+			ingredientesSin += ingredientesST.nextToken() + ", sin";
 		}
 		
-		return ingredientesSin.substring(0, ingredientesSin.length()-6);		
+		return "Sin " + ingredientesSin.substring(0, ingredientesSin.length()-5).toLowerCase();		
 	}
 
 

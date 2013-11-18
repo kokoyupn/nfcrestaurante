@@ -102,7 +102,7 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
 		
 		//Obtengo los datos del restaurante su numero y abreviatura
         try{ //Abrimos la base de datos para consultarla
- 	       	sqlMesas = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Mesas.db"); 
+ 	       	sqlMesas = new HandlerGenerico(getApplicationContext(),"Mesas.db"); 
  	        dbMesas = sqlMesas.open();
  	     
  	    }catch(SQLiteException e){
@@ -111,22 +111,21 @@ public class SincronizarTpv extends Activity implements CreateNdefMessageCallbac
         // 
         
 		String listaPlatosStr = dameCodigoRestaurante()+numeroMesa+"@"+numPersonas+"@";
-		String[] campos = new String[]{"Sincro","IdPlato","Observaciones","Extras"};//Campos que quieres recuperar
+		String[] campos = new String[]{"Sincro","IdPlato","Ingredientes","Extras"};//Campos que quieres recuperar
 		String[] datosMesa = new String[]{numeroMesa};	
 		Cursor cursorPedido = dbMesas.query("Mesas", campos, "NumMesa=?", datosMesa,null, null,null);
 		int sincro=0;
     	while(cursorPedido.moveToNext()){
     		
     		sincro=cursorPedido.getInt(0);
-    		if (sincro==0)//No estasincronizado
-    		{
-    		listaPlatosStr += cursorPedido.getString(1);
-    		if(!cursorPedido.getString(2).equals(""))
-    			listaPlatosStr+="+"+cursorPedido.getString(2);
-    		if(!cursorPedido.getString(3).equals(""))
-        	listaPlatosStr+= "*"+cursorPedido.getString(3);
-    		
-    		listaPlatosStr+="@";
+    		if (sincro==0){//No estasincronizado
+	    		listaPlatosStr += cursorPedido.getString(1);
+	    		if(!cursorPedido.getString(2).equals(""))
+	    			listaPlatosStr+="+"+cursorPedido.getString(2);
+	    		if(!cursorPedido.getString(3).equals(""))
+	        	listaPlatosStr+= "*"+cursorPedido.getString(3);
+	    		
+	    		listaPlatosStr+="@";
     		
     		}
     }

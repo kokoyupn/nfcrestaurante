@@ -130,11 +130,11 @@ public class SincronizacionQR extends Activity {
 					extras =  stTodoSeparado.nextToken();
 							
 				// comentarios
-				String observaciones = "";
+				String ingredientes = "";
 				if (plato.contains("*"))
-					observaciones =  stTodoSeparado.nextToken();
+					ingredientes =  stTodoSeparado.nextToken();
 						
-				anadirPlatos(abreviaturaRest+id, extras, observaciones);
+				anadirPlatos(abreviaturaRest+id, extras, ingredientes);
 			}	
 		}
 		else {
@@ -171,8 +171,8 @@ public class SincronizacionQR extends Activity {
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", idQR);
-	        	if (ingredientesFinales.equals("")) plato.put("Observaciones", "Con todos los ingredientes");
-		        else plato.put("Observaciones", ingredientesFinales);
+	        	if (ingredientesFinales.equals("")) plato.put("Ingredientes", "Con todos los ingredientes");
+		        else plato.put("Ingredientes", ingredientesFinales);
 	        	if (extrasQR.equals(""))	plato.put("Extras","Sin guarnición");
 		        else plato.put("Extras", extrasFinales);
 	        	plato.put("FechaHora", formatteDate + " " + formatteHour);

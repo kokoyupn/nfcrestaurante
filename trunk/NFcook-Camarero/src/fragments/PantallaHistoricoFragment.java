@@ -130,7 +130,7 @@ public class PantallaHistoricoFragment extends Fragment {
 
 	private void importarBaseDatatos(){
 		try{
-			sql = new HandlerGenerico(getActivity().getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Historico.db"); 
+			sql = new HandlerGenerico(getActivity().getApplicationContext(),"Historico.db"); 
 			db = sql.open();
 		}catch(SQLiteException e){
 			Toast.makeText(getActivity().getApplicationContext(),"NO EXISTE",Toast.LENGTH_SHORT).show();

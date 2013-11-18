@@ -563,8 +563,8 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", idNFC);
-	        	if (ingredientesFinales.equals("")) plato.put("Observaciones", "Con todos los ingredientes");
-		        else plato.put("Observaciones", ingredientesFinales);
+	        	if (ingredientesFinales.equals("")) plato.put("Ingredientes", "Con todos los ingredientes");
+		        else plato.put("Ingredientes", ingredientesFinales);
 	        	if (extrasNFC.equals(""))	plato.put("Extras","Sin guarnición");
 		        else plato.put("Extras", extrasFinales);
 	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
