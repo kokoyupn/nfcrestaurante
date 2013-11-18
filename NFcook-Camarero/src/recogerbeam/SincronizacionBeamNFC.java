@@ -182,7 +182,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	{
 		//Obtengo los datos del restaurante su numero y abreviatura
         try{ //Abrimos la base de datos para consultarla
- 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","Equivalencia_Restaurantes.db"); 
+ 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"Equivalencia_Restaurantes.db"); 
  	        dbEquivalencia = sqlEquivalencia.open();
  	     
  	    }catch(SQLiteException e){
@@ -219,8 +219,8 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 					String plato = stPlatos.nextToken();
 					StringTokenizer stTodoSeparado =  new StringTokenizer(plato,"+,*");
 					
-					String extras,comentario;
-					extras=comentario="";
+					String extras,ingredientes;
+					extras=ingredientes="";
 					// id
 					int id =  Integer.parseInt(stTodoSeparado.nextToken());
 					parar= id==255;
@@ -232,9 +232,9 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 						}
 						// comentarios
 						if (plato.contains("*"))  {
-							comentario =  stTodoSeparado.nextToken();
+							ingredientes =  stTodoSeparado.nextToken();
 						}
-						añadirPlatos(restaurante,abreviatura+id,extras,comentario);
+						añadirPlatos(abreviatura+id,extras,ingredientes);
 					}			
 				}
 				}
@@ -245,7 +245,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	}
 	
 
-	public void añadirPlatos(String restaurantes,String id,String extras,String observaciones)
+	public void añadirPlatos(String id,String extras, String ingredientes)
 	{
 		
     		
@@ -254,7 +254,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
             String  restaurante = PantallaMesasFragment.dameRestaurante();
             
           try{
-    			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+    			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "MiBase.db");
     			dbMiBase = sqlrestaurante.open();
     			    			
         		//Campos que quiero recuperar de la base de datos
@@ -304,7 +304,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
       		
       		try{
        			//Abro base de datos para introducir los platos en esa mesa
-       			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+       			sqlMesas=new HandlerGenerico(getApplicationContext(), "Mesas.db");
        			dbMesas= sqlMesas.open();
        			//Meto el plato en la base de datos Mesas
 	       		ContentValues plato = new ContentValues();
@@ -312,7 +312,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	        	plato.put("NumMesa",PantallaMesasFragment.dameMesa());
 	        	plato.put("IdCamarero",PantallaMesasFragment.dameCamarero()); 
 	        	plato.put("IdPlato", id);
-	        	plato.put("Observaciones", observaciones);
+	        	plato.put("Ingredientes", ingredientes);
 	        	plato.put("Extras",extrasFinal);
 	        	plato.put("FechaHora", PantallaMesasFragment.dameFecha() + " " + PantallaMesasFragment.dameHora());
 	        	plato.put("Nombre", cursor.getString(0));

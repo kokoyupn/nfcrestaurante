@@ -200,7 +200,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
     			"@fh10+extra1+extra2*OBS*nombrePlato*2.2*4*62*idCamarero*fechaHora";*/
     	
     	try{
-    		sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+    		sqlMesas=new HandlerGenerico(context, "Mesas.db");
 			dbMesas= sqlMesas.open();
 			
 			dbMesas.delete("Mesas", "NumMesa=?",new String[]{numMesa});
@@ -231,10 +231,10 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 				}
 				System.out.println("ExtrasParaDB: "+extrasParaBD);
 				
-				String obs = campos.nextToken();//Tienes las observaciones
-				if(obs.equals("_"))
-					obs="";
-				System.out.println("Observac: "+obs);
+				String ingredientes = campos.nextToken();//Tienes los ingredientes
+				if(ingredientes.equals("_")) // FIXME esto que es _
+					ingredientes = "";
+				System.out.println("Observac: "+ingredientes);
 				
 				String nombrePlato,precio,numPersonas,idUnico,idCamarero,fechaHora;
 				nombrePlato = campos.nextToken();
@@ -249,7 +249,7 @@ public class RecogerCuentaTPV extends Activity  implements OnNdefPushCompleteCal
 	        	nuevo.put("NumMesa", numMesa);
 				nuevo.put("IdCamarero", idCamarero);
 				nuevo.put("IdPlato", id);
-				nuevo.put("Observaciones", obs);
+				nuevo.put("Ingredientes", ingredientes);
 				nuevo.put("Extras", extrasParaBD);
 				nuevo.put("FechaHora", fechaHora);
 				nuevo.put("Nombre", nombrePlato);

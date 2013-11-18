@@ -103,7 +103,7 @@ public class PantallaMesasFragment extends Fragment {
         
 	   //Para importar la base de Assets
         try{
-			sqlMesas = new HandlerGenerico(getActivity().getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db" );
+			sqlMesas = new HandlerGenerico(getActivity().getApplicationContext(), "Mesas.db" );
 			
 			dbMesas= sqlMesas.open();
 			}catch(SQLiteException e){
@@ -197,7 +197,7 @@ public class PantallaMesasFragment extends Fragment {
 				            alert.setPositiveButton("Aceptar",new  DialogInterface.OnClickListener() { // si le das al aceptar
 				               	public void onClick(DialogInterface dialog, int whichButton) {
 				                	try{
-				                		HandlerGenerico sqlHistorico = new HandlerGenerico(getActivity().getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Historico.db");
+				                		HandlerGenerico sqlHistorico = new HandlerGenerico(getActivity().getApplicationContext(),  "Historico.db");
 				                		SQLiteDatabase dbHistorico= sqlHistorico.open();
 				            			
 				                		String[] numeroDeMesa = new String[]{numeroMesaAEditar};
@@ -582,7 +582,7 @@ public class PantallaMesasFragment extends Fragment {
 	                       
 	                        //abrimos la base de datos MiBase.db
 	                        try{
-	                			sqlMiBase=new HandlerGenerico(getActivity().getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+	                			sqlMiBase=new HandlerGenerico(getActivity().getApplicationContext(), "MiBase.db");
 	                			dbMiBase= sqlMiBase.open();
 	                		}catch(SQLiteException e){
 	                			System.out.println("CATCH");

@@ -78,7 +78,7 @@ public class MiCursorAdapterBuscadorPlatos extends CursorAdapter{
    
    private void importarBaseDatatos(){
        try{
-       	sql = new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db"); 
+       	sql = new HandlerGenerico(context, "MiBase.db"); 
        	db = sql.open();
        }catch(SQLiteException e){
         	Toast.makeText(context,"NO EXISTE",Toast.LENGTH_SHORT).show();
