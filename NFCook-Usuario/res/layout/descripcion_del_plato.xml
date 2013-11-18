@@ -5,16 +5,6 @@
     android:layout_height="match_parent"
     android:background="#ffdd8d" >
 
-    <Button
-        android:id="@+id/botonOpcionEditar"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginRight="10dp"
-        android:onClick="onClickConfirmarEditar"
-        android:text="Editar" />
-
     <ImageView
         android:id="@+id/imageConfirmarPlato"
         android:layout_width="57dp"
