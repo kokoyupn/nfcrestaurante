@@ -77,6 +77,9 @@ public class Mesa extends Activity {
 	private boolean entrar=false;
 	private boolean primeraVez,mueves;
 	
+	private	ArrayList<Boolean> ingredientesMarcadosBoolean;
+    private ArrayList<String> ingredientesTotales;
+	
 	
 	private AutoCompleteTextView actwObservaciones;
 	
@@ -102,6 +105,9 @@ public class Mesa extends Activity {
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
+		
+		ingredientesTotales = new ArrayList<String>();
+		ingredientesMarcadosBoolean = new ArrayList<Boolean>();
 		
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
@@ -393,7 +399,7 @@ public class Mesa extends Activity {
 		    while(c.moveToNext()){
 		    	if(primero){
 
-		    		elementos.add(new PadreListMesa(c.getString(0), generarFraseExtras(c.getString(2)), generarFraseIngredientes(c.getString(1)), Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+		    		elementos.add(new PadreListMesa(c.getString(0), c.getString(2), c.getString(1), Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 
 		    		primero=false;
 		    	}else{
@@ -407,8 +413,8 @@ public class Mesa extends Activity {
 	    				String o = elementos.get(i).getObservaciones();
 	    				
 			    		if( n.equals(c.getString(0)) &&
-			    			e.equals(generarFraseExtras(c.getString(2))) &&
-			    			o.equals(generarFraseIngredientes(c.getString(1))) &&
+			    			e.equals(c.getString(2)) &&
+			    			o.equals(c.getString(1)) &&
 			    			sincronizado == c.getInt(6) ){
 			    				repetido = true;
 			    				elementos.get(i).sumaCantidad();//Le sumas 1 a ese elemento del array que esta repetido
@@ -417,7 +423,7 @@ public class Mesa extends Activity {
 			    			i++;
 		    		}
 		    		if(!repetido){
-		    			elementos.add(new PadreListMesa(c.getString(0), generarFraseExtras(c.getString(2)), generarFraseIngredientes(c.getString(1)),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+		    			elementos.add(new PadreListMesa(c.getString(0), c.getString(2), c.getString(1),Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
 		    		}
 		    	}
 		    	
@@ -429,29 +435,6 @@ public class Mesa extends Activity {
 			System.out.println("Error en obtenerElementos");
 			return elementos;
 		}
-	}
-
-	private static String generarFraseExtras(String extras) {
-		if(!extras.equals(""))
-			return extras.charAt(0) + extras.substring(1, extras.length()).toLowerCase();
-		else
-			return "";
-	}
-
-
-	private static String generarFraseIngredientes(String ingredientesBD) {
-		
-		if (ingredientesBD.equals("Con todos los ingredientes"))
-			return ingredientesBD;
-		
-		String ingredientesSin = "";		
-		StringTokenizer ingredientesST = new StringTokenizer(ingredientesBD, ",");
-		
-		while(ingredientesST.hasMoreElements()){
-			ingredientesSin += ingredientesST.nextToken() + ", sin";
-		}
-		
-		return "Sin " + ingredientesSin.substring(0, ingredientesSin.length()-5).toLowerCase();		
 	}
 	
 
@@ -465,6 +448,9 @@ public class Mesa extends Activity {
 					importarBaseDatatosMesa();
 					String nuevosExtrasMarcados = null;
 					
+					String ingredientesStr = null;
+					String ingredientesBinarios = null;
+					
 					if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
 						nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
 					}
@@ -476,12 +462,31 @@ public class Mesa extends Activity {
 //			    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
 //			    	}
 			    	
+			    	if(ingredientesMarcadosBoolean.size() > 0){
+						ingredientesStr = "";
+						ingredientesBinarios = "";
+						for(int i=0; i<ingredientesMarcadosBoolean.size(); i++){
+							if(ingredientesMarcadosBoolean.get(i)) // == true
+								ingredientesBinarios += "1";
+							else{						   // == false
+								ingredientesBinarios += "0";
+								ingredientesStr += ingredientesTotales.get(i) + ", sin ";
+							}
+						}
+						if (ingredientesStr.equals("")){
+							ingredientesStr = "Con todos los ingredientes";
+						} else {
+							ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
+						}    			
+					}
+			    	
 			    	if(nuevosExtrasMarcados==null)
-						nuevosExtrasMarcados="";
+						nuevosExtrasMarcados="Sin guarnición";
 					
 			    	ContentValues platoEditado = new ContentValues();
 			    	platoEditado.put("Extras", nuevosExtrasMarcados);
-			    	platoEditado.put("Ingredientes", "poyas");
+			    	platoEditado.put("Ingredientes", ingredientesStr);
+			    	
 			        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
 			        
 			        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
@@ -581,10 +586,10 @@ public class Mesa extends Activity {
   		
   		String ingredientesPlatoCadena = cursor.getString(0);
   		String ingredientesMarcadosCadena = adapter.getObservacionesPlato(posicion);
-  		
+
         String[] ingredientesMarcadosString = ingredientesMarcadosCadena.split(",");
-        ArrayList<Boolean> ingredientesMarcadosBoolean = new ArrayList<Boolean>();
-        ArrayList<String> ingredientesTotales = new ArrayList<String>();
+        ingredientesMarcadosBoolean = new ArrayList<Boolean>();
+        ingredientesTotales = new ArrayList<String>();
         
         if (!ingredientesPlatoCadena.equals("")){
    
