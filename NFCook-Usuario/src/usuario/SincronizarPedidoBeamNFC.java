@@ -37,23 +37,14 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     TextView mInfoText;
     private static final int MESSAGE_SENT = 1;
     Context context;
-    private String abreviaturaRest;
     
     //Variables para bases de datos
     private HandlerDB sqlCuenta, sqlPedido, sqlRestaurante ;
 	private SQLiteDatabase dbCuenta, dbPedido, dbRestaurante;
     
 	//Variables para los pedidos
-	String restaurante;
-    String pedido;
-    
-    
-    int numeroRestaurante;
-	String abreviatura;
-	/*Variables para obtener el valor equivalente del restaurante*/
-	String ruta="/data/data/com.example.nfcook_camarero/databases/";
-	
-    
+	String restaurante, pedido, abreviaturaRest, codigoRest;
+   
 	@SuppressLint("NewApi")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,58 +169,66 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
 		sqlRestaurante.close();
 	}
 		
-
 	/** 
-	 * Prepara el pedido en un string para que sea facil su tratamiento a la hora de escribir en la tag.
-	 * Obtiene de la base de datos el pedido a sincronizar con la siguiente forma:
-	 * "id_plato@id_plato+extras@5*Obs@id_plato+extras*Obs@";	
-	 * "1@2@3@4+10010@5*Con tomate@1+01001*Con azucar@2+10010*Sin macarrones@";	
-	 * 
+	 * Devuelve un string con el id del restaurante + el pedido
 	 * @return
 	 */
 	private String damePedidoStr() {
-		
-		String listaPlatosStr = dameCodigoRestaurante();
-				String[] campos = new String[]{"Id","ExtrasBinarios","Observaciones","Restaurante"};//Campos que quieres recuperar
-		String[] datosRestaurante = new String[]{restaurante};	
-		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante,null, null,null);
-    	
-    	while(cursorPedido.moveToNext()){
-    		
-    		// le quito fh o v para introducir solo el id numerico en la tag
-    		String idplato = cursorPedido.getString(0).substring(abreviaturaRest.length());
-    		
-        	// compruebo si hay extras y envio +Extras si hay y si no ""
-    		String extrasBinarios = cursorPedido.getString(1);
-    		if (extrasBinarios == null) extrasBinarios = "";
-    		else extrasBinarios = "+" + extrasBinarios;
-    		
-    		// compruebo si hay observaciones y envio *Observaciones si hay y si no ""
-    		String observaciones = cursorPedido.getString(2);
-    		if (observaciones == null) observaciones = "";
-    		else observaciones = "*" + observaciones;
-    		
-    		listaPlatosStr += idplato + extrasBinarios + observaciones +"@";     	
-    	}
-    	
-    	// para indicar que ha finalizado el pedido escribo un 255 
-    	listaPlatosStr += "255";
-    	
-    	return listaPlatosStr;
+		obtenerCodigoYAbreviaturaRestaurante();
+    	return codigoRest + "@" + damePedidoActual();
 	}
 	
-	private String dameCodigoRestaurante(){
+	/**
+	 * Prepara el pedido en un string para que sea facil su tratamiento a la
+	 * hora de escribir en la tag. Obtiene de la base de datos el pedido a
+	 * sincronizar con la siguiente forma:
+	 * "id_plato@id_plato+extras@5*ingredientes@id_plato+extras*ingredientes@";
+	 * "1@2@3@4+10010@5*01011@1+01001*1111@2+10010*1000100@";
+	 * 
+	 * @return
+	 */
+	private String damePedidoActual() {
+		String listaPlatosStr = "";
+		String[] campos = new String[] { "Id", "ExtrasBinarios",
+				"IngredientesBinarios", "Restaurante" };// Campos que quieres recuperar
+		String[] datosRestaurante = new String[] { restaurante };
+		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?",
+				datosRestaurante, null, null, null);
+
+		while (cursorPedido.moveToNext()) {
+
+			// le quito fh o v para introducir solo el id numerico en la tag
+			String idplato = cursorPedido.getString(0).substring(abreviaturaRest.length());
+
+			// compruebo si hay extras y envio +Extras si hay y si no ""
+			String extrasBinarios = cursorPedido.getString(1);
+			if (extrasBinarios == null)
+				extrasBinarios = "";
+			else
+				extrasBinarios = "+" + extrasBinarios;
+
+			// compruebo si hay ingredientes y envio *Ingre si no ""
+			String ingredientesBinarios = cursorPedido.getString(2);
+			if (ingredientesBinarios == null)
+				ingredientesBinarios = "";
+			else
+				ingredientesBinarios = "*" + ingredientesBinarios;
+
+			listaPlatosStr += idplato + extrasBinarios + ingredientesBinarios + "@";
+		}
+		
+		return listaPlatosStr;
+	}
+	
+	private void obtenerCodigoYAbreviaturaRestaurante() {
 		// Campos que quieres recuperar
 		String[] campos = new String[] { "Numero", "Abreviatura" };
 		String[] datos = new String[] { restaurante };
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
-
+		
 		cursorPedido.moveToFirst();
-		String codigoRest = cursorPedido.getString(0) + "@";
+		codigoRest = cursorPedido.getString(0);
 		abreviaturaRest = cursorPedido.getString(1);
-		
-		return codigoRest;
-		
 	}
 
     /**
@@ -256,8 +255,7 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     /**
      * Metodo encargado de cerrar la ventana
      */
-    public void cerrarVentana()
-    {
+    public void cerrarVentana(){
     	this.finish();
     }
     
