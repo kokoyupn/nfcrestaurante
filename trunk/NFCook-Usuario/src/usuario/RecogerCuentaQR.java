@@ -161,7 +161,7 @@ public class RecogerCuentaQR extends Activity {
     		ContentValues platoCuenta = new ContentValues();
     		platoCuenta.put("Id", cursorCuenta.getString(0));
         	platoCuenta.put("Plato", cursorCuenta.getString(1));
-        	platoCuenta.put("Observaciones", "");
+        	platoCuenta.put("Ingredientes", "");
         	platoCuenta.put("Extras", "");
         	platoCuenta.put("PrecioPlato",cursorCuenta.getDouble(2));
         	platoCuenta.put("Restaurante",restaurante);

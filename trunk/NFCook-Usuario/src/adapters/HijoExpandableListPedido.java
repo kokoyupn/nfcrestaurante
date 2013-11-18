@@ -17,14 +17,14 @@ import java.util.Iterator;
  *
  */
 public class HijoExpandableListPedido {
-	private String observaciones, extras, id;
+	private String ingredientes, extras, id;
 	private double precio;
 	private int numeroDeConfiguraciones;
 	private double precioUnidad;
 	private ArrayList<String> idsUnicos; // Si hay mas de una configuracion igual necesitamos guardar sus ids unicos para despues poder modificar la base de datos.
 	
-	public HijoExpandableListPedido(String observaciones, String extras, double precio, String id) {
-		this.observaciones = observaciones;
+	public HijoExpandableListPedido(String ingredientes, String extras, double precio, String id) {
+		this.ingredientes = ingredientes;
 		this.extras = extras;
 		this.precio = precio;
 		precioUnidad = precio;
@@ -35,8 +35,8 @@ public class HijoExpandableListPedido {
 	}
 
 
-	public String getObservaciones() {
-		return observaciones;
+	public String getIngredientes() {
+		return ingredientes;
 	}
 
 
@@ -68,9 +68,9 @@ public class HijoExpandableListPedido {
 	}
 
 
-	public void setExtrasObs(String extras, String observaciones) {
+	public void setExtrasIng(String extras, String ingredientes) {
 		this.extras = extras;
-		this.observaciones = observaciones;
+		this.ingredientes = ingredientes;
 	}
 
 	public static boolean existeHijoIgualEnArray(ArrayList<HijoExpandableListPedido> hijos, HijoExpandableListPedido hijoAbuscar) {
@@ -111,10 +111,10 @@ public class HijoExpandableListPedido {
 		}else{
 			extrasIdem = extras.equals(hijo.extras);
 		}
-		if(observaciones == null && hijo.observaciones == null){
+		if(ingredientes == null && hijo.ingredientes == null){
 			obsIdem = true;
-		}else if (observaciones != null && hijo.observaciones != null){
-			obsIdem = observaciones.equals(hijo.observaciones);
+		}else if (ingredientes != null && hijo.ingredientes != null){
+			obsIdem = ingredientes.equals(hijo.ingredientes);
 		}
 		
 		return extrasIdem && obsIdem;

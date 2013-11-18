@@ -305,7 +305,7 @@ public class RecogerCuentaNFC extends Activity implements
     		ContentValues platoCuenta = new ContentValues();
     		platoCuenta.put("Id", cursor.getString(0));
         	platoCuenta.put("Plato", cursor.getString(1));
-        	platoCuenta.put("Observaciones", "");
+        	platoCuenta.put("Ingredientes", "");
         	platoCuenta.put("Extras", "");
         	platoCuenta.put("PrecioPlato",cursor.getDouble(2));
         	platoCuenta.put("Restaurante",restaurante);

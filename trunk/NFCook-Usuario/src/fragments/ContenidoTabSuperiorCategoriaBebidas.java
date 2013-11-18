@@ -156,7 +156,7 @@ public class ContenidoTabSuperiorCategoriaBebidas extends Fragment{
 	    	plato.put("Restaurante", restaurante);
 	    	plato.put("Id", bebida.getIdPlato());
 	    	plato.put("Plato", bebida.getNombre());
-	    	plato.put("Observaciones", (String) null);
+	    	plato.put("Ingredientes", (String) null);
 	    	plato.put("Extras", (String) null);
 	    	plato.put("PrecioPlato", bebida.getPrecioUnidad());
 	    	plato.put("IdHijo", DescripcionPlato.getIdentificadorUnicoHijoPedido() + "");

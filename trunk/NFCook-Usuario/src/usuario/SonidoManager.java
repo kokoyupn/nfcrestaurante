@@ -16,8 +16,7 @@ public class SonidoManager {
     private float balance = 0.5f;
 	
 	// Constructor, setup the audio manager and store the app context
-	public SonidoManager(Context appContext)
-	{
+	public SonidoManager(Context appContext){
 	  sndPool = new SoundPool(16, AudioManager.STREAM_MUSIC, 100);
  	  pContext = appContext;
 	}
