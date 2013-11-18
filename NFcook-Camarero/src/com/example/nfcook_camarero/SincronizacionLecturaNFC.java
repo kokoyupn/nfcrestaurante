@@ -563,8 +563,10 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", idNFC);
+
 	        	if (ingredientesFinales.equals("")) plato.put("Ingredientes", "Con todos los ingredientes");
 		        else plato.put("Ingredientes", ingredientesFinales);
+
 	        	if (extrasNFC.equals(""))	plato.put("Extras","Sin guarnición");
 		        else plato.put("Extras", extrasFinales);
 	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
@@ -581,7 +583,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	        	Mesa.pintarBaseDatosMiFav();
 	        	
 	      	}catch(Exception e){
-	    		System.out.println("Error en base de datos de Mesas en anadirPlatos QR");
+	    		System.out.println("Error en base de datos de Mesas en anadirPlatos NFC");
 	      	}
 	        
 		}catch(SQLiteException e){

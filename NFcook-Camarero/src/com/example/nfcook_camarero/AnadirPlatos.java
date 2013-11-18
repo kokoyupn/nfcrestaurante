@@ -312,7 +312,7 @@ public class AnadirPlatos extends Activity{
 					   onClickBotonAceptarAlertDialog(ventanaEmergente, nombrePlato);
 					   View vistaAviso = LayoutInflater.from(AnadirPlatos.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 					   expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
-					   actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+					   //actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
 					   TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
 					   encabezadoDialog.setText("Añadir Plato");
 					   TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);

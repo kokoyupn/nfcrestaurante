@@ -125,7 +125,7 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
 	  				onClickBotonAceptarAlertDialog(ventanaEmergente, groupPositioMarcar, position);
 	  				View vistaAviso = LayoutInflater.from(context).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 	  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
-	  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+	  				//actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
 	  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
 	  				encabezadoDialog.setText("Añadir Plato");
 	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
@@ -303,7 +303,7 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
 		        	plato.put("NumMesa",AnadirPlatos.getNumMesa());
 		        	plato.put("IdCamarero",AnadirPlatos.getIdCamarero());
 		        	plato.put("IdPlato", idPlato);
-		        	plato.put("Observaciones", observaciones);
+		        	plato.put("Ingredientes", observaciones);
 		        	plato.put("Extras", nuevosExtrasMarcados);
 		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
 		        	plato.put("Nombre", nombrePlato);
