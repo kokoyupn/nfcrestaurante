@@ -316,17 +316,15 @@ public class SincronizarPedidoNFC extends Activity implements
 	private void enviarPedidoACuenta() {
 
 		// Campos que quieres recuperar
-		String[] campos = new String[] { "Id", "Plato", "Observaciones",
-				"Extras", "PrecioPlato", "Restaurante", "IdHijo" };
+		String[] campos = new String[] { "Id", "Plato", "Ingredientes", "Extras", "PrecioPlato", "Restaurante", "IdHijo" };
 		String[] datosRestaurante = new String[] { restaurante };
-		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?",
-				datosRestaurante, null, null, null);
+		Cursor cursorPedido = dbPedido.query("Pedido", campos, "Restaurante=?", datosRestaurante, null, null, null);
 
 		while (cursorPedido.moveToNext()) {
 			ContentValues platoCuenta = new ContentValues();
 			platoCuenta.put("Id", cursorPedido.getString(0));
 			platoCuenta.put("Plato", cursorPedido.getString(1));
-			platoCuenta.put("Observaciones", cursorPedido.getString(2));
+			platoCuenta.put("Ingredientes", cursorPedido.getString(2));
 			platoCuenta.put("Extras", cursorPedido.getString(3));
 			platoCuenta.put("PrecioPlato", cursorPedido.getDouble(4));
 			platoCuenta.put("Restaurante", cursorPedido.getString(5));

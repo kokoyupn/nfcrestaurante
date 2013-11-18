@@ -76,7 +76,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		
 		String extrasPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getExtras();
-		String observacionesPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getObservaciones();
+		String ingredientesPlato = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getIngredientes();
 		String precioPlato = Math.rint(padresExpandableList.get(groupPosition).getHijoAt(childPosition).getPrecio()*100)/100 + "€";
 		int unidades = padresExpandableList.get(groupPosition).getHijoAt(childPosition).getNumeroDeConfiguraciones();
 		
@@ -88,23 +88,23 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		TextView textViewObservaciones = (TextView) convertView.findViewById(R.id.textViewPedidoObservaciones);
 		TextView textViewUnidades = (TextView) convertView.findViewById(R.id.textViewUnidadesPedido);
 		
-		if(extrasPlato==null && observacionesPlato==null){
+		if(extrasPlato==null && ingredientesPlato==null){
 			
 			textViewExtras.setText("Sin guarnición");
 			textViewObservaciones.setText("Sin observaciones");
 		
-		}else if(extrasPlato==null && observacionesPlato!=null){
+		}else if(extrasPlato==null && ingredientesPlato!=null){
 			
 			textViewExtras.setText("Sin guarnición");			
-			textViewObservaciones.setText(observacionesPlato);
+			textViewObservaciones.setText(ingredientesPlato);
 		
 		}else{
 			
 			textViewExtras.setText(extrasPlato);
-			if(observacionesPlato==null){
+			if(ingredientesPlato==null){
 				textViewObservaciones.setText("Sin observaciones");
 			}else{
-				textViewObservaciones.setText(observacionesPlato);
+				textViewObservaciones.setText(ingredientesPlato);
 			}
 		}
 		
@@ -174,14 +174,14 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 				String idPlato = idPlatoPadreEditado = padresExpandableList.get(groupPositionMarcar).getIdPlato();
 				String idPlatoHijo = idPlatoHijoEditado = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getPrimerIdUnicoParaModificar();
 				String extras = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getExtras();
-				String observaciones = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getObservaciones();
+				String ingredientes = padresExpandableList.get(groupPositionMarcar).getHijoAt(childPositionMarcar).getIngredientes();
 				
 				Intent intent = new Intent(v.getContext(), DescripcionPlatoEditar.class);
 				
 				//Elementos a recoger en la actividad invocada.
 				intent.putExtra("idPlato", idPlato);
 		    	intent.putExtra("extras",extras);
-		    	intent.putExtra("observaciones", observaciones);
+		    	intent.putExtra("ingredientes", ingredientes);
 		    	intent.putExtra("idHijo", idPlatoHijo);
 		    	fragmentLista.startActivity(intent);
 			}
@@ -273,7 +273,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 	 * @param dbPedido
 	 */
 	public void actualizaHijoEditado(SQLiteDatabase dbPedido) {
-		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones", "PrecioPlato"};
+		String[] camposBusquedaObsExt = new String[]{"Extras","Ingredientes", "PrecioPlato"};
     	String[] datos = new String[]{idPlatoPadreEditado, idPlatoHijoEditado};
     	
     	Cursor cursor = dbPedido.query("Pedido", camposBusquedaObsExt, "Id =? AND IdHijo =?", datos,null, null,null);
@@ -297,7 +297,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
         		}
         	}
     	}else{
-    		padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).setExtrasObs(extrasNuevos, observacionesNuevas);
+    		padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado).setExtrasIng(extrasNuevos, observacionesNuevas);
     		if(HijoExpandableListPedido.existeHijoIgualEnArray(padresExpandableList.get(posPadreEditado).getArrayChildren(), padresExpandableList.get(posPadreEditado).getHijoAt(posHijoEditado))){
     			padresExpandableList.get(posPadreEditado).eliminaHijo(posHijoEditado);
     		}

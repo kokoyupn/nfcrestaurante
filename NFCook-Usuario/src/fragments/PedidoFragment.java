@@ -102,7 +102,7 @@ public class PedidoFragment extends Fragment{
 			Iterator<String> iteradorConjunto = conjuntoNombresPadres.iterator();
 	    	while(iteradorConjunto.hasNext()){
 		    	ArrayList<HijoExpandableListPedido> hijos = new ArrayList<HijoExpandableListPedido>();
-	    		String[] camposBusquedaObsExt = new String[]{"Extras","Observaciones","PrecioPlato", "Id","IdHijo"};
+	    		String[] camposBusquedaObsExt = new String[]{"Extras","Ingredientes","PrecioPlato", "Id","IdHijo"};
 	    		String nombrePlato = iteradorConjunto.next();
 	    		String idPadre = "";
 		    	String[] datos = new String[]{restaurante, nombrePlato};
