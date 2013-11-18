@@ -140,8 +140,8 @@ public class Handler extends SQLiteOpenHelper {
 			"Ingredientes TEXT,Extras TEXT, PrecioPlato INTEGER)";
 			db.execSQL(query);
 		}else if(DB_NAME=="Pedido.db"){
-			String query="CREATE TABLE Pedido(Restaurante TEXT,Id TEXT,IdHijo TEXT,Plato TEXT," +
-					"IngredientesBinarios TEXT, Extras TEXT, ExtrasBinarios TEXT, PrecioPlato INTEGER, IngredientesBinarios TEXT)";
+			String query="CREATE TABLE Pedido(Sincro TEXT, Restaurante TEXT,Id TEXT,IdHijo TEXT,Plato TEXT," +
+					"Ingredientes TEXT, IngredientesBinarios TEXT, Extras TEXT, ExtrasBinarios TEXT, PrecioPlato INTEGER)";
 			db.execSQL(query);
 		}
 		else if(DB_NAME=="Equivalencia_Restaurantes.db"){
