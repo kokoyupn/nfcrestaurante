@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import baseDatos.HandlerGenerico;
-
+import adapters.MiGridViewSeleccionarIngredientesPlato;
 import adapters.PadreListMesa;
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListEditarAdapter;
@@ -35,6 +35,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -78,7 +79,6 @@ public class Mesa extends Activity {
 	
 	
 	private AutoCompleteTextView actwObservaciones;
-	private static String restaurante;
 	
 	
 	private static MiExpandableListEditarAdapter adapterExpandableListEditarExtras;
@@ -102,7 +102,6 @@ public class Mesa extends Activity {
 		numMesa = bundle.getString("NumMesa");
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
-		restaurante = bundle.getString("Restaurante");
 		
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
@@ -140,10 +139,11 @@ public class Mesa extends Activity {
 		  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
 		  				encabezadoDialog.setText("Editar Plato");
 		  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
-		  				actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+		  				//actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
 		  				tituloPlato.setText(adapter.getNombrePlato(posicion));
-		  				actwObservaciones.setText(adapter.getObservacionesPlato(posicion));
+		  				//actwObservaciones.setText(adapter.getObservacionesPlato(posicion));
 		  				cargarExpandableListExtras(posicion);
+		  				cargarGridViewIngredientes(posicion, vistaAviso);
 		  				ventanaEmergente.setView(vistaAviso);
 		  				ventanaEmergente.show();
 					} else
@@ -325,7 +325,7 @@ public class Mesa extends Activity {
             		intent.putExtra("NumMesa", numMesa);
             		intent.putExtra("IdCamarero",idCamarero);
             		intent.putExtra("Personas", numPersonas);
-            		intent.putExtra("Restaurante", restaurante);
+            		intent.putExtra("Restaurante", MainActivity.restaurante);
             		startActivity(intent);
             		
             	}catch(Exception e){
@@ -344,7 +344,7 @@ public class Mesa extends Activity {
             		intent.putExtra("NumMesa", numMesa);
             		intent.putExtra("IdCamarero",idCamarero);
             		intent.putExtra("Personas", numPersonas);
-            		intent.putExtra("Restaurante", restaurante);
+            		intent.putExtra("Restaurante", MainActivity.restaurante);
             		startActivity(intent);
             		
             	}catch(Exception e){
@@ -381,7 +381,7 @@ public class Mesa extends Activity {
 	private static ArrayList<PadreListMesa> obtenerElementos() {
 		ArrayList<PadreListMesa> elementos=null;
 		try{
-			String[] campos = new String[]{"Nombre","Observaciones","Extras","Precio","IdUnico","IdPlato","Sincro"};
+			String[] campos = new String[]{"Nombre","Ingredientes","Extras","Precio","IdUnico","IdPlato","Sincro"};
 		    String[] numeroDeMesa = new String[]{numMesa};
 		    
 		    Cursor c = dbMesas.query("Mesas",campos, "NumMesa=?",numeroDeMesa, null,null, null);
@@ -392,7 +392,9 @@ public class Mesa extends Activity {
 		    
 		    while(c.moveToNext()){
 		    	if(primero){
+
 		    		elementos.add(new PadreListMesa(c.getString(0), generarFraseExtras(c.getString(2)), generarFraseIngredientes(c.getString(1)), Double.parseDouble(c.getString(3)),c.getInt(4),c.getString(5),c.getInt(6)));
+
 		    		primero=false;
 		    	}else{
 		    		int i = 0;
@@ -428,13 +430,15 @@ public class Mesa extends Activity {
 			return elementos;
 		}
 	}
-	
+
 	private static String generarFraseExtras(String extras) {
-		return extras.charAt(0) + extras.substring(1, extras.length()).toLowerCase();
+		if(!extras.equals(""))
+			return extras.charAt(0) + extras.substring(1, extras.length()).toLowerCase();
+		else
+			return "";
 	}
 
 
-	@SuppressLint("DefaultLocale")
 	private static String generarFraseIngredientes(String ingredientesBD) {
 		
 		if (ingredientesBD.equals("Con todos los ingredientes"))
@@ -449,7 +453,7 @@ public class Mesa extends Activity {
 		
 		return "Sin " + ingredientesSin.substring(0, ingredientesSin.length()-5).toLowerCase();		
 	}
-
+	
 
 	protected void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,final int posicion) {
 		
@@ -466,18 +470,18 @@ public class Mesa extends Activity {
 					}
 			    	
 			    	String observacionesNuevas;
-			    	if(!actwObservaciones.getText().toString().equals("")){
-			    		observacionesNuevas = actwObservaciones.getText().toString();
-			    	}else{
-			    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
-			    	}
+//			    	if(!actwObservaciones.getText().toString().equals("")){
+//			    		observacionesNuevas = actwObservaciones.getText().toString();
+//			    	}else{
+//			    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
+//			    	}
 			    	
 			    	if(nuevosExtrasMarcados==null)
 						nuevosExtrasMarcados="";
 					
 			    	ContentValues platoEditado = new ContentValues();
 			    	platoEditado.put("Extras", nuevosExtrasMarcados);
-			    	platoEditado.put("Observaciones", observacionesNuevas);
+			    	platoEditado.put("Ingredientes", "poyas");
 			        String[] camposUpdate = {numMesa,adapter.getIdPlato(posicion),String.valueOf(adapter.getIdPlatoUnico(posicion))};
 			        
 			        dbMesas.update("Mesas", platoEditado, "NumMesa=? AND IdPlato =? AND IdUnico=?", camposUpdate);
@@ -566,6 +570,58 @@ public class Mesa extends Activity {
   		}
 	}
 	
+	public void cargarGridViewIngredientes(int posicion, View vistaVentanaEmergente){
+		HandlerGenerico sqlMiBase=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		SQLiteDatabase dbMiBase= sqlMiBase.open();
+  		String[] campos = new String[]{"Ingredientes"};
+  		String[] datos = new String[]{adapter.getIdPlato(posicion)};
+  		
+  		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Id =?",datos,null,null,null); 
+  		cursor.moveToFirst();
+  		
+  		String ingredientesPlatoCadena = cursor.getString(0);
+  		String ingredientesMarcadosCadena = adapter.getObservacionesPlato(posicion);
+  		
+        String[] ingredientesMarcadosString = ingredientesMarcadosCadena.split(",");
+        ArrayList<Boolean> ingredientesMarcadosBoolean = new ArrayList<Boolean>();
+        ArrayList<String> ingredientesTotales = new ArrayList<String>();
+        
+        if (!ingredientesPlatoCadena.equals("")){
+   
+        	if (ingredientesMarcadosCadena.equals("Con todos los ingredientes")){
+		    	String[] tokens = ingredientesPlatoCadena.split("%");
+		        for (int i=0; i<tokens.length; i++){
+		        	ingredientesTotales.add(tokens[i]);
+		        	ingredientesMarcadosBoolean.add(true);
+		        }
+        	}else{
+        		String[] tokens = ingredientesPlatoCadena.split("%");
+        		for (int i=0; i<tokens.length; i++){
+        			ingredientesTotales.add(tokens[i]);
+       
+        			int j = 0, espacio = 0; // espacios es para comparar sin espacios
+        			boolean marcado = false;
+        			while(!marcado && j <ingredientesMarcadosString.length){
+        				
+        				if (tokens[i].toLowerCase().equals(ingredientesMarcadosString[j].substring(4 + espacio)))
+        					marcado = true;
+        				else 
+        					j++;
+        				if (j == 1) espacio = 1;
+        			}
+        			if (marcado)
+        				ingredientesMarcadosBoolean.add(false);
+        			else 
+        				ingredientesMarcadosBoolean.add(true);
+        		}
+        	}
+   
+        }
+        GridView gridViewIngredientes = (GridView) vistaVentanaEmergente.findViewById(R.id.gridViewIngredientes);
+		MiGridViewSeleccionarIngredientesPlato miGridViewSeleccionarIngredientesPlato = new MiGridViewSeleccionarIngredientesPlato(Mesa.this, ingredientesTotales, ingredientesMarcadosBoolean);
+		gridViewIngredientes.setAdapter(miGridViewSeleccionarIngredientesPlato);
+	}
+	
 	public static void actualizaListPlatos(){
 		try{
 			importarBaseDatatosMesa();						
@@ -610,7 +666,7 @@ public class Mesa extends Activity {
 			dbMiBaseFav = sqlMiBaseFav.open();
 			
 			String[] campo = new String[]{"VecesPedido"};//Consultas el numero de veces que ya se ha pedido
-    		String[] info = new String[]{restaurante, id};//En un restaurante concreto y con un IdPlato 
+    		String[] info = new String[]{MainActivity.restaurante, id};//En un restaurante concreto y con un IdPlato 
     		
       		Cursor campoVeces = dbMiBaseFav.query("Restaurantes",campo,"Restaurante=? AND Id=?",info,null,null,null); 
       		campoVeces.moveToFirst();
@@ -622,7 +678,7 @@ public class Mesa extends Activity {
 			
       		ContentValues platoAumentarVeces = new ContentValues();
       		platoAumentarVeces.put("VecesPedido", nuevoVeces);
-      		String[] camposUpdate = {restaurante,id};
+      		String[] camposUpdate = {MainActivity.restaurante,id};
       		dbMiBaseFav.update("Restaurantes", platoAumentarVeces, "Restaurante=? AND Id=?", camposUpdate);
 				
       		dbMiBaseFav.close();
@@ -642,7 +698,7 @@ public class Mesa extends Activity {
         	
 			String[] campos = new String[]{"Nombre","VecesPedido"};
         	
-        	String[] restau = new String[]{restaurante};
+        	String[] restau = new String[]{MainActivity.restaurante};
         	Cursor c = dbMiBaseFav.query("Restaurantes",campos, "Restaurante=?",restau, null,null, null);
         	
         	while(c.moveToNext()){
@@ -668,7 +724,7 @@ public class Mesa extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	if (item.getItemId() == R.id.botonNFC) {
     		Intent intent = new Intent(this,SincronizarTpv.class);
-    		intent.putExtra("Restaurante", restaurante);
+    		intent.putExtra("Restaurante", MainActivity.restaurante);
     		intent.putExtra("Mesa", numMesa);
     		intent.putExtra("Personas", numPersonas);
     		startActivityForResult(intent,0);

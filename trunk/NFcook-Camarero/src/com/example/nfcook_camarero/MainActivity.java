@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
+	public static String restaurante;
+	
 	EditText usuario; //Contiene el usuario que introduces por pantalla
 	EditText password; //Contiene la contraseña que introduces por pantalla
 	//Ruta de las bases de datos
@@ -36,6 +38,7 @@ public class MainActivity extends Activity {
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
     	 //Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
     	super.onCreate(savedInstanceState);       
@@ -111,15 +114,25 @@ public class MainActivity extends Activity {
     	   	  Intent intent = new Intent(this, InicializarCamarero.class);
            	  intent.putExtra("usuario", usuario.getText().toString());
 
-           	  if (password.getText().toString().equals("foster"))
+           	  if (password.getText().toString().equals("foster")){
            		  intent.putExtra("Restaurante","Foster");
-           	  else
+           		  restaurante = "Foster";
+           	  }else{
            		 intent.putExtra("Restaurante","VIPS");
+           		 restaurante = "VIPS";
+           	  }
            	  startActivityForResult(intent,0);
     	   }
     	   else{
     		   //La contraseña no es la misma que la guardada en la base de datos
-    		   abrir_ventanaEmergente("Contraseña incorrecta",R.drawable.icono_password);
+    		   //abrir_ventanaEmergente("Contraseña incorrecta",R.drawable.icono_password);
+    		 //Iniciamos la nueva actividad
+     	   	  Intent intent = new Intent(this, InicializarCamarero.class);
+            	  intent.putExtra("usuario", usuario.getText().toString());
+            	  intent.putExtra("Restaurante","Foster");
+            	  restaurante = "Foster";
+            	  
+            	  startActivityForResult(intent,0);
    			
     	   }
   	
