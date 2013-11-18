@@ -172,7 +172,7 @@ public class SincronizacionQR extends Activity {
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", idQR);
 	        	if (ingredientesFinales.equals("")) plato.put("Observaciones", "Con todos los ingredientes");
-		        else plato.put("Observaciones", "Sin: " + ingredientesFinales);
+		        else plato.put("Observaciones", "Sin " + ingredientesFinales);
 	        	if (extrasQR.equals(""))	plato.put("Extras","Sin guarnición");
 		        else plato.put("Extras", extrasFinales);
 	        	plato.put("FechaHora", formatteDate + " " + formatteHour);
