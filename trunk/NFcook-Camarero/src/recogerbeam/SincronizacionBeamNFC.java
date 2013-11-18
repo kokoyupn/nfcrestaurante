@@ -1,20 +1,13 @@
 package recogerbeam;
 
-
-
-
 import java.util.StringTokenizer;
 
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.R;
 import com.example.nfcook_camarero.SonidoManager;
-import com.example.nfcook_camarero.R.id;
-import com.example.nfcook_camarero.R.layout;
-import com.example.nfcook_camarero.R.menu;
-import com.example.nfcook_camarero.R.raw;
-
 import baseDatos.HandlerGenerico;
 import fragments.PantallaMesasFragment;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -48,31 +41,24 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
     Context context;
 	 
 	//Variables usadas en la manipulacion e bases de datos	
-	HandlerGenerico sqlMesas,sqlrestaurante;
-	SQLiteDatabase dbMesas,dbMiBase;
-	
+	HandlerGenerico sqlMesas, sqlRestaurante;
+	SQLiteDatabase dbMesas, dbRestaurante;
 	
 	//Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
 	
-	String restaurante;
-	int numeroRestaurante;
-	String abreviatura;
-	/*Variables para obtener el valor equivalente del restaurante*/
-	String ruta="/data/data/com.example.nfcook_camarero/databases/";
+	String restaurante, codigoRest, abreviaturaRest;
+	
 	private SQLiteDatabase dbEquivalencia;
-	private HandlerGenerico sqlEquivalencia;
-	
-	
+	private HandlerGenerico sqlEquivalencia;	
 	
 	    
 	/**Metodo que se encarga de cerrar la ventana
 	 * */
-	public void cerrarVentana()
-	    {
-	    	this.finish();
-	    }
+	public void cerrarVentana(){
+	    this.finish();
+	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -143,197 +129,209 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 		mNfcAdapter.disableForegroundDispatch(this);
 		
 	}
-	 @Override
-	   public void onResume() {
-	        super.onResume();//esto
-	        // Check to see that the Activity started due to an Android Beam
-	        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-	            processIntent(getIntent());
-	        }
-	    }
+	@Override
+   public void onResume() {
+        super.onResume();//esto
+        // Check to see that the Activity started due to an Android Beam
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+            processIntent(getIntent());
+        }
+    }
 
-	    @Override
-	    public void onNewIntent(Intent intent) {
-	        setIntent(intent);
-	    	
-	    }
-	   
-	    /**
-	     *Metodo encargado de procesar el mensaje que se le envia de un dispositivo al otro
-	     */
-	    public void processIntent(Intent intent) {
-	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
-	                NfcAdapter.EXTRA_NDEF_MESSAGES);
-	        // only one message sent during the beam
-	        NdefMessage msg = (NdefMessage) rawMsgs[0];
-	        //--------Metodos para añadir a la base de datos mesas
-	        decodificar(new String(msg.getRecords()[0].getPayload()));
-	        //Sonido para confirmar el pedido sincronizado
-	        sonidoManager.play(sonido);
-	        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente.", Toast.LENGTH_LONG).show();
-	        cerrarVentana();     
-	        
-	    }
-	/**
-	 * Metodo que dado una lista de platos se encarga de añadir a la base de datos de mesas los platos que ha elegido el usuario
-	 * @param listaPlatosStr: lista de platos que tenemos que añadir a la base de datos
+    @Override
+    public void onNewIntent(Intent intent) {
+        setIntent(intent);
+    	
+    }
+   
+    /**
+     *Metodo encargado de procesar el mensaje que se le envia de un dispositivo al otro
+     */
+    public void processIntent(Intent intent) {
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+                NfcAdapter.EXTRA_NDEF_MESSAGES);
+        // only one message sent during the beam
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        //--------Metodos para añadir a la base de datos mesas
+        decodificarPlatos(new String(msg.getRecords()[0].getPayload()));
+        //Sonido para confirmar el pedido sincronizado
+        sonidoManager.play(sonido);
+        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente.", Toast.LENGTH_LONG).show();
+        cerrarVentana();     
+        
+    }
+    /**
+	 * Metodo que decodifica el string mandado por Beam.
+	 * Va comprobando el id, si tiene extras y comentarios hasta que se encuentre un 255 como id
+	 * que significa que ha terminado
+	 * @param pedidoQR
 	 */
-	public void decodificar (String listaPlatosStr)
-	{
-		//Obtengo los datos del restaurante su numero y abreviatura
-        try{ //Abrimos la base de datos para consultarla
- 	       	sqlEquivalencia = new HandlerGenerico(getApplicationContext(),"Equivalencia_Restaurantes.db"); 
- 	        dbEquivalencia = sqlEquivalencia.open();
- 	     
- 	    }catch(SQLiteException e){
- 	        	Toast.makeText(getApplicationContext(),"No existe la base de datos equivalencia",Toast.LENGTH_SHORT).show();
- 	       }
- 	   
- 	   try{
- 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
- 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
- 		   String[] campos = new String[]{"Numero","Abreviatura"};
- 		   String[] datos = new String[]{PantallaMesasFragment.dameRestaurante()};
- 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
- 		   Cursor c = dbEquivalencia.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
- 	  	   
- 	  	   c.moveToFirst();
-        	 
- 	  	   numeroRestaurante = c.getInt(0);
- 	  	   abreviatura = c.getString(1);
- 	  	   
- 	  	   	  	
- 		}catch(Exception e){ }
- 	   
- 	   
-		boolean parar=false;
-		// separamos por platos
-				StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr,"@");
-				String a= stPlatos.nextToken();
-				int numero= Integer.parseInt(a);
-				// Compruebo si el pedido que hemos leido corresponde a este restaurate.
-				if (numeroRestaurante==numero)
-				{
-				while(stPlatos.hasMoreElements()){
-					//Para cada plato lo decodificamos y lo añadimos a la base de datos
-					String plato = stPlatos.nextToken();
-					StringTokenizer stTodoSeparado =  new StringTokenizer(plato,"+,*");
-					
-					String extras,ingredientes;
-					extras=ingredientes="";
-					// id
-					int id =  Integer.parseInt(stTodoSeparado.nextToken());
-					parar= id==255;
-					if(!parar){//Si no ha acabado el mensaje		
-						// extras
-						if (plato.contains("+"))  {
-							extras =  stTodoSeparado.nextToken();
-								
-						}
-						// comentarios
-						if (plato.contains("*"))  {
-							ingredientes =  stTodoSeparado.nextToken();
-						}
-						añadirPlatos(abreviatura+id,extras,ingredientes);
-					}			
-				}
-				}
-				else {
-					Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
-					
-				}
-	}
-	
+	private void decodificarPlatos(String pedidoBeam) {
 
-	public void añadirPlatos(String id,String extras, String ingredientes)
-	{
+		// separamos por platos
+		StringTokenizer stPlatos = new StringTokenizer(pedidoBeam,"@");
 		
-    		
-            Cursor cursor = null;
-            String extrasFinal="";
-            String  restaurante = PantallaMesasFragment.dameRestaurante();
-            
-          try{
-    			sqlrestaurante =new HandlerGenerico(getApplicationContext(), "MiBase.db");
-    			dbMiBase = sqlrestaurante.open();
-    			    			
-        		//Campos que quiero recuperar de la base de datos
-    			String[] campos = new String[]{"Nombre","Precio","Extras"};
-    			//Datos que tengo para consultarla
-          		String[] datos = new String[]{restaurante,id};
-          		
-          		cursor = dbMiBase.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
-          		cursor.moveToFirst();       
-                dbMiBase.close();
-                // Voy a comprobar los extras que se han escogido comparando el codigo binario que leemos de la tarjeta y los extras de la base de datos.
-                //Obtengo los extras de la base de datos
-                String extrasBaseDatos= cursor.getString(2);
-                //Separo los distintos tipos de extras
-                StringTokenizer auxExtras= new StringTokenizer(extrasBaseDatos,"/");
-                StringTokenizer auxExtras2 = null;
-                String elemento = "";
-                
-                int numExtras=0;
-                if (!extras.equals("")){
-                //Recorrro cada uno de los elementos que se me han generado en el sring tokenizer que son de la forma Guarnicion:PatatasAsada,Ensalada
-                while (auxExtras.hasMoreElements())
-                	{auxExtras2= new StringTokenizer((String) auxExtras.nextElement(),":");
-                	 //Elimino el Guarnicion:/Salsa:/Guarnicion:
-                	 auxExtras2.nextElement();
-                     extrasFinal +=auxExtras2.nextElement()+",";
-                	}
-                //Extras final tiene todos los extras de ese plato separados por comas
-                auxExtras= new StringTokenizer(extrasFinal,",");
-                extrasFinal="";
-                //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
-                while (auxExtras.hasMoreElements())
-            	  { elemento= (String) auxExtras.nextElement();
-            	    if (extras.charAt(numExtras)=='1')
-            		   extrasFinal +=elemento+", ";
-            	    numExtras++;    	  
-            	  }
-                //Le quito la ultima coma al extra final para que quede estetico
-                if (extrasFinal!= "")
-                	extrasFinal=extrasFinal.substring(0,extrasFinal.length()-2);
-                }
-    		}catch(SQLiteException e){
-    		 	System.out.println("Error lectura base de datos de MIBASE.");
-    		}
-    		
-         
-      		
-      		try{
-       			//Abro base de datos para introducir los platos en esa mesa
-       			sqlMesas=new HandlerGenerico(getApplicationContext(), "Mesas.db");
-       			dbMesas= sqlMesas.open();
-       			//Meto el plato en la base de datos Mesas
-	       		ContentValues plato = new ContentValues();
+		String codigoRestBeam = stPlatos.nextToken();
+		
+		// mismo restaurante
+		if (codigoRest.equals(codigoRestBeam)){
+		
+			while(stPlatos.hasMoreElements()){
+				
+				String plato = stPlatos.nextToken();
+				StringTokenizer stTodoSeparado =  new StringTokenizer(plato,"+,*");
+						
+				// id
+				String id =  stTodoSeparado.nextToken();
+				
+				// extras
+				String extras = "";
+				if (plato.contains("+"))
+					extras =  stTodoSeparado.nextToken();
+							
+				// comentarios
+				String ingredientes = "";
+				if (plato.contains("*"))
+					ingredientes =  stTodoSeparado.nextToken();
+						
+				anadirPlatos(abreviaturaRest+id, extras, ingredientes);
+			}	
+		}
+		else {
+			Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();
+		}
+	}
+		
+	@SuppressLint("SdCardPath")
+	public void anadirPlatos(String idQR, String extrasQR, String ingredientesQR){           
+       	
+		try{
+			sqlRestaurante = new HandlerGenerico(getApplicationContext(), "MiBase.db");
+			dbRestaurante = sqlRestaurante.open();
+		
+			//Campos que quiero recuperar de la base de datos y datos que tengo para consultarla
+			String[] campos = new String[]{"Nombre","Precio","Extras","Ingredientes"};
+	      	String[] datos = new String[]{restaurante, idQR};
+	      	
+      		Cursor cursor = dbRestaurante.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
+      		cursor.moveToFirst();       
+      		dbRestaurante.close();			
+	
+	      	String extrasSeparadosPorComas = obtenerExtrasSeparadosPorComas(cursor.getString(2));
+	        String extrasFinales = compararExtrasQRconBD(extrasSeparadosPorComas, extrasQR);
+	        String ingredientesFinales = compararIngredientesQRconBD(cursor.getString(3), ingredientesQR);
+	        
+	        try{	      	        	
+	        	sqlMesas = new HandlerGenerico(getApplicationContext(), "Mesas.db");
+	    		dbMesas = sqlMesas.open();
 	        	
-	        	plato.put("NumMesa",PantallaMesasFragment.dameMesa());
-	        	plato.put("IdCamarero",PantallaMesasFragment.dameCamarero()); 
-	        	plato.put("IdPlato", id);
-	        	plato.put("Ingredientes", ingredientes);
-	        	plato.put("Extras",extrasFinal);
-	        	plato.put("FechaHora", PantallaMesasFragment.dameFecha() + " " + PantallaMesasFragment.dameHora());
+	   			//Meto el plato en la base de datos Mesas 
+	    		// FIXME no se meten los datos que vienen de la pantalla anterior porque se pierden con el beam al abrirse otra pantalla
+	       		ContentValues plato = new ContentValues();
+	        	int idUnico = PantallaMesasFragment.getIdUnico();
+	        	/*plato.put("NumMesa", numMesa);
+	        	plato.put("IdCamarero", idCamarero);*/
+	        	plato.put("IdPlato", idQR);
+	        	if (ingredientesFinales.equals("")) plato.put("Ingredientes", "Con todos los ingredientes");
+		        else plato.put("Ingredientes", ingredientesFinales);
+	        	if (extrasQR.equals(""))	plato.put("Extras","Sin guarnición");
+		        else plato.put("Extras", extrasFinales);
+	        	//plato.put("FechaHora", formatteDate + " " + formatteHour);
 	        	plato.put("Nombre", cursor.getString(0));
 	        	plato.put("Precio",cursor.getDouble(1));
-	        	plato.put("Personas",PantallaMesasFragment.dameNumPersonas());
-	        	plato.put("IdUnico", PantallaMesasFragment.getIdUnico());
-	        	plato.put("IdUnico",0);
-	        	dbMesas.insert("Mesas", null, plato);
+	        	//plato.put("Personas",numPersonas);
+	        	plato.put("IdUnico", idUnico);
+	        	plato.put("Sincro", 0);
+	        	dbMesas.insert("Mesas", null, plato);  	
 	        	dbMesas.close();
-	        	
-	        	//FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
-	        	Mesa.actualizarNumeroVecesPlatoPedido(id);
+		        
+		        //FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
+	        	Mesa.actualizarNumeroVecesPlatoPedido(idQR);
 	        	Mesa.pintarBaseDatosMiFav();
-	              	
-      		}catch(Exception e){
-    		
-    		}
-   
+	        	
+	      	}catch(Exception e){
+	    		System.out.println("Error en base de datos de Mesas en anadirPlatos QR");
+	      	}
+	        
+		}catch(SQLiteException e){
+	    		 System.out.println("Error en base de datos de MIBASE");
+		}
 	}
 
+	private String compararExtrasQRconBD(String extrasSeparadosPorComasBD, String extrasQR) {
+		StringTokenizer extrasST = new StringTokenizer(extrasSeparadosPorComasBD, ",");
+	    String extras = "";
+	    int i = 0;
+	    //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
+	    while (extrasST.hasMoreElements()){ 
+	    	 String elem = (String) extrasST.nextElement();
+	    	 if (extrasQR.charAt(i)=='1')
+	    		 extras +=elem + ", ";
+	    	 i++;    	  
+	     }
+	     //Le quito la ultima coma al extra final para que quede estetico
+	     if (extras!= "")
+	        extras = extras.substring(0, extras.length()-2);
+	     
+	     return extras;
+	}
+
+	/**
+	 * Devuelve en un string los extras separados por comas
+	 */
+	private String obtenerExtrasSeparadosPorComas(String extrasBD) {
 		
+		String extras = "";   
+		
+		// Voy a comprobar los extras que se han escogido comparando el codigo binario que leemos de la tarjeta y los extras de la base de datos.
+        StringTokenizer auxExtrasPadre = new StringTokenizer(extrasBD,"/"); //Separo los distintos tipos de extras
+     
+        // quitamos el padre de los extras para que solo queden los extras separados por comas en extrasFinal
+        while (auxExtrasPadre.hasMoreElements()){
+        	StringTokenizer auxExtrasHijo = new StringTokenizer((String) auxExtrasPadre.nextElement(),":");   
+        	auxExtrasHijo.nextElement(); // eliminamos el padre
+            extras += auxExtrasHijo.nextElement() + ","; 
+        }
+	
+        return extras;
+	}
+		
+	/**
+	 * Compara los ingredientes de QR con los de la BD, devuelve los marcados
+	 */
+	private String compararIngredientesQRconBD(String ingredientesBD, String ingredientesQR) {
+		StringTokenizer ingredientesST = new StringTokenizer(ingredientesBD, "%");
+	    String ingredientes = "";
+	    int i = 0;
+	    //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
+	    while (ingredientesST.hasMoreElements()){ 
+	    	 String elem = (String) ingredientesST.nextElement();
+	    	 if (ingredientesQR.charAt(i)=='0')
+	    		 ingredientes +=elem + ", ";
+	    	 i++;    	  
+	     }
+	     //Le quito la ultima coma al extra final para que quede estetico
+	     if (ingredientes!= "")
+	    	 ingredientes = ingredientes.substring(0, ingredientes.length()-2);
+	     
+	     return ingredientes;
+	}
+
+	/**
+	 * MEtodo que da valor al codigo y a la abreviatura del restaurante
+	 */
+	private void obtenerCodigoYAbreviaturaRestaurante() {
+		// Campos que quieres recuperar
+		String[] campos = new String[] { "Numero", "Abreviatura" };
+		String[] datos = new String[] { restaurante };
+		Cursor cursorPedido = dbEquivalencia.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
+		
+		cursorPedido.moveToFirst();
+		codigoRest = cursorPedido.getString(0);
+		abreviaturaRest = cursorPedido.getString(1);
+	}	
+	
+	
 	/*Menu que usaremos para activar el NFC y el beam*/
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
