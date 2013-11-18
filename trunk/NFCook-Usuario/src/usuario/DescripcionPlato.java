@@ -1,30 +1,16 @@
 package usuario;
 
 import java.util.ArrayList;
-
-
-
-
-
-
-
-
 import baseDatos.HandlerDB;
-
 import com.example.nfcook.R;
-
 import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListAdapterEditar;
-import adapters.MiGridViewCalculadoraAdapter;
-import adapters.MiGridViewRepartirPlatoCalculadoraAdapter;
 import adapters.MiGridViewSeleccionarIngredientesPlato;
 import adapters.PadreExpandableListEditar;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -36,7 +22,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -82,22 +67,17 @@ public class DescripcionPlato extends Activity {
     	
     	setContentView(R.layout.descripcion_del_plato);
     	
-    	TextView t=(TextView)findViewById(R.id.descripcionPlatoeditar);
-		LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,t.getLineHeight()*2);//ancho,largo);
+    	TextView textViewDescripcion =(TextView)findViewById(R.id.descripcionPlatoeditar);
+		LayoutParams a =new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,textViewDescripcion.getLineHeight()*2);//ancho,largo);
 		a.setMargins(52, 0, 5, 0);
-		t.setLayoutParams(a);
+		textViewDescripcion.setLayoutParams(a);
                
         cargarUltimoIdentificadorUnicoHijoPedido();
 
         editTextUnidades = (EditText) findViewById(R.id.editTextunidades);
         textViewPrecio= (TextView) findViewById(R.id.textViewPrecio);
         TextView textViewNombre = (TextView) findViewById(R.id.nombrePlato);
-        TextView textViewDescripcion= (TextView) findViewById(R.id.descripcionPlatoeditar);
         ImageView imageViewPlato = (ImageView) findViewById(R.id.imagenPlato);
-        
-        Button botonEditar = (Button) findViewById(R.id.botonOpcionEditar);
-        
-        botonEditar.setVisibility(Button.INVISIBLE);
      
         // Importamos la base de datos para su posterior lectura
         try{
@@ -116,8 +96,6 @@ public class DescripcionPlato extends Activity {
         Cursor cursor =db.query("Restaurantes",campo1,"Restaurante =? AND Nombre=?",datos,null,null,null);  
   
         expandableListExtras = (ExpandableListView) findViewById(R.id.expandableExtras);
-        
-        //String[] campo1=new String[]{"Extras","Precio","Foto","Descripcion","Id"};
         
         cursor.moveToFirst();
         String extrasBusqueda = cursor.getString(0);
@@ -350,7 +328,7 @@ public class DescripcionPlato extends Activity {
 	 
     public void onClickConfirmar(View boton){
     	boolean bienEditado = true;
-    	String observaciones = null;
+    	String ingredientesStr = null;
     	String nuevosExtrasMarcados = null;
     	String extrasBinarios = null;
     	String ingredientesBinarios = null;
@@ -366,13 +344,21 @@ public class DescripcionPlato extends Activity {
     		if(adapterExpandableListExtras!=null)
     			extrasBinarios = adapterExpandableListExtras.getExtrasBinarios();
     		if(ingredientesMarcado.size() > 0){
+    			ingredientesStr = "";
     			ingredientesBinarios = "";
     			for(int i=0; i<ingredientesMarcado.size(); i++){
     				if(ingredientesMarcado.get(i)) // == true
     					ingredientesBinarios += "1";
-    				else						   // == false
+    				else{						   // == false
     					ingredientesBinarios += "0";
+    					ingredientesStr += ingredientes.get(i) + ", sin ";
+    				}
     			}
+    			if (ingredientesStr.equals("")){
+    				ingredientesStr = "Con todos los ingredientes";
+    			} else {
+    				ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
+    			}    			
     		}
     		
     		sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 
@@ -382,7 +368,7 @@ public class DescripcionPlato extends Activity {
             	plato.put("Restaurante", restaurante);
             	plato.put("Id", idPlato);
             	plato.put("Plato", nombrePlato);
-            	plato.put("Observaciones", observaciones);
+            	plato.put("Ingredientes", ingredientesStr);
             	plato.put("Extras", nuevosExtrasMarcados);
             	plato.put("ExtrasBinarios", extrasBinarios);
             	plato.put("IngredientesBinarios", ingredientesBinarios);
