@@ -18,6 +18,7 @@ import com.example.nfcook_camarero.R;
 import fragments.PantallaMesasFragment;
 import adapters.MiGridViewBebidasAdapter;
 import adapters.PadreGridViewBebidas;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -126,7 +127,7 @@ public class AnadirBebida extends Activity{
 	// Importamos la base de datos de los restaurantes
     public void importarBaseDatos() {
     	try{
-			sql = new HandlerGenerico(getApplicationContext(),"/data/data/com.example.nfcook_camarero/databases/","MiBase.db"); 
+			sql = new HandlerGenerico(getApplicationContext(),"MiBase.db"); 
 			dbRestaurante = sql.open();
 		}catch(Exception e){
 			System.out.println("Error al abrir la base de datos de Foster en anadir Bebidas");
@@ -176,7 +177,7 @@ public class AnadirBebida extends Activity{
 	public static  void anyadirBebidas(){
 		try{
 			// Abrimos la base de datos de pedido
-			sql = new HandlerGenerico(contexto,"/data/data/com.example.nfcook_camarero/databases/","Mesas.db"); 
+			sql = new HandlerGenerico(contexto,"Mesas.db"); 
 			dbPedido = sql.open();
 			
 			
@@ -217,9 +218,6 @@ public class AnadirBebida extends Activity{
 			    }
 			}
 			
-			//FIXME
-        	Mesa.pintarBaseDatosMesa();
-			
 			actualizaGridView();
         	
 	    	// Cerramos la base de datos de pedido
@@ -230,6 +228,7 @@ public class AnadirBebida extends Activity{
 	    }
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	public static String[] fechaYHora(){
 		//Sacamos la hora a la que el camarero ha introducido la mesa
     	Calendar cal = new GregorianCalendar();
