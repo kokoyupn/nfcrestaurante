@@ -31,7 +31,6 @@ import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
 import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,8 +49,8 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	IntentFilter writeTagFilters[];
 	Tag mytag;
 	Context ctx;
-	String[][] mTechLists;
-	boolean leidoBienEnTag, esMFC,  datosMalos,restauranteIncorrecto;
+	//String[][] mTechLists;
+	boolean leidoBienEnTag, datosMalos, restauranteIncorrecto;
 	ProgressDialog	progressDialogSinc;
 	
 	//Variables usadas para añadir la lista de platos a la base de datos mesas
@@ -151,9 +150,9 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
 		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-		mTechLists = new String[][] { new String[] { MifareClassic.class.getName() } };
+		//mTechLists = new String[][] { new String[] { MifareClassic.class.getName() } };
 		writeTagFilters = new IntentFilter[] { tagDetected }; 
-		//Fecha y hora 
+
 		//Sacamos la fecha a la que el camarero ha introducido la mesa
     	Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
@@ -218,27 +217,21 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	 * 
 	 */
 	public void onDismiss(DialogInterface dialog) {
-		if (!esMFC) {
-			Toast.makeText(this, "Pedido no sincronizado. La tag no es Mifare Classic.", Toast.LENGTH_LONG ).show();		
-		}
-		else {
-
-			 if(restauranteIncorrecto){	
-				  Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();}
-			  else{	if(datosMalos) 
-					  {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos.", Toast.LENGTH_LONG).show();}
-			
-			        else {
-			        	if (leidoBienEnTag) {
-			        		Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
-			        	   }
-			
-			        	else {
-			        			Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
-			        		}
-			        }
-			 }
-		}
+		if(restauranteIncorrecto){	
+			  Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();}
+		  else{	if(datosMalos) 
+				  {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos.", Toast.LENGTH_LONG).show();}
+		
+		        else {
+		        	if (leidoBienEnTag) {
+		        		Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
+		        	   }
+		
+		        	else {
+		        			Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
+		        		}
+		        }
+		 }
 		finish();	
 	}
 
@@ -375,18 +368,14 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
 			Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
-			// compruebo que la tarjeta sea mifare classic
-			String[] tecnologiasTag = mytag.getTechList();
-			esMFC = false;
-			for (int i = 0; i < tecnologiasTag.length; i++)
-				esMFC |= tecnologiasTag[i].equals("android.nfc.tech.MifareClassic");
-		   }
+	
 			if(mytag == null){
 					Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
 			}else {
 					// ejecuta el progressDialog, codifica, escribe en tag e intercambia datos de pedido a cuenta en segundo plano
 					new SincronizarPedidoBackgroundAsyncTask().execute();
-				}
+			}
+		}
 	}
 
 	public void onPause(){
