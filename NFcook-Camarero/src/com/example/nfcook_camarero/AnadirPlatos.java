@@ -48,7 +48,6 @@ public class AnadirPlatos extends Activity{
 	private HandlerGenerico sqlMiBase, sqlBuscador;
 	private static HandlerGenerico sqlMiBaseFav;
 	private AutoCompleteTextView buscador;
-	private boolean noSeleccionadoAutoCompleteTextView;
 	private SQLiteDatabase dbMiBase, dbBuscador;
 	private static SQLiteDatabase dbMiBaseFav;
 	public static Activity actividad;
@@ -71,7 +70,6 @@ public class AnadirPlatos extends Activity{
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		noSeleccionadoAutoCompleteTextView = false;
         super.onCreate(savedInstanceState);
         actividad = this;
         
