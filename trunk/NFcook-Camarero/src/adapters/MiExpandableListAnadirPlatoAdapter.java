@@ -11,6 +11,7 @@ import baseDatos.HandlerGenerico;
 import com.example.nfcook_camarero.AnadirPlatos;
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.R;
+
 import fragments.PantallaMesasFragment;
 import junit.framework.Assert;
 import android.app.AlertDialog;
@@ -41,9 +42,12 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
     private Context context;
     private ArrayList<InformacionPlato> platos;
     
+	private ArrayList<Boolean> ingredientesMarcadosBoolean;
+	private ArrayList<String> ingredientesTotales;
+    
     private static MiExpandableListEditarAdapter adapterExpandableListEditarExtras;
 	private static ExpandableListView expandableListEditarExtras;
-	private AutoCompleteTextView actwObservaciones;
+	//private AutoCompleteTextView actwObservaciones;
     
     public MiExpandableListAnadirPlatoAdapter(Context context, ArrayList<PadreExpandableListAnadirPlato> padres){
     	padresExpandableList = padres;
@@ -126,6 +130,9 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
 	  				View vistaAviso = LayoutInflater.from(context).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 	  				expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
 	  				//actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
+	  				
+	  				cargarGridViewIngredientes(vistaAviso, idPlatoPulsado);
+	  				
 	  				TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
 	  				encabezadoDialog.setText("Añadir Plato");
 	  				TextView tituloPlato = (TextView) vistaAviso.findViewById(R.id.textViewTituloPlatoEditarYAnadir);
@@ -262,12 +269,9 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
 		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				boolean bienEditado = true;
-		    	String observaciones = "";
+				/*boolean bienEditado = true;
 		    	String nuevosExtrasMarcados = "";
-		    	if(!actwObservaciones.getText().toString().equals("")){
-		        	observaciones = actwObservaciones.getText().toString();
-		    	}
+
 		    	if(adapterExpandableListEditarExtras!=null){ //Es un plato con extras
 		    		nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
 		    		if(nuevosExtrasMarcados == null){
@@ -303,7 +307,7 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
 		        	plato.put("NumMesa",AnadirPlatos.getNumMesa());
 		        	plato.put("IdCamarero",AnadirPlatos.getIdCamarero());
 		        	plato.put("IdPlato", idPlato);
-		        	plato.put("Ingredientes", observaciones);
+		        	plato.put("Ingredientes", "");
 		        	plato.put("Extras", nuevosExtrasMarcados);
 		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
 		        	plato.put("Nombre", nombrePlato);
@@ -327,10 +331,125 @@ public class MiExpandableListAnadirPlatoAdapter extends BaseExpandableListAdapte
 		    	}else{
 		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
 					Toast.makeText(context,"¡Plato mal configurado!", Toast.LENGTH_SHORT).show();
-		    	}				
+		    	}	*/
+		    	
+		    	boolean bienEditado = true;
+		    	String observaciones = "";
+		    	String nuevosExtrasMarcados = "";
+		    	
+		    	String ingredientesStr = "";
+		    	
+		    	if(ingredientesMarcadosBoolean.size() > 0){
+					//ingredientesBinarios = "";
+					for(int i=0; i<ingredientesMarcadosBoolean.size(); i++){
+						if(!ingredientesMarcadosBoolean.get(i)) // == false
+							ingredientesStr += ingredientesTotales.get(i) + ", sin ";
+					}
+					if (ingredientesStr.equals("")){
+						ingredientesStr = "Con todos los ingredientes";
+					} else {
+						ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
+					}    			
+				}else{
+					ingredientesStr = "No hay ingredientes definidos";
+				}
+		    	
+//		    	if(!actwObservaciones.getText().toString().equals("")){
+//		        	observaciones = actwObservaciones.getText().toString();
+//		    	}
+		    	
+		    	if(adapterExpandableListEditarExtras!=null){ //Es un plato con extras
+		    		nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
+		    		if(nuevosExtrasMarcados == null){
+		    			bienEditado = false;
+		    		}
+		    	}else{ //No es un plato con extras
+		    		nuevosExtrasMarcados = "Sin guarnición";
+		    	}
+		    	if(bienEditado){
+		    		HandlerGenerico sqlMesas = null;
+		    		SQLiteDatabase dbMesas = null;
+		    		try{
+		    			sqlMesas=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
+		    			dbMesas = sqlMesas.open();
+		    		}catch(SQLiteException e){
+		    		 	Toast.makeText(context,"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
+		    		}
+		    		//Sacamos la fecha a la que el camarero ha introducido la mesa
+                	Calendar cal = new GregorianCalendar();
+                    Date date = cal.getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    String formatteDate = df.format(date);
+                    //Sacamos la hora a la que el camarero ha introducido la mesa
+                    Date dt = new Date();
+                    SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
+                    String formatteHour = dtf.format(dt.getTime());
+                    
+		        	ContentValues plato = new ContentValues();
+		        	int idUnico = PantallaMesasFragment.getIdUnico();
+		        	PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
+		        	String idPlato = padresExpandableList.get(groupPositionMarcar).getIdPlato(position);
+		        	String nombrePlato = padresExpandableList.get(groupPositionMarcar).getNombrePlato(position);
+		        	double precioPlato = padresExpandableList.get(groupPositionMarcar).getPrecioPlato(position);
+                    
+		        	plato.put("NumMesa",AnadirPlatos.getNumMesa());
+		        	plato.put("IdCamarero",AnadirPlatos.getIdCamarero());
+		        	plato.put("IdPlato", idPlato);
+		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
+		        	plato.put("Nombre", nombrePlato);
+		        	plato.put("Precio", precioPlato);
+		        	plato.put("Personas",AnadirPlatos.getNumPersonas());
+		        	plato.put("IdUnico", idUnico);
+		        	plato.put("Sincro", 0);
+		        	plato.put("Extras", nuevosExtrasMarcados);
+			    	plato.put("Ingredientes", ingredientesStr);
+		        	dbMesas.insert("Mesas", null, plato);
+		        	dbMesas.close();
+		        	
+		        	//Añadimos una unidad a las veces que se ha pedido el plato
+		        	Mesa.actualizarNumeroVecesPlatoPedido(idPlato);
+		        	
+		        	AnadirPlatos.actualizaTopPedidos(padresExpandableList);
+		        	
+		        	//Mesa.pintarBaseDatosMiFav();
+		        	
+		        	Mesa.actualizaListPlatos();
+		        	
+		        	
+		    	}else{
+		    		adapterExpandableListEditarExtras.expandeTodosLosPadres();
+					Toast.makeText(context,"¡Plato mal configurado!", Toast.LENGTH_SHORT).show();
+		    	}	
 			}
 			
 		});
+	}
+	
+	public void cargarGridViewIngredientes(View vistaVentanaEmergente, String idPlatoPulsado){
+		HandlerGenerico sqlMiBase=new HandlerGenerico(context, "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		SQLiteDatabase dbMiBase= sqlMiBase.open();
+  		String[] campos = new String[]{"Ingredientes"};
+  		String[] datos = new String[]{idPlatoPulsado};
+  		
+  		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Id =?",datos,null,null,null); 
+  		cursor.moveToFirst();
+  		
+  		String ingredientesPlatoCadena = cursor.getString(0);
+
+        ingredientesMarcadosBoolean = new ArrayList<Boolean>();
+        ingredientesTotales = new ArrayList<String>();
+        
+        if (!ingredientesPlatoCadena.equals("")){
+   
+		    	String[] tokens = ingredientesPlatoCadena.split("%");
+		        for (int i=0; i<tokens.length; i++){
+		        	ingredientesTotales.add(tokens[i]);
+		        	ingredientesMarcadosBoolean.add(true);
+		        }
+        }
+        GridView gridViewIngredientes = (GridView) vistaVentanaEmergente.findViewById(R.id.gridViewIngredientes);
+		MiGridViewSeleccionarIngredientesPlato miGridViewSeleccionarIngredientesPlato = new MiGridViewSeleccionarIngredientesPlato(context, ingredientesTotales, ingredientesMarcadosBoolean);
+		gridViewIngredientes.setAdapter(miGridViewSeleccionarIngredientesPlato);
 	}
 	
 	//FIXME

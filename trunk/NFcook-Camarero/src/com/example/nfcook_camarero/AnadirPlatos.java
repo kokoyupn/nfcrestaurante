@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import baseDatos.HandlerGenerico;
-
 import fragments.PantallaMesasFragment;
 import adapters.HijoExpandableListAnadirPlato;
 import adapters.HijoExpandableListEditar;
 import adapters.MiCursorAdapterBuscadorPlatos;
 import adapters.MiExpandableListAnadirPlatoAdapter;
 import adapters.MiExpandableListEditarAdapter;
+import adapters.MiGridViewSeleccionarIngredientesPlato;
 import adapters.PadreExpandableListAnadirPlato;
 import adapters.PadreExpandableListEditar;
 import android.app.ActionBar;
@@ -35,6 +35,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.ExpandableListView;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -64,6 +65,11 @@ public class AnadirPlatos extends Activity{
 	private static String restaurante;
 	
 	private Parcelable mstate;
+	
+	private ArrayList<String> ingredientesTotales;
+	private ArrayList<Boolean> ingredientesMarcadosBoolean;
+	
+	private MiCursorAdapterBuscadorPlatos adapterBuscador;
 	
 	//private ArrayList<InfoPlato> platosAñadidos; //aqui vaos guardando los platos que ha añadido para luego pasarselos a la pantalla de Mesa 
 	//cuando añade un plato se añade a la base de datos de mesas
@@ -296,12 +302,14 @@ public class AnadirPlatos extends Activity{
 		    Cursor c =  dbBuscador.rawQuery("SELECT Id AS _id, nombre AS item" + 
 		    			" FROM Restaurantes" + 
 		    			" WHERE Restaurante ='"+ restaurante +"' and nombre LIKE '%" +""+ "%' ", null);
-		    buscador.setAdapter(new MiCursorAdapterBuscadorPlatos(getApplicationContext(), c, CursorAdapter.NO_SELECTION, restaurante));
+		    adapterBuscador = new MiCursorAdapterBuscadorPlatos(getApplicationContext(), c, CursorAdapter.NO_SELECTION, restaurante);
+		    buscador.setAdapter(adapterBuscador);
 		    buscador.setThreshold(2);
 			
 			buscador.setOnItemClickListener(new OnItemClickListener() {
 		
-				   public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
+
+				public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
 					   //Es lo que vamos a mostrar en la barra de busqueda una vez pinchada una sugerencia.
 					   Cursor c = (Cursor) arg0.getAdapter().getItem(position);
 					   buscador.setText("");
@@ -312,6 +320,9 @@ public class AnadirPlatos extends Activity{
 					   onClickBotonAceptarAlertDialog(ventanaEmergente, nombrePlato);
 					   View vistaAviso = LayoutInflater.from(AnadirPlatos.this).inflate(R.layout.ventana_emergente_editar_anadir_plato, null);
 					   expandableListEditarExtras = (ExpandableListView) vistaAviso.findViewById(R.id.expandableListViewExtras);
+					   
+					   cargarGridViewIngredientes(vistaAviso, nombrePlato);
+					   
 					   //actwObservaciones = (AutoCompleteTextView) vistaAviso.findViewById(R.id.autoCompleteTextViewObservaciones);
 					   TextView encabezadoDialog = (TextView) vistaAviso.findViewById(R.id.textViewEditarAnadirPlato);
 					   encabezadoDialog.setText("Añadir Plato");
@@ -410,32 +421,49 @@ public class AnadirPlatos extends Activity{
 		ventanaEmergente.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
+							
 				boolean bienEditado = true;
 		    	String observaciones = "";
 		    	String nuevosExtrasMarcados = "";
-		    	if(!actwObservaciones.getText().toString().equals("")){
-		        	observaciones = actwObservaciones.getText().toString();
-		    	}
+		    	
+		    	String ingredientesStr = "";
+		    	
+		    	if(ingredientesMarcadosBoolean.size() > 0){
+					//ingredientesBinarios = "";
+					for(int i=0; i<ingredientesMarcadosBoolean.size(); i++){
+						if(!ingredientesMarcadosBoolean.get(i)) // == false
+							ingredientesStr += ingredientesTotales.get(i) + ", sin ";
+					}
+					if (ingredientesStr.equals("")){
+						ingredientesStr = "Con todos los ingredientes";
+					} else {
+						ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
+					}    			
+				}else{
+					ingredientesStr = "No hay ingredientes definidos";
+				}
+		    	
+//		    	if(!actwObservaciones.getText().toString().equals("")){
+//		        	observaciones = actwObservaciones.getText().toString();
+//		    	}
+		    	
 		    	if(adapterExpandableListEditarExtras!=null){ //Es un plato con extras
 		    		nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
 		    		if(nuevosExtrasMarcados == null){
 		    			bienEditado = false;
 		    		}
+		    	}else{ //No es un plato con extras
+		    		nuevosExtrasMarcados = "Sin guarnición";
 		    	}
 		    	if(bienEditado){
-		    		HandlerGenerico sqlMesas = null, sqlRestaurate = null;
-		    		SQLiteDatabase dbMesas = null, dbRestaurante = null;
+		    		
+		    		HandlerGenerico sqlMesas = null;
+		    		SQLiteDatabase dbMesas = null;
 		    		try{
 		    			sqlMesas=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "Mesas.db");
 		    			dbMesas = sqlMesas.open();
 		    		}catch(SQLiteException e){
 		    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MESA",Toast.LENGTH_SHORT).show();
-		    		}
-		    		try{
-		    			sqlRestaurate =new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBaseFav.db");
-		    			dbRestaurante = sqlRestaurate.open();
-		    		}catch(SQLiteException e){
-		    		 	Toast.makeText(getApplicationContext(),"NO EXISTE BASE DE DATOS MiBase(Restaurante)",Toast.LENGTH_SHORT).show();
 		    		}
 		    		
 		    		String[] campos = new String[]{"Id","Precio"};
@@ -460,7 +488,6 @@ public class AnadirPlatos extends Activity{
 		        	plato.put("NumMesa", numMesa);
 		        	plato.put("IdCamarero", idCamarero);
 		        	plato.put("IdPlato", cursor.getString(0));
-		        	plato.put("Observaciones", observaciones);
 		        	plato.put("Extras", nuevosExtrasMarcados);
 		        	plato.put("FechaHora", formatteDate + " " + formatteHour);
 		        	plato.put("Nombre", nombrePlato);
@@ -468,6 +495,8 @@ public class AnadirPlatos extends Activity{
 		        	plato.put("Personas",numPersonas);
 		        	plato.put("IdUnico", idUnico);
 		        	plato.put("Sincro", 0);
+		        	plato.put("Extras", nuevosExtrasMarcados);
+			    	plato.put("Ingredientes", ingredientesStr);
 		        	dbMesas.insert("Mesas", null, plato);
 		        	dbMesas.close();
 		        	
@@ -577,6 +606,33 @@ public class AnadirPlatos extends Activity{
   		}catch(Exception e){
 			 System.out.println("Error en generarTopPedidos");
 		}
+	}
+	
+	public void cargarGridViewIngredientes(View vistaVentanaEmergente, String nombrePlato){
+		HandlerGenerico sqlMiBase=new HandlerGenerico(getApplicationContext(), "/data/data/com.example.nfcook_camarero/databases/", "MiBase.db");
+		SQLiteDatabase dbMiBase= sqlMiBase.open();
+  		String[] campos = new String[]{"Ingredientes"};
+  		String[] datos = new String[]{nombrePlato};
+  		
+  		Cursor cursor = dbMiBase.query("Restaurantes",campos,"Nombre =?",datos,null,null,null); 
+  		cursor.moveToFirst();
+  		
+  		String ingredientesPlatoCadena = cursor.getString(0);
+
+        ingredientesMarcadosBoolean = new ArrayList<Boolean>();
+        ingredientesTotales = new ArrayList<String>();
+        
+        if (!ingredientesPlatoCadena.equals("")){
+   
+		    	String[] tokens = ingredientesPlatoCadena.split("%");
+		        for (int i=0; i<tokens.length; i++){
+		        	ingredientesTotales.add(tokens[i]);
+		        	ingredientesMarcadosBoolean.add(true);
+		        }
+        }
+        GridView gridViewIngredientes = (GridView) vistaVentanaEmergente.findViewById(R.id.gridViewIngredientes);
+		MiGridViewSeleccionarIngredientesPlato miGridViewSeleccionarIngredientesPlato = new MiGridViewSeleccionarIngredientesPlato(AnadirPlatos.this, ingredientesTotales, ingredientesMarcadosBoolean);
+		gridViewIngredientes.setAdapter(miGridViewSeleccionarIngredientesPlato);
 	}
 	
 	@Override

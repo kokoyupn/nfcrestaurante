@@ -446,38 +446,34 @@ public class Mesa extends Activity {
 				
 				
 					importarBaseDatatosMesa();
-					String nuevosExtrasMarcados = null;
+					String nuevosExtrasMarcados = "";
 					
-					String ingredientesStr = null;
-					String ingredientesBinarios = null;
+					String ingredientesStr = "";
+					//String ingredientesBinarios = null;
 					
 					if(adapterExpandableListEditarExtras != null){ // El plato tiene extras
 						nuevosExtrasMarcados = adapterExpandableListEditarExtras.getExtrasMarcados();
+					}else{ // No es un plato con extras
+						nuevosExtrasMarcados = "Sin guarnición";
 					}
 			    	
-			    	String observacionesNuevas;
-//			    	if(!actwObservaciones.getText().toString().equals("")){
-//			    		observacionesNuevas = actwObservaciones.getText().toString();
-//			    	}else{
-//			    		observacionesNuevas = adapter.getObservacionesPlato(posicion);
-//			    	}
-			    	
 			    	if(ingredientesMarcadosBoolean.size() > 0){
-						ingredientesStr = "";
-						ingredientesBinarios = "";
+						//ingredientesBinarios = "";
 						for(int i=0; i<ingredientesMarcadosBoolean.size(); i++){
-							if(ingredientesMarcadosBoolean.get(i)) // == true
-								ingredientesBinarios += "1";
-							else{						   // == false
-								ingredientesBinarios += "0";
+							if(!ingredientesMarcadosBoolean.get(i)) // == true
+								//ingredientesBinarios += "1";
+							//else{						   // == false
+								//ingredientesBinarios += "0";
 								ingredientesStr += ingredientesTotales.get(i) + ", sin ";
-							}
+							//}
 						}
 						if (ingredientesStr.equals("")){
 							ingredientesStr = "Con todos los ingredientes";
 						} else {
 							ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
 						}    			
+					}else{
+						ingredientesStr = "No hay ingredientes definidos";
 					}
 			    	
 			    	if(nuevosExtrasMarcados==null)
