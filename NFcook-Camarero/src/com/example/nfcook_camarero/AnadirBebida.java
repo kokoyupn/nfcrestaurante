@@ -200,7 +200,7 @@ public class AnadirBebida extends Activity{
 		        	nuevaBebida.put("NumMesa", numMesa);
 		        	nuevaBebida.put("IdCamarero", idCamarero);
 		        	nuevaBebida.put("IdPlato", idBebida);
-		        	nuevaBebida.put("Observaciones", "");
+		        	nuevaBebida.put("Ingredientes", "");
 		        	nuevaBebida.put("Extras", "");
 		        	nuevaBebida.put("FechaHora", fechaHora[0] + " " + fechaHora[1]); //[0]=fecha [1]=hora
 		        	nuevaBebida.put("Nombre", nombreBebida);
