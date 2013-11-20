@@ -359,6 +359,8 @@ public class DescripcionPlato extends Activity {
     			} else {
     				ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
     			}    			
+    		} else {
+    			ingredientesStr = "Con todos los ingredientes";
     		}
     		
     		sqlPedido=new HandlerDB(getApplicationContext(),"Pedido.db"); 

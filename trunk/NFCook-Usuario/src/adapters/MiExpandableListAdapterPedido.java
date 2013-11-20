@@ -91,7 +91,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 		if(extrasPlato==null && ingredientesPlato==null){
 			
 			textViewExtras.setText("Sin guarnición");
-			textViewObservaciones.setText("Sin observaciones");
+			textViewObservaciones.setText("Con todos los ingredientes");
 		
 		}else if(extrasPlato==null && ingredientesPlato!=null){
 			
@@ -102,7 +102,7 @@ public class MiExpandableListAdapterPedido extends BaseExpandableListAdapter {
 			
 			textViewExtras.setText(extrasPlato);
 			if(ingredientesPlato==null){
-				textViewObservaciones.setText("Sin observaciones");
+				textViewObservaciones.setText("Con todos los ingredientes");
 			}else{
 				textViewObservaciones.setText(ingredientesPlato);
 			}

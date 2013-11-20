@@ -188,8 +188,7 @@ public class DescripcionPlatoEditar extends Activity {
         		}
     		}
     		
-    	}
-        
+    	}         
         
         ImageView botonIngredientes = (ImageView) findViewById(R.id.botonIngredientes);
         botonIngredientes.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +250,8 @@ public class DescripcionPlatoEditar extends Activity {
 			} else {
 				ingredientesStr = "Sin " + ingredientesStr.substring(0, ingredientesStr.length()-6).toLowerCase();
 			}    			
+		} else {
+			ingredientesStr = "Con todos los ingredientes";
 		}
 		
     	ContentValues platoEditado = new ContentValues();
