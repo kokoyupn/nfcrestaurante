@@ -3,6 +3,7 @@ package usuario;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import baseDatos.HandlerDB;
 import com.example.nfcook.R;
@@ -26,7 +27,6 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.TagLostException;
-import android.nfc.tech.MifareClassic;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
@@ -51,11 +51,9 @@ public class SincronizarPedidoNFC extends Activity implements
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
 	private ArrayList<Byte> pedidoCodificadoEnBytes;
-	private boolean cabeEnTag, leidoBienDeTag, escritoBienEnTag, tagCorrupta, 
-		heCalculadoTam, restauranteCorrecto, esCuenta;
+	private boolean cabeEnTag, leidoBienDeTag, escritoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta;
 	private static boolean heSincronizadoMalAntes;
-	private static ArrayList<Byte> copiaSeguridad, copiaUltimoBloque;
-	private static int numBloqueComienzo;
+	private static ArrayList<Byte> copiaSeguridad;
 	private byte idRestaurante, idRestauranteTag;
 	// Variables para el sonido
 	SonidoManager sonidoManager;
@@ -89,14 +87,16 @@ public class SincronizarPedidoNFC extends Activity implements
 		 */
 		@Override
 		protected Void doInBackground(Void... params) {
-			// si es Mifare Classic
-		/*	try {
+			
+			// leemos y hacemos copia seguridad
+			try {
 				// si he sincronizado mal no tengo que leer porque ya tengo la copia y nadie mas ha escrito
 				// se reinician las copias de seguridad porque no se ha sincronizado mal
-				if (!heSincronizadoMalAntes)
-					leerTagNFC();
-				else
-					leidoBienDeTag = true;
+				if (!heSincronizadoMalAntes){
+					hacerCopiaSeguridad(leerTagNFC(mytag)); // lee de la tarjeta y hace la copia de seguridad
+					System.out.println("Copia seguridad: " + copiaSeguridad.toString()); //TODO quitar
+				}
+				leidoBienDeTag = true;
 				
 			} catch (IOException e1) {
 				leidoBienDeTag = false;
@@ -106,14 +106,17 @@ public class SincronizarPedidoNFC extends Activity implements
 				e1.printStackTrace();
 			}
 				
+			// escribimos
 			if (leidoBienDeTag && !esCuenta) {
 				
 				if (estoyEnRestauranteCorrecto()){
 					// si ha sincronizado mal entra xq para el la tag no esta corrupta
 					if (!tagCorrupta) {
+						// une la copia de seguridad con el pedido actual y añade al principio el rest
 						codificarPedido(damePedidoActual());
 						try {
-							escribirEnTagNFC();
+							System.out.println("Pedido nuevo: " + pedidoCodificadoEnBytes.toString()); //TODO quitar
+							escribirEnTagNFC(pedidoCodificadoEnBytes); 							
 						} catch (IOException e) {
 							heSincronizadoMalAntes = true;
 							e.printStackTrace();
@@ -123,18 +126,7 @@ public class SincronizarPedidoNFC extends Activity implements
 						}
 					}
 				}
-			} */
-			
-			//if (estoyEnRestauranteCorrecto()){
-				// si ha sincronizado mal entra xq para el la tag no esta corrupta
-				codificarPedido(damePedidoActual());
-				try {
-					escribirEnTagNFC(pedidoCodificadoEnBytes);
-			
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			//}
+			}
 			
 			// mejor aqui para buscar siempre que haga lo anterior que es lo importante
 			sonidoManager.play(sonido);
@@ -142,6 +134,8 @@ public class SincronizarPedidoNFC extends Activity implements
 			return null;
 		}
 
+		
+		
 		/**
 		 * Se ejecuta cuando termina doInBackground. Cierra las bases de datos y
 		 * tambien el progressDialog.
@@ -212,28 +206,25 @@ public class SincronizarPedidoNFC extends Activity implements
 		Intent intent = new Intent();
 		intent.putExtra("Origen", "Pedido");
 		setResult(RESULT_CANCELED, intent);
-			//if (!tagCorrupta) {
-			//	if (leidoBienDeTag) {
-			//		if (!esCuenta){
-					//	if (escritoBienEnTag){
-							//enviarPedidoACuenta();
-							enviarPedidoACuenta();
-							setResult(RESULT_OK, intent);
-							//Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
-					/*	} else {
-							if (heCalculadoTam) {
-								if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
-								else if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
-							} else {
-								if (restauranteCorrecto) Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-								else Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
-							}
-						}*/
-					//} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
-			//	} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-			//} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizo mal",Toast.LENGTH_LONG).show();
+		if (!tagCorrupta) {
+			if (leidoBienDeTag) {
+				if (!esCuenta){
+					if (escritoBienEnTag){
+						enviarPedidoACuenta();
+						setResult(RESULT_OK, intent);
+						Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
+					} else {						
+						if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
+						else if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
+						else if (!restauranteCorrecto) Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
+						else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();	
+					}
+				} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
+			} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+		} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizo mal",Toast.LENGTH_LONG).show();
+		
 		cerrarBasesDeDatos();
-		//if (!heSincronizadoMalAntes) 
+		if (!heSincronizadoMalAntes) 
 			finish();
 	}
 
@@ -425,9 +416,8 @@ public class SincronizarPedidoNFC extends Activity implements
 		// variable donde ira el pedido con la codificacion final
 		pedidoCodificadoEnBytes = new ArrayList<Byte>();
 
-		// el comienzo del array será el ultimo bloque escrito falle o no falle
-		/*for (int i = 0; i < copiaUltimoBloque.size(); i++)
-			pedidoCodificadoEnBytes.add(copiaUltimoBloque.get(i));*/
+		// metemos la copia de seguridad
+		pedidoCodificadoEnBytes.addAll(copiaSeguridad);
 		
 		// separamos por platos
 		StringTokenizer stPlatos = new StringTokenizer(listaPlatosStr, "@");
@@ -557,21 +547,9 @@ public class SincronizarPedidoNFC extends Activity implements
 	
 	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
 
-		//create the message in according with the standard
-	    //String lang = "en";
-	    //byte[] langBytes = lang.getBytes("US-ASCII");
-	    //int langLength = langBytes.length;
 	    byte[] payload = new byte[ndef.getMaxSize()-8];
 	    
 	    System.out.println("TAM: " + ndef.getMaxSize());
-
-	    //create the message in according with the standard
-	    //payload[0] = (byte) langLength;
-	    
-	    /*for (int i = 0; i < langLength; i++){
-	    	payload[i+1] = langBytes[i];
-	    }*/
-	    
 	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
 	    	payload[i] = pedidoCodificadoEnBytes.get(i);
 	    }
@@ -586,6 +564,9 @@ public class SincronizarPedidoNFC extends Activity implements
 
 	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
 
+		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
+		escritoBienEnTag = false;
+		heSincronizadoMalAntes = true;
 		try {
 			Ndef ndef = Ndef.get(mytag);
 			if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
@@ -603,8 +584,10 @@ public class SincronizarPedidoNFC extends Activity implements
 		 
 		            try {// Write the data to the tag		                
 		                ndef.writeNdefMessage(message);
+		                escritoBienEnTag = true;
+		                heSincronizadoMalAntes = false;
 		            } catch (TagLostException tle) {
-		            	System.out.println("tag lost exception al escribir");
+		            	System.out.println("tag lost exception al escribir");		            	
 		            } catch (IOException ioe) {
 		            	System.out.println("error IO al escribir");
 		            } catch (FormatException fe) {
@@ -617,6 +600,8 @@ public class SincronizarPedidoNFC extends Activity implements
 		                try {
 		                    format.connect();
 		                    format.format(message);
+		                    escritoBienEnTag = true;
+		                    heSincronizadoMalAntes = false;
 		                } catch (TagLostException tle) {
 		                	System.out.println("tag lost exception al formatear");
 		                } catch (IOException ioe) {
@@ -693,71 +678,111 @@ public class SincronizarPedidoNFC extends Activity implements
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private void leerTagNFC() throws IOException, FormatException {
+	private ArrayList<Byte> leerTagNFC(Tag tag) throws IOException, FormatException {
 
-		// para copia de seguridad
-		copiaSeguridad = new ArrayList<Byte>();
-		copiaUltimoBloque = new ArrayList<Byte>();
-		
-		//depurar
-		bloquesDepuracion = new ArrayList<Boolean>();
-
-		// Obtiene la instacia de la tarjeta nfc
-		MifareClassic mfc = MifareClassic.get(mytag);
-		// Establece la conexion
-		mfc.connect();
-
-		// Variable usada para saber por el bloque que vamos
-		int numBloque = 0;
-		// el texto que ha escrito el usuario
-		byte[] textoByte = null;
-		// para copiaSeguridad y errores
-		boolean sectorValido = false;
-		leidoBienDeTag = true;
-		Byte menosUno = (byte) Integer.parseInt("255");
-		Byte menosDos = (byte) Integer.parseInt("254");
-		boolean menosUnoEncontrado = false;
-		boolean esPrimerBloque = false;
-
-		// Recorremos todos los sectores y bloques leyendo el mensaje
-		while (numBloque < mfc.getBlockCount() && !menosUnoEncontrado) {
-			if (sePuedeEscribirEnBloque(numBloque)) {
-				// Cada sector tiene 4 bloques
-				int numSector = numBloque / 4;
-				// Validamos el sector con la A porque las tarjetas que tenemos usan el bit A en vez del B
-				sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
-				bloquesDepuracion.add(sectorValido);
-				if (sectorValido) {// Si es un sector valido
-					textoByte = mfc.readBlock(numBloque); // leemos un bloque entero
-
-					if (!esPrimerBloque){
-						esCuenta = menosDos == textoByte[0];
-						idRestauranteTag = textoByte[0];
-						esPrimerBloque = true;
-					}
-					
-					// copia ultimo bloque bloque
-					copiaUltimoBloque = new ArrayList<Byte>();
-					int i = 0;
-					while (i < MifareClassic.BLOCK_SIZE && !menosUnoEncontrado) {
-						if (textoByte[i] != menosUno) copiaUltimoBloque.add(textoByte[i]);
-						else menosUnoEncontrado = true;
-						numBloqueComienzo = numBloque;
-						i++;
-					}
-					
-					//copia seguridad
-					copiaSeguridad.addAll(copiaUltimoBloque);
-				}
-			}
-			numBloque++;
+		Ndef ndef = Ndef.get(tag);
+		NdefMessage message = ndef.getCachedNdefMessage();
+		byte[] mensajeEnBytes = message.toByteArray();
+		ArrayList<Byte> mensajeEnBytesBueno = new ArrayList<Byte>();
+		// Con este "for" eliminamos los datos inservibles del array de bytes
+		for (int i=0; i<mensajeEnBytes.length-7; i++){
+			mensajeEnBytesBueno.add(mensajeEnBytes[i+7]);
 		}
-		leidoBienDeTag = true;
-		if (!menosUnoEncontrado) tagCorrupta = true;
-		else tagCorrupta = false;
+		return mensajeEnBytesBueno;		
+	}
 
-		// Cerramos la conexion
-		mfc.close();
+	private void hacerCopiaSeguridad(ArrayList<Byte> mensaje) {
+		
+		System.out.println("hijo de puta: " + mensaje.toString());
+		
+		
+		tagCorrupta = false;
+		
+		copiaSeguridad = new ArrayList<Byte>();
+		
+		Iterator<Byte> itMensaje = mensaje.iterator();
+		boolean parar=false;
+		
+		idRestaurante = itMensaje.next();
+		copiaSeguridad.add(idRestaurante);
+		
+		while(itMensaje.hasNext() && !parar){					
+	
+			Byte idByte = itMensaje.next();
+			int id = decodificaByte(idByte);
+				
+			parar = id==255 || id==254;//El mensaje termina con un -1 en la tag
+			esCuenta = id==254;			
+	
+			if(!parar){ //Si no ha acabado el mensaje
+				
+				copiaSeguridad.add(idByte); // metemos el idByte en la copia de seguridad
+				
+				// extras
+				Byte extrasByte = itMensaje.next();
+				copiaSeguridad.add(extrasByte); // metemos extrasByte en la copia de seguridad
+				int numBytesExtras =  decodificaByte(extrasByte);
+				for (int i = 0; i < numBytesExtras; i++ )
+					copiaSeguridad.add(itMensaje.next());  //metemos los extras binarios en la copia de seguridad
+										
+				// ingredientes		
+				Byte ingredByte = itMensaje.next();
+				copiaSeguridad.add(ingredByte); // metemos ingredByte en copia de seguridad
+				int numBytesIngredientes = decodificaByte(ingredByte);				
+				for(int i=0; i < numBytesIngredientes; i++){
+					copiaSeguridad.add(itMensaje.next()); // metemos ingred binarios en copia de seguridad
+				}
+			}//if parar             
+		 }//while	
+		
+		if(!parar) 
+			tagCorrupta = true;
+	}
+	
+	/**Metodo que se encargar de convertir un byte dado por parametro a un tipo int
+	 *  
+	 * @param idByte
+	 * @return
+	 */
+		 
+	public static int decodificaByte(byte idByte){
+		int id = (int)idByte;
+		if (id < 0) return id + 256;
+		else return id;
+	}
+	
+	/** Convierte un numero decimal en su equivalente en binario
+	 *  
+	 * @param decimal
+	 * @return
+	 */
+	public static String decToBin(int decimal){
+		
+		int base = 2;
+		int result = 0;
+		int multiplier = 1;
+		
+		if (decimal < 0)
+			decimal = 256 + decimal;
+		
+		while (decimal>0){
+			int residue = decimal%base;
+			decimal = decimal/base;
+			result = result +residue*multiplier;
+			multiplier = multiplier * 10;
+		}
+		// rellenamos con ceros a la izquierda para que tenga siempre 8 bytes
+		String resultStr = "";
+		String numBytes = ""+result;
+		int veces = 8 - numBytes.length();
+		
+		for (int i = 0; i < veces; i++)
+			resultStr += "0";
+	
+		resultStr += result;
+			
+		return resultStr;
+		
 	}
 
 	/************************************ GETTERS, SETTERS ****************************************/
