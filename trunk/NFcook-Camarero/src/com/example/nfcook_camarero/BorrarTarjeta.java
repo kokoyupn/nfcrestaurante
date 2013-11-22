@@ -1,6 +1,7 @@
 package com.example.nfcook_camarero;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import baseDatos.HandlerGenerico;
@@ -18,9 +19,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.nfc.FormatException;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.TagLostException;
 import android.nfc.tech.MifareClassic;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -40,12 +46,10 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	Context ctx;
 	String[][] mTechLists;
 	boolean escritoBienEnTag;
-	boolean esMFC;
 	ProgressDialog	progressDialogSinc;
 	String restaurante;
 	int numeroRestaurante;
-	/*Variables para obtener el valor equivalente del restaurante*/
-	String ruta="/data/data/com.example.nfcook_camarero/databases/";
+
 	private SQLiteDatabase dbEquivalencia;
 	private HandlerGenerico sql;
 	
@@ -77,21 +81,24 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	  protected Void doInBackground(Void... params) {	  		  
 		  SystemClock.sleep(1000);
 		  // si es Mifare Classic
-		  if (esMFC) {
-				try {   
-					read(mytag);//Se ha detectado la tag procedemos a leerla
-									
-					//Sonido de confirmacion
-					sonidoManager.play(sonido);
-					}
-				 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
-					Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
-					e.printStackTrace();
-				} catch (FormatException e) {
-					Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
-					e.printStackTrace();
+			try {   
+				//read(mytag);//Se ha detectado la tag procedemos a leerla
+				
+				ArrayList<Byte> al = new ArrayList<Byte>();
+				al.add((byte)0); // FIXME cambiar toda esta mierda
+				al.add((byte)255);
+				escribirEnTagNFC(al);
+				
+				//Sonido de confirmacion
+				sonidoManager.play(sonido);
 				}
-			 }
+			 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
+				Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
+				e.printStackTrace();
+			} catch (FormatException e) {
+				Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
+				e.printStackTrace();
+			}
 		
 		  return null;
 	  }
@@ -142,7 +149,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
   		//restaurante="Foster";
   		
   		 try{ //Abrimos la base de datos para consultarla
- 	       	sql = new HandlerGenerico(getApplicationContext(),ruta,"Equivalencia_Restaurantes.db"); 
+ 	       	sql = new HandlerGenerico(getApplicationContext(),"Equivalencia_Restaurantes.db"); 
  	        dbEquivalencia = sql.open();
  	     
  	    }catch(SQLiteException e){
@@ -187,17 +194,12 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	 * 
 	 */
 	public void onDismiss(DialogInterface dialog) {
-		if (!esMFC) {
-			Toast.makeText(this, "No se ha borrado la tag. La tag no es Mifare Classic.", Toast.LENGTH_LONG ).show();		
-		}
-		else {
-			if (escritoBienEnTag) {
-			 Toast.makeText(this, "Borrado correctamente.", Toast.LENGTH_LONG ).show();		
-			}
-			else {
-				Toast.makeText(this, "Borrado no completado", Toast.LENGTH_LONG ).show();		 
-			}
-		}
+//		if (escritoBienEnTag) {
+//			Toast.makeText(this, "Borrado correctamente.", Toast.LENGTH_LONG ).show();		
+//		}
+//		else {
+//			Toast.makeText(this, "Borrado no completado", Toast.LENGTH_LONG ).show();		 
+//		}
 		finish();	
 	}
 
@@ -209,74 +211,172 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private void read(Tag tag) throws IOException, FormatException {	
-		
-		String aux = "";
-		aux += "255";
-		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
-		
-		ArrayList<Byte> al = new ArrayList<Byte>();
-		al.add((byte) numeroRestaurante);
-		pedidoCodificadoEnBytes.addAll(al);
-		
-		al = new ArrayList<Byte>();
-		al.add((byte) Integer.parseInt(aux));
-		pedidoCodificadoEnBytes.addAll(al);
+	private void read(Tag tag) throws IOException, FormatException {
 		
 		
-		// Obtenemos instancia de MifareClassic para el tag.
-				MifareClassic mfc = MifareClassic.get(mytag);
-												
-				// Habilitamos operaciones de I/O
-				mfc.connect();
-
-				boolean sectorValido = false;				
-				
-				// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
-				int recorrerString = 0;	
-				// para saber si se ha escrito o no
-				escritoBienEnTag = false;
-				
-				// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
-				// se escribe mandando bloques de 16 bytes
-				int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
-				if (numMod16 != 0){
-					int huecos = 16-numMod16;
-					for (int i = 0; i < huecos; i++)
-						pedidoCodificadoEnBytes.add((byte) 0);
-				}
-				for (int i=0; i<mfc.getBlockCount();i++)
-				{
-					if (sePuedeEscribirEnBloque(i)) {
-						// cada sector tiene 4 bloques
-						int numSector = i / 4;
-						// autentifico con la key A para escritura
-						sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
-						if (sectorValido) {
-							// si es menor significa que queda por escribir cosas
-							if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
-								// recorremos con un for para obtener bloques de 16 bytes
-								byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
-								for (int j=0; j<MifareClassic.BLOCK_SIZE; j++)
-									datosAlBloque[j] = pedidoCodificadoEnBytes.get(j+recorrerString);
-								// avanzo para el siguiente bloque
-								recorrerString += MifareClassic.BLOCK_SIZE;
-								// escribimos en el bloque
-								mfc.writeBlock(i, datosAlBloque);
-							} else {
-								// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
-								byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
-								mfc.writeBlock(i, ceros);
-							}
-						}
-					} 
-				}
-				escritoBienEnTag = true;
-								
-				// Cerramos la conexion
-				mfc.close();
+		//TODO LUEGO HACER LECTURAS
+		
+//		String aux = "";
+//		aux += "255";
+//		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
+//		
+//		ArrayList<Byte> al = new ArrayList<Byte>();
+//		al.add((byte) numeroRestaurante);
+//		pedidoCodificadoEnBytes.addAll(al);
+//		
+//		al = new ArrayList<Byte>();
+//		al.add((byte) Integer.parseInt(aux));
+//		pedidoCodificadoEnBytes.addAll(al);
+//		
+//		
+//		// Obtenemos instancia de MifareClassic para el tag.
+//				MifareClassic mfc = MifareClassic.get(mytag);
+//												
+//				// Habilitamos operaciones de I/O
+//				mfc.connect();
+//
+//				boolean sectorValido = false;				
+//				
+//				// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
+//				int recorrerString = 0;	
+//				// para saber si se ha escrito o no
+//				escritoBienEnTag = false;
+//				
+//				// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
+//				// se escribe mandando bloques de 16 bytes
+//				int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
+//				if (numMod16 != 0){
+//					int huecos = 16-numMod16;
+//					for (int i = 0; i < huecos; i++)
+//						pedidoCodificadoEnBytes.add((byte) 0);
+//				}
+//				for (int i=0; i<mfc.getBlockCount();i++)
+//				{
+//					if (sePuedeEscribirEnBloque(i)) {
+//						// cada sector tiene 4 bloques
+//						int numSector = i / 4;
+//						// autentifico con la key A para escritura
+//						sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
+//						if (sectorValido) {
+//							// si es menor significa que queda por escribir cosas
+//							if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
+//								// recorremos con un for para obtener bloques de 16 bytes
+//								byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
+//								for (int j=0; j<MifareClassic.BLOCK_SIZE; j++)
+//									datosAlBloque[j] = pedidoCodificadoEnBytes.get(j+recorrerString);
+//								// avanzo para el siguiente bloque
+//								recorrerString += MifareClassic.BLOCK_SIZE;
+//								// escribimos en el bloque
+//								mfc.writeBlock(i, datosAlBloque);
+//							} else {
+//								// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
+//								byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
+//								mfc.writeBlock(i, ceros);
+//							}
+//						}
+//					} 
+//				}
+//				escritoBienEnTag = true;
+//								
+//				// Cerramos la conexion
+//				mfc.close();
 		
 	}
+	
+	
+	/************************************ ESCRITURA NFC ****************************************/
+
+	/**
+	 * Metodo encargado de escribir en el tag. Escribira en el tag el texto
+	 * introducido por el usuario. Los bloques que queden sin escribir seran
+	 * reescritos con 0's eliminando el texto que hubiese anteriormente
+	 * 
+	 * @param text
+	 * @param tag
+	 * @throws IOException
+	 * @throws FormatException
+	 */
+	
+	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
+
+	    byte[] payload = new byte[ndef.getMaxSize()-8];
+	    
+	    System.out.println("TAM: " + ndef.getMaxSize());
+	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
+	    	payload[i] = pedidoCodificadoEnBytes.get(i);
+	    }
+	    
+	    for (int i = pedidoCodificadoEnBytes.size() ; i < ndef.getMaxSize() - 8; i++){
+	    	payload[i] = 0;
+	    }
+
+	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
+	    return recordNFC;
+	}
+
+	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
+
+		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
+		escritoBienEnTag = false;
+		try {
+			Ndef ndef = Ndef.get(mytag);
+			if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
+				NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes,ndef) };
+			    NdefMessage message = new NdefMessage(records); 
+	    
+		        // If the tag is already formatted, just write the message to it
+		        if(ndef != null) {
+		            ndef.connect();
+		 
+		            // Make sure the tag is writable
+		            if(!ndef.isWritable()) {
+		                System.out.println("tag no es writable");
+		            }
+		 
+		            try {// Write the data to the tag		                
+		                ndef.writeNdefMessage(message);
+		                escritoBienEnTag = true;
+		            } catch (TagLostException tle) {
+		            	System.out.println("tag lost exception al escribir");		            	
+		            } catch (IOException ioe) {
+		            	System.out.println("error IO al escribir");
+		            } catch (FormatException fe) {
+		            	System.out.println("error format al escribir");
+		            }
+		        // If the tag is not formatted, format it with the message
+		        } else {
+		            NdefFormatable format = NdefFormatable.get(mytag);
+		            if(format != null) {
+		                try {
+		                    format.connect();
+		                    format.format(message);
+		                    escritoBienEnTag = true;
+		                } catch (TagLostException tle) {
+		                	System.out.println("tag lost exception al formatear");
+		                } catch (IOException ioe) {
+		                	System.out.println("error IO al formatear");
+		                } catch (FormatException fe) {
+		                	System.out.println("error format al formatear");
+		                }
+		            } else {
+		            	System.out.println("format es null");
+		            }
+		        }
+			}
+	    } catch(Exception e) {
+	    	System.out.println("ultimo try");
+	    }
+	}
+	
+	/**
+	 * Devuelve un booleano informando de si el pedido cabe o no cabe en la
+	 * tarjeta
+	 */
+	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) {
+		return pedidoCodificadoEnBytes.size() < ndef.getMaxSize();
+		
+	}
+
 
 	/**
 	 * Metedo encargado de comprobar si se puede o no escribir en un bloque pasado por parametro
@@ -296,18 +396,13 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
 			Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
-			// compruebo que la tarjeta sea mifare classic
-			String[] tecnologiasTag = mytag.getTechList();
-			esMFC = false;
-			for (int i = 0; i < tecnologiasTag.length; i++)
-				esMFC |= tecnologiasTag[i].equals("android.nfc.tech.MifareClassic");
-		   }
 			if(mytag == null){
 					Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
 			}else {
 					// ejecuta el progressDialog, codifica, escribe en tag 
 					new SincronizarPedidoBackgroundAsyncTask().execute();
-				}
+			}
+		}
 	}
 
 	public void onPause(){
