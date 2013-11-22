@@ -123,7 +123,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case MESSAGE_SENT:
-                Toast.makeText(getApplicationContext(), "Pedido Sincronizado.", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Pedido Sincronizado.", Toast.LENGTH_LONG).show();
                 cerrarVentana();
                 break;
             }
@@ -164,7 +164,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
         decodificarPlatos(new String(msg.getRecords()[0].getPayload()));
         //Sonido para confirmar el pedido sincronizado
         sonidoManager.play(sonido);
-        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Pedido sincronizado correctamente", Toast.LENGTH_LONG).show();
         cerrarVentana();     
         
     }
@@ -211,7 +211,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	}
 		
 	@SuppressLint("SdCardPath")
-	public void anadirPlatos(String idQR, String extrasQR, String ingredientesQR){           
+	public void anadirPlatos(String idBeam, String extrasBeam, String ingredientesBeam){           
        	
 		try{
 			sqlRestaurante = new HandlerGenerico(getApplicationContext(), "MiBase.db");
@@ -219,15 +219,15 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 		
 			//Campos que quiero recuperar de la base de datos y datos que tengo para consultarla
 			String[] campos = new String[]{"Nombre","Precio","Extras","Ingredientes"};
-	      	String[] datos = new String[]{restaurante, idQR};
+	      	String[] datos = new String[]{restaurante, idBeam};
 	      	
       		Cursor cursor = dbRestaurante.query("Restaurantes",campos,"Restaurante=? AND Id=?",datos,null,null,null); 
       		cursor.moveToFirst();       
       		dbRestaurante.close();			
 	
 	      	String extrasSeparadosPorComas = obtenerExtrasSeparadosPorComas(cursor.getString(2));
-	        String extrasFinales = compararExtrasQRconBD(extrasSeparadosPorComas, extrasQR);
-	        String ingredientesFinales = compararIngredientesQRconBD(cursor.getString(3), ingredientesQR);
+	        String extrasFinales = compararExtrasBeamconBD(extrasSeparadosPorComas, extrasBeam);
+	        String ingredientesFinales = compararIngredientesBeamconBD(cursor.getString(3), ingredientesBeam);
 	        
 	        try{	      	        	
 	        	sqlMesas = new HandlerGenerico(getApplicationContext(), "Mesas.db");
@@ -236,29 +236,29 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	   			//Meto el plato en la base de datos Mesas 
 	    		// FIXME no se meten los datos que vienen de la pantalla anterior porque se pierden con el beam al abrirse otra pantalla
 	       		ContentValues plato = new ContentValues();
-	        	int idUnico = PantallaMesasFragment.getIdUnico();
-	        	/*plato.put("NumMesa", numMesa);
-	        	plato.put("IdCamarero", idCamarero);*/
-	        	plato.put("IdPlato", idQR);
+	        	
+	        	plato.put("NumMesa",PantallaMesasFragment.dameMesa());
+                plato.put("IdCamarero",PantallaMesasFragment.dameCamarero());
+	        	plato.put("IdPlato", idBeam);
 	        	if (ingredientesFinales.equals("")) plato.put("Ingredientes", "Con todos los ingredientes");
 		        else plato.put("Ingredientes", ingredientesFinales);
-	        	if (extrasQR.equals(""))	plato.put("Extras","Sin guarnición");
+	        	if (extrasBeam.equals(""))	plato.put("Extras","Sin guarnición");
 		        else plato.put("Extras", extrasFinales);
-	        	//plato.put("FechaHora", formatteDate + " " + formatteHour);
+	        	 plato.put("FechaHora", PantallaMesasFragment.dameFecha() + " " + PantallaMesasFragment.dameHora());
 	        	plato.put("Nombre", cursor.getString(0));
 	        	plato.put("Precio",cursor.getDouble(1));
-	        	//plato.put("Personas",numPersonas);
-	        	plato.put("IdUnico", idUnico);
+	        	plato.put("Personas",PantallaMesasFragment.dameNumPersonas());
+                plato.put("IdUnico", PantallaMesasFragment.getIdUnico());
 	        	plato.put("Sincro", 0);
 	        	dbMesas.insert("Mesas", null, plato);  	
 	        	dbMesas.close();
 		        
 		        //FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
-	        	//Mesa.actualizarNumeroVecesPlatoPedido(idQR);
-	        	//Mesa.pintarBaseDatosMiFav();
+	        	Mesa.actualizarNumeroVecesPlatoPedido(idBeam);
+	        	Mesa.pintarBaseDatosMiFav();
 	        	
 	      	}catch(Exception e){
-	    		System.out.println("Error en base de datos de Mesas en anadirPlatos QR");
+	    		System.out.println("Error en base de datos de Mesas en anadirPlatos Beam");
 	      	}
 	        
 		}catch(SQLiteException e){
@@ -266,14 +266,14 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 		}
 	}
 
-	private String compararExtrasQRconBD(String extrasSeparadosPorComasBD, String extrasQR) {
+	private String compararExtrasBeamconBD(String extrasSeparadosPorComasBD, String extrasBeam) {
 		StringTokenizer extrasST = new StringTokenizer(extrasSeparadosPorComasBD, ",");
 	    String extras = "";
 	    int i = 0;
 	    //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
 	    while (extrasST.hasMoreElements()){ 
 	    	 String elem = (String) extrasST.nextElement();
-	    	 if (extrasQR.charAt(i)=='1')
+	    	 if (extrasBeam.charAt(i)=='1')
 	    		 extras +=elem + ", ";
 	    	 i++;    	  
 	     }
@@ -307,20 +307,20 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	/**
 	 * Compara los ingredientes de QR con los de la BD, devuelve los marcados
 	 */
-	private String compararIngredientesQRconBD(String ingredientesBD, String ingredientesQR) {
+	private String compararIngredientesBeamconBD(String ingredientesBD, String ingredientesBeam) {
 		StringTokenizer ingredientesST = new StringTokenizer(ingredientesBD, "%");
 	    String ingredientes = "";
 	    int i = 0;
 	    //Recorro los extras y compruebo con el codigo binario cual de los extras ha sido escogio(un 1)
 	    while (ingredientesST.hasMoreElements()){ 
 	    	 String elem = (String) ingredientesST.nextElement();
-	    	 if (ingredientesQR.charAt(i)=='0')
-	    		 ingredientes +=elem + ", ";
+	    	 if (ingredientesBeam.charAt(i)=='0')
+	    		 ingredientes +=elem + ", sin ";
 	    	 i++;    	  
 	     }
 	     //Le quito la ultima coma al extra final para que quede estetico
 	     if (ingredientes!= "")
-	    	 ingredientes = ingredientes.substring(0, ingredientes.length()-2);
+	    	 ingredientes = "Sin " + ingredientes.substring(0, ingredientes.length()-6).toLowerCase();
 	     
 	     return ingredientes;
 	}
