@@ -641,12 +641,12 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	    while (ingredientesST.hasMoreElements()){ 
 	    	 String elem = (String) ingredientesST.nextElement();
 	    	 if (ingredientesNFC.charAt(i)=='0')
-	    		 ingredientes +=elem + ", ";
+	    		 ingredientes +=elem + ", sin ";
 	    	 i++;    	  
 	     }
 	     //Le quito la ultima coma al extra final para que quede estetico
 	     if (ingredientes!= "")
-	    	 ingredientes = ingredientes.substring(0, ingredientes.length()-2);
+	    	 ingredientes = "Sin " + ingredientes.substring(0, ingredientes.length()-6).toLowerCase();
 	     
 	     return ingredientes;
 	}
