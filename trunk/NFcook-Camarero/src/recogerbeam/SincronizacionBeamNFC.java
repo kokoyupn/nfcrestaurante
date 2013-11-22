@@ -2,9 +2,11 @@ package recogerbeam;
 
 import java.util.StringTokenizer;
 
+import com.example.nfcook_camarero.MainActivity;
 import com.example.nfcook_camarero.Mesa;
 import com.example.nfcook_camarero.R;
 import com.example.nfcook_camarero.SonidoManager;
+
 import baseDatos.HandlerGenerico;
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
@@ -74,11 +76,17 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
         actionbar.setDisplayHomeAsUpEnabled(true);
     	
     	
-		//El numero de la mesa se obtiene de la pantalla anterior
-		Bundle bundle = getIntent().getExtras();
-		restaurante=bundle.getString("Restaurante");
-	
-		    
+        restaurante = MainActivity.restaurante;
+        
+        //obtenemos el codigo y la abreviatura del rest
+  		try {
+  			sqlEquivalencia = new HandlerGenerico(getApplicationContext(), "Equivalencia_Restaurantes.db");
+  			dbEquivalencia = sqlEquivalencia.open();
+  		} catch (SQLiteException e) {
+  			System.out.println("NO EXISTE BASE DE DATOS PEDIDO: SINCRONIZAR QR");
+  		}
+  		obtenerCodigoYAbreviaturaRestaurante();
+  		dbEquivalencia.close();		    
 		//Creamos la instacia del manager de sonido
 		sonidoManager = new SonidoManager(getApplicationContext());
 		// Pone el volumen al volumen del movil actual
@@ -246,8 +254,8 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	        	dbMesas.close();
 		        
 		        //FIXME Probar. Añadimos una unidad a las veces que se ha pedido el plato
-	        	Mesa.actualizarNumeroVecesPlatoPedido(idQR);
-	        	Mesa.pintarBaseDatosMiFav();
+	        	//Mesa.actualizarNumeroVecesPlatoPedido(idQR);
+	        	//Mesa.pintarBaseDatosMiFav();
 	        	
 	      	}catch(Exception e){
 	    		System.out.println("Error en base de datos de Mesas en anadirPlatos QR");
