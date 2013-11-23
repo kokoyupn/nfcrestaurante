@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
@@ -202,10 +203,21 @@ public class ClasificacionPlatosFragment extends Fragment {
 			    fotoPlato = new ImageView(getActivity());
 				int imagen = getResources().getIdentifier(platoNuevo.getFoto(), "drawable", getActivity().getPackageName());
 			    fotoPlato.setImageResource(imagen);
-			    TableRow.LayoutParams layoutImagen = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0.3f);
-		    	fotoPlato.setLayoutParams(layoutImagen);
+			    
+			    /*
+			     * Aqui hemos creado layoutImagen, que matiene el formato de 0.3.
+			     * Pero para que todas las imagenes tengan el mismo tamano, las hemos metido en un LinearLayout 
+			     * que ajustara su tamano, mientras que el layout de TableRow nos permitira tener esa fila con un 0.3 de peso.
+			     * */
+			    TableRow.LayoutParams layoutImagen = new TableRow.LayoutParams(0, LayoutParams.MATCH_PARENT, 0.3f);
+			    LinearLayout linearImagen = new LinearLayout(getActivity());
+			    linearImagen.setLayoutParams(layoutImagen);
+			    LinearLayout.LayoutParams layoutLinearImagen = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 120);
+		    	
+			    fotoPlato.setLayoutParams(layoutLinearImagen);
 		    	fotoPlato.setBackgroundResource(getResources().getIdentifier("cell_style", "color", getActivity().getPackageName()));
 		    	fotoPlato.setPadding(0, 10, 0, 10);
+		    	linearImagen.addView(fotoPlato);
 		    			    	
 		    	String posicion = "" + (plato+1);
 		    	
@@ -220,7 +232,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 				
 			rowPlato.addView(posPlato);
 			rowPlato.addView(nombrePlato);
-			rowPlato.addView(fotoPlato);
+			rowPlato.addView(linearImagen);
 
 			// Añadimos la fila a la tabla
 	        tablaClasificacion.addView(rowPlato, new TableLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
