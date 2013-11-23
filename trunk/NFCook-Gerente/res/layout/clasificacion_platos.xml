@@ -1,16 +1,17 @@
-<ScrollView  
+<LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/verde5" >
-    
-<TableLayout 
- 		android:id="@+id/tableLayout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	   	android:layout_marginLeft="15dp"
-	    android:layout_marginRight="15dp" >
-	
+    android:layout_height="wrap_content"
+    android:background="@color/verde5"	>
+
+	<TableLayout 
+	android:id="@+id/tableLayoutUp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+   	android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp" 
+    android:background="@color/verde5"	>
+  
 	    <TableRow
 	        android:id="@+id/tableRowButtons"
 	        android:layout_width="match_parent"
@@ -60,7 +61,7 @@
 		            android:id="@+id/posicion"
 	            	android:layout_width="0dp"
 	            	android:layout_height="wrap_content"
-	            	android:text="Pos"
+	            	android:text="#"
 	            	android:layout_weight="0.12"
 	            	android:gravity="center"
 	            	android:textAppearance="?android:attr/textAppearanceMedium"
@@ -95,6 +96,21 @@
 	    			android:padding="5dp"
 	            	android:background="@color/head_style"/>
 
-			</TableRow>
-  		</TableLayout>
-  </ScrollView>
+			</TableRow>  
+  	
+  	<ScrollView  
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:background="@color/verde5"	>
+  		
+  		<TableLayout 
+	 		android:id="@+id/tableLayout"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:background="@color/verde5" >
+		    
+		</TableLayout>
+	</ScrollView>
+	
+</TableLayout>
+</LinearLayout>

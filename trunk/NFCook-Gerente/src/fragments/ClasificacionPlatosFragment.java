@@ -21,7 +21,6 @@ import android.widget.Toast;
 import baseDatos.HandlerGenerico;
 
 import com.example.nfcook_gerente.PlatoClasificacion;
-import com.example.nfcook_gerente.R;
 
 public class ClasificacionPlatosFragment extends Fragment {
 
@@ -120,9 +119,8 @@ public class ClasificacionPlatosFragment extends Fragment {
 		// Ordenaremos los platos en funcion de su demanda
 		ordenaPlatos(0); // 0 = Demanda	
 		
-		// borramos desde 2 porque la primera son los botones y la segunda la cabecera de la tabla
 		if (!primeraVez)
-			tablaClasificacion.removeViews(2, platosFavoritos.size()); 
+			tablaClasificacion.removeViews(0, platosFavoritos.size()); 
 		
 		completaTablaPlatos(platosFavoritos);
 	    botonDemanda.setBackgroundResource(getResources().getIdentifier("ic_demandaclickado", "drawable", getActivity().getPackageName()));
@@ -140,8 +138,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 		// Ordenaremos los platos en funcion de su facturacion
 		ordenaPlatos(1); // 1 = Facturacion
 		
-		// borramos desde 2 porque la primera son los botones y la segunda la cabecera de la tabla
-		tablaClasificacion.removeViews(2, platosFavoritos.size());
+		tablaClasificacion.removeViews(0, platosFavoritos.size());
 		
 		completaTablaPlatos(platosFavoritos); 
 		botonFacturacion.setBackgroundResource(getResources().getIdentifier("ic_facturacion2clickado", "drawable", getActivity().getPackageName()));
@@ -199,13 +196,13 @@ public class ClasificacionPlatosFragment extends Fragment {
 			
 			// Vamos creando TableRow por cada plato
 			rowPlato = new TableRow(getActivity());
-			TableRow.LayoutParams layoutP = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			TableRow.LayoutParams layoutP = new TableRow.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 			rowPlato.setLayoutParams(layoutP);
 
 			    fotoPlato = new ImageView(getActivity());
 				int imagen = getResources().getIdentifier(platoNuevo.getFoto(), "drawable", getActivity().getPackageName());
 			    fotoPlato.setImageResource(imagen);
-			    TableRow.LayoutParams layoutImagen = new TableRow.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.3f);
+			    TableRow.LayoutParams layoutImagen = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0.3f);
 		    	fotoPlato.setLayoutParams(layoutImagen);
 		    	fotoPlato.setBackgroundResource(getResources().getIdentifier("cell_style", "color", getActivity().getPackageName()));
 		    	fotoPlato.setPadding(0, 10, 0, 10);
@@ -213,11 +210,11 @@ public class ClasificacionPlatosFragment extends Fragment {
 		    	String posicion = "" + (plato+1);
 		    	
 				posPlato = aplicaLayoutTexto(posicion);
-				TableRow.LayoutParams layoutTextPos = new TableRow.LayoutParams(0, LayoutParams.MATCH_PARENT, 0.12f);
+				TableRow.LayoutParams layoutTextPos = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0.12f);
 				posPlato.setLayoutParams(layoutTextPos);
 		    	
 				nombrePlato = aplicaLayoutTexto(platoNuevo.getNombre());
-				TableRow.LayoutParams layoutTextNombre = new TableRow.LayoutParams(0, LayoutParams.MATCH_PARENT, 0.58f);
+				TableRow.LayoutParams layoutTextNombre = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0.58f);
 		    	nombrePlato.setLayoutParams(layoutTextNombre);
 		    	
 				
@@ -226,7 +223,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 			rowPlato.addView(fotoPlato);
 
 			// Añadimos la fila a la tabla
-	        tablaClasificacion.addView(rowPlato, new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+	        tablaClasificacion.addView(rowPlato, new TableLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		}		
 	}
