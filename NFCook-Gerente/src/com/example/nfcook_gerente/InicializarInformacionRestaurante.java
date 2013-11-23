@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import adapters.PagerAdapter;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,7 +15,8 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
@@ -66,10 +68,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     }
     
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-		//Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
+    public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs);
 
@@ -84,7 +83,10 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 		// Marcamos el tab de informacion como inicialo el de empleados si se han seleccionado varios restaurantes
         tabs.setCurrentTab(0);
         ultimoTabSeleccionado = 0;
-	    tabs.getTabWidget().getChildAt(ultimoTabSeleccionado).setBackgroundColor(Color.parseColor("#CAE0CD"));
+        marcarTabSeleccionado();
+
+	    // Cambiamos el fondo al ActionBar
+	  	getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#004400")));
 	}
 	
 	
@@ -106,10 +108,10 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     	if(!sinInfo){
 	    	// Creamos el tab1 --> Información
     		spec = tabs.newTabSpec("tabInformacion");     
-	        // Hacemos referencia a su layout correspondiente
-	        spec.setContent(R.id.tab1);
 	        // Preparamos la vista del tab con el layout que hemos preparado
 	        spec.setIndicator(prepararTabView(getApplicationContext(),"tabInformacion"));
+	        // Hacemos referencia a su layout correspondiente
+	        spec.setContent(R.id.tab1);
 	        // Lo añadimos
 	        tabs.addTab(spec);
 			// Creamos el fragment de cada tab
@@ -118,42 +120,37 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     	
         // Creamos el tab2 --> Empleados
         spec = tabs.newTabSpec("tabEmpleados");
-        if(sinInfo)
+        if(sinInfo){
         	spec.setContent(R.id.tab1);
-        else 
+        }else{ 
 	        spec.setContent(R.id.tab2);
-        spec.setIndicator(prepararTabView(getApplicationContext(),"tabEmpleados"));
+        }
+	    spec.setIndicator(prepararTabView(getApplicationContext(),"tabEmpleados"));
         tabs.addTab(spec);
-        //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
         listFragments.add(Fragment.instantiate(this, EmpleadosFragment.class.getName(), bundleInfoRestaurante));
    
         // Creamos el tab3 --> Ingresos
         spec = tabs.newTabSpec("tabIngresos");
-        if(sinInfo)
+        if(sinInfo){
         	spec.setContent(R.id.tab2);
-        else 
+        }else{ 
 	        spec.setContent(R.id.tab3);
+        }
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabIngresos"));
         tabs.addTab(spec);
-        //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
         listFragments.add(Fragment.instantiate(this, IngresosFragment.class.getName(), bundleInfoRestaurante));
      
         // Creamos el tab4 --> Clasificación de platos
         spec = tabs.newTabSpec("tabClasificacionPlatos");
-        if(sinInfo)
+        if(sinInfo){
         	spec.setContent(R.id.tab3);
-        else 
+        }else{ 
 	        spec.setContent(R.id.tab4);
+        }
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabClasificacionPlatos"));
         tabs.addTab(spec);
-        //TODO Cambiar la instacia en funcion de lo que tenga que cargar el fragment
         listFragments.add(Fragment.instantiate(this, ClasificacionPlatosFragment.class.getName()));
 
-     	// Ponemos el fondo a cada uno de los tabs
-     	for(int i=0;i<listFragments.size();i++){
-	        tabs.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#A9CBAD"));
-     	}
-     	
      	// Aqui creamos el viewPager y el pagerAdapter para el correcto slide entre pestañas
      	inicializarViewPager();
 
@@ -166,27 +163,23 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     	// Cargamos el layout
     	tabContentView = LayoutInflater.from(context).inflate(R.layout.tabs, null);
     	// Cargamos el icono del tab
-    	//ImageView imagenTab = (ImageView)tabContentView.findViewById(R.id.imageViewTabInferior);
+    	ImageView imagenTab = (ImageView)tabContentView.findViewById(R.id.imageViewTabInferior);
     	// Cargamos el titulo del tab
     	TextView textoTab = (TextView)tabContentView.findViewById(R.id.textViewTabInferior);
-    	textoTab.setTextColor(Color.BLACK);
+    	textoTab.setTextColor(Color.WHITE);
     	// Asignamos el título e icono para cada tab
     	if(nombreTab.equals("tabInformacion")){
-     		textoTab.setText("  INFORMACIÓN  ");
-     		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
-     		//imagenTab.setImageResource(getResources().getIdentifier("inicio","drawable",this.getPackageName()));
+     		textoTab.setText("Información");
+     		imagenTab.setImageResource(getResources().getIdentifier("informacion","drawable",this.getPackageName()));
      	}else if(nombreTab.equals("tabEmpleados")){
-    		textoTab.setText("  EMPLEADOS  ");
-     		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
-    		//imagenTab.setImageResource(getResources().getIdentifier("pedido","drawable",this.getPackageName()));
+    		textoTab.setText("Empleados");
+    		imagenTab.setImageResource(getResources().getIdentifier("empleados","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabIngresos")){
-    		textoTab.setText("  INGRESOS  ");
-     		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
-    		//imagenTab.setImageResource(getResources().getIdentifier("pagar","drawable",this.getPackageName()));
+    		textoTab.setText("Facturación");
+    		imagenTab.setImageResource(getResources().getIdentifier("ingresos","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabClasificacionPlatos")){
-    		textoTab.setText("  CLASIFICACIÓN  \nDE PLATOS");
-     		//TODO Si queremos poner una imagen en el tab. OJO porque tiene tam 0dp x 0dp en el layout
-    		//imagenTab.setImageResource(getResources().getIdentifier("calculadora","drawable",this.getPackageName()));
+    		textoTab.setText("Ranking\nde platos");
+    		imagenTab.setImageResource(getResources().getIdentifier("clasificacion","drawable",this.getPackageName()));
     	}
     	return tabContentView;
     }
@@ -219,14 +212,32 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 	public void onTabChanged(String tabId) {
 		int tabSeleccionado = tabs.getCurrentTab();
 		
-		// Cambiamos el fondo del tab que hubiese marcado ya que se ha desmarcado
-	    tabs.getTabWidget().getChildAt(ultimoTabSeleccionado).setBackgroundColor(Color.parseColor("#A9CBAD"));
+		// Actualizamos el titulo del ActionBar
+		switch(tabSeleccionado){
+			case 0: 
+			    getActionBar().setTitle(" INFORMACIÓN DEL RESTAURANTE...");
+			    break;
+			case 1:
+				getActionBar().setTitle(" EMPLEADOS...");
+			    break;
+			case 2:
+				getActionBar().setTitle(" FACTURACIÓN...");
+			    break;
+			case 3:
+				getActionBar().setTitle(" RANKING DE PLATOS...");
+			    break;
+			default:
+				getActionBar().setTitle(" NFCOOK GERENTE...");
+		}
 		
-		// Actualizamos el ultimo tab seleccionado y cambiamos al tab y fondo seleccionado
+		// Desmarcamos el tab que acabamos de seleccionar, es simplemente una cuestion estetica
+		desmarcarTabSeleccionado();
+		
+		// Actualizamos el ultimo tab seleccionado y marcamos el tab que acabamos de seleccionar, es simplemente una cuestion estetica
 		ultimoTabSeleccionado = tabSeleccionado;
       	tabs.setCurrentTabByTag(tabId);
-        tabs.getTabWidget().getChildAt(ultimoTabSeleccionado).setBackgroundColor(Color.parseColor("#CAE0CD"));
-
+      	marcarTabSeleccionado();
+      	
 		// Seleccionar la página en el ViewPager.
         miViewPager.setCurrentItem(tabSeleccionado);
     
@@ -235,12 +246,23 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.FrameLayoutContenedorTabs, f);
         ft.commit();
-        
-        //Ponemos el título a la actividad
-		//Recogemos ActionBar
-//		ActionBar actionbar = getActionBar();
-//		actionbar.setTitle(" INFORMACIÓN DEL RESTAURANTE...");		
 	}
+    
+    public void marcarTabSeleccionado(){
+	    // Cargamos el layout
+    	View vista =  tabs.getTabWidget().getChildTabViewAt(ultimoTabSeleccionado);
+    	// Cogemos el layout inferior y lo coloreamos de azul para indicar que el tab esta seleccionado
+    	LinearLayout linear = (LinearLayout) vista.findViewById(R.id.tab_seleccionado);
+    	linear.setBackgroundColor(Color.parseColor("#63B8FF"));
+    }
+    
+    public void desmarcarTabSeleccionado(){
+	    // Cargamos el layout
+    	View vista =  tabs.getTabWidget().getChildTabViewAt(ultimoTabSeleccionado);
+    	// Cogemos el layout inferior y lo coloreamos de azul para indicar que el tab esta seleccionado
+    	LinearLayout linear = (LinearLayout) vista.findViewById(R.id.tab_seleccionado);
+    	linear.setBackgroundColor(Color.parseColor("#000000"));
+    }
     
 	public View createTabContent(String tag) {
 		return null;
