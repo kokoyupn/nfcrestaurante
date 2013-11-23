@@ -7,13 +7,19 @@
     android:background="@color/verde5" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:gravity="top"
+        android:orientation="horizontal"
+        android:showDividers="beginning" >
 
         <TabHost
             android:id="@+id/tabhost"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="visible" >
 
             <LinearLayout
                 android:id="@+id/linearLayoutContenidoTabsSup"
@@ -27,13 +33,6 @@
                     android:layout_height="wrap_content"
                     android:fillViewport="true"
                     android:scrollbars="none" >
-
-                    <TabWidget
-                        android:id="@android:id/tabs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="horizontal" >
-                    </TabWidget>
                 </HorizontalScrollView>
 
                 <FrameLayout
@@ -66,12 +65,26 @@
                     </LinearLayout>
                 </FrameLayout>
 
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/negro"
+                    android:divider="?android:attr/dividerVertical"
+                    android:dividerPadding="8dip"
+                    android:gravity="top"
+                    android:measureWithLargestChild="true"
+                    android:scrollbars="horizontal"
+                    android:showDividers="middle" >
+                </TabWidget>
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" >
                 </android.support.v4.view.ViewPager>
+
             </LinearLayout>
         </TabHost>
     </LinearLayout>

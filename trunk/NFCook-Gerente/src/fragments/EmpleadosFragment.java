@@ -49,18 +49,15 @@ public class EmpleadosFragment extends Fragment{
 	private SQLiteDatabase dbBuscador;
 	
 	private AutoCompleteTextView buscador;
-	
-	private static String idEmpleado;
-	 
+		 
 	private ListView listaEmpleados;
 	private MiEmpleadosAdapter adapterListaEmpleados;
 	private ArrayList<PadreListaEmpleados> elementosListaEmpleados;
 
 	@Override  
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
-		
 		vista = inflater.inflate(R.layout.empleados, container, false);
-
+		
 		importarBaseDatatos();
 		cargarBarraDeBusqueda();
 		cargarListViewEmpleados();
@@ -85,8 +82,7 @@ public class EmpleadosFragment extends Fragment{
         		//Lanzamos la actividad
         		startActivity(intent);
                 }
-        });
-		
+        });	
 	}
 
 	/**
@@ -168,8 +164,4 @@ public class EmpleadosFragment extends Fragment{
 				      
 				 });
 	 }
-	
-	
-	
-	
 }

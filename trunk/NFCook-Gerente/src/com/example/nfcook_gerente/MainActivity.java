@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		 //Quitamos barra de titulo de la aplicacion
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	}
@@ -43,7 +44,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 	
 	/**
      * Metodo para el boton invisible que usamos para probar la aplicacion mas rapido

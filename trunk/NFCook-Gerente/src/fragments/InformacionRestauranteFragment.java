@@ -41,9 +41,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    vista = inflater.inflate(R.layout.informacion_restaurante, container, false);
-	    
-	    //getActivity().getActionBar().setTitle("  INFORMACION DEL RESTAURANTE");
-	    
+	   
 	    // Leemos la información del restaurante 
 	    Bundle bundleInfo = getActivity().getIntent().getExtras();
 	    String nombreRestaurante = bundleInfo.getString("nombre");
@@ -160,10 +158,10 @@ public class InformacionRestauranteFragment extends Fragment implements Location
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             callIntent.setData(Uri.parse("tel:" + telefonoRestaurante)); // "tel:"+ telefono
             startActivity(callIntent);
-     } catch (ActivityNotFoundException activityException) {
+		} catch (ActivityNotFoundException activityException) {
             Log.e("Calling a Phone Number", "Call failed", activityException);
             activityException.printStackTrace();
-     }
+		}
 	}
 
 	
