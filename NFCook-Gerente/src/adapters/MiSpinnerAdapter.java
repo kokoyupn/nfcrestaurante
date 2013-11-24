@@ -25,7 +25,7 @@ public class MiSpinnerAdapter extends ArrayAdapter<ContenidoSpinnerHijo>{
 		this.datosSpinner = datosSpinner;
 		this.context = context;
 	}
-
+ 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 

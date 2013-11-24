@@ -15,41 +15,48 @@ import java.util.Random;
 
 import adapters.ContenidoSpinnerHijo;
 import adapters.MiSpinnerAdapter;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import auxiliares.ObjetoAuxGrafica;
 import baseDatos.HandlerGenerico;
 
 import com.androidplot.series.XYSeries;
+import com.androidplot.ui.AnchorPosition;
+import com.androidplot.ui.DynamicTableModel;
 import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.SizeMetric;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.XYStepMode;
+import com.androidplot.xy.YLayoutStyle;
 import com.example.nfcook_gerente.InicializarInformacionRestaurante;
 import com.example.nfcook_gerente.MultitouchPlot;
 import com.example.nfcook_gerente.R;
@@ -65,7 +72,7 @@ import com.example.nfcook_gerente.R;
 public class IngresosFragment extends Fragment{
 	private View vista;	
 	private String tipo;
-	public boolean esGeneral;
+	public boolean esGeneral, modoZoomActivado, leyendaActivada;
 	private String[] ids;
 	private int dia,mes,anio;
 	private HandlerGenerico sqlIngresos;
@@ -74,18 +81,20 @@ public class IngresosFragment extends Fragment{
 	private ArrayList<String> spinnerAnio;
 	
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		
+	
 		vista = inflater.inflate(R.layout.grafica, container, false);
 		
 		//oculta el teclado que aparece automaticamente
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				
 		//Leemos la info para conocer los ids de los restaurantes seleccionados
-	    Bundle bundleInfo = getActivity().getIntent().getExtras();
+	    final Bundle bundleInfo = getActivity().getIntent().getExtras();
 	    String stringIds = bundleInfo.getString("ids");
 	    ids = stringIds.split(",");
 	    esGeneral =  bundleInfo.getBoolean("esGeneral");
-		  
+	    modoZoomActivado = false;
+	    leyendaActivada = true;
+	    
 		abrirIngresosDB();
 	    cargarSpinnerAnio();
 	    
@@ -129,22 +138,61 @@ public class IngresosFragment extends Fragment{
 		}); 
 		
 		
-		Button zoom = (Button) vista.findViewById(R.id.buttonZoom);
+		final ImageView zoom = (ImageView) vista.findViewById(R.id.zoomLock);
 		zoom.setOnClickListener(new OnClickListener() {
 			
-			public void onClick(View v) {
-				//getActivity().stopService(new Intent("aa"));
-				//getActivity().getSupportFragmentManager().beginTransaction().remove(getActivity().getSupportFragmentManager().getFragments().get(1)).commit();
+			public void onClick(View v) {	
+				InicializarInformacionRestaurante.pausaViewPager();
+				if (modoZoomActivado)	
+					myMultitouchPlot.setOnTouchListener(new OnTouchListener() {
+						
+						@Override
+						public boolean onTouch(View v, MotionEvent event) {
+							return false;
+						}
+					});
+				else myMultitouchPlot.initTouchHandling();
+				modoZoomActivado = !modoZoomActivado;
 				
-//				getActivity().getSupportFragmentManager().getFragments().get(1).onPause();
-//				getActivity().getSupportFragmentManager().beginTransaction().commit();
-				
+				//cambiamos el icono
+				String icono = null;
+				if(modoZoomActivado)
+					icono = "zoom_unlock";
+				else 
+					icono = "zoom_lock";
+				int img = getActivity().getResources().getIdentifier(icono,"drawable", getActivity().getPackageName());
+			    zoom.setImageResource(img);
 			}
 		}); 
-		return vista;
 		
+		
+		final ImageView imgLeyenda = (ImageView) vista.findViewById(R.id.ocultaLeyenda);
+		imgLeyenda.setOnClickListener(new OnClickListener() { 
+			
+			@Override
+			public void onClick(View v) {
+				//cambiamos el icono
+				String icono = null;
+				if(leyendaActivada){
+					myMultitouchPlot.getLegendWidget().setVisible(false);
+					icono = "mostrar_leyenda";
+				}else{
+					myMultitouchPlot.getLegendWidget().setVisible(true);
+					icono = "ocultar_leyenda";
+				}
+				int img = getActivity().getResources().getIdentifier(icono,"drawable", getActivity().getPackageName());
+			    imgLeyenda.setImageResource(img);
+				
+				leyendaActivada = !leyendaActivada;
+				
+		        myMultitouchPlot.disableAllMarkup();
+		        myMultitouchPlot.redraw();
+			}
+		});
+		
+		return vista;
 	}	
-	
+	 
 
 	private void cargarAlDia(){
 		
@@ -222,7 +270,7 @@ public class IngresosFragment extends Fragment{
 			    			Arrays.asList(ejeX),
 			                Arrays.asList(ejeY),  // Array de datos
 			                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
-					
+					  
 				    myMultitouchPlot.addSeries(series1, formato);
 					//EjeX
 				    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
@@ -235,12 +283,26 @@ public class IngresosFragment extends Fragment{
 		}
 		        
 		myMultitouchPlot.setDomainLabel("Dia");
-		if (esGeneral)
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
-        else
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
+//		if (esGeneral)
+//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
+//        else
+//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
 		myMultitouchPlot.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
 		myMultitouchPlot.setTitle("");
+        
+//        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
+//        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
+//        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
+//        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
+//        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
+//        
+//        //Leyenda. Cambiamos el color, el tamaño de texto y la altura
+//        Paint paint = new Paint();
+//        paint.setColor(Color.WHITE);
+//        paint.setTextSize(20);
+//        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
+//        myMultitouchPlot.getLegendWidget().setHeight(40);
+		dibujaLeyenda();
         
 		myMultitouchPlot.disableAllMarkup();
 		myMultitouchPlot.redraw();
@@ -341,13 +403,29 @@ public class IngresosFragment extends Fragment{
 		}
        
 		myMultitouchPlot.setDomainLabel("Mes");
-		if (esGeneral)
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
-        else
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
+//		if (esGeneral)
+//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
+//        else
+//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
 		myMultitouchPlot.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
 		myMultitouchPlot.setTitle("");
         
+//        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
+//        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
+//        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
+//        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
+//        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
+//        
+//        //Leyenda
+//        Paint paint = new Paint();
+//        paint.setColor(Color.WHITE);
+//        paint.setTextSize(20);
+//        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
+//        myMultitouchPlot.getLegendWidget().setHeight(40);
+//		
+		
+		dibujaLeyenda();
+		
 		myMultitouchPlot.disableAllMarkup();
 		myMultitouchPlot.redraw();
 		
@@ -450,25 +528,59 @@ public class IngresosFragment extends Fragment{
 		} 
 		        
         myMultitouchPlot.setDomainLabel("Año");
-        if (esGeneral)
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
-        else
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
         myMultitouchPlot.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 270, SizeLayoutType.ABSOLUTE));
         myMultitouchPlot.setTitle("");
+//        
+//        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
+//        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
+//        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
+//        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
+//        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
+//        
+//        //Leyenda
+//       int numCols;
+//       if((ids.length % 2) == 0)
+//    	   numCols = ids.length / 2;
+//       else
+//    	   numCols = (ids.length / 2) +1;
+//       // use a grid:
+//        myMultitouchPlot.getLegendWidget().setTableModel(new DynamicTableModel(numCols, 2));
+// 
+//        // adjust the legend size so there is enough room
+//        // to draw the new legend grid:
+//        if (esGeneral || ids.length == 1)
+//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 250, SizeLayoutType.ABSOLUTE));
+//        else
+//    		myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(70, SizeLayoutType.ABSOLUTE, numCols * 250, SizeLayoutType.ABSOLUTE));
+//        	
+//        // add a semi-transparent black background to the legend
+//        // so it's easier to see overlaid on top of our plot:
+//        Paint bgPaint = new Paint();
+//        bgPaint.setColor(Color.BLACK);
+//        bgPaint.setStyle(Paint.Style.FILL);
+//        bgPaint.setAlpha(100);
+//        myMultitouchPlot.getLegendWidget().setBackgroundPaint(bgPaint);
+//        
+//        Paint paint = new Paint();
+//        paint.setColor(Color.WHITE);
+//        paint.setTextSize(20);
+//        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
+// 
+//        // adjust the padding of the legend widget to look a little nicer:
+//        myMultitouchPlot.getLegendWidget().setPadding(5, 1, 1, 1);       
+// 
+//        // reposition the grid 
+//        myMultitouchPlot.position(myMultitouchPlot.getLegendWidget(),
+//        		numCols * 10,
+//        		XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+//        		80,
+//        		YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
+//        		AnchorPosition.RIGHT_BOTTOM);
+//        //Fin leyenda
         
-        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
-        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
-        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
-        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
-        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
         
-        //Leyenda
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(20);
-        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
-        myMultitouchPlot.getLegendWidget().setHeight(40);
+        dibujaLeyenda();
+        
 
         myMultitouchPlot.disableAllMarkup();
         myMultitouchPlot.redraw();
@@ -476,7 +588,7 @@ public class IngresosFragment extends Fragment{
         TextView fechaSeleccionada = (TextView)  vista.findViewById(R.id.textViewFechaSeleccionada);
 		fechaSeleccionada.setText(anio+"");	
 	}	
-	 
+	  
 
 	
 	public ArrayList<ObjetoAuxGrafica> cargarDatosDia(int idRestaurante){//buscamos en la bd el dia mes y año. importe por horas
@@ -884,6 +996,65 @@ public class IngresosFragment extends Fragment{
 			if( ! spinnerAnio.contains(c.getString(0)))
 				spinnerAnio.add(c.getString(0));	    	
 	    }
+	}
+	
+	@SuppressLint("NewApi")
+	public void dibujaLeyenda(){ 
+		//obtenemos el ancho de la grafica para luego calcular el tamaño de la leyenda
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int ancho = size.x;
+		float columnas = ancho/250;
+		float filas;
+		if((ids.length % columnas) == 0)
+			   filas = ids.length / columnas;
+		  else
+			   filas = (ids.length / columnas) +1;
+		
+        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
+        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
+        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
+        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
+       myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
+        
+        // use a grid:
+        myMultitouchPlot.getLegendWidget().setTableModel(new DynamicTableModel((int)columnas,(int)filas));
+
+        // adjust the legend size so there is enough room
+        // to draw the new legend grid:
+        if (esGeneral){
+        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 250, SizeLayoutType.ABSOLUTE));
+        }else if(ids.length<columnas){
+        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 4*250, SizeLayoutType.ABSOLUTE));
+        	//myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, ids.length*250, SizeLayoutType.ABSOLUTE));
+        }else{
+    		myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(filas*40, SizeLayoutType.ABSOLUTE, columnas * 250, SizeLayoutType.ABSOLUTE));
+        }
+        
+        // add a semi-transparent black background to the legend
+        // so it's easier to see overlaid on top of our plot: 
+        Paint bgPaint = new Paint();
+        bgPaint.setColor(Color.BLACK);
+        bgPaint.setStyle(Paint.Style.FILL);
+        bgPaint.setAlpha(100);
+        myMultitouchPlot.getLegendWidget().setBackgroundPaint(bgPaint);
+        
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(20);
+        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
+ 
+        // adjust the padding of the legend widget to look a little nicer:
+        myMultitouchPlot.getLegendWidget().setPadding(5, 1, 1, 1);       
+
+    	// reposition the grid 
+        myMultitouchPlot.position(myMultitouchPlot.getLegendWidget(),
+        		40,
+        		XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+        		80,
+        		YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
+        		AnchorPosition.RIGHT_BOTTOM);
 	}
 	
 }
