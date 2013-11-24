@@ -15,15 +15,14 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/textViewTabInferior"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginBottom="7dp"
             android:gravity="center_horizontal|center"
             android:text="asasass"
             android:textColor="@color/negro"
@@ -33,11 +32,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/separador_tab"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginBottom="13dp"
+        android:layout_marginTop="13dp"
         android:background="@color/azulCamarero" >
 
     </LinearLayout>
@@ -45,7 +45,7 @@
     <LinearLayout
         android:id="@+id/tab_seleccionado"
         android:layout_width="match_parent"
-        android:layout_height="7dp"
+        android:layout_height="6dp"
         android:layout_gravity="bottom"
         android:background="@color/negro"
         android:orientation="vertical" >

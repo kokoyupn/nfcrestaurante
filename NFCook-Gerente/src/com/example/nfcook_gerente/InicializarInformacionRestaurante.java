@@ -80,6 +80,9 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         inicializarTabs();
         cargarTabsEInicializarViewPages();
         
+        // Quitamos el separador del último tab por una cuestión estética
+        quitarSeparadorUltimoTab();
+        
 		// Marcamos el tab de informacion como inicialo el de empleados si se han seleccionado varios restaurantes
         tabs.setCurrentTab(0);
         ultimoTabSeleccionado = 0;
@@ -178,7 +181,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     		textoTab.setText("Facturación");
     		imagenTab.setImageResource(getResources().getIdentifier("ingresos","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabClasificacionPlatos")){
-    		textoTab.setText("Ranking\nde platos");
+    		textoTab.setText("Ranking");
     		imagenTab.setImageResource(getResources().getIdentifier("clasificacion","drawable",this.getPackageName()));
     	}
     	return tabContentView;
@@ -261,6 +264,14 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     	View vista =  tabs.getTabWidget().getChildTabViewAt(ultimoTabSeleccionado);
     	// Cogemos el layout inferior y lo coloreamos de azul para indicar que el tab esta seleccionado
     	LinearLayout linear = (LinearLayout) vista.findViewById(R.id.tab_seleccionado);
+    	linear.setBackgroundColor(Color.parseColor("#000000"));
+    }
+    
+    public void quitarSeparadorUltimoTab(){
+    	// Cargamos el layout
+    	View vista =  tabs.getTabWidget().getChildTabViewAt(3);
+    	// Cogemos el layout inferior y lo coloreamos de azul para indicar que el tab esta seleccionado
+    	LinearLayout linear = (LinearLayout) vista.findViewById(R.id.separador_tab);
     	linear.setBackgroundColor(Color.parseColor("#000000"));
     }
     
