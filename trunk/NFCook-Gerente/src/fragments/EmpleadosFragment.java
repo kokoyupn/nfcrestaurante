@@ -140,6 +140,7 @@ public class EmpleadosFragment extends Fragment{
 			Cursor c =  dbBuscador.rawQuery("SELECT IdEmpleado AS _id,Nombre AS Item" + 
 		    			" FROM Empleados" + 
 		    			" WHERE Nombre LIKE '%" + "%' or Apellido1 LIKE '%"+"%'", null);
+		
 			buscador.setAdapter(new MiCursorAdapterBuscadorEmpleados(getActivity(), c, CursorAdapter.NO_SELECTION));
 		    buscador.setThreshold(2);
 			

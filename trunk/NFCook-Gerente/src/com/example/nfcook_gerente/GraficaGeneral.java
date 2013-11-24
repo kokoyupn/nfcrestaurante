@@ -123,9 +123,9 @@ public class GraficaGeneral extends Activity{
 //		graphView.setScalable(true);
 	
 		//calculo el tamaño que tiene que tener el texto en funcion de la grafica
-		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
-		int ancho = layout.getWidth();
-		int tamañoTexto = ancho / 24; //24 = numHorizontalLabels
+		//LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
+		//int ancho = layout.getWidth();
+		//int tamañoTexto = ancho / 24; //24 = numHorizontalLabels
 		
 		
 	
@@ -143,7 +143,7 @@ public class GraficaGeneral extends Activity{
 		
 		//buscamos el la zona donde va la gráfica y le cargaos la que acabamos de crear
 //		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
-		layout.addView(graphView);
+		//layout.addView(graphView);
 
 	}
 	
@@ -201,8 +201,8 @@ public class GraficaGeneral extends Activity{
 		graphView.setBackgroundColor(Color.GRAY);
 		
 		//buscamos el la zona donde va la gráfica y le cargaos la que acabamos de crear
-		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
-		layout.addView(graphView);
+		//LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
+		//layout.addView(graphView);
 	}
 	
 	private void cargarAlAnio(){
@@ -248,8 +248,8 @@ public class GraficaGeneral extends Activity{
 		graphView.setBackgroundColor(Color.GREEN);
 		
 		//buscamos el la zona donde va la gráfica y le cargaos la que acabamos de crear
-		LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
-		layout.addView(graphView);
+		//LinearLayout layout = (LinearLayout) findViewById(R.id.contenedor);
+		//layout.addView(graphView);
 	}
 	
 	public void onClickAlAnio(View vista){
