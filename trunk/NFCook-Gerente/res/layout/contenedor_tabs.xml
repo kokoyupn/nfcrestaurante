@@ -43,25 +43,29 @@
                     <LinearLayout
                         android:id="@+id/tab1"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent" >
+                        android:layout_height="match_parent" 
+                        android:orientation="horizontal">
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/tab2"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent" >
+                        android:layout_height="match_parent" 
+                        android:orientation="horizontal">
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/tab3"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent" >
+                        android:layout_height="match_parent" 
+                        android:orientation="horizontal">
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/tab4"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent" >
+                        android:layout_height="match_parent" 
+                        android:orientation="horizontal">
                     </LinearLayout>
                 </FrameLayout>
 
@@ -78,12 +82,12 @@
                     android:showDividers="middle" >
                 </TabWidget>
 
-                <android.support.v4.view.ViewPager
+                <adapters.ViewPagerBloquearSlide
                     android:id="@+id/viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" >
-                </android.support.v4.view.ViewPager>
+                </adapters.ViewPagerBloquearSlide>
 
             </LinearLayout>
         </TabHost>

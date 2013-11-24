@@ -130,7 +130,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 	    botonDemanda.refreshDrawableState();
 		botonFacturacion.refreshDrawableState();
 		
-    	Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por demanda",Toast.LENGTH_SHORT).show();	
+//    	Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por demanda",Toast.LENGTH_SHORT).show();	
 
 	}
 	
@@ -148,7 +148,7 @@ public class ClasificacionPlatosFragment extends Fragment {
 		botonDemanda.refreshDrawableState();
 		botonFacturacion.refreshDrawableState();
 
-		Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por facturación",Toast.LENGTH_SHORT).show();	
+		//Toast.makeText(getActivity().getApplicationContext(),"Platos ordenados por facturación",Toast.LENGTH_SHORT).show();	
 	}
 	
 	

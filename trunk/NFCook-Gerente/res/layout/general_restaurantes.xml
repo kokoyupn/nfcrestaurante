@@ -24,9 +24,12 @@
             android:id="@+id/listViewRestaurantes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:divider="@color/verde5"
             android:dividerHeight="5dp"
+            android:focusable="false"
             android:padding="5dp" >
+            <requestFocus/>
 
         </ListView>
 
@@ -36,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
-        android:layout_margin="20dp"
+        android:layout_margin="5dp"
         android:gravity="bottom" >
 
         <LinearLayout

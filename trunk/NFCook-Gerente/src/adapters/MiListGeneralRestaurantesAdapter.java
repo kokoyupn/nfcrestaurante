@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.nfcook_gerente.GeneralRestaurantes;
 import com.example.nfcook_gerente.R;
 
 /**
@@ -50,29 +53,50 @@ public class MiListGeneralRestaurantesAdapter extends BaseAdapter{
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View vista=convertView;
+	public View getView(final int position, View convertView, ViewGroup parent) {
+        Holder holder = null;
+        if (convertView == null)
+        {
+            holder = new Holder();
+	    	convertView = l_Inflater.inflate(R.layout.contenido_lista_restaurantes,null);
+			holder.setCheckBox((CheckBox) convertView.findViewById(R.id.checkRestaurante));
+            convertView.setTag(holder);
+	    }else{
+            holder = (Holder) convertView.getTag(); 
+        }
         
-	    if(convertView == null) {
-			vista = l_Inflater.inflate(R.layout.contenido_lista_restaurantes,null);
-	    }
-	    
 	    //Obtenemos el restaurante para poder sacar posteriormente los datos         
 	    final PadreListRestaurantes unRestaurante = restaurantes.get(position);
- 	    
-	    TextView nombre = (TextView) vista.findViewById(R.id.nombreRestaurante);
+	  	    
+	    TextView nombre = (TextView) convertView.findViewById(R.id.nombreRestaurante);
 	    nombre.setText(unRestaurante.getNombreRestaurante());
 	    
-	    TextView calle = (TextView) vista.findViewById(R.id.calle);
+	    TextView calle = (TextView) convertView.findViewById(R.id.calle);
 	    calle.setText(unRestaurante.getCalle());	
 	    
+	    holder.getCheckBox().setTag(unRestaurante.getIdRestaurante());
+        holder.getCheckBox().setChecked(unRestaurante.isSelected());       
+        holder.getCheckBox().setOnCheckedChangeListener(new OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked)
+            {
+                if (unRestaurante.getIdRestaurante() == (Integer)view.getTag())
+                {
+                	unRestaurante.setSelected(isChecked);
+                }
+            }
+        });
+	    
+        
+        
+        final CheckBox check = (CheckBox) convertView.findViewById(R.id.checkRestaurante);
 	    //ponemos visible o invisible el checkbox y desplazamos para que quede bien esteticamente
-	    final CheckBox check = (CheckBox) vista.findViewById(R.id.checkRestaurante);
 	    if (unRestaurante.isCheckVisibles()){
 	    	check.setVisibility(0);
 	    	//desplazamos a la derecha
-	    	calle.setPadding(60, 0, 0, 0);
-	    	nombre.setPadding(60, 0, 0, 0);
+	    	calle.setPadding(80, 0, 0, 0);
+	    	nombre.setPadding(80, 0, 0, 0);
 
 	    }else{
 	    	//El 4 significa invisible
@@ -80,24 +104,35 @@ public class MiListGeneralRestaurantesAdapter extends BaseAdapter{
 	    	//desplazamos a la izquierda
 	    	calle.setPadding(0, 0, 0, 0);
 	    	nombre.setPadding(0, 0, 0, 0);
-	    }
-	    
-	    //establecemos el oyente del check para actualizar los datos de ese restaurante
-	    check.setOnClickListener(new OnClickListener() {
-	    	@Override
-			public void onClick(View v) {
-	    		if (check.isChecked()){
-	    	    	unRestaurante.setSelected(true);
-	    	    }else unRestaurante.setSelected(false);
-			}
-		});
+	    }      
 	    
 	    //obtenemos la imagen y la cargamos en su lugar
-	    ImageView imagen = (ImageView) vista.findViewById(R.id.imagenRestaurante);    
+	    ImageView imagen = (ImageView) convertView.findViewById(R.id.imagenRestaurante);    
 	    int img = context.getResources().getIdentifier(unRestaurante.getImagen(),"drawable", context.getPackageName());
-	    imagen.setImageResource(img);
+	    imagen.setImageResource(img); 
 
-	    return vista;
+	    return convertView;
 	    }
+	
+	
+	
+	
+	
+	class Holder
+	{
+	    CheckBox checkBox;
+	 
+	    public CheckBox getCheckBox()
+	    {
+	        return checkBox;
+	    }
+	 
+	    public void setCheckBox(CheckBox checkBox)
+	    {
+	        this.checkBox = checkBox;
+	    }   
+	 
+	}
+	
 	
 }

@@ -205,6 +205,7 @@ public class InfoEmpleado extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				
 				grafica.clear();
+				
             	
             	String[] campos = new String[]{"Hora","Importe","IdEmpleado"};
      		    String[] datos = new String[]{diaElegido,mesElegido,anioElegido,idEmpleado};
@@ -378,6 +379,9 @@ public class InfoEmpleado extends Activity {
 	public void dibujarGrafica(){
 		
 		mySimpleXYPlot = (MultitouchPlot) findViewById(R.id.graficaIngresos);
+		//activamos el zoom
+		mySimpleXYPlot.initTouchHandling();
+		
 		mySimpleXYPlot.setRangeLabel("Euros");
 		
 		dibDia = (Button)findViewById(R.id.dibDia);

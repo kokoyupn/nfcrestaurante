@@ -33,6 +33,7 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 	static final private int ONE_FINGER_DRAG = 1;
 	static final private int TWO_FINGERS_DRAG = 2;
 	private int mode = NONE;
+	private boolean zoomMode;
 
 	private Number minXSeriesValue;
 	private Number maxXSeriesValue;
@@ -49,22 +50,22 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 	public MultitouchPlot(Context context, String title)
 	{
 		super(context, title);
-		initTouchHandling();
+		//initTouchHandling();
 	}
 
 	public MultitouchPlot(Context context, AttributeSet attributes)
 	{
 		super(context, attributes);
-		initTouchHandling();
+		//initTouchHandling();
 	}
 
 	public MultitouchPlot(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
-		initTouchHandling();
+		//initTouchHandling();
 	}
 
-	private void initTouchHandling()
+	public void initTouchHandling()
 	{
 		this.setOnTouchListener(this);
 	}

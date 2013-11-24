@@ -3,6 +3,7 @@ package com.example.nfcook_gerente;
 import java.util.ArrayList;
 
 import adapters.PagerAdapter;
+import adapters.ViewPagerBloquearSlide;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,11 +39,11 @@ import fragments.IngresosFragment;
 public class InicializarInformacionRestaurante extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
 
 	// Tabs: Informacion, Empleados, Ingresos y Clasificacion de platos
-	private TabHost tabs;
+	private static TabHost tabs;
 	private View tabContentView;
-	private ViewPager miViewPager;
+	private static ViewPagerBloquearSlide miViewPager;
 	private PagerAdapter miPagerAdapter;
-	private ArrayList<Fragment> listFragments;
+	private static ArrayList<Fragment> listFragments;
 	private Bundle bundleInfoRestaurante;
 	private boolean sinInfo;
 	
@@ -200,7 +200,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
          * se van a usar en el ViewPager.
          */
     	miPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), listFragments);
-        miViewPager = (ViewPager) super.findViewById(R.id.viewpager);
+        miViewPager = (ViewPagerBloquearSlide) super.findViewById(R.id.viewpager);
         miViewPager.setAdapter(miPagerAdapter);
         
         // Indicamos cuál es el número máximo de páginas que puede haber
@@ -269,7 +269,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     
     public void quitarSeparadorUltimoTab(){
     	// Cargamos el layout
-    	View vista =  tabs.getTabWidget().getChildTabViewAt(3);
+    	View vista =  tabs.getTabWidget().getChildTabViewAt(tabs.getChildCount()-1);
     	// Cogemos el layout inferior y lo coloreamos de azul para indicar que el tab esta seleccionado
     	LinearLayout linear = (LinearLayout) vista.findViewById(R.id.separador_tab);
     	linear.setBackgroundColor(Color.parseColor("#000000"));
@@ -277,7 +277,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     
 	public View createTabContent(String tag) {
 		return null;
-	}
+	} 
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
@@ -299,5 +299,14 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 	public void onPause () {
 		super.onPause();
 		Log.v("pause", "onPause"); 
+	}       
+     	
+	public static void pausaViewPager(){
+		//Sacamos el estado de los tabs
+		boolean estadoTabs = tabs.getTabWidget().getChildAt(0).isEnabled();
+
+		tabs.getTabWidget().setEnabled(!estadoTabs);
+		
+		miViewPager.setPagingEnabled(!miViewPager.getPagingEnabled());		
 	}
 }
