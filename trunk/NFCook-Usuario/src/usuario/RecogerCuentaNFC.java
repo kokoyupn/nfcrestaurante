@@ -22,32 +22,31 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.nfc.FormatException;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class RecogerCuentaNFC extends Activity implements
-		DialogInterface.OnDismissListener {
+public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDismissListener {
 
-	
-	
 	private ProgressDialog progressDialogSinc;
-	private String restaurante;
-	private HandlerDB sqlCuenta, sqlMiBase, sqlRestaurante;
-	private SQLiteDatabase dbCuenta, dbMiBase, dbRestaurante;
+	private HandlerDB sqlCuenta, sqlMiBase, sqlEquivalencia;
+	private SQLiteDatabase dbCuenta, dbMiBase, dbEquivalencia;
+	
 	// NFC
 	private NfcAdapter adapter;
 	private PendingIntent pendingIntent;
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
-	private boolean dispositivoCompatible, restauranteCorrecto, leidoBienDeTag, estaLaCuenta, tagCorrupta;
-	private byte idRestauranteTag;
-	private ArrayList<Byte> cuentaBytes;
+	private boolean restauranteCorrecto, leidoBienDeTag, esCuenta, tagCorrupta;
+	private String restaurante, abreviaturaRest, codigoRest;
+	private ArrayList<Byte> cuentaLeidaEnBytes;
+	
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
@@ -56,8 +55,6 @@ public class RecogerCuentaNFC extends Activity implements
 	public static String mensaje="";
 	
 	public static boolean enviarPorEmail;
-	
-	private static String abreviaturaRest; 
 
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas
@@ -87,25 +84,23 @@ public class RecogerCuentaNFC extends Activity implements
 		 */
 		@Override
 		protected Void doInBackground(Void... params) {
-			// si es Mifare Classic
-			if (dispositivoCompatible) {
-				try {
-					leerTagNFC();
-					
-				} catch (IOException e1) {
-					leidoBienDeTag = false;
-					e1.printStackTrace();
-				} catch (FormatException e1) {
-					leidoBienDeTag = false;
-					e1.printStackTrace();
-				}
+			try {
+				// comprueba errores y prepara el arrayList leido para decodificarlo en el metodo onDismiss
+				comprobarErrores(read(mytag));	
+			} catch (IOException e1) {
+				leidoBienDeTag = false;
+				e1.printStackTrace();
+			} catch (FormatException e1) {
+				leidoBienDeTag = false;
+				e1.printStackTrace();
 			}
-			
+
 			// mejor aqui para buscar siempre que haga lo anterior que es lo importante
 			sonidoManager.play(sonido);
 			SystemClock.sleep(1000);
 			return null;
 		}
+
 
 		/**
 		 * Se ejecuta cuando termina doInBackground. Cierra las bases de datos y
@@ -139,8 +134,7 @@ public class RecogerCuentaNFC extends Activity implements
 
 		// preparamos para NFC
 		adapter = NfcAdapter.getDefaultAdapter(this);
-		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
 		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
 		writeTagFilters = new IntentFilter[] { tagDetected };
@@ -150,6 +144,13 @@ public class RecogerCuentaNFC extends Activity implements
 
 		// configuracion del sonido
 		configurarSonido();
+		
+		//obtenemos el codigo y la abreviatura del rest
+		obtenerCodigoYAbreviaturaRestaurante();
+		
+		//inicializamos variables para mostrar errores
+		leidoBienDeTag = tagCorrupta = restauranteCorrecto = esCuenta = false;
+		
 	}
 	
 	//  para el atras del action bar
@@ -169,18 +170,16 @@ public class RecogerCuentaNFC extends Activity implements
 	 */
 	public void onDismiss(DialogInterface dialog) {
 
-		if (dispositivoCompatible){
-			if (leidoBienDeTag){
-				if (!tagCorrupta){
-					if (estoyEnRestauranteCorrecto()){
-						if (estaLaCuenta) {
-							decodificarPlatos(dameCuentaString(cuentaBytes));
-							Toast.makeText(this,"Cuenta recogida correctamente",Toast.LENGTH_LONG).show();
-						} else Toast.makeText(this,"Error al recoger la cuenta. No hay ninguna cuenta en la tarjeta",Toast.LENGTH_LONG).show();			
-					} else Toast.makeText(this,"Error al recoger la cuenta. No estas en el restaurante correcto.",Toast.LENGTH_LONG).show();
-				} else Toast.makeText(this,"Error al recoger la cuenta",Toast.LENGTH_LONG).show();
-			} else Toast.makeText(this,"Error al recoger la cuenta. Has levantado el dispositivo antes de tiempo",Toast.LENGTH_LONG).show();
-		} else Toast.makeText(this,"Error al recoger la cuenta. Tu dispositivo no es compatible con esta tarjeta",Toast.LENGTH_LONG).show();
+		if (leidoBienDeTag){
+			if (!tagCorrupta){
+				if (restauranteCorrecto){
+					if (esCuenta) {
+						decodificarPlatos(dameCuentaString(cuentaLeidaEnBytes));
+						Toast.makeText(this,"Cuenta recogida correctamente",Toast.LENGTH_LONG).show();
+					} else Toast.makeText(this,"Error al recoger la cuenta. No hay ninguna cuenta en la tarjeta",Toast.LENGTH_LONG).show();			
+				} else Toast.makeText(this,"Error al recoger la cuenta. No estas en el restaurante correcto.",Toast.LENGTH_LONG).show();
+			} else Toast.makeText(this,"Error al recoger la cuenta",Toast.LENGTH_LONG).show();
+		} else Toast.makeText(this,"Error al recoger la cuenta. Has levantado el dispositivo antes de tiempo",Toast.LENGTH_LONG).show();
 		
 		Intent intent = new Intent();
         intent.putExtra("Origen", "Cuenta");
@@ -222,10 +221,10 @@ public class RecogerCuentaNFC extends Activity implements
 	private void abrirBasesDeDatos() {
 		sqlCuenta = null;
 		sqlMiBase = null;
-		sqlRestaurante = null;
+		sqlEquivalencia = null;
 		dbCuenta = null;
 		dbMiBase = null;
-		dbRestaurante = null;
+		dbEquivalencia = null;
 
 		try {
 			sqlMiBase = new HandlerDB(getApplicationContext(), "MiBase.db");
@@ -240,25 +239,11 @@ public class RecogerCuentaNFC extends Activity implements
 			System.out.println("NO EXISTE BASE DE DATOS CUENTA: SINCRONIZAR NFC (cargarBaseDeDatosCuenta)");
 		}
 		try {
-			sqlRestaurante = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
-			dbRestaurante = sqlRestaurante.open();
+			sqlEquivalencia = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
+			dbEquivalencia = sqlEquivalencia.open();
 		} catch (SQLiteException e) {
 			System.out.println("NO EXISTE BASE DE DATOS Restaurante: SINCRONIZAR NFC (cargarBaseDeDatosResta)");
 		}
-	}
-	
-	private boolean estoyEnRestauranteCorrecto(){
-		// Campos que quieres recuperar
-		String[] campos = new String[] { "Numero", "Abreviatura" };
-		String[] datos = new String[] { restaurante };
-		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
-
-		cursorPedido.moveToFirst();
-		byte idRest = (byte) Integer.parseInt(cursorPedido.getString(0));
-		abreviaturaRest = cursorPedido.getString(1);
-		restauranteCorrecto = (idRest == idRestauranteTag);
-		
-		return restauranteCorrecto;
 	}
 
 	/**
@@ -266,11 +251,41 @@ public class RecogerCuentaNFC extends Activity implements
 	 */
 	private void cerrarBasesDeDatos() {
 		sqlCuenta.close();
-		sqlRestaurante.close();
+		sqlEquivalencia.close();
 	}
 
 	/********************************* DECODIFICACION ************************************/
 
+	
+	/**
+	 * Comprueba si estoy en restaurante correcto, si es una cuenta y procesa la cuenta dejandola lista
+	 * para decodificar y añadirla a la base de datos quitandole el codRest, el byte cuenta y los ceros del final
+	 * @param cuentaLeida
+	 */
+	private void comprobarErrores(ArrayList<Byte> cuentaLeida) {
+
+		tagCorrupta = false;
+		
+		if (estoyEnRestauranteCorrecto(cuentaLeida.remove(0))){
+			if (hayUnaCuenta(cuentaLeida.remove(0))){
+				Iterator<Byte> itCuenta = cuentaLeida.iterator();
+				
+				boolean parar = false;
+				while(itCuenta.hasNext() && !parar){					
+					
+					Byte idByte = itCuenta.next();
+					parar = decodificaByte(idByte)==255; //El mensaje termina con un -1 en la tag
+
+					if(!parar)
+						cuentaLeidaEnBytes.add(idByte); // metemos el idByte en la cuenta
+				 }	
+				
+				if(!parar) 
+					tagCorrupta = true;
+			}
+		}	
+	}
+	
 	/**
 	 * Metodo que decodifica el string que ha leido del QR.
 	 * Va comprobando el id, si tiene extras y comentarios hasta que se encuentre un 255 como id
@@ -316,14 +331,6 @@ public class RecogerCuentaNFC extends Activity implements
     		mensajeCuenta.put("PrecioPlato",cursor.getDouble(2));
     		mensajes.add(mensajeCuenta);
     	}	
-    	
-    	
-    	//if (enviarPorEmail){
-        	
-        	
-        		
-        	
-    	//}
 	}	
 	
     private void borrarCuentaActual() {
@@ -366,35 +373,14 @@ public class RecogerCuentaNFC extends Activity implements
 		else return id;
 	}
 		
-		
-	/**
-	 * Comprueba si se puede escribir o no en los bloques de las tag
-	 * 
-	 * @param numBloque
-	 * @return
-	 */
-	private boolean sePuedeEscribirEnBloque(int numBloque) {
-		return (numBloque + 1) % 4 != 0 && numBloque != 0;
-	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-			Toast.makeText(this, this.getString(R.string.tag_detectada),
-					Toast.LENGTH_SHORT).show();
-
-			// compruebo que la tarjeta sea mifare classic
-			String[] tecnologiasTag = mytag.getTechList();
-			dispositivoCompatible = false;
-			for (int i = 0; i < tecnologiasTag.length; i++)
-				dispositivoCompatible |= tecnologiasTag[i].equals("android.nfc.tech.MifareClassic");
-
+			//Toast.makeText(this, this.getString(R.string.tag_detectada), Toast.LENGTH_SHORT).show();
 		}
-		if (mytag == null) {
-			Toast.makeText(this, this.getString(R.string.tag_no_detectada),
-					Toast.LENGTH_SHORT).show();
-		} else {
+		if (mytag != null) {
 			// ejecuta el progressDialog, codifica, escribe en tag e intercambia
 			// datos de pedido a cuenta en segundo plano
 			new SincronizarPedidoBackgroundAsyncTask().execute();
@@ -416,67 +402,65 @@ public class RecogerCuentaNFC extends Activity implements
 	/********************************** LECTURA NFC **********************************************/
 
 	/**
-	 * Metodo que se encarga de leer bloques de la tarjeta nfc
+	 * Metodo que se encarga de leer de la tarjeta nfc
 	 * 
 	 * @param tag
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private void leerTagNFC() throws IOException, FormatException {
-
-		// Obtiene la instacia de la tarjeta nfc
-		MifareClassic mfc = MifareClassic.get(mytag);
-		// Establece la conexion
-		mfc.connect();
-
-		// va lo que lee
-		cuentaBytes = new ArrayList<Byte>();
-		// Variable usada para saber por el bloque que vamos
-		int numBloque = 0;
-		// el texto que ha escrito el usuario
-		byte[] textoByte = null;
-		// para errores
-		boolean sectorValido = false;
-		leidoBienDeTag = true;
-		Byte menosUno = (byte) Integer.parseInt("255");
-		Byte menosDos = (byte) Integer.parseInt("254");
-		boolean menosUnoEncontrado = false;
-		boolean esPrimerBloque = false;
-
-		// Recorremos todos los sectores y bloques leyendo el mensaje
-		while (numBloque < mfc.getBlockCount() && !menosUnoEncontrado) {
-			if (sePuedeEscribirEnBloque(numBloque)) {
-				// Cada sector tiene 4 bloques
-				int numSector = numBloque / 4;
-				// Validamos el sector con la A porque las tarjetas que tenemos usan el bit A en vez del B
-				sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
-
-				if (sectorValido) {// Si es un sector valido
-					textoByte = mfc.readBlock(numBloque); // leemos un bloque entero
-
-					if (!esPrimerBloque){
-						estaLaCuenta = textoByte[0] == menosDos;
-						idRestauranteTag = textoByte[1];
-						esPrimerBloque = true;
-					}
-					
-					int i = 0;
-					while (i < MifareClassic.BLOCK_SIZE && !menosUnoEncontrado) {
-						if (textoByte[i] != menosUno) cuentaBytes.add(textoByte[i]);
-						else menosUnoEncontrado = true;
-						i++;
-					}
-				}
-			}
-			numBloque++;
+	private ArrayList<Byte> read(Tag tag) throws IOException, FormatException {	
+		
+		 /*
+        * See NFC forum specification for "Text Record Type Definition" at 3.2.1
+        *
+        * http://www.nfc-forum.org/specs/
+        *
+        * bit_7 defines encoding
+        * bit_6 reserved for future use, must be 0
+        * bit_5..0 length of IANA language code
+        */
+		Ndef ndef = Ndef.get(tag);
+		NdefMessage message = ndef.getCachedNdefMessage();
+		byte[] mensajeEnBytes = message.toByteArray();
+		ArrayList<Byte> cuentaLeida = new ArrayList<Byte>();
+		// Con este "for" eliminamos los datos inservibles del array de bytes
+		for (int i=0; i<mensajeEnBytes.length-7; i++){
+			cuentaLeida.add(mensajeEnBytes[i+7]);
 		}
-		leidoBienDeTag = true;
-		tagCorrupta = !menosUnoEncontrado;
-
-		// Cerramos la conexion
-		mfc.close();
+		
+		return cuentaLeida;
+	}
+		
+	/**
+	 * MEtodo que da valor al codigo y a la abreviatura del restaurante
+	 */
+	private void obtenerCodigoYAbreviaturaRestaurante() {
+		// Campos que quieres recuperar
+		String[] campos = new String[] { "Numero", "Abreviatura" };
+		String[] datos = new String[] { restaurante };
+		Cursor cursorPedido = dbEquivalencia.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
+		
+		cursorPedido.moveToFirst();
+		codigoRest = cursorPedido.getString(0);
+		abreviaturaRest = cursorPedido.getString(1);
 	}
 	
+	/**
+	 * Devuelve si estoy en el restaurante correcto y da valor a la variable para mostrar errores
+	 * @param codigoRestTag
+	 * @return
+	 */
+	private boolean estoyEnRestauranteCorrecto(byte codigoRestTag){
+		return restauranteCorrecto = ((byte) Integer.parseInt(codigoRest) == codigoRestTag);
+	}
 	
-}
+	/**
+	 * Devuelve si hay una cuenta y da valor a la variable para mostrar errores
+	 * @param cuentaTag
+	 * @return
+	 */
+	private boolean hayUnaCuenta (byte cuentaTag){
+		return esCuenta = ((byte) 254 == cuentaTag);
+	}
 
+}
