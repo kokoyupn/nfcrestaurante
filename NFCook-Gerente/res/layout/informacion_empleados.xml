@@ -7,8 +7,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="5dp"
-    android:layout_marginTop="10dp"
+    android:layout_margin="5dp"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -23,9 +22,11 @@
 
             <ImageView
                 android:id="@+id/fotoEmpleado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp" />
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                android:background="#000000"
+                android:padding="1dp"
+                android:src="@drawable/carlosdelprado" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -40,17 +41,17 @@
 
                     <ImageView
                         android:id="@+id/imagenNombre"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:layout_marginRight="5dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
                         android:src="@drawable/ic_empleado" />
 
                     <TextView
                         android:id="@+id/nombreEmpleado"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="TextView" />
+                        android:textSize="12sp"
+                        android:text="Nombre" />
 
                 </LinearLayout>
                 
@@ -61,17 +62,17 @@
 
                     <ImageView
                         android:id="@+id/imagenPuesto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:layout_marginRight="5dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
                         android:src="@drawable/ic_puesto" />
 
                     <TextView
                         android:id="@+id/puestoEmpleado"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="TextView" />
+                        android:textSize="12sp"
+                        android:text="Puesto" />
 
                 </LinearLayout>
                 
@@ -82,17 +83,17 @@
 
                     <ImageView
                         android:id="@+id/imageDni"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:layout_marginRight="5dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
                         android:src="@drawable/ic_id" />
 
                     <TextView
                         android:id="@+id/dni"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="TextView" />
+                        android:textSize="12sp"
+                        android:text="DNI" />
 
                 </LinearLayout>
                 
@@ -103,17 +104,17 @@
 
                     <ImageView
                         android:id="@+id/imagenDomicilioEmpleado"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:layout_marginRight="5dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
                         android:src="@drawable/ic_calle" />
 
                     <TextView
                         android:id="@+id/domicilioEmpleado"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="TextView" />
+                        android:textSize="12sp"
+                        android:text="Domicilio" />
 
                 </LinearLayout>
                 
@@ -124,52 +125,37 @@
 
                     <ImageView
                         android:id="@+id/imagenNacimiento"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                         android:layout_marginRight="5dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
                         android:src="@drawable/ic_nacimiento" />
 
                     <TextView
                         android:id="@+id/nacimiento"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="TextView" />
+                        android:textSize="12sp"
+                        android:text="Fecha nacimiento" />
 
                 </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/botonCalendario"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="left"
+                        android:background="@drawable/ic_calendario" />
+                </FrameLayout>
+
 	 </LinearLayout>
 
             
 
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/botonCalendario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_calendario"
-                android:layout_gravity="center_horizontal" />
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/periodoElegido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/negro" />
-
-        </FrameLayout>
 
     </LinearLayout>
 
@@ -177,12 +163,13 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="bottom|center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_marginTop="5dp" >
         
         <com.example.nfcook_gerente.MultitouchPlot
             android:id="@+id/graficaIngresos"
             android:layout_width="match_parent"
-            android:layout_height="550dp"
+            android:layout_height="400dp"
             android:layout_gravity="center_horizontal"
             title="Grafica"/>
 
@@ -202,18 +189,21 @@
                     android:id="@+id/dibDia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
                     android:background="@drawable/boton_al_dia" />
 
                 <Button
                     android:id="@+id/dibMes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
                     android:background="@drawable/boton_al_mes" />
 
                 <Button
                     android:id="@+id/dibAnio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
                     android:background="@drawable/boton_al_anio" />
 
             </LinearLayout>

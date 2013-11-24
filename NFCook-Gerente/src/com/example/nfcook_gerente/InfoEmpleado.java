@@ -21,6 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,8 +94,6 @@ public class InfoEmpleado extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		//Quitamos barra de titulo de la aplicacion
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		setContentView(R.layout.informacion_empleados);
 		
@@ -106,6 +105,10 @@ public class InfoEmpleado extends Activity {
 		mostrarInfo();
 		funcionalidadCalendario();
 		dibujarGrafica();
+		
+		// Cambiamos el fondo al ActionBar
+	  	getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#004400")));
+	  	getActionBar().setTitle(" DATOS EMPLEADO");
 	}
 
 	private void cargarSpinners(String distincion,Spinner selDia,Spinner selMes, Spinner selAnio, Builder ventanaEmergenteSpinners) {
@@ -234,9 +237,9 @@ public class InfoEmpleado extends Activity {
     		    String titulo = diaElegido + "/" + mesElegido + "/"+ anioElegido;
     		    formatoGrafica(grafica,temporal,"Hora",titulo);
     		    
-                periodoElegido = (TextView) findViewById(R.id.periodoElegido);
+                /*periodoElegido = (TextView) findViewById(R.id.periodoElegido);
                 periodoElegido.setText("Fecha de la grafica: " + 
-                		diaElegido + "/" + mesElegido + "/"+ anioElegido);
+                		diaElegido + "/" + mesElegido + "/"+ anioElegido);*/
                 		
 		
 			}
@@ -277,8 +280,8 @@ public class InfoEmpleado extends Activity {
     		    String titulo = mesElegido + "/"+ anioElegido;
     		    formatoGrafica(grafica,temporal,"Dia",titulo);
     		    
-    		    periodoElegido = (TextView) findViewById(R.id.periodoElegido);
-                periodoElegido.setText("Fecha de la grafica: " + mesElegido + "/"+ anioElegido);
+    		    /*periodoElegido = (TextView) findViewById(R.id.periodoElegido);
+                periodoElegido.setText("Fecha de la grafica: " + mesElegido + "/"+ anioElegido);*/
 		
 			}
 		});	
@@ -317,8 +320,8 @@ public class InfoEmpleado extends Activity {
     		    
     		    formatoGrafica(grafica,temporal,"Mes",anioElegido);
     		    
-    		    periodoElegido = (TextView) findViewById(R.id.periodoElegido);
-                periodoElegido.setText("Fecha de la grafica: " + anioElegido);
+    		   /* periodoElegido = (TextView) findViewById(R.id.periodoElegido);
+                periodoElegido.setText("Fecha de la grafica: " + anioElegido);*/
 		
 			}
 		});	
