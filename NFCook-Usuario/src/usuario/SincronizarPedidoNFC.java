@@ -54,11 +54,10 @@ public class SincronizarPedidoNFC extends Activity implements
 	private boolean cabeEnTag, leidoBienDeTag, escritoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta;
 	private static boolean heSincronizadoMalAntes;
 	private static ArrayList<Byte> copiaSeguridad;
-	private byte idRestaurante, idRestauranteTag;
+	private String abreviaturaRest, codigoRest;
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
-	private static String abreviaturaRest;
 
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas
@@ -107,7 +106,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			// escribimos
 			if (leidoBienDeTag && !esCuenta) {
 				
-				if (estoyEnRestauranteCorrecto()){
+				if (estoyEnRestauranteCorrecto(copiaSeguridad.get(0))){
 					// si ha sincronizado mal entra xq para el la tag no esta corrupta
 					if (!tagCorrupta) {
 						// une la copia de seguridad con el pedido actual y añade al principio el rest
@@ -342,14 +341,19 @@ public class SincronizarPedidoNFC extends Activity implements
 		Cursor cursorPedido = dbRestaurante.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
 
 		cursorPedido.moveToFirst();
-		idRestaurante = (byte) Integer.parseInt(cursorPedido.getString(0));
+		codigoRest = cursorPedido.getString(0);
 		abreviaturaRest = cursorPedido.getString(1);
 	}
-	
-	private boolean estoyEnRestauranteCorrecto(){
-		return restauranteCorrecto = (idRestaurante == idRestauranteTag);
-	}
 
+	/**
+	 * Devuelve si estoy en el restaurante correcto y da valor a la variable para mostrar errores
+	 * @param codigoRestTag
+	 * @return
+	 */
+	private boolean estoyEnRestauranteCorrecto(byte codigoRestTag){
+		return restauranteCorrecto = ((byte) Integer.parseInt(codigoRest) == codigoRestTag);
+	}
+	
 	/**
 	 * Cierra las bases de datos Cuenta y Pedido
 	 */
@@ -618,9 +622,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	    } catch(Exception e) {
 	    	System.out.println("ultimo try");
 	    }
-	}
-	
-	
+	}	
 
 	/**
 	 * Devuelve un booleano informando de si el pedido cabe o no cabe en la
@@ -681,15 +683,12 @@ public class SincronizarPedidoNFC extends Activity implements
 	private void hacerCopiaSeguridad(ArrayList<Byte> mensaje) {
 	
 		tagCorrupta = false;
-		
 		copiaSeguridad = new ArrayList<Byte>();
 		
 		Iterator<Byte> itMensaje = mensaje.iterator();
-		boolean parar=false;
+		copiaSeguridad.add(itMensaje.next()); //metemos el idRest
 		
-		idRestaurante = itMensaje.next();
-		copiaSeguridad.add(idRestaurante);
-		
+		boolean parar = false;
 		while(itMensaje.hasNext() && !parar){					
 	
 			Byte idByte = itMensaje.next();
