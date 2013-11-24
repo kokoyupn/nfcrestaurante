@@ -5,8 +5,6 @@ import java.util.StringTokenizer;
 
 import com.example.nfcook.R;
 
-import fragments.ContenidoTabSuperiorCategoriaBebidas;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -17,13 +15,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 import baseDatos.HandlerDB;
 
-
 public class RecogerCuentaQR extends Activity {
 	
-	private HandlerDB sqlCuenta, sqlMiBase, sqlRestaurante;
-	private SQLiteDatabase dbCuenta, dbMiBase, dbRestaurante;
-	private String restaurante, abreviaturaRest;
-	private int numeroRestaurante;
+	private HandlerDB sqlCuenta, sqlMiBase, sqlEquivalencia;
+	private SQLiteDatabase dbCuenta, dbMiBase, dbEquivalencia;
+	private String restaurante, abreviaturaRest, codigoRest;
 	public static boolean enviarPorEmail;
 	public static ArrayList<ContentValues> mensajesQR; 
 	
@@ -37,19 +33,8 @@ public class RecogerCuentaQR extends Activity {
 		
  	    abrirBasesDeDatos();
 		
- 	    try{
- 		  /**Campos de la base de datos Restaurante TEXT,Numero INTEGER,Abreviatura TEXT
- 	        * Nombre de la tabla de esa base de datos Restaurantes*/		
- 		   String[] campos = new String[]{"Numero","Abreviatura"};
- 		   String[] datos = new String[]{restaurante};
- 		   //Buscamos en la base de datos el nombre de usuario y la contraseña
- 		   Cursor c = dbRestaurante.query("Restaurantes",campos,"Restaurante=?",datos, null,null, null);
- 	  	   c.moveToFirst();
-        	 
- 	  	   numeroRestaurante = c.getInt(0);
- 	  	   abreviaturaRest = c.getString(1);
- 	  	
- 		 }catch(Exception e){ }
+ 	    //obtenemos el codigo y la abreviatura del rest
+ 	    obtenerCodigoYAbreviaturaRestaurante();
         
 		//Lectura QR
 		Intent intent = new Intent("com.example.nfcook.SCAN");
@@ -91,7 +76,7 @@ public class RecogerCuentaQR extends Activity {
 		StringTokenizer stPlatos = new StringTokenizer(pedidoQR,"@");
 			
 		// Compruebo si el pedido que hemos leido corresponde a este restaurate.
-		if (numeroRestaurante == Integer.parseInt(stPlatos.nextToken())){
+		if (codigoRest.equals(stPlatos.nextToken())){
 		
 			borrarCuentaActual();
 			
@@ -122,10 +107,10 @@ public class RecogerCuentaQR extends Activity {
 	private void abrirBasesDeDatos() {
 		sqlCuenta = null;
 		sqlMiBase = null;
-		sqlRestaurante = null;
+		sqlEquivalencia = null;
 		dbCuenta = null;
 		dbMiBase = null;
-		dbRestaurante = null;
+		dbEquivalencia = null;
 
 		try {
 			sqlMiBase = new HandlerDB(getApplicationContext(), "MiBase.db");
@@ -140,8 +125,8 @@ public class RecogerCuentaQR extends Activity {
 			System.out.println("NO EXISTE BASE DE DATOS CUENTA: Recoger Cuenta QR (abrirBasesDatos)");
 		}
 		try {
-			sqlRestaurante = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
-			dbRestaurante = sqlRestaurante.open();
+			sqlEquivalencia = new HandlerDB(getApplicationContext(), "Equivalencia_Restaurantes.db");
+			dbEquivalencia = sqlEquivalencia.open();
 		} catch (SQLiteException e) {
 			System.out.println("NO EXISTE BASE DE DATOS DE EQUIVALENCIAS: Recoger Cuenta QR (abrirBasesDatos)");
 		}
@@ -175,12 +160,26 @@ public class RecogerCuentaQR extends Activity {
     	}		
 	}	
 	
+	/**
+	 * MEtodo que da valor al codigo y a la abreviatura del restaurante
+	 */
+	private void obtenerCodigoYAbreviaturaRestaurante() {
+		// Campos que quieres recuperar
+		String[] campos = new String[] { "Numero", "Abreviatura" };
+		String[] datos = new String[] { restaurante };
+		Cursor cursorPedido = dbEquivalencia.query("Restaurantes", campos, "Restaurante=?",datos, null, null, null);
+		
+		cursorPedido.moveToFirst();
+		codigoRest = cursorPedido.getString(0);
+		abreviaturaRest = cursorPedido.getString(1);
+	}
+	
 
 	/**
 	 * Cierra las bases de datos Cuenta y Pedido
 	 */
 	private void cerrarBasesDeDatos() {
 		sqlCuenta.close();
-		sqlRestaurante.close();
+		dbEquivalencia.close();
 	}
 }
