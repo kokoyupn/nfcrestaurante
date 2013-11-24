@@ -223,7 +223,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	}
 
 	/**
-	 * Metodo que se encarga de leer bloques de la tarjeta nfc
+	 * Metodo que se encarga de leer de la tarjeta nfc
 	 * @param tag
 	 * @throws IOException
 	 * @throws FormatException
