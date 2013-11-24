@@ -49,15 +49,13 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	IntentFilter writeTagFilters[];
 	Tag mytag;
 	Context ctx;
-	//String[][] mTechLists;
-	boolean leidoBienEnTag, datosMalos, restauranteIncorrecto;
+	boolean leidoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta;
 	ProgressDialog	progressDialogSinc;
 	
-	//Variables usadas para añadir la lista de platos a la base de datos mesas
 	HandlerGenerico sqlMesas,sqlRestaurante,sqlEquivalencia;	
 	SQLiteDatabase dbMesas,dbRestaurante,dbEquivalencia;
-	String numMesa, idCamarero, numPersonas, restaurante, codigoRest, abreviaturaRest;
 	
+	String numMesa, idCamarero, numPersonas, restaurante, codigoRest, abreviaturaRest;
 	ArrayList<Byte> mensajeEnBytesBueno;
 	
 	//Variables para el sonido
@@ -90,24 +88,20 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	  @Override
 	  protected Void doInBackground(Void... params) {	  		  
 		  SystemClock.sleep(1000);
-		  // si es Mifare Classic
-	//	  if (esMFC) {
-				try {   
-					read(mytag);//Se ha detectado la tag procedemos a leerla
-					//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
-					decodificar(mensajeEnBytesBueno);
-					//Sonido de confirmacion
-					sonidoManager.play(sonido);
-					}
-				 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
-					//Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
-					e.printStackTrace();
-				} catch (FormatException e) {
-					//Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
-					e.printStackTrace();
+		  try {   
+				read(mytag);
+				//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
+				decodificar(mensajeEnBytesBueno);
+				//Sonido de confirmacion
+				sonidoManager.play(sonido);
 				}
-	//		 }
-		
+			 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
+				//Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
+				e.printStackTrace();
+			} catch (FormatException e) {
+				//Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
+				e.printStackTrace();
+			}
 		  return null;
 	  }
 
@@ -142,15 +136,13 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		numPersonas = bundle.getString("Personas");
 		idCamarero = bundle.getString("IdCamarero");
 		restaurante=bundle.getString("Restaurante");
-		datosMalos=false;
-		restauranteIncorrecto=false;
+		
 		ctx=this;
 		
 		adapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
 		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-		//mTechLists = new String[][] { new String[] { MifareClassic.class.getName() } };
 		writeTagFilters = new IntentFilter[] { tagDetected }; 
 
 		//Sacamos la fecha a la que el camarero ha introducido la mesa
@@ -158,16 +150,15 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         formatteDate = df.format(date);
+        
         //Sacamos la hora a la que el camarero ha introducido la mesa
         Date dt = new Date();
         SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
         formatteHour = dtf.format(dt.getTime());
         
-		//Creamos la instacia del manager de sonido
+		//Creamos la instacia del manager de sonido, ponemos volumen y cargamos el sonido
 		sonidoManager = new SonidoManager(getApplicationContext());
-		// Pone el volumen al volumen del movil actual
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        //Cargamos el sonido
         sonido=sonidoManager.load(R.raw.confirm);
        
         //obtenemos el codigo y la abreviatura del rest
@@ -179,6 +170,9 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
   		}
   		obtenerCodigoYAbreviaturaRestaurante();
   		dbEquivalencia.close();
+  		
+  		//inicializamos variables para mostrar errores
+  		leidoBienEnTag = tagCorrupta = restauranteCorrecto = esCuenta = false;
                 
 		// creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
@@ -217,26 +211,17 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	 * 
 	 */
 	public void onDismiss(DialogInterface dialog) {
-		if(restauranteIncorrecto){	
-			  Toast.makeText(getApplicationContext(), "Los platos sincronizados no corresponden a este restaurante.", Toast.LENGTH_LONG).show();}
-		  else{	if(datosMalos) 
-				  {Toast.makeText(getApplicationContext(), "La tarjeta no contiene datos correctos.", Toast.LENGTH_LONG).show();}
-		
-		        else {
-		        	if (leidoBienEnTag) {
-		        		Toast.makeText(this, "Pedido sincronizado correctamente.", Toast.LENGTH_LONG ).show();		
-		        	   }
-		
-		        	else {
-		        			Toast.makeText(this, "Pedido no sincronizado.", Toast.LENGTH_LONG ).show();		 
-		        		}
-		        }
-		 }
+		if(restauranteCorrecto){	
+			if(!tagCorrupta) {
+				if (!esCuenta){
+					if (leidoBienEnTag) Toast.makeText(this, "Pedido sincronizado correctamente", Toast.LENGTH_LONG ).show();		
+			        else Toast.makeText(this, "Pedido no sincronizado", Toast.LENGTH_LONG ).show();	
+				} else Toast.makeText(getApplicationContext(), "Hay una cuenta en la tarjeta", Toast.LENGTH_LONG).show();
+		    } else Toast.makeText(getApplicationContext(), "La tarjeta está corrupta, usa la opción borrar para restablecerla", Toast.LENGTH_LONG).show();
+		} else Toast.makeText(getApplicationContext(), "Los platos en la tarjeta no corresponden a este restaurante", Toast.LENGTH_LONG).show();
 		finish();	
 	}
 
-	
-	//@SuppressLint("NewApi")
 	/**
 	 * Metodo que se encarga de leer bloques de la tarjeta nfc
 	 * @param tag
@@ -263,101 +248,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 			mensajeEnBytesBueno.add(mensajeEnBytes[i+7]);
 		}
 	}
-		/*Variables para borrar la tarjeta */
-//		String aux = "";
-//		aux += "255";
-//		ArrayList<Byte> pedidoCodificadoEnBytes = new ArrayList<Byte>();
-//		
-//		ArrayList<Byte> al= new ArrayList<Byte>();
-//		al.add((byte) numeroRestaurante);
-//		pedidoCodificadoEnBytes.addAll(al);
-//		
-//		al = new ArrayList<Byte>();
-//		al.add((byte) Integer.parseInt(aux));
-//		pedidoCodificadoEnBytes.addAll(al);
-//		
-//		
-//		
-//		
-//		mensaje = new ArrayList<Byte>();
-//			
-//		// Obtiene la instacia de la tarjeta nfc
-//		MifareClassic mfc = MifareClassic.get(tag);
-//										
-//		// Establece la conexion
-//		mfc.connect();
-//		
-//		boolean sectorValido = false;		
-//
-//		//----------Borrado de la tarjeta
-//		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
-//		int recorrerString = 0;	
-//		
-//		// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que 
-//		// se escribe mandando bloques de 16 bytes
-//		int  numMod16 = pedidoCodificadoEnBytes.size() % 16;
-//		if (numMod16 != 0){
-//			int huecos = 16-numMod16;
-//			for (int i = 0; i < huecos; i++)
-//				pedidoCodificadoEnBytes.add((byte) 0);
-//		}
-//		
-//		//Variable usada para saber por el bloque que vamos
-//		int numBloque = 0;
-//		// el texto que ha escrito el usuario
-//		byte[] textoByte = null;
-//		String texto="";// Variable usada para concatenar el mensaje leido
-//				
-//		// Recorremos todos los sectores y bloques leyendo el mensaje
-//		   
-//		while (numBloque < mfc.getBlockCount()) {
-//			if (sePuedeLeerEnBloque(numBloque)) {
-//			
-//				// Cada sector tiene 4 bloques
-//				int numSector = numBloque / 4;
-//				//Validamos el sector con la A porque las tarjetas que tenemos usan el bit A en vez del B
-//				
-//				sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
-//	
-//				if (sectorValido) {//Si es un sector valido
-//				
-//						textoByte=mfc.readBlock(numBloque); //leemos un bloque entero
-//						
-//						for (int i=0; i<MifareClassic.BLOCK_SIZE; i++)
-//							{texto=texto+(char)textoByte[i];//Concatenamos el contenido del bloque en el string ya que de la tarjeta lo leemos en bytes
-//							 		  mensaje.add(textoByte[i]);
-//							}
-//						
-//						// si es menor significa que queda por escribir cosas
-//						if (recorrerString < pedidoCodificadoEnBytes.size()) { //textoBytes.length 
-//							// recorremos con un for para obtener bloques de 16 bytes
-//							byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
-//							for (int j=0; j<MifareClassic.BLOCK_SIZE; j++)
-//								datosAlBloque[j] = pedidoCodificadoEnBytes.get(j+recorrerString);
-//							// avanzo para el siguiente bloque
-//							recorrerString += MifareClassic.BLOCK_SIZE;
-//							// escribimos en el bloque
-//							mfc.writeBlock(numBloque, datosAlBloque);
-//						} else {
-//							// escribimos ceros en el resto de la tarjeta porque ya no queda nada por escribir
-//							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
-//							mfc.writeBlock(numBloque, ceros);
-//						}
-//			} 	
-//				numBloque++;
-//			}
-//			else {
-//				numBloque++;
-//				 }
-//				
-//			
-//		}
-//		leidoBienEnTag = true; 				 
-//		// Cerramos la conexion
-//		mfc.close();
-//		
-//		
-//	}
+		
 
 	/**Con este método detectamos la presencia de la tarjeta tag y establecemos la conexión
 	 * luego procedemos a añadir los platos a la base de datos mesas decodificandolos.
@@ -367,13 +258,13 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	protected void onNewIntent(Intent intent){
 		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
-			Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
+			//Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
 	
 			if(mytag == null){
-					Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
+				Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
 			}else {
-					// ejecuta el progressDialog, codifica, escribe en tag e intercambia datos de pedido a cuenta en segundo plano
-					new SincronizarPedidoBackgroundAsyncTask().execute();
+				// ejecuta el progressDialog, codifica, escribe en tag e intercambia datos de pedido a cuenta en segundo plano
+				new SincronizarPedidoBackgroundAsyncTask().execute();
 			}
 		}
 	}
@@ -394,97 +285,51 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	
 	}
 	
-	
-
-	/**Decodificamos el contenido leido de la tag separando cada plato y añadiendolo a las mesas.
-	 * */
+	/**
+	 * Decodificamos el contenido leido de la tag separando cada plato y añadiendolo a las mesas.
+	 */
 	private void decodificar(ArrayList<Byte> mensaje) {
-		//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
+		
 		Iterator<Byte> itPlatos = mensaje.iterator();
 		boolean parar=false;
-		int numRestaurante; //TODO FALTA POR HACER
-		//numRestaurante = decodificaByte(itPlatos.next());  ID DEL REST
+		tagCorrupta = false;
 		
-		while(itPlatos.hasNext() && !parar){					
-
-			int id = decodificaByte(itPlatos.next());
-			
-			parar = id==255;//El mensaje termina con un -1 en la tag
+		int numRestaurante = decodificaByte(itPlatos.next());  //ID DEL REST
+		
+		restauranteCorrecto = numRestaurante == Integer.parseInt(codigoRest);
+		
+		
+		if (restauranteCorrecto){
+		
+			while(itPlatos.hasNext() && !parar){					
 	
-			if(!parar){ //Si no ha acabado el mensaje
-				// extras
-				int numBytesExtras =  decodificaByte(itPlatos.next());
-				String extrasBinarios = "";				
-				for (int i = 0; i < numBytesExtras; i++ )
-					extrasBinarios += decToBin(itPlatos.next());
-										
-				// ingredientes				
-				int numBytesIngredientes = decodificaByte(itPlatos.next());
-				String ingredientesBinarios = "";
-				for(int i=0; i < numBytesIngredientes; i++){
-					ingredientesBinarios += decToBin(itPlatos.next());
-				}
+				int id = decodificaByte(itPlatos.next());
 				
-				//Añadimos el plato
-				anadirPlatos(abreviaturaRest+id,extrasBinarios,ingredientesBinarios);
-			}//if parar             
-		 }//while
+				parar = id==255 || id==254; //El mensaje termina con un -1 en la tag o esCuenta
+				esCuenta = id==254;	
 		
-//Recorremos todo el mensaje leido y vamos descomponiendo todos los platos en id-extras-comentario
-//		Iterator<Byte> itPlatos = mensaje.iterator();
-//		Iterator<Byte> iteradorAux = mensaje.iterator();
-//		
-//		boolean correcto=false;
-//		boolean parar=false;
-//		int numRestaurante;
-//		int n;
-//		while(iteradorAux.hasNext() && !correcto){
-//			   n = decodificaByte(iteradorAux.next());
-//			    correcto= n==255;
-//			  }
-//		
-//	if (correcto){
-//		numRestaurante = decodificaByte(itPlatos.next());
-//		if(numeroRestaurante==numRestaurante )
-//		{
-//		while(itPlatos.hasNext() && !parar){
-//			
-//			// id
-//			int id = decodificaByte(itPlatos.next());
-//			//El mensaje termina con un -1 en la tag
-//			parar= id==255;
-//			
-//			if(!parar){//Si no ha acabado el mensaje
-//				// extras
-//				int numExtras =  decodificaByte(itPlatos.next());
-//				String extras = "";
-//				
-//				for (int i = 0; i < numExtras; i++ )
-//					extras += decToBin(itPlatos.next());
-//							
-//				// comentario
-//				int numComentario =  decodificaByte(itPlatos.next());
-//				String comentario = "";
-//				
-//				for (int i = 0; i < numComentario; i++)
-//					comentario += (char)decodificaByte(itPlatos.next());
-//				//Añadimos el plato
-//				añadirPlatos(restaurante,abreviatura+id,extras,comentario);
-//			}//if parar		
-//		 }//while
-//		}//if
-//	
-//		else{
-//					
-//			restauranteIncorrecto=true;
-//		}
-//		}
-//		else { 
-//			datosMalos=true;
-//			
-//		}
-		
-	
+				if(!parar){ //Si no ha acabado el mensaje
+					// extras
+					int numBytesExtras =  decodificaByte(itPlatos.next());
+					String extrasBinarios = "";				
+					for (int i = 0; i < numBytesExtras; i++ )
+						extrasBinarios += decToBin(itPlatos.next());
+											
+					// ingredientes				
+					int numBytesIngredientes = decodificaByte(itPlatos.next());
+					String ingredientesBinarios = "";
+					for(int i=0; i < numBytesIngredientes; i++){
+						ingredientesBinarios += decToBin(itPlatos.next());
+					}
+					
+					//Añadimos el plato
+					anadirPlatos(abreviaturaRest+id,extrasBinarios,ingredientesBinarios);
+				}//if parar             
+			 }//while
+			
+			if(!parar) 
+				tagCorrupta = true;
+		}
 	}
 	
 	/**Metodo que se encargar de convertir un byte dado por parametro a un tipo int
