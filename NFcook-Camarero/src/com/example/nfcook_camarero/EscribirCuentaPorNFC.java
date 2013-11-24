@@ -1,9 +1,9 @@
 package com.example.nfcook_camarero;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
 import baseDatos.HandlerGenerico;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -17,9 +17,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.nfc.FormatException;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
+import android.nfc.TagLostException;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -38,7 +42,7 @@ public class EscribirCuentaPorNFC extends Activity implements
 	private PendingIntent pendingIntent;
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
-	private boolean dispositivoCompatible, cabeEnTag, escritoBienEnTag, heCalculadoTam;
+	private boolean cabeEnTag, escritoBienEnTag;
 	private byte idRestaurante;
 	private ArrayList<Byte> cuentaCodificadaEnBytes;
 	// Variables para el sonido
@@ -72,17 +76,16 @@ public class EscribirCuentaPorNFC extends Activity implements
 		 */
 		@Override
 		protected Void doInBackground(Void... params) {
-			// si es Mifare Classic
-			if (dispositivoCompatible) {
-				try {				
-					escribirEnTagNFC();
-				} catch (IOException e) {
-					escritoBienEnTag = false;
-					e.printStackTrace();
-				} catch (FormatException e) {
-					escritoBienEnTag = false;
-					e.printStackTrace();
-				}
+			
+			try {				
+				// se decodifica antes para no perder tiempo de escritura
+				escribirEnTagNFC(cuentaCodificadaEnBytes);
+			} catch (IOException e) {
+				escritoBienEnTag = false;
+				e.printStackTrace();
+			} catch (FormatException e) {
+				escritoBienEnTag = false;
+				e.printStackTrace();
 			}
 			
 			// mejor aqui para buscar siempre que haga lo anterior que es lo importante
@@ -139,6 +142,8 @@ public class EscribirCuentaPorNFC extends Activity implements
 		obtenerIdRestYAbreviatura();
 		codificarCuenta(dameCuentaString());
 		
+		//inicializamos variables para mostrar errores
+		escritoBienEnTag = cabeEnTag = false;
 	}
 	
 	//  para el atras del action bar
@@ -159,16 +164,14 @@ public class EscribirCuentaPorNFC extends Activity implements
 	 */
 	public void onDismiss(DialogInterface dialog) {
 
-		if (dispositivoCompatible){
-			if (escritoBienEnTag) Toast.makeText(this,"Cuenta sincronizada correctamente",Toast.LENGTH_LONG).show();
-			else {
-				if (heCalculadoTam) {
-					if (cabeEnTag) Toast.makeText(this, "Cuenta no sincronizada. Has levantado el dispositivo antes de tiempo.",Toast.LENGTH_LONG).show();
-					else Toast.makeText(this,"Cuenta no sincronizada. No cabe en la tarjeta",Toast.LENGTH_LONG).show();
-				} else Toast.makeText(this, "Cuenta no sincronizada. Has levantado el dispositivo antes de tiempo.",Toast.LENGTH_LONG).show();
-			}
-		} else Toast.makeText(this,"Cuenta no sincronizada. Tu dispositivo no es compatible con esta tarjeta.",Toast.LENGTH_LONG).show();
-				
+		Intent intent = new Intent();
+		intent.putExtra("Origen", "Pedido");
+		if (escritoBienEnTag){
+			Toast.makeText(this,"Cuenta sincronizada correctamente",Toast.LENGTH_LONG).show();
+		} else {						
+			if (!cabeEnTag) Toast.makeText(this,"Cuenta no sincronizada. No cabe en la tarjeta",Toast.LENGTH_LONG).show();
+			else Toast.makeText(this,"Cuenta no sincronizada. Has levantado el dispositivo antes de tiempo",Toast.LENGTH_LONG).show();	
+		}
 		cerrarBasesDeDatos();
 		finish();
 	}
@@ -265,7 +268,7 @@ public class EscribirCuentaPorNFC extends Activity implements
 	}
 
 	/**
-	 * Codifica la cuenta y pondra al inicio un -2 indicando que es una cuenta, el idRest, 
+	 * Codifica la cuenta y pondra al inicio el idRest, un -2 indicando que es una cuenta,
 	 * los id platos y luego un -1 indicando el final
 	 * @param cuenta
 	 * @return
@@ -274,13 +277,12 @@ public class EscribirCuentaPorNFC extends Activity implements
 
 		// variable donde ira el pedido con la codificacion final
 		cuentaCodificadaEnBytes = new ArrayList<Byte>();
-		// para indicar que ha finalizado el pedido escribo un 254 (-2)
-		cuentaCodificadaEnBytes.add((byte) Integer.parseInt("254"));	
 		// se mete el idRest
 		cuentaCodificadaEnBytes.add(idRestaurante);
-		// separamos por platos
+		// para indicar que es una cuenta un -2
+		cuentaCodificadaEnBytes.add((byte) Integer.parseInt("254"));	
+		// separamos por platos y los metemos al arrayList
 		StringTokenizer stCuenta = new StringTokenizer(cuenta, "@");
-		
 		while (stCuenta.hasMoreElements()) {
 			String id = stCuenta.nextToken();
 			cuentaCodificadaEnBytes.addAll(codificaIdPlato(id));
@@ -318,109 +320,94 @@ public class EscribirCuentaPorNFC extends Activity implements
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	private void escribirEnTagNFC() throws IOException, FormatException {
+	
+	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
 
-		// Obtenemos instancia de MifareClassic para el tag.
-		MifareClassic mfc = MifareClassic.get(mytag);
+	    byte[] payload = new byte[ndef.getMaxSize()-8];
+	    
+	    System.out.println("TAM: " + ndef.getMaxSize());
+	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
+	    	payload[i] = pedidoCodificadoEnBytes.get(i);
+	    }
+	    
+	    for (int i = pedidoCodificadoEnBytes.size() ; i < ndef.getMaxSize() - 8; i++){
+	    	payload[i] = 0;
+	    }
 
-		// Habilitamos operaciones de I/O
-		mfc.connect();
-
-		escritoBienEnTag = false;
-
-		boolean sectorValido = false;
-		// para avanzar los bloques (en el 0 no se puede escribir)
-		int numBloque = 0;		
-		// para recorrer string de MifareClassic.BLOCK_SIZE en MifareClassic.BLOCK_SIZE
-		int recorrerString = 0;
-		// relleno con 0's el pedido hasta que sea modulo16 para que luego no haya problemas ya que
-		// se escribe mandando bloques de 16 bytes
-		int numMod16 = cuentaCodificadaEnBytes.size() % 16;
-		if (numMod16 != 0) {
-			int huecos = 16 - numMod16;
-			for (int i = 0; i < huecos; i++)
-				cuentaCodificadaEnBytes.add((byte) 0);
-		}
-
-		if (cabeCuentaEnTag(cuentaCodificadaEnBytes, mfc)) {
-			// recorro todos los bloques escribiendo el pedido. Cuando acabe escribo 0's en los que sobren
-			while (numBloque < mfc.getBlockCount() && !escritoBienEnTag) {
-				// comprobamos si el bloque puede ser escrito o es un bloque prohibido
-				if (sePuedeEscribirEnBloque(numBloque)) {
-					// cada sector tiene 4 bloques
-					int numSector = numBloque / 4;
-					// autentifico con la key A para escritura
-					sectorValido = mfc.authenticateSectorWithKeyA(numSector,MifareClassic.KEY_DEFAULT);
-					if (sectorValido) {
-						// si es menor significa que queda por escribir cosas
-						if (recorrerString < cuentaCodificadaEnBytes.size()) {
-							// recorremos con un for para obtener bloques de 16 bytes
-							byte[] datosAlBloque = new byte[MifareClassic.BLOCK_SIZE];
-							for (int i = 0; i < MifareClassic.BLOCK_SIZE; i++)
-								datosAlBloque[i] = cuentaCodificadaEnBytes.get(i + recorrerString);
-							// avanzo para el siguiente bloque
-							recorrerString += MifareClassic.BLOCK_SIZE;
-							// escribimos en el bloque
-							mfc.writeBlock(numBloque, datosAlBloque);
-						} else {
-							byte[] ceros = new byte[MifareClassic.BLOCK_SIZE];
-							mfc.writeBlock(numBloque, ceros);
-						}
-					}
-				}
-				numBloque++;
-			}
-		}
-		escritoBienEnTag = true;
-		
-		// Cerramos la conexion
-		mfc.close();
+	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
+	    return recordNFC;
 	}
 
+	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
+
+		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
+		escritoBienEnTag = false;
+		try {
+			Ndef ndef = Ndef.get(mytag);
+			if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
+				NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes,ndef) };
+			    NdefMessage message = new NdefMessage(records); 
+	    
+		        // If the tag is already formatted, just write the message to it
+		        if(ndef != null) {
+		            ndef.connect();
+		 
+		            // Make sure the tag is writable
+		            if(!ndef.isWritable()) {
+		                System.out.println("tag no es writable");
+		            }
+		 
+		            try {// Write the data to the tag		                
+		                ndef.writeNdefMessage(message);
+		                escritoBienEnTag = true;
+		            } catch (TagLostException tle) {
+		            	System.out.println("tag lost exception al escribir");		            	
+		            } catch (IOException ioe) {
+		            	System.out.println("error IO al escribir");
+		            } catch (FormatException fe) {
+		            	System.out.println("error format al escribir");
+		            }
+		        // If the tag is not formatted, format it with the message
+		        } else {
+		            NdefFormatable format = NdefFormatable.get(mytag);
+		            if(format != null) {
+		                try {
+		                    format.connect();
+		                    format.format(message);
+		                    escritoBienEnTag = true;
+		                } catch (TagLostException tle) {
+		                	System.out.println("tag lost exception al formatear");
+		                } catch (IOException ioe) {
+		                	System.out.println("error IO al formatear");
+		                } catch (FormatException fe) {
+		                	System.out.println("error format al formatear");
+		                }
+		            } else {
+		            	System.out.println("format es null");
+		            }
+		        }
+			}
+	    } catch(Exception e) {
+	    	System.out.println("ultimo try");
+	    }
+	}
+		
 	/**
 	 * Devuelve un booleano informando de si el pedido cabe o no cabe en la
 	 * tarjeta
-	 * 
-	 * @param pedidoCodificadoEnBytes
-	 * @param mfc
-	 * @return
 	 */
-	private boolean cabeCuentaEnTag(ArrayList<Byte> cuentaCodificadoEnBytes, MifareClassic mfc) {
-		int bytesTag = mfc.getBlockCount() * 16;
-		int bytesProhibidosTag = (mfc.getSectorCount() + 1) * 16;
-		int bytesLibresTag = bytesTag - bytesProhibidosTag;
-		heCalculadoTam = true;
-		cabeEnTag = cuentaCodificadoEnBytes.size() < bytesLibresTag;
-		return cabeEnTag;
-		
+	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) {
+		return pedidoCodificadoEnBytes.size() < ndef.getMaxSize();		
 	}
 
-	/**
-	 * Comprueba si se puede escribir o no en los bloques de las tag
-	 * 
-	 * @param numBloque
-	 * @return
-	 */
-	private boolean sePuedeEscribirEnBloque(int numBloque) {
-		return (numBloque + 1) % 4 != 0 && numBloque != 0;
-	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-			Toast.makeText(this, this.getString(R.string.ok_detection),Toast.LENGTH_SHORT).show();
-
-			// compruebo que la tarjeta sea mifare classic
-			String[] tecnologiasTag = mytag.getTechList();
-			dispositivoCompatible = false;
-			for (int i = 0; i < tecnologiasTag.length; i++)
-				dispositivoCompatible |= tecnologiasTag[i].equals("android.nfc.tech.MifareClassic");
-
+			//Toast.makeText(this, this.getString(R.string.ok_detection),Toast.LENGTH_SHORT).show();
 		}
-		if (mytag == null) {
-			Toast.makeText(this, this.getString(R.string.error_detected),Toast.LENGTH_SHORT).show();
-		} else {
+		if (mytag != null) {
 			// ejecuta el progressDialog, codifica, escribe en tag e intercambia
 			// datos de pedido a cuenta en segundo plano
 			new SincronizarPedidoBackgroundAsyncTask().execute();
