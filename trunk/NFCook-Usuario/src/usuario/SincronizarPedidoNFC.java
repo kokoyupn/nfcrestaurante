@@ -59,8 +59,6 @@ public class SincronizarPedidoNFC extends Activity implements
 	SonidoManager sonidoManager;
 	int sonido;
 	private static String abreviaturaRest;
-	
-	private ArrayList<Boolean> bloquesDepuracion; 
 
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas
@@ -184,6 +182,9 @@ public class SincronizarPedidoNFC extends Activity implements
 		// para reducir mas el tiempo y que no hay problemas en la escritura
 		abrirBasesDeDatos();
 		obtenerIdRestYAbreviatura();		
+		
+		//inicializamos variables para mostrar errores
+		escritoBienEnTag = leidoBienDeTag = tagCorrupta = restauranteCorrecto = esCuenta = cabeEnTag = false;
 	}
 	
 	//  para el atras del action bar
@@ -629,28 +630,14 @@ public class SincronizarPedidoNFC extends Activity implements
 		return pedidoCodificadoEnBytes.size() < ndef.getMaxSize();
 		
 	}
-
-	/**
-	 * Comprueba si se puede escribir o no en los bloques de las tag
-	 * 
-	 * @param numBloque
-	 * @return
-	 */
-	private boolean sePuedeEscribirEnBloque(int numBloque) {
-		return (numBloque + 1) % 4 != 0 && numBloque != 0;
-	}
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-			Toast.makeText(this, this.getString(R.string.tag_detectada),
-					Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, this.getString(R.string.tag_detectada), Toast.LENGTH_SHORT).show();
 		}
-		if (mytag == null) {
-			Toast.makeText(this, this.getString(R.string.tag_no_detectada),
-					Toast.LENGTH_SHORT).show();
-		} else {
+		if (mytag != null) {
 			// ejecuta el progressDialog, codifica, escribe en tag e intercambia
 			// datos de pedido a cuenta en segundo plano
 			new SincronizarPedidoBackgroundAsyncTask().execute();
@@ -692,10 +679,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	}
 
 	private void hacerCopiaSeguridad(ArrayList<Byte> mensaje) {
-		
-		System.out.println("hijo de puta: " + mensaje.toString());
-		
-		
+	
 		tagCorrupta = false;
 		
 		copiaSeguridad = new ArrayList<Byte>();
