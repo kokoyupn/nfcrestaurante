@@ -173,7 +173,8 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
   		dbEquivalencia.close();
   		
   		//inicializamos variables para mostrar errores
-  		leidoBienEnTag = tagCorrupta = restauranteCorrecto = esCuenta = false;
+  		tagCorrupta = esCuenta = false;
+  		leidoBienEnTag = restauranteCorrecto = true;
                 
 		// creamos el progresDialog que se mostrara
   		crearProgressDialogSinc(); 
@@ -244,12 +245,14 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		Ndef ndef = Ndef.get(tag);
 		if (ndef != null){
 			NdefMessage message = ndef.getCachedNdefMessage();
-			byte[] mensajeEnBytes = message.toByteArray();			
-			// Con este "for" eliminamos los datos inservibles del array de bytes
-			for (int i=0; i<mensajeEnBytes.length-7; i++){
-				mensajeEnBytesBueno.add(mensajeEnBytes[i+7]);
-			}
-			leidoBienEnTag = true;
+			if(message != null){
+				byte[] mensajeEnBytes = message.toByteArray();			
+				// Con este "for" eliminamos los datos inservibles del array de bytes
+				for (int i=0; i<mensajeEnBytes.length-10; i++){
+					mensajeEnBytesBueno.add(mensajeEnBytes[i+10]);
+				}
+				leidoBienEnTag = true;
+			} else leidoBienEnTag = false;
 		} else{
 			tagCorrupta = true;
 		}
