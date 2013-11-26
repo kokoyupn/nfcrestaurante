@@ -194,6 +194,9 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	 * introducido por el usuario. Los bloques que queden sin escribir seran
 	 * reescritos con 0's eliminando el texto que hubiese anteriormente
 	 * 
+	 * ATENCIÓN: Sólo se utilizan los primeros 439 bytes de la tarjeta.
+	 * Del 439 al 462 no se pueden utilizar
+	 * 
 	 * @param text
 	 * @param tag
 	 * @throws IOException
@@ -202,19 +205,57 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	
 	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
 
-		byte[] payload = new byte[/*ndef.getMaxSize()*/462-8];
+	    String lang       = "en";
+	    byte[] langBytes  = lang.getBytes("UTF-8");
+	    int    langLength = langBytes.length;
 	    
-	    //System.out.println("TAM: " + ndef.getMaxSize());
+	    byte[] payload    = new byte[ndef.getMaxSize() - (1 + langLength) - 12];
+	    System.out.println("PUTA");
+	    System.out.println(payload.length);
+	    System.out.println(ndef.getMaxSize());
+
+	    // set status byte (see NDEF spec for actual bits)
+	    payload[0] = (byte) langLength;
+
+	    // copy langbytes and textbytes into payload
+	    System.arraycopy(langBytes, 0, payload, 1, langLength);
+	
 	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
-	    	payload[i] = pedidoCodificadoEnBytes.get(i);
-	    }
-	    
-	    for (int i = pedidoCodificadoEnBytes.size() ; i < /*ndef.getMaxSize()*/462-8; i++){
-	    	payload[i] = 0;
+	    	payload[i+langLength+1] = pedidoCodificadoEnBytes.get(i);
 	    }
 
-	    NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
-	    return recordNFC;
+	    NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, 
+	                                       NdefRecord.RTD_TEXT, 
+	                                       new byte[0], 
+	                                       payload);
+
+	    return record;
+	}
+	
+	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes) throws UnsupportedEncodingException {
+
+		String lang       = "en";
+	    byte[] langBytes  = lang.getBytes("UTF-8");
+	    int    langLength = langBytes.length;
+	    
+	    byte[] payload    = new byte[454 - (1 + langLength) - 12];
+
+	    // set status byte (see NDEF spec for actual bits)
+	    payload[0] = (byte) langLength;
+
+	    // copy langbytes and textbytes into payload
+	    System.arraycopy(langBytes, 0, payload, 1, langLength);
+	
+	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
+	    	payload[i+langLength+1] = pedidoCodificadoEnBytes.get(i);
+	    }
+
+	    NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, 
+	                                       NdefRecord.RTD_TEXT, 
+	                                       new byte[0], 
+	                                       payload);
+
+	    return record;
 	}
 
 	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
@@ -245,7 +286,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 		        // If the tag is already formatted, just write the message to it
 		        if(ndef != null) {
 		        	if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
-			        	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, null) };
+			        	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, ndef) };
 					    NdefMessage message = new NdefMessage(records); 
 			        	
 			            ndef.connect();
@@ -281,7 +322,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
             NdefFormatable format = NdefFormatable.get(mytag);
             if(format != null) {
                 try {
-                	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, null) };
+                	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes) };
     			    NdefMessage message = new NdefMessage(records); 
                 	
                     format.connect();
@@ -335,7 +376,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	protected void onNewIntent(Intent intent){
 		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
-			Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
+			//Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
 			if(mytag == null){
 					Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
 			}else {

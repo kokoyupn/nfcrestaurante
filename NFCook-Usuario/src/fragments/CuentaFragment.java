@@ -297,11 +297,13 @@ public class CuentaFragment extends Fragment{
 		m.replace(R.id.FrameLayoutPestanas, fragmentCuenta);
 		m.commitAllowingStateLoss();
 		if (requestCode == REQUEST_PAYPAL_CHECKOUT) PayPalActivityResult(requestCode,resultCode,data);
-		if(data.getExtras().getString("Tipo").equals("NFC")){
-			lanzarAlertDialogCuentaElectronicaNFC();
-		}else{
-			lanzarAlertDialogCuentaElectronicaQR();
-		}
+		
+		if(RecogerCuentaNFC.cuentaRecibidaConExito)
+			if(data.getExtras().getString("Tipo").equals("NFC")){
+				lanzarAlertDialogCuentaElectronicaNFC();
+			}else{
+				lanzarAlertDialogCuentaElectronicaQR();
+			}
 		
 	}
 	
