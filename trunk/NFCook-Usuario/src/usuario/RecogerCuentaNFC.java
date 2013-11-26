@@ -73,7 +73,9 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 		 */
 		@Override
 		protected void onPreExecute() {
-			abrirBasesDeDatos();
+			abrirBasesDeDatos();			
+			//obtenemos el codigo y la abreviatura del rest
+			obtenerCodigoYAbreviaturaRestaurante();
 			progressDialogSinc.show();
 			
 		}
@@ -87,6 +89,7 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 			try {
 				// comprueba errores y prepara el arrayList leido para decodificarlo en el metodo onDismiss
 				comprobarErrores(read(mytag));	
+				leidoBienDeTag = true;
 			} catch (IOException e1) {
 				leidoBienDeTag = false;
 				e1.printStackTrace();
@@ -145,9 +148,6 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 		// configuracion del sonido
 		configurarSonido();
 		
-		//obtenemos el codigo y la abreviatura del rest
-		obtenerCodigoYAbreviaturaRestaurante();
-		
 		//inicializamos variables para mostrar errores
 		leidoBienDeTag = tagCorrupta = restauranteCorrecto = esCuenta = false;
 		
@@ -177,8 +177,8 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 						decodificarPlatos(dameCuentaString(cuentaLeidaEnBytes));
 						Toast.makeText(this,"Cuenta recogida correctamente",Toast.LENGTH_LONG).show();
 					} else Toast.makeText(this,"Error al recoger la cuenta. No hay ninguna cuenta en la tarjeta",Toast.LENGTH_LONG).show();			
-				} else Toast.makeText(this,"Error al recoger la cuenta. No estas en el restaurante correcto.",Toast.LENGTH_LONG).show();
-			} else Toast.makeText(this,"Error al recoger la cuenta",Toast.LENGTH_LONG).show();
+				} else Toast.makeText(this,"Error al recoger la cuenta. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
+			} else Toast.makeText(this,"La tarjeta está averiada. Llama al camarero",Toast.LENGTH_LONG).show();
 		} else Toast.makeText(this,"Error al recoger la cuenta. Has levantado el dispositivo antes de tiempo",Toast.LENGTH_LONG).show();
 		
 		Intent intent = new Intent();
@@ -264,26 +264,29 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 	 */
 	private void comprobarErrores(ArrayList<Byte> cuentaLeida) {
 
-		tagCorrupta = false;
+		cuentaLeidaEnBytes = new ArrayList<Byte>();
 		
-		if (estoyEnRestauranteCorrecto(cuentaLeida.remove(0))){
-			if (hayUnaCuenta(cuentaLeida.remove(0))){
-				Iterator<Byte> itCuenta = cuentaLeida.iterator();
-				
-				boolean parar = false;
-				while(itCuenta.hasNext() && !parar){					
+		if (!tagCorrupta){
+		
+			if (estoyEnRestauranteCorrecto(cuentaLeida.remove(0))){
+				if (hayUnaCuenta(cuentaLeida.remove(0))){
+					Iterator<Byte> itCuenta = cuentaLeida.iterator();
 					
-					Byte idByte = itCuenta.next();
-					parar = decodificaByte(idByte)==255; //El mensaje termina con un -1 en la tag
-
-					if(!parar)
-						cuentaLeidaEnBytes.add(idByte); // metemos el idByte en la cuenta
-				 }	
-				
-				if(!parar) 
-					tagCorrupta = true;
-			}
-		}	
+					boolean parar = false;
+					while(itCuenta.hasNext() && !parar){					
+						
+						Byte idByte = itCuenta.next();
+						parar = decodificaByte(idByte)==255; //El mensaje termina con un -1 en la tag
+	
+						if(!parar)
+							cuentaLeidaEnBytes.add(idByte); // metemos el idByte en la cuenta
+					 }	
+					
+					if(!parar) 
+						tagCorrupta = true;
+				}
+			}	
+		}
 	}
 	
 	/**
@@ -352,10 +355,6 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 		
 		String cuentaStr = "";
 		
-		// quitamos el idRestaurante y el -2 de que es cuenta
-		itPlatos.next();
-		itPlatos.next();
-		
 		while(itPlatos.hasNext())
 			cuentaStr += decodificaByte(itPlatos.next()) + "@";
 		
@@ -420,13 +419,17 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
         * bit_5..0 length of IANA language code
         */
 		Ndef ndef = Ndef.get(tag);
-		NdefMessage message = ndef.getCachedNdefMessage();
-		byte[] mensajeEnBytes = message.toByteArray();
 		ArrayList<Byte> cuentaLeida = new ArrayList<Byte>();
-		// Con este "for" eliminamos los datos inservibles del array de bytes
-		for (int i=0; i<mensajeEnBytes.length-7; i++){
-			cuentaLeida.add(mensajeEnBytes[i+7]);
-		}
+		tagCorrupta = false;
+		
+		if (ndef != null){
+			NdefMessage message = ndef.getCachedNdefMessage();
+			byte[] mensajeEnBytes = message.toByteArray();
+			// Con este "for" eliminamos los datos inservibles del array de bytes
+			for (int i=0; i<mensajeEnBytes.length-7; i++){
+				cuentaLeida.add(mensajeEnBytes[i+7]);
+			}
+		} else tagCorrupta = true;
 		
 		return cuentaLeida;
 	}
