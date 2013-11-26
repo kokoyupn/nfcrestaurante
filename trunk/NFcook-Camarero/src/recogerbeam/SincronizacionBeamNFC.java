@@ -236,6 +236,8 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	   			//Meto el plato en la base de datos Mesas 
 	    		// FIXME no se meten los datos que vienen de la pantalla anterior porque se pierden con el beam al abrirse otra pantalla
 	       		ContentValues plato = new ContentValues();
+	       		int idUnico = PantallaMesasFragment.getIdUnico();
+	       		PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
 	        	
 	        	plato.put("NumMesa",PantallaMesasFragment.dameMesa());
                 plato.put("IdCamarero",PantallaMesasFragment.dameCamarero());
@@ -248,7 +250,7 @@ public class SincronizacionBeamNFC extends Activity  implements OnNdefPushComple
 	        	plato.put("Nombre", cursor.getString(0));
 	        	plato.put("Precio",cursor.getDouble(1));
 	        	plato.put("Personas",PantallaMesasFragment.dameNumPersonas());
-                plato.put("IdUnico", PantallaMesasFragment.getIdUnico());
+                plato.put("IdUnico", idUnico);
 	        	plato.put("Sincro", 0);
 	        	dbMesas.insert("Mesas", null, plato);  	
 	        	dbMesas.close();

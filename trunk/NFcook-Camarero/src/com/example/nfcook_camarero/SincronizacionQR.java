@@ -168,6 +168,8 @@ public class SincronizacionQR extends Activity {
 	   			//Meto el plato en la base de datos Mesas
 	       		ContentValues plato = new ContentValues();
 	        	int idUnico = PantallaMesasFragment.getIdUnico();
+	        	PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
+	        	
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", idQR);
