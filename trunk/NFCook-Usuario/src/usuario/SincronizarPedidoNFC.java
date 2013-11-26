@@ -221,10 +221,19 @@ public class SincronizarPedidoNFC extends Activity implements
 			} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
 		} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizó mal",Toast.LENGTH_LONG).show();
 		
-		cerrarBasesDeDatos();
-		if (!heSincronizadoMalAntes) 
+		if (!heSincronizadoMalAntes){
+			cerrarBasesDeDatos();
 			finish();
+		}
 	}
+	
+	public void onBackPressed() {
+		if (!heSincronizadoMalAntes) 
+			super.onBackPressed();
+	    else 
+	    	Toast.makeText(this,"No puedes volver atrás hasta que sincronices correctamente",Toast.LENGTH_LONG).show();
+	}
+	
 
 	/**
 	 * Crea un progressDialog con el formato que se quiera.
