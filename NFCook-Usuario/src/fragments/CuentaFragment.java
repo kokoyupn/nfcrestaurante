@@ -345,17 +345,19 @@ public void onClickBotonAceptarAlertDialog(Builder ventanaEmergente,String tipo)
 	
 			public void onClick(DialogInterface dialog, int which) {
 					
+				//FIXME NO VA EL ENVIO DE EMAILS NIGGAS
+				
 					RecogerCuentaNFC.enviarPorEmail = true;
 					
 					Mail m = new Mail();
-		            m.setUser("busyrm@gmail.com");// username 
-		            m.setPass("widowmaker");// password
+		            m.setUser("nfcookapp@gmail.com");// username 
+		            m.setPass("Macarrones");// password
 	
 		            
 		            String[] toArr = {edit.getText().toString()}; 
 		            
 		            m.setTo(toArr); 
-		            m.setFrom("busyrm@gmail.com"); 
+		            m.setFrom("nfcookapp@gmail.com"); 
 		            m.setSubject("Ticket de su cuenta"); 
 		            
 		            Double precioTotal = 0.0;
