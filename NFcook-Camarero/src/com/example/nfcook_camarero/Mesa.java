@@ -507,7 +507,7 @@ public class Mesa extends Activity {
 		}	
 	}
 	
-	public void cargarExpandableListExtras(int posicion){ //TODO
+	public void cargarExpandableListExtras(int posicion){
 		HandlerGenerico sqlMiBase=new HandlerGenerico(getApplicationContext(), "MiBase.db");
 		SQLiteDatabase dbMiBase= sqlMiBase.open();
   		String[] campos = new String[]{"Extras"};

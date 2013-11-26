@@ -125,21 +125,20 @@ public class MainActivity extends Activity {
     	   }
     	   else{
     		   //La contraseña no es la misma que la guardada en la base de datos
-    		   //abrir_ventanaEmergente("Contraseña incorrecta",R.drawable.icono_password);
-    		 //Iniciamos la nueva actividad
-     	   	  Intent intent = new Intent(this, InicializarCamarero.class);
-            	  intent.putExtra("usuario", usuario.getText().toString());
-            	  intent.putExtra("Restaurante","Foster");
-            	  restaurante = "Foster";
-            	  
-            	  startActivityForResult(intent,0);
-   			
+    		   abrir_ventanaEmergente("Contraseña incorrecta",R.drawable.icono_password);
+   	
     	   }
   	
 		}catch(Exception e){
 			//No existe ese usuario en la base de datos
 			System.out.println(e.getStackTrace().toString());
-			abrir_ventanaEmergente("No existe ese usuario o contraseña incorrecta",R.drawable.icono_usuario);
+			 Intent intent = new Intent(this, InicializarCamarero.class);
+      	  intent.putExtra("usuario", usuario.getText().toString());
+      	  intent.putExtra("Restaurante","Foster");
+      	  restaurante = "Foster";
+      	  
+      	  startActivityForResult(intent,0);
+			//abrir_ventanaEmergente("No existe ese usuario o contraseña incorrecta",R.drawable.icono_usuario);
 		}
 	   
    }

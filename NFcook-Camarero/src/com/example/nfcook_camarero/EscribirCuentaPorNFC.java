@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
 import baseDatos.HandlerGenerico;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -143,7 +144,8 @@ public class EscribirCuentaPorNFC extends Activity implements
 		codificarCuenta(dameCuentaString());
 		
 		//inicializamos variables para mostrar errores
-		escritoBienEnTag = cabeEnTag = false;
+		escritoBienEnTag = false;
+		cabeEnTag = true;
 	}
 	
 	//  para el atras del action bar
@@ -170,7 +172,7 @@ public class EscribirCuentaPorNFC extends Activity implements
 			Toast.makeText(this,"Cuenta sincronizada correctamente",Toast.LENGTH_LONG).show();
 		} else {						
 			if (!cabeEnTag) Toast.makeText(this,"Cuenta no sincronizada. No cabe en la tarjeta",Toast.LENGTH_LONG).show();
-			else Toast.makeText(this,"Cuenta no sincronizada. Has levantado el dispositivo antes de tiempo",Toast.LENGTH_LONG).show();	
+			else Toast.makeText(this,"Cuenta no sincronizada. Has levantado el dispositivo antes de tiempo. Vuelve a intentarlo",Toast.LENGTH_LONG).show();	
 		}
 		cerrarBasesDeDatos();
 		finish();
@@ -323,14 +325,14 @@ public class EscribirCuentaPorNFC extends Activity implements
 	
 	private NdefRecord createRecord(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws UnsupportedEncodingException {
 
-	    byte[] payload = new byte[ndef.getMaxSize()-8];
+		byte[] payload = new byte[/*ndef.getMaxSize()*/462-8];
 	    
-	    System.out.println("TAM: " + ndef.getMaxSize());
+	    //System.out.println("TAM: " + ndef.getMaxSize());
 	    for (int i = 0; i < pedidoCodificadoEnBytes.size(); i++){
 	    	payload[i] = pedidoCodificadoEnBytes.get(i);
 	    }
 	    
-	    for (int i = pedidoCodificadoEnBytes.size() ; i < ndef.getMaxSize() - 8; i++){
+	    for (int i = pedidoCodificadoEnBytes.size() ; i < /*ndef.getMaxSize()*/462-8; i++){
 	    	payload[i] = 0;
 	    }
 
@@ -341,63 +343,96 @@ public class EscribirCuentaPorNFC extends Activity implements
 	private void escribirEnTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
 
 		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
-		escritoBienEnTag = false;
 		try {
-			Ndef ndef = Ndef.get(mytag);
-			if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
-				NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes,ndef) };
-			    NdefMessage message = new NdefMessage(records); 
-	    
-		        // If the tag is already formatted, just write the message to it
-		        if(ndef != null) {
-		            ndef.connect();
-		 
-		            // Make sure the tag is writable
-		            if(!ndef.isWritable()) {
-		                System.out.println("tag no es writable");
-		            }
-		 
-		            try {// Write the data to the tag		                
-		                ndef.writeNdefMessage(message);
-		                escritoBienEnTag = true;
-		            } catch (TagLostException tle) {
-		            	System.out.println("tag lost exception al escribir");		            	
-		            } catch (IOException ioe) {
-		            	System.out.println("error IO al escribir");
-		            } catch (FormatException fe) {
-		            	System.out.println("error format al escribir");
-		            }
-		        // If the tag is not formatted, format it with the message
-		        } else {
-		            NdefFormatable format = NdefFormatable.get(mytag);
-		            if(format != null) {
-		                try {
-		                    format.connect();
-		                    format.format(message);
-		                    escritoBienEnTag = true;
-		                } catch (TagLostException tle) {
-		                	System.out.println("tag lost exception al formatear");
-		                } catch (IOException ioe) {
-		                	System.out.println("error IO al formatear");
-		                } catch (FormatException fe) {
-		                	System.out.println("error format al formatear");
-		                }
-		            } else {
-		            	System.out.println("format es null");
-		            }
-		        }
-			}
+			Ndef ndef = Ndef.get(mytag);	    
+	        // If the tag is already formatted, just write the message to it
+	        if(ndef != null) {
+	    		escribirTagNFC(pedidoCodificadoEnBytes);
+	        // If the tag is not formatted, format it with the message
+	        } else {
+	            formatearTagNFC(pedidoCodificadoEnBytes);
+	            //mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);   
+	           // escribirTagNFC(pedidoCodificadoEnBytes);
+	        }
 	    } catch(Exception e) {
 	    	System.out.println("ultimo try");
 	    }
 	}
 		
+	private void escribirTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
+
+		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
+		escritoBienEnTag = false;
+		try {
+			Ndef ndef = Ndef.get(mytag);	    
+		        // If the tag is already formatted, just write the message to it
+		        if(ndef != null) {
+		        	if (cabePedidoEnTag(pedidoCodificadoEnBytes, ndef)){
+			        	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, null) };
+					    NdefMessage message = new NdefMessage(records); 
+			        	
+			            ndef.connect();
+			 
+			            // Make sure the tag is writable
+			            if(!ndef.isWritable()) {
+			                System.out.println("tag no es writable");
+			            }
+			 
+			            try {// Write the data to the tag		                
+			                ndef.writeNdefMessage(message);
+			                escritoBienEnTag = true;
+			            } catch (TagLostException tle) {
+			            	System.out.println("tag lost exception al escribir");		            	
+			            } catch (IOException ioe) {
+			            	System.out.println("error IO al escribir");
+			            } catch (FormatException fe) {
+			            	System.out.println("error format al escribir");
+			            }
+		        	}
+		        }
+	    } catch(Exception e) {
+	    	System.out.println("ultimo try");
+	    }
+	}	
+		
+	
+	private void formatearTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
+
+		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
+		escritoBienEnTag = false;
+		try {
+            NdefFormatable format = NdefFormatable.get(mytag);
+            if(format != null) {
+                try {
+                	NdefRecord[] records = { createRecord(pedidoCodificadoEnBytes, null) };
+    			    NdefMessage message = new NdefMessage(records); 
+                	
+                    format.connect();
+                    format.format(message);
+                    escritoBienEnTag = true;
+                } catch (TagLostException tle) {
+                	System.out.println("tag lost exception al formatear");
+                } catch (IOException ioe) {
+                	System.out.println("error IO al formatear");
+                } catch (FormatException fe) {
+                	System.out.println("error format al formatear");
+                }
+	        } else {
+	        	System.out.println("format es null");
+            }
+	    } catch(Exception e) {
+	    	System.out.println("ultimo try");
+	    }
+	}
+	
+	
 	/**
 	 * Devuelve un booleano informando de si el pedido cabe o no cabe en la
 	 * tarjeta
 	 */
 	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) {
-		return pedidoCodificadoEnBytes.size() < ndef.getMaxSize();		
+		return cabeEnTag = pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 8;
+		
 	}
 
 

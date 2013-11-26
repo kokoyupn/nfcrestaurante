@@ -90,16 +90,17 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		  SystemClock.sleep(1000);
 		  try {   
 				read(mytag);
-				//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
-				decodificar(mensajeEnBytesBueno);
-				//Sonido de confirmacion
-				sonidoManager.play(sonido);
+				if (!tagCorrupta && leidoBienEnTag){
+					//Decodificamos el mensaje leido de la tag y añadimos los platos a la base de datos.
+					decodificar(mensajeEnBytesBueno);
+					//Sonido de confirmacion
+					sonidoManager.play(sonido);
 				}
-			 catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
-				//Toast.makeText(ctx, ctx.getString(R.string.error_reading), Toast.LENGTH_LONG ).show();
+		  } catch (IOException e) {//Error en la lectura has alejado el dispositivo de la tag
+				leidoBienEnTag = false;
 				e.printStackTrace();
 			} catch (FormatException e) {
-				//Toast.makeText(ctx, ctx.getString(R.string.error_reading) , Toast.LENGTH_LONG ).show();
+				leidoBienEnTag = false;
 				e.printStackTrace();
 			}
 		  return null;
@@ -239,13 +240,18 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
          * bit_6 reserved for future use, must be 0
          * bit_5..0 length of IANA language code
          */
-		Ndef ndef = Ndef.get(tag);
-		NdefMessage message = ndef.getCachedNdefMessage();
-		byte[] mensajeEnBytes = message.toByteArray();
 		mensajeEnBytesBueno = new ArrayList<Byte>();
-		// Con este "for" eliminamos los datos inservibles del array de bytes
-		for (int i=0; i<mensajeEnBytes.length-7; i++){
-			mensajeEnBytesBueno.add(mensajeEnBytes[i+7]);
+		Ndef ndef = Ndef.get(tag);
+		if (ndef != null){
+			NdefMessage message = ndef.getCachedNdefMessage();
+			byte[] mensajeEnBytes = message.toByteArray();			
+			// Con este "for" eliminamos los datos inservibles del array de bytes
+			for (int i=0; i<mensajeEnBytes.length-7; i++){
+				mensajeEnBytesBueno.add(mensajeEnBytes[i+7]);
+			}
+			leidoBienEnTag = true;
+		} else{
+			tagCorrupta = true;
 		}
 	}
 		
@@ -292,12 +298,10 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		
 		Iterator<Byte> itPlatos = mensaje.iterator();
 		boolean parar=false;
-		tagCorrupta = false;
 		
 		int numRestaurante = decodificaByte(itPlatos.next());  //ID DEL REST
 		
-		restauranteCorrecto = numRestaurante == Integer.parseInt(codigoRest);
-		
+		restauranteCorrecto = numRestaurante == Integer.parseInt(codigoRest);		
 		
 		if (restauranteCorrecto){
 		
@@ -405,6 +409,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	   			//Meto el plato en la base de datos Mesas
 	       		ContentValues plato = new ContentValues();
 	        	int idUnico = PantallaMesasFragment.getIdUnico();
+	        	PantallaMesasFragment.getInstanciaClase().setUltimoIdentificadorUnico();
 	        	plato.put("NumMesa", numMesa);
 	        	plato.put("IdCamarero", idCamarero);
 	        	plato.put("IdPlato", idNFC);
