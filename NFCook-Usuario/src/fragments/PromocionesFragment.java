@@ -3,6 +3,8 @@ package fragments;
 import com.example.nfcook.R;
 
 import android.app.ActionBar;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ public class PromocionesFragment extends Fragment {
         // Recogemos ActionBar
         ActionBar actionbar = getActivity().getActionBar();
     	actionbar.setTitle(" PROMOCIONES");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));    	
     	
 		View viewPromociones = inflater.inflate(R.layout.promociones, container, false);
 		WebView webPromociones = (WebView) viewPromociones.findViewById(R.id.webViewPromociones);

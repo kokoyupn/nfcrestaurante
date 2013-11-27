@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,10 +39,12 @@ public class PantallaInicialRestaurante extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.inicio_restaurante, container, false);
 		
-		// Ponemos el título a la actividad
-        // Recogemos ActionBar
+		// Recogemos el actionbar
         ActionBar actionbar = getActivity().getActionBar();
+        // Ponemos el título a la actividad
     	actionbar.setTitle(" INICIO");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
 		
 		// Cargamos el mensaje de bienvenida
 		TextView textViewMensajeBienvenida = (TextView)vista.findViewById(R.id.textViewBienvenidaRestaurante);

@@ -6,7 +6,6 @@ import baseDatos.HandlerDB;
 
 import com.example.nfcook.R;
 
-import fragments.PantallaInicialRestaurante;
 import adapters.InfomacionPlatoPantallaReparto;
 import adapters.MiGridViewCalculadoraAdapter;
 import adapters.MiViewPagerAdapter;
@@ -14,13 +13,14 @@ import adapters.PadreGridViewCalculadora;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -74,10 +74,12 @@ public class Calculadora extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calculadora);
         
-        // Ponemos el título a la actividad
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
+        // Ponemos el título a la actividad
     	actionbar.setTitle(" CALCULADORA");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

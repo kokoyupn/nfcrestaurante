@@ -20,6 +20,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -125,10 +127,12 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 		
 		setContentView(R.layout.sincronizar_pedido_nfc);
 		
-		// Ponemos el título a la actividad
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
-    	actionbar.setTitle(" RECOGER CUENTA");
+    	// Ponemos el título a la actividad
+        actionbar.setTitle(" RECOGER CUENTA");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

@@ -16,6 +16,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,11 +55,13 @@ public class DescripcionPlato extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Ponemos el título a la actividad
+          
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
+        // Ponemos el título a la actividad
     	actionbar.setTitle(" SELECCIÓN DE PLATO");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

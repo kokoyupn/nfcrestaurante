@@ -41,6 +41,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -638,10 +639,12 @@ public class InicializarRestaurante extends FragmentActivity
 			        ft.replace(R.id.FrameLayoutPestanas, f);
 			        ft.commit();
 			        			        
-			        // Ponemos el título a la actividad
 			        // Recogemos ActionBar
 			        ActionBar actionbar = getActionBar();
-			    	actionbar.setTitle(" CONFIGURE SU MENÚ...");
+			    	// Ponemos el título a la actividad
+			        actionbar.setTitle(" CONFIGURE SU MENÚ...");
+			    	// Cambiamos el fondo al ActionBar
+			    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
 			        
 			        tabs.getTabWidget().getChildAt(InicializarRestaurante.getTabInferiorSeleccionado()).setBackgroundColor(Color.parseColor("#c38838"));
 				}

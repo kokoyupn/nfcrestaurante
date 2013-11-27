@@ -23,6 +23,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -125,7 +127,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			
 			// mejor aqui para buscar siempre que haga lo anterior que es lo importante
 			sonidoManager.play(sonido);
-			SystemClock.sleep(1000);
+			SystemClock.sleep(1000); // 1 segundo de postureo
 			return null;
 		}
 
@@ -147,10 +149,12 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		setContentView(R.layout.sincronizar_pedido_nfc);
 		
-		// Ponemos el título a la actividad
-        // Recogemos ActionBar
+		// Recogemos ActionBar      
         ActionBar actionbar = getActionBar();
-    	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	// Ponemos el título a la actividad  
+        actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

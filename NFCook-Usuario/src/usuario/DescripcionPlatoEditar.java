@@ -18,6 +18,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -51,10 +53,12 @@ public class DescripcionPlatoEditar extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Ponemos el título a la actividad
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
-    	actionbar.setTitle(" EDICIÓN DE PLATO");
+    	// Ponemos el título a la actividad
+        actionbar.setTitle(" EDICIÓN DE PLATO");
+        // Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
