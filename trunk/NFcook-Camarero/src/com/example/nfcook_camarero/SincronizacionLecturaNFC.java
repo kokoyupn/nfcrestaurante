@@ -26,6 +26,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -87,7 +89,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	   */
 	  @Override
 	  protected Void doInBackground(Void... params) {	  		  
-		  SystemClock.sleep(1000);
+		  //SystemClock.sleep(1000);
 		  try {   
 				read(mytag);
 				if (!tagCorrupta && leidoBienEnTag){
@@ -127,6 +129,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle("SINCRONIZAR PEDIDO");
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B3861")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

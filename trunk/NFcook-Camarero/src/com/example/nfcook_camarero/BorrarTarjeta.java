@@ -17,6 +17,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -117,7 +119,8 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
-    	actionbar.setTitle("BORRAR TAG");
+    	actionbar.setTitle("BORRAR TARJETA");
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B3861")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

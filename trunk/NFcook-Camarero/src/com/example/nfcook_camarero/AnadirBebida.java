@@ -26,6 +26,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,6 +78,7 @@ public class AnadirBebida extends Activity{
     	// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" AÑADIR BEBIDA");
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B3861")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
