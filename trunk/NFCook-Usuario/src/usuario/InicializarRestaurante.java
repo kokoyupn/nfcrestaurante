@@ -584,11 +584,11 @@ public class InicializarRestaurante extends FragmentActivity
             tabsSuperiores.getTabWidget().getChildAt(i).setFocusableInTouchMode(true);
         }
     
-    	// Determinamos el ancho de cada tab superior (225dp)
-//    	for(int i=0;i<listFragments.size();i++){
-//        tabsSuperiores.getTabWidget().getChildAt(i).setLayoutParams(new
-//               LinearLayout.LayoutParams(225,100));
-//    	}
+    	// Determinamos el ancho de cada tab superior (250dp), fijo solo el ancho y dejo el alto el que tiene
+    	for(int i=0;i<listFragments.size();i++){
+        tabsSuperiores.getTabWidget().getChildAt(i).setLayoutParams(new
+               LinearLayout.LayoutParams(250,tabsSuperiores.getTabWidget().getChildAt(i).getLayoutParams().height));
+    	}
     	
     	// Aqui creamos el viewPager y el pagerAdapter para el correcto slide entre pestañas
     	miPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), listFragments);
