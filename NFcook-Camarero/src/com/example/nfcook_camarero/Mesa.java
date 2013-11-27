@@ -1,7 +1,6 @@
 package com.example.nfcook_camarero;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import baseDatos.HandlerGenerico;
 import adapters.MiGridViewSeleccionarIngredientesPlato;
@@ -10,7 +9,6 @@ import adapters.HijoExpandableListEditar;
 import adapters.MiExpandableListEditarAdapter;
 import adapters.MiListMesaAdapter;
 import adapters.PadreExpandableListEditar;
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +20,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -112,6 +112,7 @@ public class Mesa extends Activity {
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MESA " + numMesa + ": PEDIDO ACTUAL");
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B3861")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

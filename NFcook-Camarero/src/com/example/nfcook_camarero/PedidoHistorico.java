@@ -11,6 +11,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -59,6 +61,7 @@ public class PedidoHistorico extends Activity {
 		// Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MESA "+ numMesa);
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B3861")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

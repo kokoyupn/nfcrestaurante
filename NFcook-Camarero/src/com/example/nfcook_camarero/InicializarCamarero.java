@@ -10,6 +10,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -65,6 +66,7 @@ public class InicializarCamarero extends FragmentActivity implements OnTabChange
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
     	actionbar.setTitle(" MENÚ PRINCIPAL");
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B3861")));
         
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);
