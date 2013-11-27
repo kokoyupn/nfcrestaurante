@@ -269,7 +269,7 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
     
     public void quitarSeparadorUltimoTab(){
     	// Cargamos el layout
-    	View vista =  tabs.getTabWidget().getChildTabViewAt(tabs.getChildCount()-1);
+    	View vista =  tabs.getTabWidget().getChildTabViewAt(tabs.getTabWidget().getChildCount() - 1);
     	// Cogemos el layout inferior y lo coloreamos de azul para indicar que el tab esta seleccionado
     	LinearLayout linear = (LinearLayout) vista.findViewById(R.id.separador_tab);
     	linear.setBackgroundColor(Color.parseColor("#000000"));

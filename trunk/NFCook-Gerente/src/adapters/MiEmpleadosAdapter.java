@@ -25,26 +25,26 @@ import android.view.LayoutInflater;
  */
 
 public class MiEmpleadosAdapter extends BaseAdapter{
-	private ArrayList<PadreListaEmpleados> contenido;
+	private ArrayList<PadreListaEmpleados> empleados;
 	private Activity activity;
 	private Context context;
 	 
 	 public MiEmpleadosAdapter(Activity activity, ArrayList<PadreListaEmpleados> contenido) {
 		 this.activity = activity;
 		 this.context = activity.getApplicationContext();
-		 this.contenido = contenido;
+		 this.empleados = contenido;
 	}
 	 
 	public int getCount() {
-		return contenido.size();
+		return empleados.size();
 	}
 	
 	public Object getItem(int pos) {
-		return contenido.get(pos);
+		return empleados.get(pos);
 	}
 	
 	public long getItemId(int pos) {
-		return 0;//contenido.get(pos).getDni();
+		return 0;
 	}
 
 	@Override
@@ -56,19 +56,19 @@ public class MiEmpleadosAdapter extends BaseAdapter{
 	        vista = inflater.inflate(R.layout.contenido_lista_empleados, null);
 	    }
 	             
-	    PadreListaEmpleados empleado = contenido.get(position);
+	    PadreListaEmpleados empleado = empleados.get(position);
 	     
 	    ImageView foto = (ImageView) vista.findViewById(R.id.imagenEmpleado);
-	    foto.setImageResource(context.getResources().getIdentifier(contenido.get(position).getFoto(),"drawable",context.getPackageName()));	
+	    foto.setImageResource(context.getResources().getIdentifier(empleados.get(position).getFoto(),"drawable",context.getPackageName()));	
 		
 	    TextView nombre = (TextView) vista.findViewById(R.id.nombre);
 	    nombre.setText(empleado.getNombre()+" "+empleado.getApellido1()+" "+empleado.getApellido2());
 	    
 	    TextView puesto = (TextView) vista.findViewById(R.id.puesto);
-	    puesto.setText("Puesto: " + empleado.getPuesto());
+	    puesto.setText(empleado.getPuesto());
 	    
 	    TextView idEmpleado = (TextView) vista.findViewById(R.id.idEmpleado);
-	    idEmpleado.setText("Numero de empleado: " + empleado.getIdEmpleado());
+	    idEmpleado.setText(empleado.getIdEmpleado());
 	    
 	   return vista;
 	}
