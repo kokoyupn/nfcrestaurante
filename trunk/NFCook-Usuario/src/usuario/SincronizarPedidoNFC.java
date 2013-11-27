@@ -92,10 +92,11 @@ public class SincronizarPedidoNFC extends Activity implements
 			try {
 				// si he sincronizado mal no tengo que leer porque ya tengo la copia y nadie mas ha escrito
 				// se reinician las copias de seguridad porque no se ha sincronizado mal
-				if (!heSincronizadoMalAntes){
+//				if (!heSincronizadoMalAntes){
 					hacerCopiaSeguridad(leerTagNFC(mytag)); // lee de la tarjeta y hace la copia de seguridad
-					System.out.println("Copia seguridad: " + copiaSeguridad.toString()); //TODO quitar
-				}
+					if(copiaSeguridad != null)
+						System.out.println("Copia seguridad: " + copiaSeguridad.toString()); //TODO quitar
+//				}
 				
 			} catch (IOException e1) {
 				leidoBienDeTag = false;
@@ -106,7 +107,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			}
 				
 			// escribimos
-			if (leidoBienDeTag && !esCuenta && !tagCorrupta) {
+			if (leidoBienDeTag && !esCuenta && (!tagCorrupta || heSincronizadoMalAntes)) {
 				
 				if (estoyEnRestauranteCorrecto(copiaSeguridad.get(0))){
 					// une la copia de seguridad con el pedido actual y añade al principio el rest
@@ -219,9 +220,12 @@ public class SincronizarPedidoNFC extends Activity implements
 					}
 				} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
 			} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-		} else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizó mal",Toast.LENGTH_LONG).show();
+		} else {
+			if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
+			else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizó mal",Toast.LENGTH_LONG).show();
+		}
 		
-		if (!heSincronizadoMalAntes){
+		if (!heSincronizadoMalAntes && leidoBienDeTag){
 			cerrarBasesDeDatos();
 			finish();
 		}
@@ -638,7 +642,7 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
 		escritoBienEnTag = false;
-		heSincronizadoMalAntes = true;
+        heSincronizadoMalAntes = false;
 		try {
 			Ndef ndef = Ndef.get(mytag);	    
 		        // If the tag is already formatted, just write the message to it
@@ -657,18 +661,22 @@ public class SincronizarPedidoNFC extends Activity implements
 			            try {// Write the data to the tag		                
 			                ndef.writeNdefMessage(message);
 			                escritoBienEnTag = true;
-			                heSincronizadoMalAntes = false;
+			                tagCorrupta = false;
 			            } catch (TagLostException tle) {
-			            	System.out.println("tag lost exception al escribir");		            	
+			            	System.out.println("tag lost exception al escribir");	
+			            	heSincronizadoMalAntes = true;
 			            } catch (IOException ioe) {
 			            	System.out.println("error IO al escribir");
+			            	heSincronizadoMalAntes = true;
 			            } catch (FormatException fe) {
 			            	System.out.println("error format al escribir");
+			            	heSincronizadoMalAntes = true;
 			            }
 		        	}
 		        }
 	    } catch(Exception e) {
 	    	System.out.println("ultimo try");
+	    	cabeEnTag = false;
 	    }
 	}	
 		
@@ -677,7 +685,7 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
 		escritoBienEnTag = false;
-		heSincronizadoMalAntes = true;
+		heSincronizadoMalAntes = false;
 		try {
             NdefFormatable format = NdefFormatable.get(mytag);
             if(format != null) {
@@ -688,13 +696,16 @@ public class SincronizarPedidoNFC extends Activity implements
                     format.connect();
                     format.format(message);
                     escritoBienEnTag = true;
-                    heSincronizadoMalAntes = false;
+                    tagCorrupta = false;
                 } catch (TagLostException tle) {
                 	System.out.println("tag lost exception al formatear");
+                	heSincronizadoMalAntes = true;
                 } catch (IOException ioe) {
                 	System.out.println("error IO al formatear");
+                	heSincronizadoMalAntes = true;
                 } catch (FormatException fe) {
                 	System.out.println("error format al formatear");
+                	heSincronizadoMalAntes = true;
                 }
 	        } else {
 	        	System.out.println("format es null");
@@ -710,7 +721,7 @@ public class SincronizarPedidoNFC extends Activity implements
 	 * tarjeta
 	 */
 	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) {
-		return cabeEnTag = pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 8;
+		return cabeEnTag = pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 15;
 		
 	}
 	
@@ -762,7 +773,7 @@ public class SincronizarPedidoNFC extends Activity implements
 					mensajeEnBytesBueno.add(mensajeEnBytes[i+10]);
 				}
 				leidoBienDeTag = true;
-			}else tagCorrupta = true;
+			}else leidoBienDeTag = false;
 		}else{
 			tagCorrupta = true;
 		}
@@ -771,12 +782,12 @@ public class SincronizarPedidoNFC extends Activity implements
 
 	private void hacerCopiaSeguridad(ArrayList<Byte> mensaje) {
 	
+		ArrayList<Byte> copiaSeguridadAux = new ArrayList<Byte>();
 		
-		copiaSeguridad = new ArrayList<Byte>();
 		
 		if(!tagCorrupta && leidoBienDeTag){
 			Iterator<Byte> itMensaje = mensaje.iterator();
-			copiaSeguridad.add(itMensaje.next()); //metemos el idRest
+			copiaSeguridadAux.add(itMensaje.next()); //metemos el idRest
 			
 			boolean parar = false;
 			while(itMensaje.hasNext() && !parar){					
@@ -789,27 +800,31 @@ public class SincronizarPedidoNFC extends Activity implements
 		
 				if(!parar){ //Si no ha acabado el mensaje
 					
-					copiaSeguridad.add(idByte); // metemos el idByte en la copia de seguridad
+					copiaSeguridadAux.add(idByte); // metemos el idByte en la copia de seguridad
 					
 					// extras
 					Byte extrasByte = itMensaje.next();
-					copiaSeguridad.add(extrasByte); // metemos extrasByte en la copia de seguridad
+					copiaSeguridadAux.add(extrasByte); // metemos extrasByte en la copia de seguridad
 					int numBytesExtras =  decodificaByte(extrasByte);
 					for (int i = 0; i < numBytesExtras; i++ )
-						copiaSeguridad.add(itMensaje.next());  //metemos los extras binarios en la copia de seguridad
+						copiaSeguridadAux.add(itMensaje.next());  //metemos los extras binarios en la copia de seguridad
 											
 					// ingredientes		
 					Byte ingredByte = itMensaje.next();
-					copiaSeguridad.add(ingredByte); // metemos ingredByte en copia de seguridad
+					copiaSeguridadAux.add(ingredByte); // metemos ingredByte en copia de seguridad
 					int numBytesIngredientes = decodificaByte(ingredByte);				
 					for(int i=0; i < numBytesIngredientes; i++){
-						copiaSeguridad.add(itMensaje.next()); // metemos ingred binarios en copia de seguridad
+						copiaSeguridadAux.add(itMensaje.next()); // metemos ingred binarios en copia de seguridad
 					}
 				}//if parar             
 			 }//while	
 			
 			if(!parar) 
 				tagCorrupta = true;
+			else{
+				copiaSeguridad = new ArrayList<Byte>();
+				copiaSeguridad.addAll(copiaSeguridadAux);
+			}
 		}
 	}
 	
