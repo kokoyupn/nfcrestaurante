@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -50,12 +52,14 @@ public class SincronizarPedidoBeamNFC extends Activity implements CreateNdefMess
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sincronizar_pedido_beam_nfc);
-        context= this;
-                     	
-        // Ponemos el título a la actividad
+        context= this;                     	
+       
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
-    	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	 // Ponemos el título a la actividad
+        actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

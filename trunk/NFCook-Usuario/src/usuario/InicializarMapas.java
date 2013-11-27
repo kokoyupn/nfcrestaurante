@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TabHost;
@@ -28,12 +29,14 @@ public class InicializarMapas extends TabActivity{
         setContentView(R.layout.contenedor_tabs_mapas);
         
         Bundle bundle = getIntent().getExtras();
-		restaurante = bundle.getString("nombreRestaurante");
-        
-     	// Ponemos el título a la actividad
+		restaurante = bundle.getString("nombreRestaurante");        
+     	
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
+        // Ponemos el título a la actividad
     	actionbar.setTitle(" MAPAS");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

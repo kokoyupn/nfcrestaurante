@@ -20,7 +20,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -41,12 +43,14 @@ public class SincronizarPedidoQR extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sincronizar_pedido_qr);   
-        
-     // Ponemos el título a la actividad
+        setContentView(R.layout.sincronizar_pedido_qr);           
+     
         // Recogemos ActionBar
         ActionBar actionbar = getActionBar();
-    	actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	// Ponemos el título a la actividad
+        actionbar.setTitle(" SINCRONIZAR PEDIDO");
+    	// Cambiamos el fondo al ActionBar
+    	actionbar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#B45F04")));
     	
     	// atras en el action bar
         actionbar.setDisplayHomeAsUpEnabled(true);

@@ -29,6 +29,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -69,9 +71,10 @@ public class CuentaFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.cuenta, container, false);
 		botonPayPalPulsado = false;
-		// Ponemos el título a la actividad
+		
         // Recogemos ActionBar
         ActionBar actionbar = getActivity().getActionBar();
+        // Ponemos el título a la actividad
     	actionbar.setTitle(" CUENTA");
     	
 		// Cargamos la estructura desde la que mostraremos en la listview
