@@ -45,7 +45,7 @@ public class EscribirCuentaPorNFC extends Activity implements
 	private PendingIntent pendingIntent;
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
-	private boolean cabeEnTag, escritoBienEnTag;
+	private boolean cabeEnTag, escritoBienEnTag, tengoNdefFormatable;
 	private byte idRestaurante;
 	private ArrayList<Byte> cuentaCodificadaEnBytes;
 	// Variables para el sonido
@@ -336,9 +336,6 @@ public class EscribirCuentaPorNFC extends Activity implements
 	    int    langLength = langBytes.length;
 	    
 	    byte[] payload    = new byte[ndef.getMaxSize() - (1 + langLength) - 12];
-	    System.out.println("PUTA");
-	    System.out.println(payload.length);
-	    System.out.println(ndef.getMaxSize());
 
 	    // set status byte (see NDEF spec for actual bits)
 	    payload[0] = (byte) langLength;
@@ -391,7 +388,17 @@ public class EscribirCuentaPorNFC extends Activity implements
 			Ndef ndef = Ndef.get(mytag);	    
 	        // If the tag is already formatted, just write the message to it
 	        if(ndef != null) {
-	    		escribirTagNFC(pedidoCodificadoEnBytes);
+	        	NdefMessage message = ndef.getCachedNdefMessage();
+	        	if(message != null){				
+	        		escribirTagNFC(pedidoCodificadoEnBytes);
+	        	}else{
+	        		
+					if (!tengoNdefFormatable)
+						escribirTagNFC(pedidoCodificadoEnBytes);
+					
+					else 
+						formatearTagNFC(pedidoCodificadoEnBytes);
+	        	}
 	        // If the tag is not formatted, format it with the message
 	        } else {
 	            formatearTagNFC(pedidoCodificadoEnBytes);
@@ -474,7 +481,7 @@ public class EscribirCuentaPorNFC extends Activity implements
 	 * tarjeta
 	 */
 	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) {
-		return cabeEnTag = pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 8;
+		return cabeEnTag = pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 15;
 		
 	}
 
@@ -484,6 +491,14 @@ public class EscribirCuentaPorNFC extends Activity implements
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			//Toast.makeText(this, this.getString(R.string.ok_detection),Toast.LENGTH_SHORT).show();
+			
+			ArrayList<String> tech = new ArrayList<String>();
+			for(int i = 0; i<mytag.getTechList().length; i++)
+				tech.add(mytag.getTechList()[i]);
+			
+			if (tech.contains("android.nfc.tech.NdefFormatable")){
+				tengoNdefFormatable = true;
+			}
 		}
 		if (mytag != null) {
 			// ejecuta el progressDialog, codifica, escribe en tag e intercambia

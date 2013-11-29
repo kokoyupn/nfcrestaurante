@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import baseDatos.HandlerGenerico;
 import fragments.PantallaMesasFragment;
 import android.annotation.SuppressLint;
@@ -51,7 +52,7 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 	IntentFilter writeTagFilters[];
 	Tag mytag;
 	Context ctx;
-	boolean leidoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta;
+	boolean leidoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta, tengoNdefFormatable;
 	ProgressDialog	progressDialogSinc;
 	
 	HandlerGenerico sqlMesas,sqlRestaurante,sqlEquivalencia;	
@@ -255,7 +256,11 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 					mensajeEnBytesBueno.add(mensajeEnBytes[i+10]);
 				}
 				leidoBienEnTag = true;
-			} else leidoBienEnTag = false;
+			} else {
+				if (!tengoNdefFormatable)
+					tagCorrupta = true;	
+			    else leidoBienEnTag = false;
+			}
 		} else{
 			tagCorrupta = true;
 		}
@@ -272,6 +277,14 @@ public class SincronizacionLecturaNFC extends Activity implements DialogInterfac
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
 			//Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
 	
+			ArrayList<String> tech = new ArrayList<String>();
+			for(int i = 0; i<mytag.getTechList().length; i++)
+				tech.add(mytag.getTechList()[i]);
+			
+			if (tech.contains("android.nfc.tech.NdefFormatable")){
+				tengoNdefFormatable = true;
+			}
+			
 			if(mytag == null){
 				Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
 			}else {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import baseDatos.HandlerDB;
@@ -56,13 +57,15 @@ public class SincronizarPedidoNFC extends Activity implements
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
 	private ArrayList<Byte> pedidoCodificadoEnBytes;
-	private boolean cabeEnTag, leidoBienDeTag, escritoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta;
+	private boolean cabeEnTag, leidoBienDeTag, escritoBienEnTag, tagCorrupta, restauranteCorrecto, esCuenta, 
+		 tagPirateada, tengoNdefFormatable;
 	private static boolean heSincronizadoMalAntes;
 	private static ArrayList<Byte> copiaSeguridad;
 	private String abreviaturaRest, codigoRest;
 	// Variables para el sonido
 	SonidoManager sonidoManager;
 	int sonido;
+	
 
 	/**
 	 * Clase interna necesaria para ejecutar en segundo plano tareas
@@ -109,7 +112,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			}
 				
 			// escribimos
-			if (leidoBienDeTag && !esCuenta && (!tagCorrupta || heSincronizadoMalAntes)) {
+			if (!tagPirateada && leidoBienDeTag && !esCuenta && (!tagCorrupta || heSincronizadoMalAntes)) {
 				
 				if (estoyEnRestauranteCorrecto(copiaSeguridad.get(0))){
 					// une la copia de seguridad con el pedido actual y añade al principio el rest
@@ -185,7 +188,7 @@ public class SincronizarPedidoNFC extends Activity implements
 		obtenerIdRestYAbreviatura();		
 		
 		//inicializamos variables para mostrar errores
-		escritoBienEnTag = tagCorrupta = restauranteCorrecto = esCuenta = false;
+		escritoBienEnTag = tagCorrupta = restauranteCorrecto = esCuenta = tagPirateada = false;
 		leidoBienDeTag = cabeEnTag = true;
 	}
 	
@@ -209,25 +212,30 @@ public class SincronizarPedidoNFC extends Activity implements
 		Intent intent = new Intent();
 		intent.putExtra("Origen", "Pedido");
 		setResult(RESULT_CANCELED, intent);
-		if (!tagCorrupta) {
-			if (leidoBienDeTag) {
-				if (!esCuenta){
-					if (escritoBienEnTag){
-						enviarPedidoACuenta();
-						setResult(RESULT_OK, intent);
-						Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
-					} else {						
-						if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
-						else if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
-						else if (!restauranteCorrecto) Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
-						else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();	
-					}
-				} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
-			} else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
-		} else {
-			if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
-			else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizó mal",Toast.LENGTH_LONG).show();
-		}
+		if (!tagPirateada){
+			if (!tagCorrupta) {
+				if (leidoBienDeTag) {
+					if (!esCuenta){
+						if (escritoBienEnTag){
+							enviarPedidoACuenta();
+							setResult(RESULT_OK, intent);
+							Toast.makeText(this,"Pedido sincronizado correctamente. Puedes verlo en cuenta",Toast.LENGTH_LONG).show();
+						} else {						
+							if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
+							else if (!cabeEnTag) Toast.makeText(this,"Pedido no sincronizado. No cabe en la tarjeta. Llama a camarero o usa otro metodo de transmision",Toast.LENGTH_LONG).show();
+							else if (!restauranteCorrecto) Toast.makeText(this,"Pedido no sincronizado. No estas en el restaurante correcto",Toast.LENGTH_LONG).show();
+							else Toast.makeText(this,this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();	
+						}
+					} else Toast.makeText(this,"Pedido no sincronizado. Avisa al camarero porque hay una cuenta en la tarjeta",Toast.LENGTH_LONG).show();
+				} else {
+					
+					Toast.makeText(this, this.getString(R.string.error_escritura),Toast.LENGTH_LONG).show();
+				}
+			} else {
+				if (heSincronizadoMalAntes) Toast.makeText(this,"Has levantado el dispositvo antes de tiempo. Tienes que volver a sincronizar",Toast.LENGTH_LONG).show();
+				else Toast.makeText(this,"Pedido no sincronizado. Tiene que sincronizar la persona que sincronizó mal",Toast.LENGTH_LONG).show();
+			}
+		} else Toast.makeText(this,"La tarjeta está averiada. Avisa al camarero para que la arregle",Toast.LENGTH_LONG).show();
 		
 		if (!heSincronizadoMalAntes && leidoBienDeTag){
 			cerrarBasesDeDatos();
@@ -575,9 +583,6 @@ public class SincronizarPedidoNFC extends Activity implements
 	    int    langLength = langBytes.length;
 	    
 	    byte[] payload    = new byte[ndef.getMaxSize() - (1 + langLength) - 12];
-	    System.out.println("PUTA");
-	    System.out.println(payload.length);
-	    System.out.println(ndef.getMaxSize());
 
 	    // set status byte (see NDEF spec for actual bits)
 	    payload[0] = (byte) langLength;
@@ -630,7 +635,18 @@ public class SincronizarPedidoNFC extends Activity implements
 			Ndef ndef = Ndef.get(mytag);	    
 	        // If the tag is already formatted, just write the message to it
 	        if(ndef != null) {
-	    		escribirTagNFC(pedidoCodificadoEnBytes);
+	        	NdefMessage message = ndef.getCachedNdefMessage();
+	        	if(message != null){				
+	        		escribirTagNFC(pedidoCodificadoEnBytes);
+	        	}else{
+	        		
+					if (!tengoNdefFormatable){
+						if (copiaSeguridad != null)
+							escribirTagNFC(pedidoCodificadoEnBytes);
+					}
+					else 
+						formatearTagNFC(pedidoCodificadoEnBytes);
+	        	}
 	        // If the tag is not formatted, format it with the message
 	        } else {
 	            formatearTagNFC(pedidoCodificadoEnBytes);
@@ -646,7 +662,6 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
 		escritoBienEnTag = false;
-        heSincronizadoMalAntes = false;
 		try {
 			Ndef ndef = Ndef.get(mytag);	    
 		        // If the tag is already formatted, just write the message to it
@@ -666,6 +681,7 @@ public class SincronizarPedidoNFC extends Activity implements
 			                ndef.writeNdefMessage(message);
 			                escritoBienEnTag = true;
 			                tagCorrupta = false;
+			                heSincronizadoMalAntes = false;
 			            } catch (TagLostException tle) {
 			            	System.out.println("tag lost exception al escribir");	
 			            	heSincronizadoMalAntes = true;
@@ -689,7 +705,6 @@ public class SincronizarPedidoNFC extends Activity implements
 
 		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
 		escritoBienEnTag = false;
-		heSincronizadoMalAntes = false;
 		try {
             NdefFormatable format = NdefFormatable.get(mytag);
             if(format != null) {
@@ -701,6 +716,7 @@ public class SincronizarPedidoNFC extends Activity implements
                     format.format(message);
                     escritoBienEnTag = true;
                     tagCorrupta = false;
+                    heSincronizadoMalAntes = false;
                 } catch (TagLostException tle) {
                 	System.out.println("tag lost exception al formatear");
                 	heSincronizadoMalAntes = true;
@@ -734,6 +750,14 @@ public class SincronizarPedidoNFC extends Activity implements
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			//Toast.makeText(this, this.getString(R.string.tag_detectada), Toast.LENGTH_SHORT).show();
+			
+			ArrayList<String> tech = new ArrayList<String>();
+			for(int i = 0; i<mytag.getTechList().length; i++)
+				tech.add(mytag.getTechList()[i]);
+			
+			if (tech.contains("android.nfc.tech.NdefFormatable")){
+				tengoNdefFormatable = true;
+			}
 		}
 		if (mytag != null) {
 			// ejecuta el progressDialog, codifica, escribe en tag e intercambia
@@ -777,7 +801,15 @@ public class SincronizarPedidoNFC extends Activity implements
 					mensajeEnBytesBueno.add(mensajeEnBytes[i+10]);
 				}
 				leidoBienDeTag = true;
-			}else leidoBienDeTag = false;
+			} else {
+				
+				if (!tengoNdefFormatable){
+					tagCorrupta = true;
+					if (copiaSeguridad != null)
+						mensajeEnBytesBueno.addAll(copiaSeguridad);	
+				}
+			    else leidoBienDeTag = false;
+			}
 		}else{
 			tagCorrupta = true;
 		}
@@ -787,48 +819,53 @@ public class SincronizarPedidoNFC extends Activity implements
 	private void hacerCopiaSeguridad(ArrayList<Byte> mensaje) {
 	
 		ArrayList<Byte> copiaSeguridadAux = new ArrayList<Byte>();
-		
-		
-		if(!tagCorrupta && leidoBienDeTag){
-			Iterator<Byte> itMensaje = mensaje.iterator();
-			copiaSeguridadAux.add(itMensaje.next()); //metemos el idRest
+		tagPirateada = false;
+		try {
 			
-			boolean parar = false;
-			while(itMensaje.hasNext() && !parar){					
-		
-				Byte idByte = itMensaje.next();
-				int id = decodificaByte(idByte);
-					
-				parar = id==255 || id==254;//El mensaje termina con un -1 en la tag
-				esCuenta = id==254;			
-		
-				if(!parar){ //Si no ha acabado el mensaje
-					
-					copiaSeguridadAux.add(idByte); // metemos el idByte en la copia de seguridad
-					
-					// extras
-					Byte extrasByte = itMensaje.next();
-					copiaSeguridadAux.add(extrasByte); // metemos extrasByte en la copia de seguridad
-					int numBytesExtras =  decodificaByte(extrasByte);
-					for (int i = 0; i < numBytesExtras; i++ )
-						copiaSeguridadAux.add(itMensaje.next());  //metemos los extras binarios en la copia de seguridad
-											
-					// ingredientes		
-					Byte ingredByte = itMensaje.next();
-					copiaSeguridadAux.add(ingredByte); // metemos ingredByte en copia de seguridad
-					int numBytesIngredientes = decodificaByte(ingredByte);				
-					for(int i=0; i < numBytesIngredientes; i++){
-						copiaSeguridadAux.add(itMensaje.next()); // metemos ingred binarios en copia de seguridad
-					}
-				}//if parar             
-			 }//while	
+			if(!tagCorrupta && leidoBienDeTag){
+				Iterator<Byte> itMensaje = mensaje.iterator();
+				copiaSeguridadAux.add(itMensaje.next()); //metemos el idRest
+				
+				boolean parar = false;
+				while(itMensaje.hasNext() && !parar){					
 			
-			if(!parar) 
-				tagCorrupta = true;
-			else{
-				copiaSeguridad = new ArrayList<Byte>();
-				copiaSeguridad.addAll(copiaSeguridadAux);
+					Byte idByte = itMensaje.next();
+					int id = decodificaByte(idByte);
+						
+					parar = id==255 || id==254;//El mensaje termina con un -1 en la tag
+					esCuenta = id==254;			
+			
+					if(!parar){ //Si no ha acabado el mensaje
+						
+						copiaSeguridadAux.add(idByte); // metemos el idByte en la copia de seguridad
+						
+						// extras
+						Byte extrasByte = itMensaje.next();
+						copiaSeguridadAux.add(extrasByte); // metemos extrasByte en la copia de seguridad
+						int numBytesExtras =  decodificaByte(extrasByte);
+						for (int i = 0; i < numBytesExtras; i++ )
+							copiaSeguridadAux.add(itMensaje.next());  //metemos los extras binarios en la copia de seguridad
+												
+						// ingredientes		
+						Byte ingredByte = itMensaje.next();
+						copiaSeguridadAux.add(ingredByte); // metemos ingredByte en copia de seguridad
+						int numBytesIngredientes = decodificaByte(ingredByte);				
+						for(int i=0; i < numBytesIngredientes; i++){
+							copiaSeguridadAux.add(itMensaje.next()); // metemos ingred binarios en copia de seguridad
+						}
+					}//if parar             
+				 }//while	
+				
+				if(!parar) 
+					tagCorrupta = true;
+				else{
+					copiaSeguridad = new ArrayList<Byte>();
+					copiaSeguridad.addAll(copiaSeguridadAux);
+				}
 			}
+		} catch (NoSuchElementException e){
+			e.printStackTrace();
+			tagPirateada = true;			
 		}
 	}
 	

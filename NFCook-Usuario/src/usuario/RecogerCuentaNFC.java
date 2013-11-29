@@ -45,7 +45,7 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 	private PendingIntent pendingIntent;
 	private IntentFilter writeTagFilters[];
 	private Tag mytag;
-	private boolean restauranteCorrecto, leidoBienDeTag, esCuenta, tagCorrupta;
+	private boolean restauranteCorrecto, leidoBienDeTag, esCuenta, tagCorrupta, tengoNdefFormatable;
 	private String restaurante, abreviaturaRest, codigoRest;
 	private ArrayList<Byte> cuentaLeidaEnBytes;
 	
@@ -386,6 +386,15 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			//Toast.makeText(this, this.getString(R.string.tag_detectada), Toast.LENGTH_SHORT).show();
+			
+			ArrayList<String> tech = new ArrayList<String>();
+			for(int i = 0; i<mytag.getTechList().length; i++)
+				tech.add(mytag.getTechList()[i]);
+			
+			if (tech.contains("android.nfc.tech.NdefFormatable")){
+				tengoNdefFormatable = true;
+			}
+			
 		}
 		if (mytag != null) {
 			// ejecuta el progressDialog, codifica, escribe en tag e intercambia
@@ -439,7 +448,11 @@ public class RecogerCuentaNFC extends Activity implements DialogInterface.OnDism
 				for (int i=0; i<mensajeEnBytes.length-10; i++){
 					cuentaLeida.add(mensajeEnBytes[i+10]);
 				}
-			} else leidoBienDeTag = false;
+			} else {
+				if (!tengoNdefFormatable)
+					tagCorrupta = true;	
+			    else leidoBienDeTag = false;
+			}
 		} else tagCorrupta = true;
 		
 		return cuentaLeida;
