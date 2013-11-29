@@ -45,7 +45,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	Tag mytag;
 	Context ctx;
 	String[][] mTechLists;
-	boolean escritoBienEnTag;
+	boolean escritoBienEnTag, tengoNdefFormatable;
 	String restaurante, codigoRest, abreviaturaRest;
 	ProgressDialog	progressDialogSinc;
 
@@ -213,9 +213,6 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	    int    langLength = langBytes.length;
 	    
 	    byte[] payload    = new byte[ndef.getMaxSize() - (1 + langLength) - 12];
-	    System.out.println("PUTA");
-	    System.out.println(payload.length);
-	    System.out.println(ndef.getMaxSize());
 
 	    // set status byte (see NDEF spec for actual bits)
 	    payload[0] = (byte) langLength;
@@ -267,11 +264,21 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 		try {
 			Ndef ndef = Ndef.get(mytag);	    
 	        // If the tag is already formatted, just write the message to it
-	        if(ndef != null) {
-	    		escribirTagNFC(pedidoCodificadoEnBytes);
+			if(ndef != null) {
+	        	NdefMessage message = ndef.getCachedNdefMessage();
+	        	if(message != null){				
+	        		escribirTagNFC(pedidoCodificadoEnBytes);
+	        	}else{
+	        		
+					if (!tengoNdefFormatable)
+						escribirTagNFC(pedidoCodificadoEnBytes);
+					
+					else 
+						formatearTagNFC(pedidoCodificadoEnBytes);
+	        	}
 	        // If the tag is not formatted, format it with the message
 	        } else {
-	            formatearTagNFC(pedidoCodificadoEnBytes, ndef);
+	            formatearTagNFC(pedidoCodificadoEnBytes);
 	            //mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);   
 	           // escribirTagNFC(pedidoCodificadoEnBytes);
 	        }
@@ -317,7 +324,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	}	
 		
 	
-	private void formatearTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) throws IOException, FormatException {
+	private void formatearTagNFC(ArrayList<Byte> pedidoCodificadoEnBytes) throws IOException, FormatException {
 
 		// inicializacion de estas variables para no tener que ponerlas siempre en el catch
 		escritoBienEnTag = false;
@@ -352,7 +359,7 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 	 * tarjeta
 	 */
 	private boolean cabePedidoEnTag(ArrayList<Byte> pedidoCodificadoEnBytes, Ndef ndef) {
-		return pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 8;
+		return pedidoCodificadoEnBytes.size() < ndef.getMaxSize() - 15;
 		
 	}
 
@@ -380,6 +387,15 @@ public class BorrarTarjeta extends Activity implements DialogInterface.OnDismiss
 		if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
 			mytag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);    
 			//Toast.makeText(this, this.getString(R.string.ok_detection), Toast.LENGTH_LONG ).show();
+			
+			ArrayList<String> tech = new ArrayList<String>();
+			for(int i = 0; i<mytag.getTechList().length; i++)
+				tech.add(mytag.getTechList()[i]);
+			
+			if (tech.contains("android.nfc.tech.NdefFormatable")){
+				tengoNdefFormatable = true;
+			}
+			
 			if(mytag == null){
 					Toast.makeText(this, this.getString(R.string.error_detected), Toast.LENGTH_LONG ).show();
 			}else {
