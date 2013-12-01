@@ -268,17 +268,14 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onPageSelected(int pos) {
-		// TODO Auto-generated method stub
 		tabs.setCurrentTab(pos);
 	}
 	
