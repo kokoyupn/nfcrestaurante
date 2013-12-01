@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import fragments.ClasificacionPlatosFragment;
 import fragments.EmpleadosFragment;
@@ -31,6 +30,13 @@ import fragments.IngresosFragment;
  * @author: Alejandro Moran
  * 
  * Esta clase contendrá toda la información de un restaurante.
+ * La información del restaurante se organizará por tabs, almacenando cada uno su información correspondiente.
+ * Los tabs son los siguientes:
+ * 
+ * - Informacion: datos correspondientes al restaurante (telefono, localización, foto, valoración...)
+ * - Empleados: información de todos los empleados
+ * - Facturacion: toda la información sobre la facturación del mismo
+ * - Ranking de platos: todos los platos ordenados en orden descendente en función de la demanda o por ingresos
  * 
  * Se accede a ella al seleccionar un restaurante, 
  * en la lista inicial.
@@ -38,7 +44,6 @@ import fragments.IngresosFragment;
 **/
 public class InicializarInformacionRestaurante extends FragmentActivity implements OnTabChangeListener, OnPageChangeListener {
 
-	// Tabs: Informacion, Empleados, Ingresos y Clasificacion de platos
 	private static TabHost tabs;
 	private View tabContentView;
 	private static ViewPagerBloquearSlide miViewPager;
@@ -48,24 +53,6 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
 	private boolean sinInfo;
 	
 	private int ultimoTabSeleccionado;
-	
-	
-    class TabFactory implements TabContentFactory {
-   	 
-        private final Context mContext;
- 
-        public TabFactory(Context context) {
-            mContext = context;
-        }
- 
-        @Override
-		public View createTabContent(String tag) {
-            View v = new View(mContext);
-            v.setMinimumWidth(0);
-            v.setMinimumHeight(0);
-            return v;
-        }
-    }
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {        
