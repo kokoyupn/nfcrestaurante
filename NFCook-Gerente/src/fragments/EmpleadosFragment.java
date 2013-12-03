@@ -22,8 +22,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import baseDatos.HandlerGenerico;
 
-
-import com.example.nfcook_gerente.InfoEmpleado;
+import com.example.nfcook_gerente.InicializarDatosEmpleado;
 import com.example.nfcook_gerente.R;
 
 
@@ -78,7 +77,7 @@ public class EmpleadosFragment extends Fragment{
             	//nos llevara a la pantalla siguiente          	
             	PadreListaEmpleados pulsado= empleados.get(position);
                 //dbMesas.close();
-            	Intent intent = new Intent(EmpleadosFragment.this.getActivity(),InfoEmpleado.class);
+            	Intent intent = new Intent(EmpleadosFragment.this.getActivity(), InicializarDatosEmpleado.class);
             	//Le pasamos a la siguiente pantalla el id del empleado que ha pulsado para luego consultar en la BD
             	intent.putExtra("IdEmpleado",pulsado.getIdEmpleado());
         		//Lanzamos la actividad
@@ -149,7 +148,7 @@ public class EmpleadosFragment extends Fragment{
 					   String idEmpleado = c.getString(0);
 					   
 					   //Accedes a otra pantalla con los datos del empleado
-					   Intent intent = new Intent(EmpleadosFragment.this.getActivity(),InfoEmpleado.class);
+					   Intent intent = new Intent(EmpleadosFragment.this.getActivity(), InicializarDatosEmpleado.class);
 					   //Le pasamos a la siguiente pantalla el el id del empleado
 					   intent.putExtra("IdEmpleado",idEmpleado);					   
 					   //Lanzamos la actividad
