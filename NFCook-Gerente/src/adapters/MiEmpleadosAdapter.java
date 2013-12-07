@@ -67,9 +67,6 @@ public class MiEmpleadosAdapter extends BaseAdapter{
 	    TextView puesto = (TextView) vista.findViewById(R.id.puesto);
 	    puesto.setText(empleado.getPuesto());
 	    
-	    TextView idEmpleado = (TextView) vista.findViewById(R.id.idEmpleado);
-	    idEmpleado.setText(empleado.getIdEmpleado());
-	    
 	   return vista;
 	}
 }

@@ -5,19 +5,31 @@
      android:orientation="vertical" 
      android:background="@color/verde5" >
 
-    
-    <AutoCompleteTextView
-	     android:id="@+id/autoCompleteTextViewBuscadorEmpleados	"
-	     android:layout_width="match_parent"
-	     android:layout_height="wrap_content"
-	     android:background="?android:attr/editTextBackground"
-	     android:drawableLeft="@drawable/buscarempleado"
-	     android:ems="15"
-	     android:hint="Buscar"
-	     android:textSize="20dp" >
-	
-	     <requestFocus />
-	 </AutoCompleteTextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewBuscadorEmpleados	"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="?android:attr/editTextBackground"
+            android:drawableLeft="@drawable/buscarempleado"
+            android:ems="15"
+            android:hint="Buscar"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/filtrar" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listaEmpleados"

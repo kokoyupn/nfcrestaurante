@@ -70,6 +70,9 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         // Quitamos el separador del último tab por una cuestión estética
         quitarSeparadorUltimoTab();
         
+        // Ponemos el título del tab que habrá seleccionado por defecto
+	    getActionBar().setTitle(" INFORMACIÓN DEL RESTAURANTE...");
+	  	
 		// Marcamos el tab de informacion como inicialo el de empleados si se han seleccionado varios restaurantes
         tabs.setCurrentTab(0);
         ultimoTabSeleccionado = 0;
