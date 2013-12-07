@@ -2,6 +2,7 @@ package com.example.nfcook_gerente;
 
 import java.util.ArrayList;
 
+import fragments.FichaFragment;
 import adapters.PagerAdapter;
 import adapters.ViewPagerBloquearSlide;
 import android.content.Context;
@@ -12,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -45,7 +45,7 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
 	private static ViewPagerBloquearSlide miViewPager;
 	private PagerAdapter miPagerAdapter;
 	private static ArrayList<Fragment> listFragments;
-	private String idEmpleado;
+	private Bundle bundleIdEmpleado;
 	
 	private int ultimoTabSeleccionado;
     
@@ -54,8 +54,8 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contenedor_tabs_datos_empleado);
         
-        // Recogemos el id del empleado para poder cargar luego su información correspondiente
-        idEmpleado = getIntent().getExtras().getString("IdEmpleado");
+        // Recogemos la info del empleado para poder cargar luego su información correspondiente
+        bundleIdEmpleado = getIntent().getExtras();
         
         inicializarTabs();
         cargarTabsEInicializarViewPages();
@@ -63,6 +63,9 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
         // Quitamos el separador del último tab por una cuestión estética
         quitarSeparadorUltimoTab();
         
+    	// Ponemos el título del tab que habrá seleccionado por defecto
+	  	getActionBar().setTitle(" FICHA...");
+	  	
 		// Marcamos el tab de informacion como inicialo el de empleados si se han seleccionado varios restaurantes
         tabs.setCurrentTab(0);
         ultimoTabSeleccionado = 0;
@@ -97,7 +100,7 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
         // Lo añadimos
         tabs.addTab(spec);
 		// Creamos el fragment de cada tab
-        //listFragments.add(Fragment.instantiate(this, InformacionRestauranteFragment.class.getName(), bundleInfoRestaurante));  
+        listFragments.add(Fragment.instantiate(this, FichaFragment.class.getName(), bundleIdEmpleado));  
    
         // Creamos el tab2 --> Empleados
         spec = tabs.newTabSpec("tabEmpleados");
@@ -147,7 +150,7 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
     		textoTab.setText("Facturación");
     		imagenTab.setImageResource(getResources().getIdentifier("graficafacturacion","drawable",this.getPackageName()));
     	}else if(nombreTab.equals("tabTablaFacturacion")){
-    		textoTab.setText("Facturacion");
+    		textoTab.setText("Facturación");
     		imagenTab.setImageResource(getResources().getIdentifier("tablafacturacion","drawable",this.getPackageName()));
     	}
     	return tabContentView;
@@ -184,19 +187,19 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
 		// Actualizamos el titulo del ActionBar
 		switch(tabSeleccionado){
 			case 0: 
-			    getActionBar().setTitle(" INFORMACIÓN DEL RESTAURANTE...");
+			    getActionBar().setTitle(" FICHA...");
 			    break;
 			case 1:
-				getActionBar().setTitle(" EMPLEADOS...");
+				getActionBar().setTitle(" JORNADA...");
 			    break;
 			case 2:
-				getActionBar().setTitle(" FACTURACIÓN...");
+				getActionBar().setTitle(" GRÁFICA FACTURACIÓN...");
 			    break;
 			case 3:
-				getActionBar().setTitle(" RANKING DE PLATOS...");
+				getActionBar().setTitle(" TABLA FACTURACIÓN...");
 			    break;
 			default:
-				getActionBar().setTitle(" NFCOOK GERENTE...");
+				getActionBar().setTitle(" DATOS EMPLEADO...");
 		}
 		
 		// Desmarcamos el tab que acabamos de seleccionar, es simplemente una cuestion estetica
@@ -258,18 +261,4 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
 		tabs.setCurrentTab(pos);
 	}
 	
-	@Override
-	public void onPause () {
-		super.onPause();
-		Log.v("pause", "onPause"); 
-	}       
-     	
-	public static void pausaViewPager(){
-		//Sacamos el estado de los tabs
-		boolean estadoTabs = tabs.getTabWidget().getChildAt(0).isEnabled();
-
-		tabs.getTabWidget().setEnabled(!estadoTabs);
-		
-		miViewPager.setPagingEnabled(!miViewPager.getPagingEnabled());		
-	}
 }
