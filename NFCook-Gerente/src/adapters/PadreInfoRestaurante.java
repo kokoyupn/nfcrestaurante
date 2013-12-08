@@ -28,13 +28,28 @@ public class PadreInfoRestaurante {
 		repetidos.add(id);
 	}
 
-
 	public String getNombreRestaurante() {
 		return nombreRestaurante;
 	}
 	
 	public int getId() {
 		return repetidos.get(0);
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public ArrayList<Integer> getRepetidos() {
+		return repetidos;
 	}
 
 }
