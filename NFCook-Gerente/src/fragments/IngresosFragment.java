@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -71,12 +72,15 @@ public class IngresosFragment extends Fragment{
 	private String tipo;
 	public boolean esGeneral, modoZoomActivado, leyendaActivada;
 	private String[] ids;
-	private int dia,mes,anio;
+	private int dia,mes,anio;      
 	private HandlerGenerico sqlIngresos;
 	private SQLiteDatabase dbIngresos;
 	private MultitouchPlot myMultitouchPlot;
 	private ArrayList<String> spinnerAnio;
+	private ArrayList<Integer> coloresUsados;
+	private Number maximoGlobal;
 	
+	@SuppressLint("SimpleDateFormat")
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 	
 		vista = inflater.inflate(R.layout.grafica, container, false);
@@ -91,13 +95,15 @@ public class IngresosFragment extends Fragment{
 	    esGeneral =  bundleInfo.getBoolean("esGeneral");
 	    modoZoomActivado = false;
 	    leyendaActivada = true;
+	    coloresUsados = new ArrayList<Integer>();
+	    maximoGlobal = 0;
 	    
 		abrirIngresosDB();
 	    cargarSpinnerAnio();
 	    
 		//Por defecto se carga al año actual
 		Calendar cal = new GregorianCalendar();
-		Date date = cal.getTime();
+		Date date = cal.getTime(); 
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String formatteDate = df.format(date);
 		dia = Integer.parseInt(formatteDate.substring(8, 10));
@@ -107,7 +113,7 @@ public class IngresosFragment extends Fragment{
 	    cargarAlAnio();
 
 		//Establezco los oyentes de los botones
-		ImageView alDia = (ImageView) vista.findViewById(R.id.botonPorDia);
+		Button alDia = (Button) vista.findViewById(R.id.botonPorDia);
 		alDia.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -116,7 +122,7 @@ public class IngresosFragment extends Fragment{
 			}
 		});
 		
-		ImageView alMes = (ImageView) vista.findViewById(R.id.botonPorMes);
+		Button alMes = (Button) vista.findViewById(R.id.botonPorMes);
 		alMes.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -125,7 +131,7 @@ public class IngresosFragment extends Fragment{
 			}
 		});
 		
-		ImageView alAnio = (ImageView) vista.findViewById(R.id.botonPorAnio);
+		Button alAnio = (Button) vista.findViewById(R.id.botonPorAnio);
 		alAnio.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -159,7 +165,7 @@ public class IngresosFragment extends Fragment{
 					icono = "zoom_lock";
 				int img = getActivity().getResources().getIdentifier(icono,"drawable", getActivity().getPackageName());
 			    zoom.setImageResource(img);
-			}
+			}      
 		}); 
 		
 		
@@ -168,7 +174,7 @@ public class IngresosFragment extends Fragment{
 			
 			@Override
 			public void onClick(View v) {
-				//cambiamos el icono
+				//cambiamos el icono       
 				String icono = null;
 				if(leyendaActivada){
 					myMultitouchPlot.getLegendWidget().setVisible(false);
@@ -211,11 +217,11 @@ public class IngresosFragment extends Fragment{
 		    	ejeY[k+1] = temporal.get(k).getImporte();// = {4,10,11,7,13,3,8,16,36,18,19,23,55,1,9};//Son los valores del eje Y
 		    	ejeX[k+1] = Double.parseDouble(temporal.get(k).getTiempo());
 		    }
-		    
-		    Random rnd = new Random();				    
-		  //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-		    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-	        LineAndPointFormatter formato = new LineAndPointFormatter(color, color, null);
+		    				    
+		    //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
+		    //int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+		    int color = dameColorSinUsar();
+	        LineAndPointFormatter formato = new LineAndPointFormatter(color,  Color.BLACK, null);
 	        
 	        //change the line width
 	        Paint paint = formato.getLinePaint();
@@ -234,8 +240,8 @@ public class IngresosFragment extends Fragment{
 		    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
 		    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
 	        //EjeY
-	        Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
-	        myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);			
+		    Number rangoEjeY = (calculaMaximo(ejeY).intValue() + 5);
+		    myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);			
 			
 		}else{ //Viene de comparar varios o uno solo
 			for(int i = 0; i<ids.length; i++){ 
@@ -251,54 +257,37 @@ public class IngresosFragment extends Fragment{
 			    	ejeY[k+1] = temporal.get(k).getImporte();// = {4,10,11,7,13,3,8,16,36,18,19,23,55,1,9};//Son los valores del eje Y
 			    	ejeX[k+1] = Double.parseDouble(temporal.get(k).getTiempo());
 			    }
-			    
-				    Random rnd = new Random();				    
-				  //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-				    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-			        LineAndPointFormatter formato = new LineAndPointFormatter(color, color, null);
-			        
-			        //change the line width
-			        Paint paint = formato.getLinePaint();
-			        paint.setStrokeWidth(5);
-			        formato.setLinePaint(paint);
+			    			     
+			    //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
+			    int color = dameColorSinUsar();
+		        LineAndPointFormatter formato = new LineAndPointFormatter(color,  Color.BLACK, null);
+		        
+		        //change the line width
+		        Paint paint = formato.getLinePaint();
+		        paint.setStrokeWidth(5);
+		        formato.setLinePaint(paint);
 
-					 //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
-				    XYSeries series1 = new SimpleXYSeries(
-			    			Arrays.asList(ejeX),
-			                Arrays.asList(ejeY),  // Array de datos
-			                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
-					  
-				    myMultitouchPlot.addSeries(series1, formato);
-					//EjeX
-				    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
-				    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
-				    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
-			        //EjeY
-			        Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
-			        myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+				 //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
+			    XYSeries series1 = new SimpleXYSeries(
+		    			Arrays.asList(ejeX),
+		                Arrays.asList(ejeY),  // Array de datos
+		                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
+				  
+			    myMultitouchPlot.addSeries(series1, formato);
+				//EjeX
+			    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
+			    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+			    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
+		        //EjeY
+			    Number rangoEjeY = (calculaMaximo(ejeY).intValue() + 5);
+			    myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
 			}
 		}
 		        
 		myMultitouchPlot.setDomainLabel("Dia");
-//		if (esGeneral)
-//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
-//        else
-//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
 		myMultitouchPlot.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
 		myMultitouchPlot.setTitle("");
-        
-//        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
-//        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
-//        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
-//        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
-//        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
-//        
-//        //Leyenda. Cambiamos el color, el tamaño de texto y la altura
-//        Paint paint = new Paint();
-//        paint.setColor(Color.WHITE);
-//        paint.setTextSize(20);
-//        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
-//        myMultitouchPlot.getLegendWidget().setHeight(40);
+		
 		dibujaLeyenda();
         
 		myMultitouchPlot.disableAllMarkup();
@@ -329,11 +318,10 @@ public class IngresosFragment extends Fragment{
 		    	ejeY[k+1] = temporal.get(k).getImporte();// = {4,10,11,7,13,3,8,16,36,18,19,23,55,1,9};//Son los valores del eje Y
 		    	ejeX[k+1] = Double.parseDouble(temporal.get(k).getTiempo());
 		    }
-		    
-		    Random rnd = new Random();				    
+		     
 		    //Modificamos los colores de la serie color de linea, color de punto, relleno respectivamente
-		    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-	        LineAndPointFormatter formato = new LineAndPointFormatter(color, color, null);
+		    int color = dameColorSinUsar();
+	        LineAndPointFormatter formato = new LineAndPointFormatter(color,  Color.BLACK, null);
 	        
 	        //change the line width
 	        Paint paint = formato.getLinePaint();
@@ -353,8 +341,8 @@ public class IngresosFragment extends Fragment{
 		    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
 		    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
 	        //EjeY
-	        Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
-	        myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+		    Number rangoEjeY = (calculaMaximo(ejeY).intValue() + 5);
+		    myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
 	        
 		}else{
 			for(int i = 0; i<ids.length; i++){
@@ -370,57 +358,38 @@ public class IngresosFragment extends Fragment{
 			    	ejeY[k+1] = temporal.get(k).getImporte();// = {4,10,11,7,13,3,8,16,36,18,19,23,55,1,9};//Son los valores del eje Y
 			    	ejeX[k+1] = Double.parseDouble(temporal.get(k).getTiempo());
 			    }
+			    		    
+			    //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
+			    int color = dameColorSinUsar();
+		        LineAndPointFormatter formato = new LineAndPointFormatter(color,  Color.BLACK, null);
+		        
+		        //change the line width
+		        Paint paint = formato.getLinePaint();
+		        paint.setStrokeWidth(5);
+		        formato.setLinePaint(paint);
+		        
+				 //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
+			    XYSeries series1 = new SimpleXYSeries(
+		    			Arrays.asList(ejeX),
+		                Arrays.asList(ejeY),  // Array de datos
+		                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
+				
+			    myMultitouchPlot.addSeries(series1, formato);	
 			    
-				    Random rnd = new Random();				    
-				  //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-				    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-			        LineAndPointFormatter formato = new LineAndPointFormatter(color, color, null);
-			        
-			        //change the line width
-			        Paint paint = formato.getLinePaint();
-			        paint.setStrokeWidth(5);
-			        formato.setLinePaint(paint);
-			        
-					 //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
-				    XYSeries series1 = new SimpleXYSeries(
-			    			Arrays.asList(ejeX),
-			                Arrays.asList(ejeY),  // Array de datos
-			                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
-					
-				    myMultitouchPlot.addSeries(series1, formato);	
-				    
-					//EjeX
-				    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
-				    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
-				    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
-			        //EjeY
-			        Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
-			        myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+				//EjeX
+			    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
+			    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+			    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
+		        //EjeY
+			    Number rangoEjeY = (calculaMaximo(ejeY).intValue() + 5);
+			    myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
 			}
 		}
        
 		myMultitouchPlot.setDomainLabel("Mes");
-//		if (esGeneral)
-//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));   
-//        else
-//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 250*ids.length, SizeLayoutType.ABSOLUTE)); 
 		myMultitouchPlot.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 170, SizeLayoutType.ABSOLUTE));
 		myMultitouchPlot.setTitle("");
-        
-//        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
-//        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
-//        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
-//        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
-//        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
-//        
-//        //Leyenda
-//        Paint paint = new Paint();
-//        paint.setColor(Color.WHITE);
-//        paint.setTextSize(20);
-//        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
-//        myMultitouchPlot.getLegendWidget().setHeight(40);
-//		
-		
+        		
 		dibujaLeyenda();
 		
 		myMultitouchPlot.disableAllMarkup();
@@ -453,10 +422,10 @@ public class IngresosFragment extends Fragment{
 		    	ejeX[k+1] = Double.parseDouble(temporal.get(k).getTiempo());
 		    }
 		    
-		    Random rnd = new Random();				    
+		    				    
 		    //Modificamos los colores de la serie color de linea, color de punto, relleno respectivamente
-		    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-	        LineAndPointFormatter formato = new LineAndPointFormatter(color, color, null);		
+		    int color = dameColorSinUsar();
+	        LineAndPointFormatter formato = new LineAndPointFormatter(color,  Color.BLACK, null);		
 	        
 	        //change the line width
 	        Paint paint = formato.getLinePaint();
@@ -467,7 +436,7 @@ public class IngresosFragment extends Fragment{
 		    XYSeries series1 = new SimpleXYSeries(
 	    			Arrays.asList(ejeX),
 	                Arrays.asList(ejeY),  // Array de datos
-	                "Ingresos globales"); // Nombre de la primera serie
+	                "Ingresos globales"); // Nombre de la serie
 			
 		    myMultitouchPlot.addSeries(series1, formato);	 
 		    
@@ -476,8 +445,9 @@ public class IngresosFragment extends Fragment{
 		    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
 		    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
 	        //EjeY
-	        Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
-	        myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+	       // Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
+	        Number rangoEjeY = (calculaMaximo(ejeY).intValue() + 5);
+		    myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
 		    
 		    
 		}else{
@@ -494,32 +464,31 @@ public class IngresosFragment extends Fragment{
 			    	ejeY[k+1] = temporal.get(k).getImporte();// = {4,10,11,7,13,3,8,16,36,18,19,23,55,1,9};//Son los valores del eje Y
 			    	ejeX[k+1] = Double.parseDouble(temporal.get(k).getTiempo());
 			    }
+			    				    
+			    //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
+			    int color = dameColorSinUsar();
+		        LineAndPointFormatter formato = new LineAndPointFormatter(color,  Color.BLACK, null);
+		        
+		        //change the line width
+		        Paint paint = formato.getLinePaint();
+		        paint.setStrokeWidth(5);
+		        formato.setLinePaint(paint);
+		         
+				 //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
+			    XYSeries series1 = new SimpleXYSeries(
+		    			Arrays.asList(ejeX),
+		                Arrays.asList(ejeY),  // Array de datos
+		                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
+				
+			    myMultitouchPlot.addSeries(series1, formato);
 			    
-				    Random rnd = new Random();				    
-				    //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
-				    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-			        LineAndPointFormatter formato = new LineAndPointFormatter(color, color, null);
-			        
-			        //change the line width
-			        Paint paint = formato.getLinePaint();
-			        paint.setStrokeWidth(5);
-			        formato.setLinePaint(paint);
-			         
-					 //En el eje X pone tantos valores como le metas al eje Y, en este caso de 9h a 23h
-				    XYSeries series1 = new SimpleXYSeries(
-			    			Arrays.asList(ejeX),
-			                Arrays.asList(ejeY),  // Array de datos
-			                "Restaurante con Id: "+ ids[i]); // Nombre de la serie
-					
-				    myMultitouchPlot.addSeries(series1, formato);
-				    
-					//EjeX
-				    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
-				    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
-				    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
-			        //EjeY
-			        Number rangoEjeY = (ejeY[ejeY.length-1]).intValue() + 5;//Con esto el ejeY llega toma como maximo valor, la mayor facturacion + 5 para que se vea bien
-			        myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
+				//EjeX
+			    myMultitouchPlot.setDomainValueFormat(new DecimalFormat("0"));//Para que las horas(ejeX) las escriba sin decimales
+			    myMultitouchPlot.setDomainStep(XYStepMode.SUBDIVIDE, temporal.size()+1);//Pone tantos valores en el eje X como elementos tenga el array de meses +1 para el cero
+			    myMultitouchPlot.setDomainBoundaries(0,ejeX[ejeX.length-1] , BoundaryMode.FIXED);
+		        //EjeY
+			    Number rangoEjeY = (calculaMaximo(ejeY).intValue() + 5);
+			    myMultitouchPlot.setRangeBoundaries(0, rangoEjeY , BoundaryMode.AUTO);
 			    	
 			} 
 		} 
@@ -527,58 +496,9 @@ public class IngresosFragment extends Fragment{
         myMultitouchPlot.setDomainLabel("Año");
         myMultitouchPlot.getTitleWidget().setSize(new SizeMetrics(15, SizeLayoutType.ABSOLUTE, 270, SizeLayoutType.ABSOLUTE));
         myMultitouchPlot.setTitle("");
-//        
-//        myMultitouchPlot.getGraphWidget().getDomainLabelPaint().setTextSize(20);
-//        myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
-//        myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
-//        //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
-//        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
-//        
-//        //Leyenda
-//       int numCols;
-//       if((ids.length % 2) == 0)
-//    	   numCols = ids.length / 2;
-//       else
-//    	   numCols = (ids.length / 2) +1;
-//       // use a grid:
-//        myMultitouchPlot.getLegendWidget().setTableModel(new DynamicTableModel(numCols, 2));
-// 
-//        // adjust the legend size so there is enough room
-//        // to draw the new legend grid:
-//        if (esGeneral || ids.length == 1)
-//        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 250, SizeLayoutType.ABSOLUTE));
-//        else
-//    		myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(70, SizeLayoutType.ABSOLUTE, numCols * 250, SizeLayoutType.ABSOLUTE));
-//        	
-//        // add a semi-transparent black background to the legend
-//        // so it's easier to see overlaid on top of our plot:
-//        Paint bgPaint = new Paint();
-//        bgPaint.setColor(Color.BLACK);
-//        bgPaint.setStyle(Paint.Style.FILL);
-//        bgPaint.setAlpha(100);
-//        myMultitouchPlot.getLegendWidget().setBackgroundPaint(bgPaint);
-//        
-//        Paint paint = new Paint();
-//        paint.setColor(Color.WHITE);
-//        paint.setTextSize(20);
-//        myMultitouchPlot.getLegendWidget().setTextPaint(paint);
-// 
-//        // adjust the padding of the legend widget to look a little nicer:
-//        myMultitouchPlot.getLegendWidget().setPadding(5, 1, 1, 1);       
-// 
-//        // reposition the grid 
-//        myMultitouchPlot.position(myMultitouchPlot.getLegendWidget(),
-//        		numCols * 10,
-//        		XLayoutStyle.ABSOLUTE_FROM_RIGHT,
-//        		80,
-//        		YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
-//        		AnchorPosition.RIGHT_BOTTOM);
-//        //Fin leyenda
-        
         
         dibujaLeyenda();
         
-
         myMultitouchPlot.disableAllMarkup();
         myMultitouchPlot.redraw();
         
@@ -588,6 +508,7 @@ public class IngresosFragment extends Fragment{
 	  
 
 	
+	@SuppressLint("UseSparseArrays")
 	public ArrayList<ObjetoAuxGrafica> cargarDatosDia(int idRestaurante){//buscamos en la bd el dia mes y año. importe por horas
 		ArrayList<ObjetoAuxGrafica> registros = new ArrayList<ObjetoAuxGrafica>();
 		
@@ -599,27 +520,28 @@ public class IngresosFragment extends Fragment{
 				String[] datos = new String[]{dia+"",mes+"",anio+"",idRestaurante+""};
 				c = dbIngresos.query("Ingresos", campos, "Dia=? AND Mes=? AND Anio=? AND IdRestaurante=?", datos, null, null,null);
 
-				while(c.moveToNext()){
-					String hora = c.getInt(1)+"";
-					registros.add(new ObjetoAuxGrafica(hora.substring(0, 2), c.getInt(0)+""));
-				}
+//				while(c.moveToNext()){
+//					String hora = c.getInt(1)+"";
+//					registros.add(new ObjetoAuxGrafica(hora.substring(0, 2), c.getInt(0)+""));
+//				}
 			}else{
 				String[] campos = new String[]{"Importe","Hora"};
 				String[] datos = new String[]{dia+"",mes+"",anio+""};
 				c = dbIngresos.query("Ingresos", campos, "Dia=? AND Mes=? AND Anio=?", datos, null, null,null);
-				
+			}
+			
 			    Map<Integer,Integer> temporal = null;//La clave es la hora y el valor el importe
 				if(c.getCount()>0){
 					temporal = new HashMap<Integer,Integer>();
 					}
 				while(c.moveToNext()){
-					String hora = c.getInt(1)+"";
+					String hora = (c.getInt(1)+"").substring(0, 2);//parseamos para sacar la hora
 					//Si no esta ya en el HashMap lo metemos, si no lo sumamos
-					if(!temporal.containsKey(c.getInt(1))){
-						temporal.put(Integer.parseInt(hora.substring(0, 2)), c.getInt(0));
+					if(!temporal.containsKey(Integer.parseInt(hora))){
+						temporal.put(Integer.parseInt(hora), c.getInt(0));
 					}else{
 						int aux = temporal.get(c.getInt(1));
-						temporal.put(Integer.parseInt(hora.substring(0, 2)), c.getInt(0) + aux);
+						temporal.put(Integer.parseInt(hora), c.getInt(0) + aux);
 					}
 				}//End del while
 
@@ -629,7 +551,7 @@ public class IngresosFragment extends Fragment{
 					int clave = (Integer) itClave.next();
 					registros.add(new ObjetoAuxGrafica(clave+"", temporal.get(clave)+"")); 
 				}
-			}
+			//}
 		}catch(Exception e){
 			System.out.println("Error en la carga de Ingresos");
 		}	
@@ -638,6 +560,7 @@ public class IngresosFragment extends Fragment{
 	}
 	
 	
+	@SuppressLint("UseSparseArrays")
 	public ArrayList<ObjetoAuxGrafica> cargarDatosMes(int idRestaurante){//buscamos en la bd el mes y año. sumar el importe por dias
 		ArrayList<ObjetoAuxGrafica> registros = new ArrayList<ObjetoAuxGrafica>();
 		Cursor c = null;
@@ -717,6 +640,7 @@ public class IngresosFragment extends Fragment{
 	}
 	
 	
+	@SuppressLint("UseSparseArrays")
 	public ArrayList<ObjetoAuxGrafica> cargarDatosAnio(int idRestaurante){//buscamos en la bd el año. sumar el importe por meses
 		ArrayList<ObjetoAuxGrafica> registros = new ArrayList<ObjetoAuxGrafica>();
 		Cursor c = null;
@@ -928,7 +852,9 @@ public class IngresosFragment extends Fragment{
 		ventanaEmergente.setNegativeButton("Cancelar", null);
 		ventanaEmergente.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
 		
-			public void onClick(DialogInterface dialog, int which) {	
+			public void onClick(DialogInterface dialog, int which) {
+				//Reseteamos el maxmo global
+			    maximoGlobal = 0;
 				if(tipo.equals("Dia")){
 					cargarAlDia();
 				}else if(tipo.equals("Mes")){
@@ -997,11 +923,11 @@ public class IngresosFragment extends Fragment{
 	
 	@SuppressLint("NewApi")
 	public void dibujaLeyenda(){ 
-		//obtenemos el ancho de la grafica para luego calcular el tamaño de la leyenda
+		//obtenemos el ancho de la pantalla para luego calcular el tamaño de la leyenda
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
-		int ancho = size.x;
+		int ancho = size.x - 200;//200 de margenes
 		float columnas = ancho/250;
 		float filas;
 		if((ids.length % columnas) == 0)
@@ -1013,24 +939,22 @@ public class IngresosFragment extends Fragment{
         myMultitouchPlot.getGraphWidget().getRangeLabelPaint().setTextSize(20);
         myMultitouchPlot.getGraphWidget().setDomainLabelWidth(20);
         //myMultitouchPlot.getGraphWidget().setRangeLabelWidth(myMultitouchPlot.getGraphWidget().getRangeLabelWidth()*2);
-       myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
+        myMultitouchPlot.getGraphWidget().setPadding(20, 20, 20, 20);
         
-        // use a grid:
-        myMultitouchPlot.getLegendWidget().setTableModel(new DynamicTableModel((int)columnas,(int)filas));
+        //Usamos un grid:
+        if(ids.length>=columnas || esGeneral)
+        	myMultitouchPlot.getLegendWidget().setTableModel(new DynamicTableModel((int)columnas,(int)filas));
 
-        // adjust the legend size so there is enough room
-        // to draw the new legend grid:
+        //ajustamos la leyenda
         if (esGeneral){
         	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 250, SizeLayoutType.ABSOLUTE));
         }else if(ids.length<columnas){
-        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 4*250, SizeLayoutType.ABSOLUTE));
-        	//myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, ids.length*250, SizeLayoutType.ABSOLUTE));
+        	myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, ids.length * 250, SizeLayoutType.ABSOLUTE));
         }else{
     		myMultitouchPlot.getLegendWidget().setSize(new SizeMetrics(filas*40, SizeLayoutType.ABSOLUTE, columnas * 250, SizeLayoutType.ABSOLUTE));
         }
         
-        // add a semi-transparent black background to the legend
-        // so it's easier to see overlaid on top of our plot: 
+        //Añadimos un fondo semitransparente
         Paint bgPaint = new Paint();
         bgPaint.setColor(Color.BLACK);
         bgPaint.setStyle(Paint.Style.FILL);
@@ -1041,17 +965,49 @@ public class IngresosFragment extends Fragment{
         paint.setColor(Color.WHITE);
         paint.setTextSize(20);
         myMultitouchPlot.getLegendWidget().setTextPaint(paint);
- 
-        // adjust the padding of the legend widget to look a little nicer:
         myMultitouchPlot.getLegendWidget().setPadding(5, 1, 1, 1);       
 
-    	// reposition the grid 
+    	//Recolocamos el grid
         myMultitouchPlot.position(myMultitouchPlot.getLegendWidget(),
         		40,
         		XLayoutStyle.ABSOLUTE_FROM_RIGHT,
         		80,
         		YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
         		AnchorPosition.RIGHT_BOTTOM);
+	}
+	
+	//Se usa para ver el maximo valor de la "y" en la grafica. 
+	//Hay que comparar con el maximo global por si se estan comparando varias
+	public Number calculaMaximo(Number[] lista){
+		Number maximo = 0;
+		for(int i = 0; i < lista.length; i++){
+			if((lista[i].floatValue() >= maximo.floatValue()))
+				maximo = lista[i];
+		}
+		if(maximo.floatValue() >= maximoGlobal.floatValue())
+			maximoGlobal = maximo;
+		return maximoGlobal;
+	}
+	
+	public int dameColorSinUsar(){
+		Random rnd = new Random();				    
+	    //Modificamos los colores de la primera serie color de linea, color de punto, relleno respectivamente
+	    int color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+	    while(estaRepetido(color)){
+	    	color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+	    }
+	    //Añadimos este color a la lista
+	    coloresUsados.add(color);
+		return color;
+	}
+
+
+	private boolean estaRepetido(int color) {
+		//recorremos la lista de colores para ver si esta repetido
+		for(int i=0; i< coloresUsados.size(); i++){
+			if(coloresUsados.get(i)== color) return true;
+		}
+		return false;
 	}
 	
 }

@@ -1,30 +1,38 @@
 package com.example.nfcook_gerente;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 
-import baseDatos.HandlerGenerico;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import adapters.MiListGeneralRestaurantesAdapter;
 import adapters.PadreListRestaurantes;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
- 
-
+import android.widget.TextView;
 import android.widget.Toast;
+import baseDatos.HandlerGenerico;
  
 /** 
  * Clase que se encarga de cargar el adapter y de la pantalla inicial del gerente
@@ -93,7 +101,7 @@ public class GeneralRestaurantes extends Activity {
 	    });
 	    
 	    //Establecemos los oyentes de los botones
-	    final ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
+	    final Button botonComparar = (Button) findViewById(R.id.botonComparar); 
 	    botonComparar.setOnClickListener(new OnClickListener() {
 			public void onClick(View vista) {
 				comparando = true;
@@ -147,7 +155,7 @@ public class GeneralRestaurantes extends Activity {
 			public void onClick(View vista) {
 				comparando = false;
 				ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
-				ImageView botonComparar = (ImageView) findViewById(R.id.botonComparar);
+				Button botonComparar = (Button) findViewById(R.id.botonComparar);
 				
 				for(int i =0; i< restaurantes.size(); i ++){
 					restaurantes.get(i).setCheckVisibles(false);
@@ -155,8 +163,8 @@ public class GeneralRestaurantes extends Activity {
 				}
 				
 		    	botonComparar.setVisibility(0); 
-		    	botonAceptar.setVisibility(8);
-		    	botonCancelar.setVisibility(8);
+		    	botonAceptar.setVisibility(4);
+		    	botonCancelar.setVisibility(4);
 		    	
 				adapterListGeneralRestaurantes = new MiListGeneralRestaurantesAdapter(GeneralRestaurantes.this, restaurantes);
 				listViewRestaurantes.setAdapter(adapterListGeneralRestaurantes);
@@ -186,11 +194,13 @@ public class GeneralRestaurantes extends Activity {
 		  		intent.putExtra("sinInfo", true);
 			  		
 		  		startActivity(intent);
+	
+				
 			}
 		});
 	} 
 
-
+ 
 	public ArrayList<PadreListRestaurantes> obtenerRestaurantes() {
 
 		ArrayList<PadreListRestaurantes> restaurantes = new ArrayList<PadreListRestaurantes>();
@@ -266,4 +276,5 @@ public class GeneralRestaurantes extends Activity {
 			todos.add(restaurantes.get(i).getIdRestaurante());
 		return todos;
 	}
+	
 }
