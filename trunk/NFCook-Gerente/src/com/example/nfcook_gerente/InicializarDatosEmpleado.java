@@ -2,7 +2,6 @@ package com.example.nfcook_gerente;
 
 import java.util.ArrayList;
 
-import fragments.FichaFragment;
 import adapters.PagerAdapter;
 import adapters.ViewPagerBloquearSlide;
 import android.content.Context;
@@ -18,8 +17,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
+import fragments.EmpleadosFragment;
+import fragments.FichaFragment;
+import fragments.GraficaIngresosFragment;
 
 /**
  * @author: Abel Chocano
@@ -107,14 +109,14 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
 	    spec.setContent(R.id.tab2);
 	    spec.setIndicator(prepararTabView(getApplicationContext(),"tabJornada"));
         tabs.addTab(spec);
-        //listFragments.add(Fragment.instantiate(this, EmpleadosFragment.class.getName(), bundleInfoRestaurante));
+        //listFragments.add(Fragment.instantiate(this, EmpleadosFragment.class.getName(), bundleIdEmpleado));
    
         // Creamos el tab3 --> Ingresos
-        spec = tabs.newTabSpec("tabIngresos");
-	    spec.setContent(R.id.tab3);
+        spec = tabs.newTabSpec("tabIngresosEmpleado");
         spec.setIndicator(prepararTabView(getApplicationContext(),"tabGraficaFacturacion"));
+	    spec.setContent(R.id.tab3);
         tabs.addTab(spec);
-        //listFragments.add(Fragment.instantiate(this, IngresosFragment.class.getName(), bundleInfoRestaurante));
+        listFragments.add(Fragment.instantiate(this, GraficaIngresosFragment.class.getName(), bundleIdEmpleado));
      
         // Creamos el tab4 --> Clasificación de platos
         spec = tabs.newTabSpec("tabClasificacionPlatos");
@@ -259,6 +261,15 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
 	@Override
 	public void onPageSelected(int pos) {
 		tabs.setCurrentTab(pos);
+	}
+	
+	public static void pausaViewPager(){
+		//Sacamos el estado de los tabs
+		boolean estadoTabs = tabs.getTabWidget().getChildAt(0).isEnabled();
+
+		tabs.getTabWidget().setEnabled(!estadoTabs);
+		
+		miViewPager.setPagingEnabled(!miViewPager.getPagingEnabled());		
 	}
 	
 }

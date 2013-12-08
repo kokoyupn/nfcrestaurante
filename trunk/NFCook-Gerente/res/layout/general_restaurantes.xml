@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
         android:orientation="vertical" >
 
         <ImageView
@@ -18,81 +17,56 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="30dp"
+            android:contentDescription="TODO"
             android:src="@drawable/boton_grafica_general" />
 
         <ListView
             android:id="@+id/listViewRestaurantes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="60dp"
+            android:background="@color/verde5"
             android:divider="@color/verde5"
             android:dividerHeight="5dp"
             android:focusable="false"
+            android:focusableInTouchMode="false"
             android:padding="5dp" >
-            <requestFocus/>
-
         </ListView>
-
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearBotones"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:layout_margin="5dp"
-        android:gravity="bottom" >
+        android:layout_gravity="bottom" >
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/buttonAceptar"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="0.5" >
-
-            <ImageView
-                android:id="@+id/buttonAceptar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.33"
-                android:onClick="onClickAceptar"
-                android:src="@drawable/validar"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_weight="0.33"
-            android:gravity="right" >
+            android:src="@drawable/validar"
+            android:visibility="invisible" />
 
-            <ImageView
-                android:id="@+id/botonComparar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.33"
-                android:src="@drawable/boton_comparar" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/botonComparar"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="0.5" >
+            android:layout_height="35dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/boton_comparar" />
 
-            <ImageView
-                android:id="@+id/buttonCancelar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="0.33"
-                android:onClick="onClickCancelar"
-                android:src="@drawable/cancelar"
-                android:visibility="gone" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/buttonCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="0.33"
+            android:src="@drawable/cancelar"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

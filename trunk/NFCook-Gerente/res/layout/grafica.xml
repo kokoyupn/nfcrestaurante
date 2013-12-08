@@ -43,7 +43,7 @@
         android:id="@+id/graficaIngresosGeneral"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="50dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="50dp"
@@ -52,31 +52,34 @@
     <LinearLayout
         android:id="@+id/opcionesGr"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="35dp"
         android:layout_gravity="bottom"
-        android:layout_margin="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:gravity="center" >
 
-        <ImageView
+        <Button
             android:id="@+id/botonPorDia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:src="@drawable/boton_al_dia" />
+            android:background="@drawable/boton_al_dia" />
 
-        <ImageView
+        <Button
             android:id="@+id/botonPorMes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:src="@drawable/boton_al_mes" />
+            android:background="@drawable/boton_al_mes" />
 
-        <ImageView
+        <Button
             android:id="@+id/botonPorAnio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
-            android:src="@drawable/boton_al_anio" />
+            android:background="@drawable/boton_al_anio" />
 
     </LinearLayout>
 
