@@ -26,56 +26,54 @@ import baseDatos.HandlerGenerico;
 
 public class MiCursorAdapterBuscadorEmpleados extends CursorAdapter{
 		
-		private HandlerGenerico sql;
-		private SQLiteDatabase db;
-		private String idEmpleado;
-		Context context;
+	private HandlerGenerico sql;
+	private SQLiteDatabase db;
+	Context context;
+	
+	public MiCursorAdapterBuscadorEmpleados(Activity activity, Cursor c, int flags) {
+		super(activity.getApplicationContext(), c, flags);
+		this.context = activity.getApplicationContext();
 		
-		public MiCursorAdapterBuscadorEmpleados(Activity activity, Cursor c, int flags) {
-			super(activity.getApplicationContext(), c, flags);
-			this.context = activity.getApplicationContext();
-			
-			
+		
+	}
+
+	@Override
+	public void bindView(View view, Context arg1, Cursor cursor) {
+		String item = createItem(cursor);
+		((TextView ) view).setText(item);  
+	}
+
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		final LayoutInflater inflater = LayoutInflater.from(context);
+		final TextView view = (TextView) inflater.inflate(R.layout.textview_buscador_empleados, parent, false);
+        
+		String item = createItem(cursor);
+		view.setText(item);
+        
+     return view;
+	}
+
+	@Override
+	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+		Cursor currentCursor = null;
+         
+		if (getFilterQueryProvider() != null) {
+			return getFilterQueryProvider().runQuery(constraint);
 		}
-
-		@Override
-	   public void bindView(View view, Context arg1, Cursor cursor) {
-	     String item = createItem(cursor);
-	     ((TextView ) view).setText(item);  
-	   }
-
-	   @Override
-	   public View newView(Context context, Cursor cursor, ViewGroup parent) {
-	     final LayoutInflater inflater = LayoutInflater.from(context);
-	     final TextView view = (TextView) inflater.inflate(R.layout.textview_buscador_empleados, parent, false);
-	        
-	     String item = createItem(cursor);
-	     view.setText(item);
-	        
-	     return view;
-	   }
-
-	   @Override
-	   public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-	     Cursor currentCursor = null;
-	         
-	     if (getFilterQueryProvider() != null) {
-	        return getFilterQueryProvider().runQuery(constraint);
-	     }
-	         
-	     String args = "";
-	     if (constraint != null) {
-	        args = constraint.toString(); 
-	        
-	     }
-	  
-	     importarBaseDatatos();
-	     
-	     currentCursor = db.rawQuery("SELECT IdEmpleado AS _id,Nombre AS Item" +
-	       " FROM Empleados" + 
-	       " WHERE Nombre LIKE '%" +args+ "%'  or Apellido1 LIKE '%" +args+ "%' or Apellido2 LIKE '%" +args+ "%'", null);
-	    // 
-	     /** Ejemplo para usar el like con varias condiciones
+         
+		String args = "";
+		if (constraint != null) {
+			args = constraint.toString(); 
+		}
+  
+		importarBaseDatatos();
+     
+		currentCursor = db.rawQuery("SELECT IdEmpleado AS _id,Nombre AS Item" +
+			" FROM Empleados" + 
+			" WHERE Nombre LIKE '%" +args+ "%'  or Apellido1 LIKE '%" +args+ "%' or Apellido2 LIKE '%" +args+ "%'", null);
+	 
+		/** Ejemplo para usar el like con varias condiciones
 	      * if (name.length() != 0) {
 
         	name = "%" + name + "%";
@@ -96,21 +94,21 @@ public class MiCursorAdapterBuscadorEmpleados extends CursorAdapter{
 		
 		    Cursor cursor = mDb.rawQuery(selectQuery, null);`
 	      */
-	  
-	     return currentCursor;
-	   }
-	 
-	   private String createItem(Cursor cursor){
-	     String item = cursor.getString(1);
-	     return item;
-	   }
-	   
-	   private void importarBaseDatatos(){
-	       try{
-	       	sql = new HandlerGenerico(context, "/data/data/com.example.nfcook_gerente/databases/", "Empleados.db"); 
-	       	db = sql.open();
-	       }catch(SQLiteException e){
-	        	Toast.makeText(context,"NO EXISTE",Toast.LENGTH_SHORT).show();
-	       }	
-		}
+  
+		return currentCursor;
 	}
+ 
+	private String createItem(Cursor cursor){
+		String item = cursor.getString(1);
+		return item;
+	}
+   
+	private void importarBaseDatatos(){
+		try{
+			sql = new HandlerGenerico(context, "/data/data/com.example.nfcook_gerente/databases/", "Empleados.db"); 
+			db = sql.open();
+		}catch(SQLiteException e){
+        	Toast.makeText(context,"NO EXISTE",Toast.LENGTH_SHORT).show();
+		}	
+	}
+}

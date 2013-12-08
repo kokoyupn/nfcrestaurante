@@ -103,16 +103,16 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
 			textView.setText(((HijoExpandableListFichaDatosLaborales) datos).getPuesto());
 			// Horas al día
 			textView = (TextView) convertView.findViewById(R.id.textViewHorasAlDia);
-			textView.setText("Su jornada es de " + ((HijoExpandableListFichaDatosLaborales) datos).getHorasAlDia() + " horas al día");
+			textView.setText("Jornada de " + ((HijoExpandableListFichaDatosLaborales) datos).getHorasAlDia() + " horas al día");
 			// Salario
 			textView = (TextView) convertView.findViewById(R.id.textViewSalario);
-			textView.setText("Su sueldo es de " + ((HijoExpandableListFichaDatosLaborales) datos).getSalario() + " € al mes");
+			textView.setText("Sueldo de " + ((HijoExpandableListFichaDatosLaborales) datos).getSalario() + " € al mes");
 			// Tipo de Contrato
 			textView = (TextView) convertView.findViewById(R.id.textViewTipoContrato);
-			textView.setText("Tiene un contrato " + ((HijoExpandableListFichaDatosLaborales) datos).getTipoContrato());
+			textView.setText("Contrato " + ((HijoExpandableListFichaDatosLaborales) datos).getTipoContrato());
 			// Finalización de contrato
 			textView = (TextView) convertView.findViewById(R.id.textViewFinalizacionContrato);
-			textView.setText("Su contrato vence el " + ((HijoExpandableListFichaDatosLaborales) datos).getFinalizacionContrato());
+			textView.setText("Vencimiento de ontrato el " + ((HijoExpandableListFichaDatosLaborales) datos).getFinalizacionContrato());
 			
 		// Otros datos
 		}else if(datos instanceof HijoExpandableListFichaOtrosDatos){
