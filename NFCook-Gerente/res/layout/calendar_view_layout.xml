@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@color/verde5">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="20dp"
+		android:layout_marginRight="10dp"
+		android:layout_marginLeft="11dp">
+
+		<ImageView
+			android:id="@+id/prevMonth"
+			android:contentDescription="@string/previous month imageview button"
+			android:src="@drawable/calendar_left_arrow_selector"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+		</ImageView>
+		<Button
+			android:id="@+id/currentMonth"
+			android:layout_weight="0.6"
+			android:textColor="#528829"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:background="@drawable/calendar_bar"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content">
+		</Button>
+		<ImageView
+			android:id="@+id/nextMonth"
+			android:contentDescription="@string/next month imageview button"
+			android:src="@drawable/calendar_right_arrow_selector"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+		</ImageView>
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_gravity="center"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="10dp"
+		android:layout_marginLeft="11dp">
+		<ImageView
+			android:id="@+id/calendarheader"
+			android:contentDescription="@string/calendar header"
+			android:src="@drawable/blue_bg_with_text"
+			android:layout_gravity="center"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+		</ImageView>
+	</LinearLayout>
+
+
+	<GridView
+		android:id="@+id/calendar"
+		android:numColumns="7"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="10dp"
+		android:layout_marginLeft="11dp">
+	</GridView>
+
+</LinearLayout>

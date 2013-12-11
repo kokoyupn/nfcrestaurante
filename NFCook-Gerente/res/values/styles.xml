@@ -22,11 +22,18 @@
 	<color name="verde3">#7AB081</color>
 	<color name="verde4">#A9CBAD</color>
 	<color name="verde5">#CAE0CD</color>
-		
+	
 	<style name="starRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@layout/ratingstars</item>
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
     </style>
 
+	<style
+		name="calendar_event_style" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">#FF6600</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">8sp</item>
+	</style>
+	
 </resources>
