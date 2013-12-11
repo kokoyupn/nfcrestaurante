@@ -20,8 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
+import fragments.CalendarioFragment;
 import fragments.ClasificacionPlatosFragment;
-import fragments.EmpleadosFragment;
 import fragments.InformacionRestauranteFragment;
 import fragments.IngresosFragment;
 
@@ -120,7 +120,8 @@ public class InicializarInformacionRestaurante extends FragmentActivity implemen
         }
 	    spec.setIndicator(prepararTabView(getApplicationContext(),"tabEmpleados"));
         tabs.addTab(spec);
-        listFragments.add(Fragment.instantiate(this, EmpleadosFragment.class.getName(), bundleInfoRestaurante));
+        // TODO CAMBIAR CalendarioFragment por la info de los empleados (Abel)
+        listFragments.add(Fragment.instantiate(this, CalendarioFragment.class.getName(), bundleInfoRestaurante));
    
         // Creamos el tab3 --> Ingresos
         spec = tabs.newTabSpec("tabIngresos");
