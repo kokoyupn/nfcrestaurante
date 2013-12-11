@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +23,19 @@ import baseDatos.HandlerGenerico;
 import com.example.nfcook_gerente.PlatoClasificacion;
 import com.example.nfcook_gerente.R;
 
+
+/**
+ * @author Alejandro Moran
+ * 
+ * Esta clase se encargara de mostrar la informacion de la clasificacion de platos
+ * del restaurante.
+ * 
+ * Utilizamos una tabla para mostrarla y dos botones para poder ordenarla en funcion
+ * de la demanda o de la facturacion.
+ * 
+ * Carga la info de la base de datos: MiBaseFav.db.
+ * 
+ * */
 public class ClasificacionPlatosFragment extends Fragment {
 
 	private TableLayout tablaClasificacion;
@@ -210,10 +222,10 @@ public class ClasificacionPlatosFragment extends Fragment {
 			     * Pero para que todas las imagenes tengan el mismo tamano, las hemos metido en un LinearLayout 
 			     * que ajustara su tamano, mientras que el layout de TableRow nos permitira tener esa fila con un 0.3 de peso.
 			     * */
-			    TableRow.LayoutParams layoutImagen = new TableRow.LayoutParams(0, LayoutParams.MATCH_PARENT, 0.3f);
+			    TableRow.LayoutParams layoutImagen = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0.3f);
 			    LinearLayout linearImagen = new LinearLayout(getActivity());
 			    linearImagen.setLayoutParams(layoutImagen);
-			    LinearLayout.LayoutParams layoutLinearImagen = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 120);
+			    LinearLayout.LayoutParams layoutLinearImagen = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, 120);
 		    	
 			    fotoPlato.setLayoutParams(layoutLinearImagen);
 		    	fotoPlato.setBackgroundResource(getResources().getIdentifier("cell_style", "color", getActivity().getPackageName()));

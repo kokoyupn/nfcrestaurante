@@ -19,9 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
-import fragments.EmpleadosFragment;
 import fragments.FichaFragment;
 import fragments.GraficaIngresosFragment;
+import fragments.CalendarioFragment;
 
 /**
  * @author: Abel Chocano
@@ -109,7 +109,8 @@ public class InicializarDatosEmpleado extends FragmentActivity implements OnTabC
 	    spec.setContent(R.id.tab2);
 	    spec.setIndicator(prepararTabView(getApplicationContext(),"tabJornada"));
         tabs.addTab(spec);
-        //listFragments.add(Fragment.instantiate(this, EmpleadosFragment.class.getName(), bundleIdEmpleado));
+        listFragments.add(Fragment.instantiate(this, CalendarioFragment.class.getName(), bundleIdEmpleado));
+
    
         // Creamos el tab3 --> Ingresos
         spec = tabs.newTabSpec("tabIngresosEmpleado");
