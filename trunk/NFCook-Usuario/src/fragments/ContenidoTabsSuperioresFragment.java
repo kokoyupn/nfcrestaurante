@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.example.nfcook.R;
+
 import usuario.DescripcionPlato;
 import usuario.InicializarRestaurante;
 import adapters.MiCursorAdapterBuscadorPlatos;
@@ -29,8 +31,6 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 import baseDatos.HandlerDB;
-
-import com.example.nfcook.R;
 
 /**
  * Clase encargada de cargar todos los platos dentro de una determinada categoría. Los platos se mostrarán
