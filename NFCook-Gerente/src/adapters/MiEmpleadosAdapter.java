@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.example.nfcook_gerente.R;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -35,14 +34,17 @@ public class MiEmpleadosAdapter extends BaseAdapter{
 		 this.empleados = contenido;
 	}
 	 
+	@Override
 	public int getCount() {
 		return empleados.size();
 	}
 	
+	@Override
 	public Object getItem(int pos) {
 		return empleados.get(pos);
 	}
 	
+	@Override
 	public long getItemId(int pos) {
 		return 0;
 	}

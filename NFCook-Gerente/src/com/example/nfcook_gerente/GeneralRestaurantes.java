@@ -1,26 +1,13 @@
 package com.example.nfcook_gerente;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import adapters.MiListGeneralRestaurantesAdapter;
 import adapters.PadreListRestaurantes;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import baseDatos.HandlerGenerico;
  
@@ -103,6 +89,7 @@ public class GeneralRestaurantes extends Activity {
 	    //Establecemos los oyentes de los botones
 	    final Button botonComparar = (Button) findViewById(R.id.botonComparar); 
 	    botonComparar.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View vista) {
 				comparando = true;
 			 	ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
@@ -123,6 +110,7 @@ public class GeneralRestaurantes extends Activity {
 	    
 	    ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
 	    botonAceptar.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View vista) {
 				
 				ArrayList<Integer> seleccionados = recorreSeleccionados();
@@ -152,6 +140,7 @@ public class GeneralRestaurantes extends Activity {
 
 		final ImageView botonCancelar = (ImageView) findViewById(R.id.buttonCancelar);
 		botonCancelar.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View vista) {
 				comparando = false;
 				ImageView botonAceptar = (ImageView) findViewById(R.id.buttonAceptar);
@@ -174,6 +163,7 @@ public class GeneralRestaurantes extends Activity {
 		
 		final ImageView botonTodos = (ImageView) findViewById(R.id.todosLosRestaurantes);
 		botonTodos.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View vista) {
 				ArrayList<Integer> todos = dameIds();
 				

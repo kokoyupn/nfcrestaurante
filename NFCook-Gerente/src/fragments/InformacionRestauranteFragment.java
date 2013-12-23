@@ -1,5 +1,7 @@
 package fragments;
 
+import com.example.nfcook_gerente.R;
+
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.nfcook_gerente.R;
-
 
 /**
  * @author: Alejandro Moran
@@ -39,6 +39,7 @@ public class InformacionRestauranteFragment extends Fragment implements Location
 	private String telefonoRestaurante, calleRestaurante;
 	
 	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    vista = inflater.inflate(R.layout.informacion_restaurante, container, false);
 	   

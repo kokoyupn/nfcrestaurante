@@ -2,6 +2,8 @@ package adapters;
 
 import java.util.ArrayList;
 
+import com.example.nfcook_gerente.R;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.nfcook_gerente.R;
 
 /**
  * Esta clase es el adapter para la lista de la pantalla general de gerente

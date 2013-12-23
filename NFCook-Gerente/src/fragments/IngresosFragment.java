@@ -80,6 +80,7 @@ public class IngresosFragment extends Fragment{
 	private ArrayList<Integer> coloresUsados;
 	private Number maximoGlobal;
 	
+
 	@SuppressLint("SimpleDateFormat")
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 	
@@ -116,6 +117,7 @@ public class IngresosFragment extends Fragment{
 		Button alDia = (Button) vista.findViewById(R.id.botonPorDia);
 		alDia.setOnClickListener(new OnClickListener() {
 			
+			@Override
 			public void onClick(View v) {
 				tipo = "Dia";
 				abrirVentanaEmergente();
@@ -125,6 +127,7 @@ public class IngresosFragment extends Fragment{
 		Button alMes = (Button) vista.findViewById(R.id.botonPorMes);
 		alMes.setOnClickListener(new OnClickListener() {
 			
+			@Override
 			public void onClick(View v) {
 				tipo= "Mes";
 				abrirVentanaEmergente();
@@ -134,6 +137,7 @@ public class IngresosFragment extends Fragment{
 		Button alAnio = (Button) vista.findViewById(R.id.botonPorAnio);
 		alAnio.setOnClickListener(new OnClickListener() {
 			
+			@Override
 			public void onClick(View v) {
 				tipo = "Anio";
 				abrirVentanaEmergente();
@@ -143,34 +147,6 @@ public class IngresosFragment extends Fragment{
 		
 		final ImageView zoom = (ImageView) vista.findViewById(R.id.zoomLock);
 		zoom.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {	
-				InicializarInformacionRestaurante.pausaViewPager();
-				if (modoZoomActivado)	
-					myMultitouchPlot.setOnTouchListener(new OnTouchListener() {
-						
-						@Override
-						public boolean onTouch(View v, MotionEvent event) {
-							return false;
-						}
-					});
-				else myMultitouchPlot.initTouchHandling();
-				modoZoomActivado = !modoZoomActivado;
-				
-				//cambiamos el icono
-				String icono = null;
-				if(modoZoomActivado)
-					icono = "zoom_unlock";
-				else 
-					icono = "zoom_lock";
-				int img = getActivity().getResources().getIdentifier(icono,"drawable", getActivity().getPackageName());
-			    zoom.setImageResource(img);
-			}      
-		}); 
-		
-		
-		final ImageView imgLeyenda = (ImageView) vista.findViewById(R.id.ocultaLeyenda);
-		imgLeyenda.setOnClickListener(new OnClickListener() { 
 			
 			@Override
 			public void onClick(View v) {
@@ -183,8 +159,8 @@ public class IngresosFragment extends Fragment{
 					myMultitouchPlot.getLegendWidget().setVisible(true);
 					icono = "ocultar_leyenda";
 				}
-				int img = getActivity().getResources().getIdentifier(icono,"drawable", getActivity().getPackageName());
-			    imgLeyenda.setImageResource(img);
+//				int img = getActivity().getResources().getIdentifier(icono,"drawable", getActivity().getPackageName());
+//			    imgLeyenda.setImageResource(img);
 				
 				leyendaActivada = !leyendaActivada;
 				
@@ -548,7 +524,7 @@ public class IngresosFragment extends Fragment{
 				//Recorro el HasMap para ir creando los datos
 				Iterator<Integer> itClave = temporal.keySet().iterator();
 				while(itClave.hasNext()){
-					int clave = (Integer) itClave.next();
+					int clave = itClave.next();
 					registros.add(new ObjetoAuxGrafica(clave+"", temporal.get(clave)+"")); 
 				}
 			//}
@@ -628,7 +604,7 @@ public class IngresosFragment extends Fragment{
 				//Recorro el HasMap para ir creando los datos
 				Iterator<Integer> itClave = temporal.keySet().iterator();
 				while(itClave.hasNext()){
-					int clave = (Integer) itClave.next();
+					int clave = itClave.next();
 					registros.add(new ObjetoAuxGrafica(clave+"", temporal.get(clave)+""));
 				}
 			}
@@ -681,7 +657,7 @@ public class IngresosFragment extends Fragment{
 				//Recorro el HasMap para ir creando los datos
 				Iterator<Integer> itClave = temporal.keySet().iterator();
 				while(itClave.hasNext()){
-					int clave = (Integer) itClave.next();
+					int clave = itClave.next();
 					registros.add(new ObjetoAuxGrafica(clave+"", temporal.get(clave)+"")); 
 				}
 				
@@ -855,6 +831,7 @@ public class IngresosFragment extends Fragment{
 			public void onClick(DialogInterface dialog, int which) {
 				//Reseteamos el maxmo global
 			    maximoGlobal = 0;
+
 				if(tipo.equals("Dia")){
 					cargarAlDia();
 				}else if(tipo.equals("Mes")){

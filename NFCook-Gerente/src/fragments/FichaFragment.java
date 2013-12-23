@@ -26,6 +26,7 @@ public class FichaFragment extends Fragment{
 	private ExpandableListView expandableListView;
 	private MiExpandableListAdapterFicha miAdapterExpandableListFicha;
 
+	@Override
 	@SuppressLint("NewApi")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		vista = inflater.inflate(R.layout.ficha, container, false);

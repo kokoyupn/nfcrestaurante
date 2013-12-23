@@ -3,12 +3,9 @@ package com.example.nfcook_gerente;
 import android.content.Context;
 import android.graphics.PointF;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.WindowManager;
-
 import com.androidplot.series.XYSeries;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.XYPlot;
@@ -71,6 +68,7 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 	}
 
 
+	@Override
 	public boolean addSeries(XYSeries series, XYSeriesFormatter formatter)
 	{
 		//Overriden to compute min and max series values
@@ -90,6 +88,7 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 	}
 
 
+	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent)
 	{
 		try{
