@@ -56,7 +56,6 @@ public class CalendarioFragment extends Fragment {
 	private GridCellAdapter adapter;
 	private Calendar _calendar;
 	private int month, year;
-	private final DateFormat dateFormatter = new DateFormat();
 	private static final String dateTemplate = "MMMM yyyy";
 	
 	private HandlerGenerico sqlEmpleados,sqlEmpleado;
@@ -70,7 +69,7 @@ public class CalendarioFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 	    vista = inflater.inflate(R.layout.calendar_view_layout, container, false);
-	    
+	    // TODO recibir el idEmpleado por bundleInfo
 //	    Bundle bundleInfo = getActivity().getIntent().getExtras();
 //	    idEmpleado = bundleInfo.getString(key)
 		
@@ -158,22 +157,21 @@ public class CalendarioFragment extends Fragment {
 	// Inner Class
 	public class GridCellAdapter extends BaseAdapter implements OnClickListener
 		{
-			private static final String tag = "GridCellAdapter";
+		
 			private final Context _context;
-
 			private final List<String> list;
 			private static final int DAY_OFFSET = 1;
-			private final String[] weekdays = new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 			private final String[] months = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Augosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 			private final int[] daysOfMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+			@SuppressWarnings("unused")
 			private final int month, year;
-			private int daysInMonth, prevMonthDays;
+			private int daysInMonth;
 			private int currentDayOfMonth, currentMonthOfYear;
 			private int currentWeekDay;
 			private Button gridcell;
 			private TextView num_events_per_day;
+			@SuppressWarnings("rawtypes")
 			private final HashMap eventsPerMonthMap;
-			private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy");
 
 			// Days in Current Month
 			public GridCellAdapter(Context context, int textViewResourceId, int month, int year)
@@ -200,11 +198,6 @@ public class CalendarioFragment extends Fragment {
 					return months[i];
 				}
 
-			private String getWeekDayAsString(int i)
-				{
-					return weekdays[i];
-				}
-
 			private int getNumberOfDaysOfMonth(int i)
 				{
 					return daysOfMonth[i];
@@ -228,12 +221,12 @@ public class CalendarioFragment extends Fragment {
 			 * @param mm
 			 * @param yy
 			 */
+			@SuppressWarnings("unused")
 			private void printMonth(int mm, int yy)
 				{
 					// The number of days to leave blank at
 					// the start of this month.
 					int trailingSpaces = 0;
-					int leadSpaces = 0;
 					int daysInPrevMonth = 0;
 					int prevMonth = 0;
 					int prevYear = 0;
@@ -349,6 +342,7 @@ public class CalendarioFragment extends Fragment {
 			 * @param month
 			 * @return
 			 */
+			@SuppressWarnings("rawtypes")
 			private HashMap findNumberOfEventsPerMonth(int year, int month)
 				{
 					HashMap map = new HashMap<String, Integer>();

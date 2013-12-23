@@ -5,10 +5,8 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -158,7 +156,8 @@ public class MainActivity extends Activity {
 		//Crea el timer para que el mensaje solo aparezca durante 2 segundos
 		final Timer t = new Timer();
 	     t.schedule(new TimerTask() {
-	         public void run() {
+	         @Override
+			public void run() {
 	            ventanaEmergente.dismiss(); 
 	             t.cancel(); 
 	         }

@@ -32,14 +32,17 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
     	this.datosFicha = datosFicha;
     }
 
+	@Override
 	public HijoExpandableListFicha getChild(int groupPosition, int childPosition) {
 		return datosFicha.get(groupPosition).getDatos();
 	}
 	
+	@Override
 	public long getChildId(int groupPosition, int childPosition) {
 		return childPosition;
 	}
 	
+	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 		ImageView imageView;
 		TextView textView;
@@ -131,6 +134,7 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
 	 * @param groupPosition
 	 * @return
 	 */
+	@Override
 	public int getChildrenCount(int groupPosition) {
 		return 1;
 	}
@@ -140,6 +144,7 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
 	 * @param groupPosition
 	 * @return
 	 */	
+	@Override
 	public Object getGroup(int groupPosition) {
 		return datosFicha.get(groupPosition);
 	}
@@ -148,10 +153,12 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
 	 * Número de padres en una lista.
 	 * @return
 	 */
+	@Override
 	public int getGroupCount() {
 		return datosFicha.size();
 	}
 
+	@Override
 	public long getGroupId(int groupPosition) {
 		return groupPosition;
 	}
@@ -165,6 +172,7 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
 	 * @param parent
 	 * @return
 	 */
+	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.padre_lista_expandible_ficha, parent, false);
@@ -175,10 +183,12 @@ public class MiExpandableListAdapterFicha extends BaseExpandableListAdapter{
 		return convertView;
 	}
 
+	@Override
 	public boolean hasStableIds() {
 		return false;
 	}
 
+	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
 	}
